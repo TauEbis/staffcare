@@ -13,7 +13,7 @@ rake db:seed
 
 **Username**: user@example.com
 
-**Password**: changeme
+**Password**: f4a025eeb5bd
 
 Documentation and Support
 -------------------------

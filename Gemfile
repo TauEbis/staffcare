@@ -11,12 +11,15 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
 gem 'spring',        group: :development
 gem 'bootstrap-sass'
 gem 'devise'
+gem 'devise_invitable'
+gem 'devise_zxcvbn'
 gem 'pg'
 gem 'pundit'
 gem 'simple_form'
 gem 'unicorn'
 gem 'unicorn-rails'
 group :development do
+  gem "letter_opener"
   gem 'better_errors'
   gem 'binding_of_caller', :platforms=>[:mri_21]
   gem 'capistrano', '~> 3.0.1'
