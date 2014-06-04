@@ -6,6 +6,9 @@ Getting Started
 
 ```
 git clone git@bitbucket.org:crossroadslabs/blackbox.git
+cd staff_care
+git remote add staging git@heroku.com:staff-care-staging.git
+git remote add prod git@heroku.com:staff-care-prod.git
 bundle install
 rake db:migrate
 rake db:seed
