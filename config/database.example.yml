@@ -16,7 +16,7 @@ development:
   adapter:  postgresql
   host:     localhost
   encoding: unicode
-  database: blackbox_development
+  database: staff_care_development
   pool:     5
   username: root
   password: 
@@ -44,7 +44,7 @@ test:
   adapter:  postgresql
   host:     localhost
   encoding: unicode
-  database: blackbox_test
+  database: staff_care_test
   pool:     5
   username: root
   password: 
@@ -54,7 +54,7 @@ production:
   adapter:  postgresql
   host:     localhost
   encoding: unicode
-  database: blackbox_production
+  database: staff_care_production
   pool:     5
   username: root
   password: 
