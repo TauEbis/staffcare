@@ -20,6 +20,7 @@ gem 'unicorn'
 gem 'unicorn-rails'
 gem 'rollbar'
 gem 'newrelic_rpm'
+gem 'rails_12factor'
 
 group :development do
   gem "letter_opener"
