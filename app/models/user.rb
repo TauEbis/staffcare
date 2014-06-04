@@ -3,13 +3,14 @@ class User < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable,
          :recoverable, :rememberable, :trackable, :validatable,
-         :lockable, :timeoutable,
-         :zxcvbnable, :invitable
-  enum role: [:user, :vip, :admin]
+         #:zxcvbnable,
+         :lockable, :timeoutable, :invitable
+
+  enum role: [:nobody, :admin, :scheduler]
   after_initialize :set_default_role, :if => :new_record?
 
   def set_default_role
-    self.role ||= :user
+    self.role ||= :nobody
   end
 
 end
