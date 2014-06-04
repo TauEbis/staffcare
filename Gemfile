@@ -19,6 +19,8 @@ gem 'simple_form'
 gem 'unicorn'
 gem 'unicorn-rails'
 gem 'rollbar'
+gem 'newrelic_rpm'
+
 group :development do
   gem "letter_opener"
   gem 'better_errors'
