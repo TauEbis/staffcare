@@ -1,6 +1,20 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy]
 
+  def index
+    @users = policy_scope(User)
+  end
+
+  def new
+    @user = User.new
+    authorize @user
+  end
+
+  def create
+    @user = User.new(user_params)
+    authorize @user
+  end
+
   def edit
   end
 
