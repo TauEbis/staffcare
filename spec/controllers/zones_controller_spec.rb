@@ -30,6 +30,10 @@ describe ZonesController, :type => :controller do
   # ZonesController. Be sure to keep this updated too.
   let(:valid_session) { {} }
 
+  before do
+    sign_in create(:admin_user)
+  end
+
   describe "GET index" do
     it "assigns all zones as @zones" do
       zone = Zone.create! valid_attributes

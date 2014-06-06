@@ -13,4 +13,8 @@ class User < ActiveRecord::Base
     self.role ||= :nobody
   end
 
+  def admin?
+    self.role == 'admin'
+  end
+
 end

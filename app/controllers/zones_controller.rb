@@ -3,7 +3,7 @@ class ZonesController < ApplicationController
 
   # GET /zones
   def index
-    @zones = Zone.all
+    @zones = policy_scope(Zone)
   end
 
   # GET /zones/1
@@ -13,6 +13,7 @@ class ZonesController < ApplicationController
   # GET /zones/new
   def new
     @zone = Zone.new
+    authorize @zone
   end
 
   # GET /zones/1/edit
@@ -22,6 +23,7 @@ class ZonesController < ApplicationController
   # POST /zones
   def create
     @zone = Zone.new(zone_params)
+    authorize @zone
 
     if @zone.save
       redirect_to @zone, notice: 'Zone was successfully created.'
@@ -49,6 +51,7 @@ class ZonesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_zone
       @zone = Zone.find(params[:id])
+      authorize @zone
     end
 
     # Only allow a trusted parameter "white list" through.

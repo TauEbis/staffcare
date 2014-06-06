@@ -20,13 +20,13 @@ gem 'devise_zxcvbn'
 gem 'pg'
 gem 'pundit'
 gem 'simple_form'
-gem 'unicorn'
-gem 'unicorn-rails'
 gem 'rollbar'
 gem 'newrelic_rpm'
 
 group :staging, :production do
   gem 'rails_12factor'
+  gem 'unicorn'
+  gem 'unicorn-rails'
 end
 
 group :development do

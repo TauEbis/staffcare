@@ -1,0 +1,11 @@
+admin:
+  email: admin@admin.com
+  # password: adminpassword
+  encrypted_password: "$2a$10$bfVSmjvSKkKGAptcE8KFwuO3NYjp6rlvcrQf5clVUkWDqHSjxExU."
+  role: 1
+scheduler:
+  email: scheduler@scheduler.com
+  # password: schedulerpassword
+  encrypted_password: "$2a$10$F3TLI.9vQjTAccEfUhSMYufxDP8XiosAMmJwzoNME43gsdpjxdISi"
+  role: 2
+

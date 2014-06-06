@@ -3,7 +3,7 @@ class LocationsController < ApplicationController
 
   # GET /locations
   def index
-    @locations = Location.all
+    @locations = policy_scope(Location)
   end
 
   # GET /locations/1
@@ -13,6 +13,7 @@ class LocationsController < ApplicationController
   # GET /locations/new
   def new
     @location = Location.new
+    authorize @location
   end
 
   # GET /locations/1/edit
@@ -22,6 +23,7 @@ class LocationsController < ApplicationController
   # POST /locations
   def create
     @location = Location.new(location_params)
+    authorize @location
 
     if @location.save
       redirect_to @location, notice: 'Location was successfully created.'
@@ -49,6 +51,7 @@ class LocationsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_location
       @location = Location.find(params[:id])
+      authorize @location
     end
 
     # Only allow a trusted parameter "white list" through.
