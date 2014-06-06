@@ -3,9 +3,11 @@ Rails.application.routes.draw do
 
   resources :zones
 
+  devise_for :users, skip: [:registrations]
+  resources :users
+
   get 'dashboard/index'
 
-  devise_for :users
 
   root to: 'dashboard#index'
 end
