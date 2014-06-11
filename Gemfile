@@ -1,6 +1,8 @@
 source 'https://rubygems.org'
 
 ruby '2.1.2'
+#ruby=2.1.2
+#ruby-gemset=staffcare
 
 gem 'rails', '4.1.1'
 gem 'sass-rails', '~> 4.0.3'
