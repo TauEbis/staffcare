@@ -23,8 +23,16 @@ class UserPolicy
     create?
   end
 
-  def update?
+  def profile?
+    update_profile?
+  end
+
+  def update_profile?
     user == record
+  end
+
+  def update?
+    user.admin?
   end
 
   def edit?

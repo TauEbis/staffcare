@@ -1,0 +1,35 @@
+<div class="authform">
+  <h3>Profile for <%= @user.name || @user.email %></h3>
+  <%= simple_form_for(@user, html: { class: 'form-horizontal' }) do |f| %>
+    <%= f.error_notification %>
+
+    <div class="form-group">
+      <%= f.label :name %>
+      <%= f.text_field :name, :autofocus => true, class: 'form-control' %>
+    </div>
+    <div class="form-group">
+      <%= f.label :email %>
+      <%= f.email_field :email, class: 'form-control' %>
+    </div>
+
+    <fieldset>
+      <p>Leave these fields blank if you don't want to change your password.</p>
+      <div class="form-group">
+        <%= f.label :password %>
+        <%= f.password_field :password, :autocomplete => 'off', class: 'form-control' %>
+      </div>
+      <div class="form-group">
+        <%= f.label :password_confirmation %>
+        <%= f.password_field :password_confirmation, class: 'form-control' %>
+      </div>
+    </fieldset>
+    <fieldset>
+      <p>You must enter your current password to make changes.</p>
+      <div class="form-group">
+        <%= f.label :current_password %>
+        <%= f.password_field :current_password, class: 'form-control' %>
+      </div>
+    </fieldset>
+    <%= f.submit 'Update', :class => 'button right' %>
+  <% end %>
+</div>

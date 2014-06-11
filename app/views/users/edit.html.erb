@@ -11,24 +11,11 @@
       <%= f.label :email %>
       <%= f.email_field :email, class: 'form-control' %>
     </div>
-    <fieldset>
-      <p>Leave these fields blank if you don't want to change your password.</p>
-      <div class="form-group">
-        <%= f.label :password %>
-        <%= f.password_field :password, :autocomplete => 'off', class: 'form-control' %>
-      </div>
-      <div class="form-group">
-        <%= f.label :password_confirmation %>
-        <%= f.password_field :password_confirmation, class: 'form-control' %>
-      </div>
-    </fieldset>
-    <fieldset>
-      <p>You must enter your current password to make changes.</p>
-      <div class="form-group">
-        <%= f.label :current_password %>
-        <%= f.password_field :current_password, class: 'form-control' %>
-      </div>
-    </fieldset>
+    <div class="form-group">
+      <%= f.label :role %>
+      <%= f.select :role, User.roles.keys.to_a, class: 'form-control' %>
+    </div>
+
     <%= f.submit 'Update', :class => 'button right' %>
   <% end %>
 </div>
