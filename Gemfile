@@ -38,7 +38,6 @@ group :development do
   gem 'binding_of_caller', :platforms=>[:mri_21]
   gem 'foreman'
   gem 'guard-bundler'
-  gem 'guard-rails'
   gem 'guard-rspec'
   gem 'quiet_assets'
   gem 'rails_layout'

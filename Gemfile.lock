@@ -97,8 +97,6 @@ GEM
     guard-bundler (2.0.0)
       bundler (~> 1.0)
       guard (~> 2.2)
-    guard-rails (0.5.2)
-      guard (~> 2.0)
     guard-rspec (4.2.9)
       guard (~> 2.1)
       rspec (>= 2.14, < 4.0)
@@ -270,7 +268,6 @@ DEPENDENCIES
   faker
   foreman
   guard-bundler
-  guard-rails
   guard-rspec
   jquery-rails
   launchy
