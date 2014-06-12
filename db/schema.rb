@@ -21,6 +21,23 @@ ActiveRecord::Schema.define(version: 20140604153414) do
     t.integer  "zone_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "mon_open"
+    t.integer  "mon_close"
+    t.integer  "tue_open"
+    t.integer  "tue_close"
+    t.integer  "wed_open"
+    t.integer  "wed_close"
+    t.integer  "thu_open"
+    t.integer  "thu_close"
+    t.integer  "fri_open"
+    t.integer  "fri_close"
+    t.integer  "sat_open"
+    t.integer  "sat_close"
+    t.integer  "sun_open"
+    t.integer  "sun_close"
+    t.integer  "rooms"
+    t.integer  "max_mds"
+    t.string   "report_server_id"
   end
 
   add_index "locations", ["zone_id"], name: "index_locations_on_zone_id", using: :btree

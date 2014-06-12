@@ -4,7 +4,7 @@ class LocationPolicy < ApplicationPolicy
       if user.admin?
         scope.all
       else
-        scope.all
+        user.locations
       end
     end
   end

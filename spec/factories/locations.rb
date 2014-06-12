@@ -3,6 +3,6 @@
 FactoryGirl.define do
   factory :location do
     name "MyString"
-    #zone
+    zone
   end
 end

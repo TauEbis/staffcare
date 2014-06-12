@@ -3,7 +3,13 @@
 
   <div class="form-inputs">
     <%= f.input :name %>
-    <%= f.association :zone %>
+    <%= f.association :zone, include_blank: false %>
+
+    <% Location::DAYS.each do |day| -%>
+      <% ['open', 'close'].each do |tod| -%>
+        <%= f.input "#{day}_#{tod}", as: :select, collection: hours_options, include_blank: false %>
+      <% end -%>
+    <% end -%>
   </div>
 
   <div class="form-actions">
