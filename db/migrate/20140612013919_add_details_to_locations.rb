@@ -1,11 +1,11 @@
 class AddDetailsToLocations < ActiveRecord::Migration
   def change
     Location::DAYS.each do |day|
-      add_column :locations, "#{day}_open", :integer
-      add_column :locations, "#{day}_close", :integer
+      add_column :locations, "#{day}_open", :integer, null: false, default: 480
+      add_column :locations, "#{day}_close", :integer, null: false, default: 480
     end
-    add_column :locations, :rooms, :integer
-    add_column :locations, :max_mds, :integer
+    add_column :locations, :rooms, :integer, null: false, default: 1
+    add_column :locations, :max_mds, :integer, null: false, default: 1
     add_column :locations, :report_server_id, :string
   end
 end

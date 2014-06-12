@@ -21,22 +21,22 @@ ActiveRecord::Schema.define(version: 20140612014505) do
     t.integer  "zone_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "mon_open"
-    t.integer  "mon_close"
-    t.integer  "tue_open"
-    t.integer  "tue_close"
-    t.integer  "wed_open"
-    t.integer  "wed_close"
-    t.integer  "thu_open"
-    t.integer  "thu_close"
-    t.integer  "fri_open"
-    t.integer  "fri_close"
-    t.integer  "sat_open"
-    t.integer  "sat_close"
-    t.integer  "sun_open"
-    t.integer  "sun_close"
-    t.integer  "rooms"
-    t.integer  "max_mds"
+    t.integer  "mon_open",         default: 480, null: false
+    t.integer  "mon_close",        default: 480, null: false
+    t.integer  "tue_open",         default: 480, null: false
+    t.integer  "tue_close",        default: 480, null: false
+    t.integer  "wed_open",         default: 480, null: false
+    t.integer  "wed_close",        default: 480, null: false
+    t.integer  "thu_open",         default: 480, null: false
+    t.integer  "thu_close",        default: 480, null: false
+    t.integer  "fri_open",         default: 480, null: false
+    t.integer  "fri_close",        default: 480, null: false
+    t.integer  "sat_open",         default: 480, null: false
+    t.integer  "sat_close",        default: 480, null: false
+    t.integer  "sun_open",         default: 480, null: false
+    t.integer  "sun_close",        default: 480, null: false
+    t.integer  "rooms",            default: 1,   null: false
+    t.integer  "max_mds",          default: 1,   null: false
     t.string   "report_server_id"
   end
 
