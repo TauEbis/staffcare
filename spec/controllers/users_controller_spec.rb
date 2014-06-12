@@ -75,7 +75,7 @@ describe UsersController, :type => :controller do
 
       it "redirects to the created user" do
         post :create, {:user => valid_attributes}, valid_session
-        expect(response).to redirect_to(User.last)
+        expect(response).to redirect_to(users_path)
       end
     end
 
@@ -184,7 +184,6 @@ describe UsersController, :type => :controller do
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(User).to receive(:update_with_password).and_return(false)
         put :update_profile, {:id => user.to_param, :user => { "name" => "invalid value" }}, valid_session
-        puts response
         expect(response).to render_template("profile")
       end
     end

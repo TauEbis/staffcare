@@ -2,8 +2,8 @@ class Location < ActiveRecord::Base
   belongs_to :zone
 
   validates :zone, presence: true
-  validates :rooms, inclusion: { in: 1..100 }
-  validates :max_mds, inclusion: { in: 1..100 }
+  validates :rooms, numericality: { greater_than: 0, less_than: 100 }
+  validates :max_mds, numericality: { greater_than: 0, less_than: 100 }
 
 
   DAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
