@@ -15,7 +15,7 @@ class UsersController < ApplicationController
     authorize @user
 
     if @user.save
-      redirect_to @user, notice: "User was successfully invited.  They'll receive an email requesting they set their password."
+      redirect_to users_path, notice: "User was successfully invited.  They'll receive an email requesting they set their password."
     else
       render :new
     end
