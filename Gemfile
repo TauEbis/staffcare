@@ -25,6 +25,8 @@ gem 'simple_form', '>= 3.1.0.rc1'
 gem 'rollbar'
 gem 'newrelic_rpm'
 
+gem 'select2-rails'
+
 group :staging, :production do
   gem 'rails_12factor'
   gem 'unicorn'

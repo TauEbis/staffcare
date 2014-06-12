@@ -6,9 +6,16 @@
     <%= f.association :zone, include_blank: false %>
 
     <% Location::DAYS.each do |day| -%>
-      <% ['open', 'close'].each do |tod| -%>
-        <%= f.input "#{day}_#{tod}", as: :select, collection: hours_options, include_blank: false %>
-      <% end -%>
+      <div class="row form-group">
+        <div class="col-sm-1">
+          <label><%= day.humanize %></label>
+        </div>
+        <% ['open', 'close'].each do |tod| -%>
+          <div class="col-sm-2">
+            <%= f.input_field "#{day}_#{tod}", as: :select, collection: hours_options, include_blank: false, class: 'form-control select2' %>
+          </div>
+        <% end -%>
+      </div>
     <% end -%>
   </div>
 
