@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Starts on:</strong>
+  <%= @schedule.starts_on %>
+</p>
+
+<p>
+  <strong>State:</strong>
+  <%= @schedule.state %>
+</p>
+
+<%= link_to 'Edit', edit_schedule_path(@schedule) %> |
+<%= link_to 'Back', schedules_path %>
