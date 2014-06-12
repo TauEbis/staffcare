@@ -3,18 +3,13 @@
   <%= simple_form_for(@user, html: { class: 'form-horizontal' }) do |f| %>
     <%= f.error_notification %>
 
-    <div class="form-group">
-      <%= f.label :name %>
-      <%= f.text_field :name, :autofocus => true, class: 'form-control' %>
-    </div>
-    <div class="form-group">
-      <%= f.label :email %>
-      <%= f.email_field :email, class: 'form-control' %>
-    </div>
-    <div class="form-group">
-      <%= f.label :role %>
-      <%= f.select :role, User.roles.keys.to_a, class: 'form-control' %>
-    </div>
+    <%= f.input :name, :autofocus => true, class: 'form-control' %>
+
+    <%= f.input :email, class: 'form-control' %>
+
+    <%= f.input :role, collection: [['Scheduler', 'scheduler'], ['Admin', 'admin']], include_blank: false, class: 'form-control' %>
+
+    <%= f.association :zones, as: :check_boxes, wrapper: :vertical_radio_and_checkboxes %>
 
     <%= f.submit 'Update', :class => 'button right' %>
   <% end %>

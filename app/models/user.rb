@@ -9,6 +9,10 @@ class User < ActiveRecord::Base
   enum role: [:nobody, :admin, :scheduler]
   after_initialize :set_default_role, :if => :new_record?
 
+  has_many :memberships
+  has_many :zones, through: :memberships
+  has_many :locations, through: :zones
+
   def set_default_role
     self.role ||= :nobody
   end

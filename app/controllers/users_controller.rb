@@ -65,6 +65,6 @@ class UsersController < ApplicationController
   end
 
   def user_params_for_admin
-    params.required(:user).permit(:name, :email, :role)
+    params.required(:user).permit(:name, :email, :role, {:zone_ids => []})
   end
 end

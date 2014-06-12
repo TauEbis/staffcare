@@ -26,8 +26,8 @@ ActiveRecord::Schema.define(version: 20140604153414) do
   add_index "locations", ["zone_id"], name: "index_locations_on_zone_id", using: :btree
 
   create_table "memberships", force: true do |t|
-    t.integer  "user_id"
-    t.integer  "zone_id"
+    t.integer  "user_id",    null: false
+    t.integer  "zone_id",    null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
