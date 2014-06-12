@@ -1,6 +1,6 @@
 <div class="authform">
   <h3>Profile for <%= @user.name || @user.email %></h3>
-  <%= simple_form_for(@user, html: { class: 'form-horizontal' }) do |f| %>
+  <%= simple_form_for(@user, url: update_profile_user_path(@user), method: :post, html: { class: 'form-horizontal' }) do |f| %>
     <%= f.error_notification %>
 
     <div class="form-group">
