@@ -54,7 +54,7 @@ ActiveRecord::Schema.define(version: 20140612014505) do
 
   create_table "schedules", force: true do |t|
     t.date     "starts_on"
-    t.integer  "state"
+    t.integer  "state",      default: 0, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

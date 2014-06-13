@@ -2,9 +2,9 @@ class ZonePolicy < ApplicationPolicy
   class Scope < Struct.new(:user, :scope)
     def resolve
       if user.admin?
-        scope.all
+        scope
       else
-        scope.all
+        scope.where(id: user.zone_ids)
       end
     end
   end

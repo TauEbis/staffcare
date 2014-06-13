@@ -3,7 +3,7 @@ class SchedulesController < ApplicationController
 
   # GET /schedules
   def index
-    @schedules = Schedule.all
+    @schedules = policy_scope(Schedule)
   end
 
   # GET /schedules/1
@@ -13,6 +13,7 @@ class SchedulesController < ApplicationController
   # GET /schedules/new
   def new
     @schedule = Schedule.new
+    authorize @schedule
   end
 
   # GET /schedules/1/edit
@@ -22,6 +23,7 @@ class SchedulesController < ApplicationController
   # POST /schedules
   def create
     @schedule = Schedule.new(schedule_params)
+    authorize @schedule
 
     if @schedule.save
       redirect_to @schedule, notice: 'Schedule was successfully created.'
@@ -49,6 +51,7 @@ class SchedulesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_schedule
       @schedule = Schedule.find(params[:id])
+      authorize @schedule
     end
 
     # Only allow a trusted parameter "white list" through.

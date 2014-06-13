@@ -1,10 +1,10 @@
-class LocationPolicy < ApplicationPolicy
+class SchedulePolicy < ApplicationPolicy
   class Scope < Struct.new(:user, :scope)
     def resolve
       if user.admin?
         scope
       else
-        scope.where(id: user.location_ids)
+        scope.not_draft
       end
     end
   end

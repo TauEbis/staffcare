@@ -37,8 +37,9 @@ describe ZonesController, :type => :controller do
   describe "GET index" do
     it "assigns all zones as @zones" do
       zone = Zone.create! valid_attributes
+      expect(Zone.count).to eq(1)
       get :index, {}, valid_session
-      expect(assigns(:zones)).to eq([zone])
+      expect(assigns(:zones).all).to eq([zone])
     end
   end
 

@@ -40,7 +40,7 @@ describe LocationsController, :type => :controller do
     it "assigns all locations as @locations" do
       location = Location.create! valid_attributes
       get :index, {}, valid_session
-      expect(assigns(:locations)).to eq([location])
+      expect(assigns(:locations).all).to eq([location])
     end
   end
 

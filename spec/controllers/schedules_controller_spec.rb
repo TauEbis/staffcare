@@ -24,11 +24,11 @@ RSpec.describe SchedulesController, :type => :controller do
   # Schedule. As you add validations to Schedule, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    { 'starts_on' => Date.tomorrow.to_s }
   }
 
   let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
+    { 'starts_on' => nil }
   }
 
   # This should return the minimal set of values that should be in the session
@@ -36,11 +36,15 @@ RSpec.describe SchedulesController, :type => :controller do
   # SchedulesController. Be sure to keep this updated too.
   let(:valid_session) { {} }
 
+  before do
+    sign_in create(:admin_user)
+  end
+
   describe "GET index" do
     it "assigns all schedules as @schedules" do
       schedule = Schedule.create! valid_attributes
       get :index, {}, valid_session
-      expect(assigns(:schedules)).to eq([schedule])
+      expect(assigns(:schedules).all).to eq([schedule])
     end
   end
 
@@ -89,11 +93,13 @@ RSpec.describe SchedulesController, :type => :controller do
 
     describe "with invalid params" do
       it "assigns a newly created but unsaved schedule as @schedule" do
+        allow_any_instance_of(Schedule).to receive(:save).and_return(false)
         post :create, {:schedule => invalid_attributes}, valid_session
         expect(assigns(:schedule)).to be_a_new(Schedule)
       end
 
       it "re-renders the 'new' template" do
+        allow_any_instance_of(Schedule).to receive(:save).and_return(false)
         post :create, {:schedule => invalid_attributes}, valid_session
         expect(response).to render_template("new")
       end
@@ -129,12 +135,14 @@ RSpec.describe SchedulesController, :type => :controller do
     describe "with invalid params" do
       it "assigns the schedule as @schedule" do
         schedule = Schedule.create! valid_attributes
+        allow_any_instance_of(Schedule).to receive(:save).and_return(false)
         put :update, {:id => schedule.to_param, :schedule => invalid_attributes}, valid_session
         expect(assigns(:schedule)).to eq(schedule)
       end
 
       it "re-renders the 'edit' template" do
         schedule = Schedule.create! valid_attributes
+        allow_any_instance_of(Schedule).to receive(:save).and_return(false)
         put :update, {:id => schedule.to_param, :schedule => invalid_attributes}, valid_session
         expect(response).to render_template("edit")
       end
