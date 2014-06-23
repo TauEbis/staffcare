@@ -1,4 +1,4 @@
-class ShiftSetList
+class CoverageOptions
 
 	attr_reader :max_mds, :open, :close, :min_openers, :min_closers, :list
 
@@ -21,7 +21,7 @@ class ShiftSetList
 	end
 
 	def build_list
-		ShiftSetListBuilder.new.build(self)
+		CoverageOptionsBuilder.new.build(self)
 	end
 
 	def opts_key

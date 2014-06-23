@@ -12,9 +12,9 @@ class Location
 
 	end
 
-# Eventually we may want to create a second shift_set_list that is a (smaller) list of conceivable solutions not just all valid shifts
-	def create_shift_set_list(day)
-		ShiftSetList.new(open: @open[day.wday()], close: @close[day.wday()], max_mds: @max_mds)
+# Eventually we may want to create a second coverage_options that is a (smaller) list of conceivable solutions not just all valid shifts
+	def coverage_options(day)
+		CoverageOptions.new(open: @open[day.wday()], close: @close[day.wday()], max_mds: @max_mds)
 	end
 
 	def to_sym
