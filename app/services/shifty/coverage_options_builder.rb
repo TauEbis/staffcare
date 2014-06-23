@@ -1,4 +1,4 @@
-class ShiftSetListBuilder
+class CoverageOptionsBuilder
 
 	def build(shift_set_list)
 		@list = shift_set_list
