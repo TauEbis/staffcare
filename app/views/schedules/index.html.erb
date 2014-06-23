@@ -1,27 +1,53 @@
-<h1>Listing schedules</h1>
+<h1>Schedules</h1>
 
-<table class="table">
-  <thead>
-    <tr>
-      <th>Starts on</th>
-      <th>State</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @schedules.each do |schedule| %>
-      <tr>
-        <td><%= schedule.starts_on %></td>
-        <td><%= schedule.state %></td>
-        <td><%= link_to 'Show', schedule %></td>
-        <td><%= link_to 'Edit', edit_schedule_path(schedule) %></td>
-        <td><%= link_to 'Destroy', schedule, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
+<% @schedules.each do |schedule| %>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <a href="<%= schedule_path(schedule) %>">
+        <h3 class="panel-title">
+          <%= l schedule.starts_on %> - <%= l schedule.ends_on %>
+          
+          <div class="pull-right">
+            <span class="label label-default"><%= schedule.state.to_s.humanize %></span>
+          </div>
+        </h3>
+      </a>
+    </div>
+    <div class="panel-body">
+      <% Zone.ordered.each do |zone| %>
+        <div class="row">
+          <div class="col-sm-4">
+            <h5><%= zone.name %></h5>
+            (pending approval)
+          </div>
+          <div class="col-sm-2 text-center">
+            <h4>200 (B+)</h4>
+            Overall
+          </div>
+          <div class="col-sm-2 text-center">
+            <h4>200 (B+)</h4>
+            Physician Sat
+          </div>
+          <div class="col-sm-2 text-center">
+            <h4>180 (A)</h4>
+            Patient Sat
+          </div>
+          <div class="col-sm-2 text-center">
+            <h4>$15k (B)</h4>
+            Savings
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <div class="panel-footer">
+      <small>Generated <%= l schedule.created_at %></small>
+      <div class="pull-right">
+        <a href="<%= url_for edit_schedule_path(schedule) %>">
+          <span class="glyphicon glyphicon-cog"></span> edit
+        </a>
+      </div>
+    </div>
+  </div>
+<% end %>
 
 <%= link_to 'New Schedule', new_schedule_path %>

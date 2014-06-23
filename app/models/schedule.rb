@@ -3,12 +3,17 @@ class Schedule < ActiveRecord::Base
   enum state: [ :draft, :active, :published, :archived ]
 
   scope :not_draft, -> { where("state <> ?", Schedule.states[:draft]) }
+  scope :ordered, -> { order(starts_on: :desc) }
+
+  default_scope -> { order(starts_on: :desc) }
 
   OPTIMIZER_FIELDS = [:penalty_30min, :penalty_60min, :penalty_90min, :penalty_eod_unseen, :penalty_slack, :min_openers, :min_closers, :md_rate, :oren_shift]
 
   OPTIMIZER_FIELDS.each do |field|
     validates field, presence: true
   end
+
+  validates :starts_on, presence: true
 
   def self.default_attributes
     {
@@ -22,5 +27,9 @@ class Schedule < ActiveRecord::Base
       md_rate: 4.25,
       oren_shift: true
     }
+  end
+
+  def ends_on
+    @_ends_on ||= starts_on + 27
   end
 end

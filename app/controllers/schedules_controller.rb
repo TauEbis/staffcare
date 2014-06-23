@@ -3,7 +3,7 @@ class SchedulesController < ApplicationController
 
   # GET /schedules
   def index
-    @schedules = policy_scope(Schedule).all
+    @schedules = policy_scope(Schedule).ordered.all
   end
 
   # GET /schedules/1
