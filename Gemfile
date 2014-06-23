@@ -19,7 +19,7 @@ gem 'jquery-turbolinks'
 gem 'bootstrap-sass'
 gem 'devise'
 gem 'devise_invitable'
-gem 'devise_zxcvbn'
+#gem 'devise_zxcvbn'
 gem 'pg'
 gem 'pundit'
 gem 'simple_form', '>= 3.1.0.rc1'
@@ -49,12 +49,14 @@ group :development do
   gem 'rb-fsevent', :require=>false
   gem 'rb-inotify', :require=>false
 end
+
 group :development, :test do
   gem 'factory_girl_rails'
   gem 'pry-rails'
   gem 'pry-rescue'
   gem 'rspec-rails', '>= 3.0.0.beta2'
 end
+
 group :test do
   gem 'capybara'
   gem 'database_cleaner'
