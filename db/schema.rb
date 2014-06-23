@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140612014505) do
+ActiveRecord::Schema.define(version: 20140623130554) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -54,9 +54,18 @@ ActiveRecord::Schema.define(version: 20140612014505) do
 
   create_table "schedules", force: true do |t|
     t.date     "starts_on"
-    t.integer  "state",      default: 0, null: false
+    t.integer  "state",                                      default: 0,     null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.decimal  "penalty_30min",      precision: 8, scale: 4,                 null: false
+    t.decimal  "penalty_60min",      precision: 8, scale: 4,                 null: false
+    t.decimal  "penalty_90min",      precision: 8, scale: 4,                 null: false
+    t.decimal  "penalty_eod_unseen", precision: 8, scale: 4,                 null: false
+    t.decimal  "penalty_slack",      precision: 8, scale: 4,                 null: false
+    t.integer  "min_openers",                                                null: false
+    t.integer  "min_closers",                                                null: false
+    t.decimal  "md_rate",            precision: 8, scale: 4,                 null: false
+    t.boolean  "oren_shift",                                 default: false, null: false
   end
 
   create_table "users", force: true do |t|

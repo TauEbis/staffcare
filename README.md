@@ -14,9 +14,9 @@ rake db:create db:migrate
 rake db:seed
 ```
 
-**Username**: user@example.com
+**Username**: admin@admin.com
 
-**Password**: f4a025eeb5bd
+**Password**: password
 
 Documentation and Support
 -------------------------

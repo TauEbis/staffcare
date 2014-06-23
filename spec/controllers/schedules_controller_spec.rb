@@ -24,11 +24,11 @@ RSpec.describe SchedulesController, :type => :controller do
   # Schedule. As you add validations to Schedule, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    { 'starts_on' => Date.tomorrow.to_s }
+    { 'starts_on' => Date.tomorrow.to_s }.merge(Schedule.default_attributes)
   }
 
   let(:invalid_attributes) {
-    { 'starts_on' => nil }
+    { 'starts_on' => nil }.merge(Schedule.default_attributes)
   }
 
   # This should return the minimal set of values that should be in the session

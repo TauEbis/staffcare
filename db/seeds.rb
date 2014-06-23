@@ -5,5 +5,30 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
-user = CreateAdminService.new.call
-puts 'CREATED ADMIN USER: ' << user.email
+
+if Rails.env.development?
+  user = User.find_or_create_by!(email: 'admin@admin.com') do |user|
+    user.password = user.password_confirmation = 'password'
+    user.admin!
+  end
+
+  puts "Created Admin User: #{user.email} / password"
+
+  user = User.find_or_create_by!(email: 'scheduler@scheduler.com') do |user|
+    user.password = user.password_confirmation = 'password'
+  end
+
+  puts "Created Scheduler User: #{user.email} / password"
+
+  ['Zone 1', 'Zone 2', 'Zone 3'].each do |zname|
+    z = Zone.create!(name: zname)
+
+    user.zones << z
+
+    ['Location 1', 'Location 2', 'Location 3'].each do |lname|
+      Location.create!(zone: z, name: "#{lname}-z#{z.id}")
+    end
+  end
+
+  user.save!
+end

@@ -3,7 +3,7 @@ class SchedulesController < ApplicationController
 
   # GET /schedules
   def index
-    @schedules = policy_scope(Schedule)
+    @schedules = policy_scope(Schedule).all
   end
 
   # GET /schedules/1
@@ -12,7 +12,7 @@ class SchedulesController < ApplicationController
 
   # GET /schedules/new
   def new
-    @schedule = Schedule.new
+    @schedule = Schedule.new(Schedule.default_attributes)
     authorize @schedule
   end
 
@@ -56,6 +56,6 @@ class SchedulesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def schedule_params
-      params.require(:schedule).permit(:starts_on, :state)
+      params.require(:schedule).permit(:starts_on, *Schedule::OPTIMIZER_FIELDS)
     end
 end
