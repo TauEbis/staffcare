@@ -21,22 +21,22 @@ ActiveRecord::Schema.define(version: 20140623130554) do
     t.integer  "zone_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "mon_open",         default: 480, null: false
-    t.integer  "mon_close",        default: 480, null: false
-    t.integer  "tue_open",         default: 480, null: false
-    t.integer  "tue_close",        default: 480, null: false
-    t.integer  "wed_open",         default: 480, null: false
-    t.integer  "wed_close",        default: 480, null: false
-    t.integer  "thu_open",         default: 480, null: false
-    t.integer  "thu_close",        default: 480, null: false
-    t.integer  "fri_open",         default: 480, null: false
-    t.integer  "fri_close",        default: 480, null: false
-    t.integer  "sat_open",         default: 480, null: false
-    t.integer  "sat_close",        default: 480, null: false
-    t.integer  "sun_open",         default: 480, null: false
-    t.integer  "sun_close",        default: 480, null: false
-    t.integer  "rooms",            default: 1,   null: false
-    t.integer  "max_mds",          default: 1,   null: false
+    t.integer  "mon_open",         default: 480,  null: false
+    t.integer  "mon_close",        default: 1260, null: false
+    t.integer  "tue_open",         default: 480,  null: false
+    t.integer  "tue_close",        default: 1260, null: false
+    t.integer  "wed_open",         default: 480,  null: false
+    t.integer  "wed_close",        default: 1260, null: false
+    t.integer  "thu_open",         default: 480,  null: false
+    t.integer  "thu_close",        default: 1260, null: false
+    t.integer  "fri_open",         default: 480,  null: false
+    t.integer  "fri_close",        default: 1260, null: false
+    t.integer  "sat_open",         default: 480,  null: false
+    t.integer  "sat_close",        default: 1260, null: false
+    t.integer  "sun_open",         default: 480,  null: false
+    t.integer  "sun_close",        default: 1260, null: false
+    t.integer  "rooms",            default: 1,    null: false
+    t.integer  "max_mds",          default: 1,    null: false
     t.string   "report_server_id"
   end
 
