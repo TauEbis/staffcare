@@ -5,6 +5,10 @@ class Location < ActiveRecord::Base
   validates :rooms, numericality: { greater_than: 0, less_than: 100 }
   validates :max_mds, numericality: { greater_than: 0, less_than: 100 }
 
+  scope :ordered, -> { order(name: :asc) }
+
+  default_scope -> { order(name: :asc) }
+
 
   DAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
   # [:mon_open, :mon_close, :tue_open, ...]

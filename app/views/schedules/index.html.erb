@@ -5,8 +5,8 @@
     <div class="panel-heading">
       <a href="<%= schedule_path(schedule) %>">
         <h3 class="panel-title">
-          <%= l schedule.starts_on %> - <%= l schedule.ends_on %>
-          
+          <%= schedule_date_span(schedule) %>
+
           <div class="pull-right">
             <span class="label label-default"><%= schedule.state.to_s.humanize %></span>
           </div>
@@ -14,7 +14,7 @@
       </a>
     </div>
     <div class="panel-body">
-      <% Zone.ordered.each do |zone| %>
+      <% @zones.each do |zone| %>
         <div class="row">
           <div class="col-sm-4">
             <h5><%= zone.name %></h5>

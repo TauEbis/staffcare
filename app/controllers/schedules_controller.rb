@@ -4,10 +4,17 @@ class SchedulesController < ApplicationController
   # GET /schedules
   def index
     @schedules = policy_scope(Schedule).ordered.all
+    @zones = user_zones.ordered
   end
 
   # GET /schedules/1
   def show
+    @zones = user_zones.ordered
+    @zone = if params[:zone_id]
+              user_zones.find(params[:zone_id].to_i)
+            else
+              user_zones.ordered.first
+            end
   end
 
   # GET /schedules/new
@@ -57,5 +64,9 @@ class SchedulesController < ApplicationController
     # Only allow a trusted parameter "white list" through.
     def schedule_params
       params.require(:schedule).permit(:starts_on, *Schedule::OPTIMIZER_FIELDS)
+    end
+
+    def user_zones
+      policy_scope(Zone)
     end
 end
