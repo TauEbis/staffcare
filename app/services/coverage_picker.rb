@@ -4,13 +4,13 @@ class CoveragePicker
 		@grader = grader
 	end
 
-	def pick_best(coverage_options, daily_visits_projection)
+	def pick_best(solution_set, daily_visits_projection)
 		@grader.visits = daily_visits_projection
 
-		best_coverage = coverage_options.first
+		best_coverage = solution_set.first
 		min_penalty = penalty(best_coverage)
 
-		coverage_options.each do |coverage|
+		solution_set.each do |coverage|
 			pen = penalty(coverage)
 			if (pen < min_penalty)
 				best_coverage = coverage
@@ -19,7 +19,8 @@ class CoveragePicker
 		end
 
 		@grader.visits = nil
-		best_coverage
+
+		return best_coverage, min_penalty
 	end
 
 
@@ -30,7 +31,7 @@ class CoveragePicker
 		end
 
 		def check_visits_length_and_coverage_span_agree # TODO
-			# raise StandardError if daily_visits_projection.size != 2 * ( coverage_options.first[-1]-coverage_options.first[0] )
+			# raise StandardError if daily_visits_projection.size != 2 * ( solution_set.first[-1]-solution_set.first[0] )
 		end
 
 end

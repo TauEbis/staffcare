@@ -56,7 +56,7 @@ class CoverageGrader
 
 			# Calculate slack and wait/queue arrays
 			(0...@time_slots).each do |x|
-				queue[x+1] = [ (@visits[x] + queue[x] - @md_rate/2 * md_nums[x]), 0 ].max
+				  queue[x+1] = [ (@visits[x] + queue[x] - @md_rate/2 * md_nums[x]), 0 ].max
 				slack[x] = [ @md_rate/2 * md_nums[x] - @visits[x] - queue[x] , 0].max
 				greater_than_thirty_min_wait[x] = [ queue[x] - @visits[x-1] , 0].max if x >= 1
 				thirty_min_wait[x] = queue[x] - greater_than_thirty_min_wait[x] if x >= 1

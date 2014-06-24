@@ -1,5 +1,8 @@
 class Schedule < ActiveRecord::Base
 
+  has_many :visit_projections, dependent: :destroy
+  has_many :location_plans, dependent: :destroy
+
   enum state: [ :draft, :active, :published, :archived ]
 
   scope :not_draft, -> { where("state <> ?", Schedule.states[:draft]) }
@@ -7,7 +10,7 @@ class Schedule < ActiveRecord::Base
 
   default_scope -> { order(starts_on: :desc) }
 
-  OPTIMIZER_FIELDS = [:penalty_30min, :penalty_60min, :penalty_90min, :penalty_eod_unseen, :penalty_slack, :min_openers, :min_closers, :md_rate, :oren_shift]
+  OPTIMIZER_FIELDS = [:penalty_30min, :penalty_60min, :penalty_90min, :penalty_eod_unseen, :penalty_slack, :md_rate, :oren_shift]
 
   OPTIMIZER_FIELDS.each do |field|
     validates field, presence: true
@@ -22,8 +25,6 @@ class Schedule < ActiveRecord::Base
       penalty_90min: 16,
       penalty_eod_unseen: 2,
       penalty_slack: 2.5,
-      min_openers: 2,
-      min_closers: 1,
       md_rate: 4.25,
       oren_shift: true
     }
@@ -31,5 +32,37 @@ class Schedule < ActiveRecord::Base
 
   def ends_on
     @_ends_on ||= starts_on + 27
+  end
+
+  def days
+    @_days ||= (starts_on..ends_on).to_a
+  end
+
+  def grader_weights
+    @_grader_weights ||= self.attributes.slice(*OPTIMIZER_FIELDS.map(&:to_s)).symbolize_keys
+  end
+
+  def optimize!
+    grader = CoverageGrader.new(grader_weights)
+    picker = CoveragePicker.new(grader)
+    loader = SpeedySolutionSetLoader.new
+
+    location_plans.each do |location_plan|
+      coverages = {}
+      penalties = {}
+
+      days.each do |day|
+        day_visits = location_plan.visits[day.to_s]
+        solution_set = loader.load(location_plan, day)
+
+        best_coverage, min_penalty = picker.pick_best(solution_set, day_visits)
+        coverages[day.to_s] = best_coverage
+        penalties[day.to_s] = min_penalty
+      end
+
+      grade = location_plan.grades.new(source: 'optimizer', coverages: coverages, penalties: penalties)
+
+      grade.save!
+    end
   end
 end
