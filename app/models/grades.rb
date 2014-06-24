@@ -1,6 +1,8 @@
 class Grades < ActiveRecord::Base
   belongs_to :location_plan
 
+  enum source: [:optimizer, :last_month, :manual]
+
 	attr_reader :schedule, :locations, :visits_projection, :grader_weights, :coverages, :penalties, :grades, :location_grades, :coverage_plan_grades
 
 	def initialize(coverage_plan)

@@ -11,16 +11,43 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140623130554) do
+ActiveRecord::Schema.define(version: 20140624173219) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "grades", force: true do |t|
+    t.integer  "location_plan_id",              null: false
+    t.integer  "source",           default: 0,  null: false
+    t.json     "coverages",        default: {}, null: false
+    t.json     "penalties",        default: {}, null: false
+    t.json     "points",           default: {}, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "location_plans", force: true do |t|
+    t.integer "location_id",                      null: false
+    t.integer "schedule_id",                      null: false
+    t.integer "visit_projection_id",              null: false
+    t.json    "visits"
+    t.integer "approval_state",      default: 0,  null: false
+    t.integer "chosen_grade_id",                  null: false
+    t.integer "max_mds"
+    t.integer "rooms"
+    t.integer "min_openers"
+    t.integer "min_closers"
+    t.integer "open_times",          default: [],              array: true
+    t.integer "close_times",         default: [],              array: true
+  end
 
   create_table "locations", force: true do |t|
     t.string   "name"
     t.integer  "zone_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "sun_open",         default: 480,  null: false
+    t.integer  "sun_close",        default: 1260, null: false
     t.integer  "mon_open",         default: 480,  null: false
     t.integer  "mon_close",        default: 1260, null: false
     t.integer  "tue_open",         default: 480,  null: false
@@ -33,10 +60,10 @@ ActiveRecord::Schema.define(version: 20140623130554) do
     t.integer  "fri_close",        default: 1260, null: false
     t.integer  "sat_open",         default: 480,  null: false
     t.integer  "sat_close",        default: 1260, null: false
-    t.integer  "sun_open",         default: 480,  null: false
-    t.integer  "sun_close",        default: 1260, null: false
     t.integer  "rooms",            default: 1,    null: false
     t.integer  "max_mds",          default: 1,    null: false
+    t.integer  "min_openers",      default: 1,    null: false
+    t.integer  "min_closers",      default: 1,    null: false
     t.string   "report_server_id"
   end
 
@@ -62,8 +89,6 @@ ActiveRecord::Schema.define(version: 20140623130554) do
     t.decimal  "penalty_90min",      precision: 8, scale: 4,                 null: false
     t.decimal  "penalty_eod_unseen", precision: 8, scale: 4,                 null: false
     t.decimal  "penalty_slack",      precision: 8, scale: 4,                 null: false
-    t.integer  "min_openers",                                                null: false
-    t.integer  "min_closers",                                                null: false
     t.decimal  "md_rate",            precision: 8, scale: 4,                 null: false
     t.boolean  "oren_shift",                                 default: false, null: false
   end
@@ -104,6 +129,17 @@ ActiveRecord::Schema.define(version: 20140623130554) do
   add_index "users", ["invitation_token"], name: "index_users_on_invitation_token", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["unlock_token"], name: "index_users_on_unlock_token", unique: true, using: :btree
+
+  create_table "visit_projections", force: true do |t|
+    t.integer  "schedule_id", null: false
+    t.integer  "location_id", null: false
+    t.string   "source"
+    t.json     "heat_maps"
+    t.json     "volumes"
+    t.json     "visits"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "zones", force: true do |t|
     t.string   "name"

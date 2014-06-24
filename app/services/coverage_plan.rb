@@ -29,7 +29,7 @@ class CoveragePlan
 	end
 
 	def optimize
-		CoveragePlanOptimizer.new.optimize( @locations, @schedule, @visits_projection, @grader, @optimized_graded_coverage_plan )
+		ScheduleOptimizer.new.optimize( @locations, @schedule, @visits_projection, @grader, @optimized_graded_coverage_plan )
 	end
 
 	def reoptimize(grader, visits_projection)

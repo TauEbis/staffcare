@@ -2,31 +2,26 @@ class LocationPlan < ActiveRecord::Base
   belongs_to :location
   belongs_to :schedule
 
-  has_many :grades
+  has_many :grades, dependent: :destroy
 
-  delegate [:open_times, :close_times, :max_mds, :rooms, :min_openers, :min_closers], to: :location
-  attr_reader :list
+  attr_reader :solution_set
 
-  def initialize
-    @list = Array.new
-    super
+  OPTIMIZER_FIELDS = [:max_mds, :rooms, :min_openers, :min_closers, :open_times, :close_times]
+
+  def solution_set
+    @_solution_set ||= build_solution_set
   end
 
-  def list
-    build_list if @list.empty?
-    @list
+  def get_solution_set_for_builder
+    @_solution_set
   end
 
-  def get_list_for_builder
-    @list
-  end
-
-  def build_list
-    CoverageOptionsBuilder.new.build(self)
+  def build_solution_set
+    SolutionSetBuilder.new.build(self)
   end
 
   def opts_key
-    { open: @open, close: @close, max_mds: @max_mds, min_openers: @min_openers, min_closers: @min_closers }.to_s
+    self.attributes.slice(*OPTIMIZER_FIELDS).to_s
   end
 
   def hours_open
@@ -38,11 +33,11 @@ class LocationPlan < ActiveRecord::Base
   end
 
   def fixed_openers
-    @fixed_openers ||= Array.new(@min_openers, @open) # Fixed openers
+    @fixed_openers ||= Array.new(min_openers, @open) # Fixed openers
   end
 
   def fixed_closers
-    @fixed_closers ||= Array.new(@min_closers, @close) # Fixed closers
+    @fixed_closers ||= Array.new(min_closers, @close) # Fixed closers
   end
 
   def first_possible_close
@@ -66,11 +61,11 @@ class LocationPlan < ActiveRecord::Base
   end
 
   def openers_to_assign
-    @max_mds - @min_openers
+    max_mds - min_openers
   end
 
   def closers_to_assign
-    @max_mds - @min_closers
+    max_mds - min_closers
   end
 
   def full_coverage
@@ -78,7 +73,7 @@ class LocationPlan < ActiveRecord::Base
   end
 
   def set_size
-    @max_mds * 2
+    max_mds * 2
   end
 
   # TODO: set_size is the number of elements in a shift set.

@@ -2,6 +2,8 @@ require 'csv'
 
 class DataProvider
 
+  attr_reader :source
+
 	def initialize(source)
 		@source = source
 	end
@@ -28,8 +30,8 @@ class DataProvider
 			locations.each do |location|
 				e = schedule.days.each
 				table.each do |row|
-						weekly_vol = row.field(location.report_server_id)
-						7.times { vol[location.report_server_id][e.next.to_s] = weekly_vol }
+						weekly_vol = row.field(location.report_server_id.downcase.to_sym)
+						7.times { vol[location.report_server_id][e.next.to_s] = weekly_vol / 7.0 }
 				end
 			end
 
@@ -55,18 +57,18 @@ class DataProvider
 
 			heat_map = Array.new(8) { Array.new }
 
-				table.each do |row|
-					heat_map[0] << row.field(:sunday)/100
-					heat_map[1] << row.field(:monday)/100
-					heat_map[2] << row.field(:tuesday)/100
-					heat_map[3] << row.field(:wednesday)/100
-					heat_map[4] << row.field(:thursday)/100
-					heat_map[5] << row.field(:friday)/100
-					heat_map[6] << row.field(:saturday)/100
-					heat_map[7] << row.field(:hour)[0..1].to_i + row.field(:hour)[3..4].to_f/60
-				end
-				scrub_heat_map(heat_map, location)
-			heat_map
+      table.each do |row|
+        heat_map[0] << row.field(:sunday)/100
+        heat_map[1] << row.field(:monday)/100
+        heat_map[2] << row.field(:tuesday)/100
+        heat_map[3] << row.field(:wednesday)/100
+        heat_map[4] << row.field(:thursday)/100
+        heat_map[5] << row.field(:friday)/100
+        heat_map[6] << row.field(:saturday)/100
+        heat_map[7] << row.field(:hour)[0..1].to_i + row.field(:hour)[3..4].to_f/60
+      end
+
+      scrub_heat_map(heat_map, location)
 		end
 
 		def read_and_parse_dummy_heat_map(location, schedule)
@@ -79,14 +81,15 @@ class DataProvider
 		end
 
 		def scrub_heat_map(heat_map, location)
-			puts heat_map.inspect
-			for n in 0..6
-				puts opening_time = location.open_times[n]
-				puts closing_time = location.close_times[n]
-				puts opening_index = (heat_map[7]).index(opening_time)
-				puts closing_index = (heat_map[7]).index(closing_time - 0.5 )
-				heat_map[n] = heat_map[n][opening_index..closing_index]
-			end
-			heat_map=heat_map[0..6]
+      #puts heat_map.inspect
+      for n in 0..6
+        opening_time = location.open_times[n]
+        closing_time = location.close_times[n]
+        opening_index = (heat_map[7]).index(opening_time)
+        closing_index = (heat_map[7]).index(closing_time - 0.5 )
+        heat_map[n] = heat_map[n][opening_index..closing_index]
+      end
+
+			heat_map[0..6]
 		end
 end

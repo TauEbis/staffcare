@@ -6,6 +6,8 @@ class AddDetailsToLocations < ActiveRecord::Migration
     end
     add_column :locations, :rooms, :integer, null: false, default: 1
     add_column :locations, :max_mds, :integer, null: false, default: 1
+    add_column :locations, :min_openers, :integer, null: false, default: 1
+    add_column :locations, :min_closers, :integer, null: false, default: 1
     add_column :locations, :report_server_id, :string
   end
 end
