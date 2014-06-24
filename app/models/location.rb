@@ -17,16 +17,12 @@ class Location < ActiveRecord::Base
     acc
   end
 
-  def coverage_options(day)
-    CoverageOptions.new(open: @_open_times[day.wday()], close: @_close_times[day.wday()], max_mds: @max_mds)
-  end
-
   # For compatibility with shifty Location
   def open_times=(ary)
     @_open_times = ary
 
     DAYS.each_with_index do |day, i|
-      send("#{day}_open=", ary[i]) if ary[i]
+      send("#{day}_open=", ary[i] * 60) if ary[i]
     end
   end
 
@@ -34,17 +30,15 @@ class Location < ActiveRecord::Base
     @_close_times = ary
 
     DAYS.each_with_index do |day, i|
-      send("#{day}_close=", ary[i]) if ary[i]
+      send("#{day}_close=", ary[i] * 60) if ary[i]
     end
   end
 
-  # TODO: Currently only works when set with open_times
   def open_times
-    @_open_times
+    @_open_times ||= DAYS.map {|day| send("#{day}_open") / 60 }
   end
 
-  # TODO: Currently only works when set with open_times
   def close_times
-    @_close_times
+    @_close_times ||= DAYS.map {|day| send("#{day}_open") / 60 }
   end
 end

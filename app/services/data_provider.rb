@@ -31,7 +31,7 @@ class DataProvider
 				e = schedule.days.each
 				table.each do |row|
 						weekly_vol = row.field(location.report_server_id.downcase.to_sym)
-						7.times { vol[location.report_server_id][e.next.to_s] = weekly_vol / 7.0 }
+						7.times { vol[location.report_server_id][e.next.to_s] = weekly_vol }
 				end
 			end
 

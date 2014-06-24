@@ -32,7 +32,7 @@ ActiveRecord::Schema.define(version: 20140624173219) do
     t.integer "visit_projection_id",              null: false
     t.json    "visits"
     t.integer "approval_state",      default: 0,  null: false
-    t.integer "chosen_grade_id",                  null: false
+    t.integer "chosen_grade_id"
     t.integer "max_mds"
     t.integer "rooms"
     t.integer "min_openers"

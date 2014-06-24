@@ -7,16 +7,20 @@ class LocationPlansFactory
   end
 
   def create(opts={})
-    @visits_projections = VisitProjection.import!(@data_provider, @schedule, @locations)
+    @visit_projections = VisitProjection.import!(@data_provider, @schedule, @locations)
 
     @schedule.location_plans.destroy_all
 
     @locations.each do |location|
-      lp = LocationPlan.new(locations: location,
-                            schedule: @schedule,
-                            visit_projection: @visits_projection[location.report_server_id],
-                            visits: @visits_projection[location.report_server_id].visits
-                            )
+      attr = location.attributes.clone.slice(*LocationPlan::OPTIMIZER_FIELDS.map(&:to_s))
+      attr.merge!({location: location,
+                   visit_projection: @visit_projections[location.report_server_id],
+                   visits: @visit_projections[location.report_server_id].visits,
+                   open_times: location.open_times,
+                   close_times: location.close_times
+                 })
+
+      lp = LocationPlan.new attr
       @schedule.location_plans << lp
       lp.save!
     end
@@ -51,13 +55,4 @@ class LocationPlansFactory
   #  @visits_projection = opts[:visits_projection] || build_visits_projection
   #end
 
-
-  # Eventually we may want to create a second coverage_options that is a (smaller) list of conceivable solutions not just all valid shifts
-  def coverage_options(location, day)
-    dow = Location::DAYS[day.wday]
-    open = location.send("#{dow}_open".to_sym)
-    close = location.send("#{dow}_close".to_sym)
-    max_mds = location.max_mds
-    CoverageOptions.new(open: open, close: close, max_mds: max_mds)
-  end
 end

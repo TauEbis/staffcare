@@ -1,4 +1,4 @@
-class CreateLocationPlan < ActiveRecord::Migration
+class CreateLocationPlans < ActiveRecord::Migration
   def change
     create_table :location_plans do |t|
       t.references :location, null: false
@@ -8,7 +8,7 @@ class CreateLocationPlan < ActiveRecord::Migration
       t.json :visits
 
       t.integer :approval_state, null: false, default: 0
-      t.references :chosen_grade, null: false
+      t.references :chosen_grade
 
       t.integer :max_mds
       t.integer :rooms

@@ -39,7 +39,7 @@ class Schedule < ActiveRecord::Base
   end
 
   def grader_weights
-    @_grader_weights ||= self.attributes.slice(*OPTIMIZER_FIELDS)
+    @_grader_weights ||= self.attributes.slice(*OPTIMIZER_FIELDS.map(&:to_s)).symbolize_keys
   end
 
   def optimize!
@@ -48,17 +48,19 @@ class Schedule < ActiveRecord::Base
     loader = SpeedySolutionSetLoader.new
 
     location_plans.each do |location_plan|
-      grade = location_plan.grades.new(source: 'optimizer')
+      coverages = {}
+      penalties = {}
 
-      schedule.days.each do |day|
-
+      days.each do |day|
         day_visits = location_plan.visits[day.to_s]
         solution_set = loader.load(location_plan, day)
 
         best_coverage, min_penalty = picker.pick_best(solution_set, day_visits)
-        grade.coverages[day.to_s] = best_coverage
-        grade.penalties[day.to_s] = min_penalty
+        coverages[day.to_s] = best_coverage
+        penalties[day.to_s] = min_penalty
       end
+
+      grade = location_plan.grades.new(source: 'optimizer', coverages: coverages, penalties: penalties)
 
       grade.save!
     end

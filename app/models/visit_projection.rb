@@ -2,6 +2,8 @@ class VisitProjection < ActiveRecord::Base
   belongs_to :schedule
   belongs_to :location
 
+  has_one :location_plan
+
 		# visits  # visits data hashed by day
 		# heat_maps = Array.new(7,Array.new)) #  eg. heat_maps[day_of_week_as_int] is an Array of half hourly percentages
 		# volumes = # patient volume data hashed by day
@@ -9,16 +11,11 @@ class VisitProjection < ActiveRecord::Base
 
   # Fills in the "visits" field based on data in volumes & heat_maps
   def build_visits
-    visits = {}
+    self.visits = {}
 
     schedule.days.each do |day|
-      begin
-        #binding.pry
-        daily_vol = volumes[day.to_s]
-        visits[day.to_s] = heat_maps[day.wday].map{ |percent| percent * daily_vol }
-      rescue
-        binding.pry
-      end
+      daily_vol = volumes[day.to_s]
+      self.visits[day.to_s] = heat_maps[day.wday].map{ |percent| percent * daily_vol }
     end
   end
 
