@@ -11,10 +11,10 @@
 // about supported directives.
 //
 //= require jquery
-//= require jquery_ujs
-//= require turbolinks
 //= require jquery.turbolinks
-//= require bootstrap
+//= require jquery_ujs
 //= require select2
+//= require bootstrap
 //= require bootstrap-datepicker/core
+//= require turbolinks
 //= require_tree .

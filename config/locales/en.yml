@@ -26,4 +26,5 @@ en:
   date:
     formats:
       default: '%b %-d, %Y'
+      with_dow: '%a %b %-d, %Y'
   hello: "Hello world"

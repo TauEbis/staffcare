@@ -22,12 +22,13 @@ gem 'devise_invitable'
 #gem 'devise_zxcvbn'
 gem 'pg'
 gem 'pundit'
+
 gem 'simple_form', '>= 3.1.0.rc1'
 gem 'bootstrap-datepicker-rails'
-gem 'rollbar'
-gem 'newrelic_rpm'
-
 gem 'select2-rails'
+
+gem 'newrelic_rpm'
+gem 'rollbar'
 
 group :staging, :production do
   gem 'rails_12factor'

@@ -12,4 +12,8 @@ module ApplicationHelper
     html.html_safe
   end
 
+  def schedule_date_options(schedule)
+    (schedule.starts_on..schedule.ends_on).map{|d| [ l(d, format: :with_dow), d.iso8601 ] }
+  end
+
 end

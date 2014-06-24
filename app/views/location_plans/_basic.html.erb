@@ -1,8 +1,10 @@
+<% location = location_plan %>
+
 <div class="panel panel-default">
   <div class="panel-body">
     <div class="col-sm-4">
       <div class="row">
-        <h3><%= location.name %></h3>
+        <h3><%= link_to location.name, location_plan_path(location) %></h3>
       </div>
       <div class="row">
         <p class="bg-danger">Life Cycle 3 (650 suggested hrs)</p>

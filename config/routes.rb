@@ -3,6 +3,8 @@ Rails.application.routes.draw do
     resources :location_plans, shallow: true, only: [:index, :show, :update]
   end
 
+  resources :coverages, only: [:show]
+
   resources :locations
 
   resources :zones

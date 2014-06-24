@@ -1,1 +1,19 @@
-<%= render 'schedules/header' %>
+<%= render 'header' %>
+
+<%= render 'basic', location_plan: @location_plan %>
+
+<div class="row">
+  <div class="col-sm-2">
+    <%= form_for @location_plan, method: :get, html: {id: 'coverage_date_form'}, url: coverage_path(@location_plan.id), remote: true do %>
+      <select name="detail_date" class="detail_date form-control">
+        <%= options_for_select schedule_date_options(@schedule) %>
+      </select>
+    <% end %>
+  </div>
+  <div class="col-sm-8 hidden" id="coverage_view_load">
+    <img src="<%= image_path('load.gif') %>" alt="Loading">
+  </div>
+  <div class="col-sm-8" id="coverage_view">
+    <i>Select a date to view details</i>
+  </div>
+</div>
