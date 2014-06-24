@@ -17,7 +17,7 @@
       <% @zones.each do |zone| %>
         <div class="row">
           <div class="col-sm-4">
-            <h5><%= zone.name %></h5>
+            <h5><%= link_to zone.name, schedule_path(schedule, zone_id: zone.id) %></h5>
             <span class="bg-danger">(pending approval)</span>
           </div>
           <div class="col-sm-2 text-center bg-warning">
