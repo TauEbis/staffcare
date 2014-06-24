@@ -13,8 +13,8 @@
 //= require jquery
 //= require jquery.turbolinks
 //= require jquery_ujs
-//= require select2
 //= require bootstrap
 //= require bootstrap-datepicker/core
+//= require chosen.jquery.min
 //= require turbolinks
 //= require_tree .

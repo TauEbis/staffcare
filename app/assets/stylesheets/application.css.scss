@@ -11,8 +11,7 @@
  * file per style scope.
  *
  *= require_tree .
- *= require select2
- *= require select2-bootstrap
  *= require bootstrap-datepicker3
+ *= require chosen.min
  *= require_self
  */

@@ -25,7 +25,6 @@ gem 'pundit'
 
 gem 'simple_form', '>= 3.1.0.rc1'
 gem 'bootstrap-datepicker-rails'
-gem 'select2-rails'
 
 gem 'newrelic_rpm'
 gem 'rollbar'

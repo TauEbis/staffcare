@@ -1,5 +1,7 @@
 $(document).ready(function() {
-  $(".select2").select2();
+  $('.dropdown-toggle').dropdown();
+  $('.chosen-select').chosen();
+
   $('[data-behaviour~=datepicker]').datepicker({"format": "yyyy-mm-dd", "weekStart": 0, "autoclose": true});
 
   $(".detail_date").on('change', function(){

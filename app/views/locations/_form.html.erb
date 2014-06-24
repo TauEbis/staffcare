@@ -23,7 +23,7 @@
         </div>
         <% ['open', 'close'].each do |tod| -%>
           <div class="col-sm-2">
-            <%= f.input_field "#{day}_#{tod}", as: :select, collection: hours_options, include_blank: false, class: 'form-control select2' %>
+            <%= f.input_field "#{day}_#{tod}", as: :select, collection: hours_options, include_blank: false, class: 'form-control chosen-select' %>
           </div>
         <% end -%>
       </div>
