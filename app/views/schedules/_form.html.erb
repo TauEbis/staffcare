@@ -1,5 +1,6 @@
 <%= simple_form_for(@schedule, html: { class: 'form-vertical' }) do |f| %>
   <%= f.error_notification %>
+  <%= display_base_errors @schedule %>
 
   <div class="form-inputs">
     <div class="row">

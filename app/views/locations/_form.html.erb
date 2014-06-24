@@ -1,5 +1,6 @@
 <%= simple_form_for(@location, html: { class: 'form-vertical' }) do |f| %>
   <%= f.error_notification %>
+  <%= display_base_errors @location %>
 
   <div class="form-inputs">
     <div class="row">

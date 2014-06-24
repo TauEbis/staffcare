@@ -7,6 +7,8 @@ class Zone < ActiveRecord::Base
 
   default_scope -> { order(name: :asc) }
 
+  validates :name, presence: true
+
   def to_s
     name
   end
