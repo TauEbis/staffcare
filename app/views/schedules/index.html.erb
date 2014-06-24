@@ -3,7 +3,7 @@
 <% @schedules.each do |schedule| %>
   <div class="panel panel-default">
     <div class="panel-heading">
-      <a href="<%= schedule_path(schedule) %>">
+      <a href="<%= schedule_location_plans_path(schedule) %>">
         <h3 class="panel-title">
           <%= schedule_date_span(schedule) %>
 
@@ -17,7 +17,7 @@
       <% @zones.each do |zone| %>
         <div class="row">
           <div class="col-sm-4">
-            <h5><%= link_to zone.name, schedule_path(schedule, zone_id: zone.id) %></h5>
+            <h5><%= link_to zone.name, schedule_location_plans_path(schedule, zone_id: zone.id) %></h5>
             <span class="bg-danger">(pending approval)</span>
           </div>
           <div class="col-sm-2 text-center bg-warning">

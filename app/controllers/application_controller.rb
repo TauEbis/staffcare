@@ -27,4 +27,9 @@ class ApplicationController < ActionController::Base
     redirect_to (request.referrer || root_path)
   end
 
+  # Zones that are available to the logged-in user
+  def user_zones
+    policy_scope(Zone)
+  end
+
 end

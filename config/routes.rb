@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
-  resources :schedules
+  resources :schedules do
+    resources :location_plans, shallow: true, only: [:index, :show, :update]
+  end
 
   resources :locations
 
