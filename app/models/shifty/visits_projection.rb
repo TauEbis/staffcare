@@ -12,8 +12,8 @@ attr_reader :time_stamp
 		@time_stamp = Time.now
 	end
 
-	def project_for(locations, time_period)
-		VisitsProjector.new.project(locations, time_period, @data_provider, self)
+	def project_for(locations, schedule)
+		VisitsProjector.new.project(locations, schedule, @data_provider, self)
 		@time_stamp = Time.now
 		self
 	end

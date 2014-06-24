@@ -1,12 +1,12 @@
 class CoveragePlanOptimizer
 
-	def optimize(locations, time_period, visits_projection, grader, graded_coverage_plan)
+	def optimize(locations, schedule, visits_projection, grader, graded_coverage_plan)
 
 		loader = SpeedyCoverageOptionsLoader.new
 		picker = CoveragePicker.new(grader)
 
 		locations.each do |location|
-			time_period.days.each do |day|
+			schedule.days.each do |day|
 
 				day_visits = visits_projection.visits[location.to_sym][day.to_s]
 				coverage_options = loader.load(location, day)

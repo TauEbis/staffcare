@@ -32,4 +32,16 @@ class Schedule < ActiveRecord::Base
   def ends_on
     @_ends_on ||= starts_on + 27
   end
+
+  def days
+    @_days ||= begin
+      b = Array.new
+
+      for i in 0..28 do
+        b << starts_on + i
+      end
+
+      b
+    end
+  end
 end

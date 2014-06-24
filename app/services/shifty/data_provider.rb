@@ -6,27 +6,27 @@ class DataProvider
 		@source = source
 	end
 
-	def volume_querry(locations, time_period)
-		self.send("read_and_parse_#{@source}_volume_data".to_sym, locations, time_period)
+	def volume_querry(locations, schedule)
+		self.send("read_and_parse_#{@source}_volume_data".to_sym, locations, schedule)
 	end
 
-	def heat_map_querry(locations, time_period)
+	def heat_map_querry(locations, schedule)
 		heat_maps = Hash.new
 		locations.each do |location|
-			heat_maps[location.to_sym] = self.send("read_and_parse_#{@source}_heat_map".to_sym, location, time_period)
+			heat_maps[location.to_sym] = self.send("read_and_parse_#{@source}_heat_map".to_sym, location, schedule)
 		end
 		heat_maps
 	end
 
 	private
 
-		def read_and_parse_sample_run_volume_data(locations, time_period)
+		def read_and_parse_sample_run_volume_data(locations, schedule)
 			table = CSV.table("mock_data/sample_run/volume_data_short.csv")
 
 			vol = Hash.new{ |hash, key| hash[key] = Hash.new }
 
 			locations.each do |location|
-				e = time_period.days.each
+				e = schedule.days.each
 				table.each do |row|
 						weekly_vol = row.field(location.name.downcase.to_sym)
 						7.times { vol[location.to_sym][e.next.to_s] = weekly_vol }
@@ -36,13 +36,13 @@ class DataProvider
 			vol
 		end
 
-		def read_and_parse_dummy_volume_data(locations, time_period)
+		def read_and_parse_dummy_volume_data(locations, schedule)
 			col = CSV.table("mock_data/dummy/visits.csv").by_col[0]
 
 			vol = Hash.new{ |hash, key| hash[key] = Hash.new }
 
 			locations.each do |location|
-				time_period.days.each do |day|
+				schedule.days.each do |day|
 					vol[location.to_sym][day.to_s] = col.inject{ |sum, n| sum + n } * 7
 				end
 			end
@@ -50,7 +50,7 @@ class DataProvider
 			vol
 		end
 
-		def read_and_parse_sample_run_heat_map(location, time_period)
+		def read_and_parse_sample_run_heat_map(location, schedule)
 			table = CSV.table("mock_data/sample_run/#{location.name}_May_Heatmap.csv")
 
 			heat_map = Array.new(8) { Array.new }
@@ -69,7 +69,7 @@ class DataProvider
 			heat_map
 		end
 
-		def read_and_parse_dummy_heat_map(location, time_period)
+		def read_and_parse_dummy_heat_map(location, schedule)
 			col = CSV.table("mock_data/dummy/visits.csv").by_col[0]
 
 			sum = col.inject{ |sum, n| sum + n }

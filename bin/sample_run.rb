@@ -12,7 +12,7 @@ require './bin/shifty_file_loader.rb'
 	  Location.new(name: "CityMD_88th_St", max_mds: 3, rooms: 12, open: [9,8,8,8,8,8,9], close: [21,22,22,22,22,22,21]),
 	]
 
-	time_period = TimePeriod.new("2014-06-06", "2014-07-03")
+	schedule = Schedule.new(starts_on: Date.parse("2014-06-06"))
 
 	grader_weights = { md_rate: 4.25, penalty_slack: 2.5, penalty_30min: 1, penalty_60min: 4, penalty_90min: 16, penalty_eod_unseen: 4 }
 
@@ -20,7 +20,7 @@ require './bin/shifty_file_loader.rb'
 	controller = CoveragePlansController.new(data_source: :sample_run)
 
 # Create coverage plan with default data inputs. This will also create an optimized coverage option
-	coverage_plan = controller.create(locations: locations, time_period: time_period, grader_weights: grader_weights)
+	coverage_plan = controller.create(locations: locations, schedule: schedule, grader_weights: grader_weights)
 
 # Print result of optimization to console
 	optimized_coverage_plan = coverage_plan.optimized_graded_coverage_plan

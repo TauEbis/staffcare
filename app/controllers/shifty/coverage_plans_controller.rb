@@ -7,12 +7,12 @@ class CoveragePlansController
 
 	def create(opts={})
 		@locations = opts[:locations] || get_current_locations
-		@time_period = opts[:time_period] || get_time_period
+		@schedule = opts[:schedule] || get_schedule
 		grader_weights = opts[:grader_weights] || get_grader_weights
 		@grader = CoverageGrader.new(grader_weights)
 		@visits_projection = opts[:visits_projection] || build_visits_projection
 
-		@coverage_plan = CoveragePlan.new(locations: @locations, time_period: @time_period, grader: @grader, visits_projection: @visits_projection)
+		@coverage_plan = CoveragePlan.new(locations: @locations, schedule: @schedule, grader: @grader, visits_projection: @visits_projection)
 		@coverage_plan.optimize
 		@coverage_plan.set_chosen_plan_to_optimize
 		@coverage_plan
@@ -33,7 +33,7 @@ class CoveragePlansController
 			@data_source = opts[:data_source] || get_data_source
 			@data_provider = DataProvider.new(@data_source)
 			@locations = opts[:locations] || dummy_locations
-			@time_period = opts[:time_period] || dummy_time_period
+			@schedule = opts[:schedule] || dummy_schedule
 			@visits_projection = opts[:visits_projection] || build_visits_projection
 		end
 
@@ -45,8 +45,8 @@ class CoveragePlansController
 			dummy_locations # Could also be Location.where(active: true)
 		end
 
-		def get_time_period
-			dummy_time_period
+		def get_schedule
+			dummy_schedule
 		end
 
 		def get_grader_weights
@@ -54,7 +54,7 @@ class CoveragePlansController
 		end
 
 		def build_visits_projection
-			VisitsProjection.new(@data_provider).project_for(@locations, @time_period)
+			VisitsProjection.new(@data_provider).project_for(@locations, @schedule)
 		end
 
 		def dummy_data_source
@@ -65,8 +65,8 @@ class CoveragePlansController
 			[ Location.new(name: "Park Slope", max_mds: 3, rooms: 12, open: Array.new(7, 8), close: Array.new(7, 22)) ]
 		end
 
-		def dummy_time_period
-			TimePeriod.new(Date.today, Date.today + 0)
+		def dummy_schedule
+			Schedule.new(starts_on: Date.today)
 		end
 
 		def dummy_grader_weights
@@ -75,9 +75,9 @@ class CoveragePlansController
 
 		def dummy_coverage_plan
 			@locations = dummy_locations
-			@time_period = dummy_time_period
+			@schedule = dummy_schedule
 			@grader = CoverageGrader.new(dummy_grader_weights)
 			@visits_projection = build_visits_projection
-			CoveragePlan.new(locations: @locations, time_period: @time_period, grader: @grader, visits_projection: @visits_projection)
+			CoveragePlan.new(locations: @locations, schedule: @schedule, grader: @grader, visits_projection: @visits_projection)
 		end
 end

@@ -1,6 +1,6 @@
 class GradedCoveragePlan
 
-	attr_reader :time_period, :locations, :visits_projection, :grader_weights, :coverages, :penalties, :grades, :location_grades, :coverage_plan_grades
+	attr_reader :schedule, :locations, :visits_projection, :grader_weights, :coverages, :penalties, :grades, :location_grades, :coverage_plan_grades
 
 	def initialize(coverage_plan)
 
@@ -8,7 +8,7 @@ class GradedCoveragePlan
 # TODO: Should store coverage opts_key (open, close, max_mds, min_openers, min_closers) value for each location, day
 
 		@locations = coverage_plan.locations
-		@time_period = coverage_plan.time_period
+		@schedule = coverage_plan.schedule
 		@visits_projection = coverage_plan.visits_projection
 		@grader_weights = coverage_plan.grader_weights
 
