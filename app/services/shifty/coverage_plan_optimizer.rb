@@ -8,12 +8,12 @@ class CoveragePlanOptimizer
 		locations.each do |location|
 			schedule.days.each do |day|
 
-				day_visits = visits_projection.visits[location.to_sym][day.to_s]
+				day_visits = visits_projection.visits[location.report_server_id][day.to_s]
 				coverage_options = loader.load(location, day)
 
 				best_coverage = picker.pick_best(coverage_options, day_visits)
-				graded_coverage_plan.coverages[location.to_sym][day.to_s] = best_coverage
-				graded_coverage_plan.penalties[location.to_sym][day.to_s] = grader.penalty(best_coverage, day_visits)
+				graded_coverage_plan.coverages[location.report_server_id][day.to_s] = best_coverage
+				graded_coverage_plan.penalties[location.report_server_id][day.to_s] = grader.penalty(best_coverage, day_visits)
 
 			end
 		end

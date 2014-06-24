@@ -1,4 +1,5 @@
-class GradedCoveragePlan
+class Grades < ActiveRecord::Base
+  belongs_to :location_plan
 
 	attr_reader :schedule, :locations, :visits_projection, :grader_weights, :coverages, :penalties, :grades, :location_grades, :coverage_plan_grades
 

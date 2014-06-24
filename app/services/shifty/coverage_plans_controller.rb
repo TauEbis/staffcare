@@ -54,7 +54,7 @@ class CoveragePlansController
 		end
 
 		def build_visits_projection
-			VisitsProjection.new(@data_provider).project_for(@locations, @schedule)
+			VisitProjection.import!(@data_provider, @schedule)
 		end
 
 		def dummy_data_source
@@ -62,7 +62,7 @@ class CoveragePlansController
 		end
 
 		def dummy_locations
-			[ Location.new(name: "Park Slope", max_mds: 3, rooms: 12, open: Array.new(7, 8), close: Array.new(7, 22)) ]
+			[ Location.new(name: "Park Slope", report_server_id: "ParkSlope", max_mds: 3, rooms: 12, open_times: Array.new(7, 8), close_times: Array.new(7, 22)) ]
 		end
 
 		def dummy_schedule

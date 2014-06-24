@@ -13,7 +13,7 @@ class DataProvider
 	def heat_map_querry(locations, schedule)
 		heat_maps = Hash.new
 		locations.each do |location|
-			heat_maps[location.to_sym] = self.send("read_and_parse_#{@source}_heat_map".to_sym, location, schedule)
+			heat_maps[location.report_server_id] = self.send("read_and_parse_#{@source}_heat_map".to_sym, location, schedule)
 		end
 		heat_maps
 	end
@@ -28,8 +28,8 @@ class DataProvider
 			locations.each do |location|
 				e = schedule.days.each
 				table.each do |row|
-						weekly_vol = row.field(location.name.downcase.to_sym)
-						7.times { vol[location.to_sym][e.next.to_s] = weekly_vol }
+						weekly_vol = row.field(location.report_server_id)
+						7.times { vol[location.report_server_id][e.next.to_s] = weekly_vol }
 				end
 			end
 
@@ -43,7 +43,7 @@ class DataProvider
 
 			locations.each do |location|
 				schedule.days.each do |day|
-					vol[location.to_sym][day.to_s] = col.inject{ |sum, n| sum + n } * 7
+					vol[location.report_server_id][day.to_s] = col.inject{ |sum, n| sum + n } * 7
 				end
 			end
 
@@ -81,8 +81,8 @@ class DataProvider
 		def scrub_heat_map(heat_map, location)
 			puts heat_map.inspect
 			for n in 0..6
-				puts opening_time = location.open[n]
-				puts closing_time = location.close[n]
+				puts opening_time = location.open_times[n]
+				puts closing_time = location.close_times[n]
 				puts opening_index = (heat_map[7]).index(opening_time)
 				puts closing_index = (heat_map[7]).index(closing_time - 0.5 )
 				heat_map[n] = heat_map[n][opening_index..closing_index]

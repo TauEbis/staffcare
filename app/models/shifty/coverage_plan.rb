@@ -19,12 +19,12 @@ class CoveragePlan
 		@visits_projection = opts[:visits_projection]
 
 # Master CoveragePlan that the user selects per location
-		@chosen_coverage_plan = GradedCoveragePlan.new(self)
+		@chosen_coverage_plan = Grades.new(self)
 
 # CoveragePlans to mix and match from:
-		@optimized_graded_coverage_plan = GradedCoveragePlan.new(self) #locked
-		@manual_graded_coverage_plan = GradedCoveragePlan.new(self) #editable
-		@last_months_coverage_plan = GradedCoveragePlan.new(self) #locked
+		@optimized_graded_coverage_plan = Grades.new(self) #locked
+		@manual_graded_coverage_plan = Grades.new(self) #editable
+		@last_months_coverage_plan = Grades.new(self) #locked
 
 	end
 
@@ -37,7 +37,7 @@ class CoveragePlan
 		@grader_weights = @grader.weights
 		@visits_projection = visits_projection
 
-		@optimized_graded_coverage_plan = GradedCoveragePlan.new(self)
+		@optimized_graded_coverage_plan = Grades.new(self)
 		optimize
 	end
 

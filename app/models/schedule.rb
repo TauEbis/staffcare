@@ -1,5 +1,9 @@
 class Schedule < ActiveRecord::Base
 
+  has_many :visit_projections
+  has_many :location_plans
+
+
   enum state: [ :draft, :active, :published, :archived ]
 
   scope :not_draft, -> { where("state <> ?", Schedule.states[:draft]) }
