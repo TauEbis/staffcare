@@ -13,6 +13,8 @@ require "sprockets/railtie"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+GC::Profiler.enable unless ENV['RAILS_ENV'] == 'production'
+
 module StaffCare
   class Application < Rails::Application
 
