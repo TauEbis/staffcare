@@ -1,3 +1,5 @@
+# A location record in the database- see LocationPlan for a record of how
+# a location was configured when a schedule was generated.
 class Location < ActiveRecord::Base
   belongs_to :zone
 

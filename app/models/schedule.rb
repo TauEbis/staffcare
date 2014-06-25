@@ -1,8 +1,10 @@
+# A generated and scored schedule
 class Schedule < ActiveRecord::Base
 
   has_many :visit_projections, dependent: :destroy
   has_many :location_plans, dependent: :destroy
 
+  # FIXME: What is the difference between active and published?
   enum state: [ :draft, :active, :published, :archived ]
 
   scope :not_draft, -> { where("state <> ?", Schedule.states[:draft]) }
@@ -57,6 +59,7 @@ class Schedule < ActiveRecord::Base
 
       days.each do |day|
         day_visits = location_plan.visits[day.to_s]
+        # Load the valid shift start/stop times for that site and day
         solution_set = loader.load(location_plan, day)
 
         best_coverage, min_penalty = picker.pick_best(solution_set, day_visits)

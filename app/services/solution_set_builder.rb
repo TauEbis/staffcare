@@ -1,3 +1,5 @@
+# Loads the possible combinatoric set of valid shifts for a given day
+# given the constraints stored as a location_plan
 class SolutionSetBuilder
 
   def initialize(location_plan, day)
