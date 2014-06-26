@@ -7,4 +7,15 @@ class Grade < ActiveRecord::Base
 
   enum source: [:optimizer, :last_month, :manual]
 
+  def calculate_grade!(days, grader)
+    days.each do |day|
+      day_visits = location_plan.visits[day.to_s]
+
+      grader.penalty(self.coverages, day_visits)
+
+      self.breakdown = grader.breakdown
+      self.points = grader.points
+    end
+  end
+
 end

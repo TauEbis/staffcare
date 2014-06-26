@@ -1,4 +1,25 @@
-<%= @date %>
-Coverage: <%= @grade.coverages[@date] %>
-Penalty: <%= @grade.penalties[@date] %>
-Points:  <%= @grade.points[@date] %>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Time</th>
+      <th>MDs</th>
+      <th>Visits</th>
+      <th>Queue</th>
+      <th>Slack</th>
+      <th>Penalty</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% size = @location_plan.visits[@date].size %>
+    <% (0...size).each do |i| -%>
+      <tr>
+        <td><%= i %></td>
+        <td><%= @grade.coverages[@date][i] %></td>
+        <td><%= @location_plan.visits[@date][i] %></td>
+        <td><%= @grade.breakdowns[@date]['queue'][i] %></td>
+        <td><%= @grade.breakdowns[@date]['slack'][i] %></td>
+        <td><%= @grade.breakdowns[@date]['penalties'][i] %></td>
+      </tr>
+    <% end -%>
+  </tbody>
+</table>

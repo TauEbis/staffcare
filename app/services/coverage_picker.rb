@@ -19,7 +19,10 @@ class CoveragePicker
 			end
 		end
 
-		return best_coverage, min_penalty.round(2)
+    penalty(best_coverage)
+    best_breakdown = @grader.breakdown
+
+    return best_coverage, best_breakdown
 	end
 
 

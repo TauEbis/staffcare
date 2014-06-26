@@ -29,7 +29,16 @@ class CoverageGrader
 	def penalty(coverage, day_visits)
 		self.set_visits= day_visits
 		penalty_with_set_visits(coverage)
-	end
+  end
+
+  def breakdown
+    {
+      queue: @queue,
+      slack: @slack,
+      penalties: @penalties,
+      penalty: @total_penalty
+    }
+  end
 
 	def set_visits= (raw_visits)
 		visits = raw_visits.map{ |visit| visit.round(@round) }
@@ -64,7 +73,7 @@ class CoverageGrader
 		end
 		@penalties[@time_slots] = @penalty_eod_unseen * @queue[@time_slots]
 
-		total_penalty = @penalties.inject(0) { | sum, x | sum + x }
+		@total_penalty = @penalties.inject(0) { | sum, x | sum + x }
 	end
 
 	private

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140626180451) do
+ActiveRecord::Schema.define(version: 20140626205623) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,7 +20,7 @@ ActiveRecord::Schema.define(version: 20140626180451) do
     t.integer  "location_plan_id",              null: false
     t.integer  "source",           default: 0,  null: false
     t.json     "coverages",        default: {}, null: false
-    t.json     "penalties",        default: {}, null: false
+    t.json     "breakdowns",       default: {}, null: false
     t.json     "points",           default: {}, null: false
     t.datetime "created_at"
     t.datetime "updated_at"

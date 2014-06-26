@@ -10,6 +10,8 @@ class CoveragesController < ApplicationController
 
     # TODO: Really look up the grade
     @grade = @location_plan.grades.first
+
+    render layout: false
   end
 
   private

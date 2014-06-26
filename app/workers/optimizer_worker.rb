@@ -24,7 +24,9 @@ class OptimizerWorker
 
     schedule.optimize!
 
-    # TODO: After optimization we should generate coverages!
+    # TODO: After optimization we should generate shift coverages!
+
+    # TODO: Bubble up Points to higher levels for cached viewing
 
     at 100, "Optimizer finished"
     schedule.complete!
