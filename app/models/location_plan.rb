@@ -6,8 +6,6 @@ class LocationPlan < ActiveRecord::Base
   has_many :grades, dependent: :destroy
   belongs_to :chosen_grade
 
-  attr_reader :solution_set
-
   OPTIMIZER_FIELDS = [:max_mds, :rooms, :min_openers, :min_closers, :open_times, :close_times]
 
   def solution_set_options(day)

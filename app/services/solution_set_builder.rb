@@ -26,6 +26,9 @@ class SolutionSetBuilder
     @set_size = @max_mds * 2
     @half_set_size = @max_mds
     @full_coverage = Array.new(@half_set_size, @open) + Array.new(@half_set_size, @close)
+    @time_slots = @hours_open * 2 # half hour time slots in the day
+    @staffing_progression = (1..(@half_set_size)).to_a + (@half_set_size-1).downto(1).to_a
+    @difference_range = 0...(@set_size-1)
   end
 
   def build
@@ -43,7 +46,7 @@ class SolutionSetBuilder
         shifts = @fixed_openers + steps + @fixed_closers # eg add [8] at begining and [22] at the end
 
         if valid?(shifts, @min_shift)
-          @set << shifts
+          @set << expand_coverage(shifts)
         end
 
       end
@@ -52,25 +55,44 @@ class SolutionSetBuilder
     @set
   end
 
-  def valid?(shifts, min_shift) # checks to see if the open and close times in a shift are satisfiable given the @min_shift
-    midday_pairs_result = midday_pairs(shifts)
-    if (midday_pairs_result == @half_set_size)
-      return false
-    else
-      (0..(@half_set_size - midday_pairs_result - 1)).each do |x|
-        return false if (shifts[@half_set_size + midday_pairs_result + x] - shifts[x] < min_shift)
+
+  private
+
+    def expand_coverage(shifts)
+      coverage = Array.new
+
+      for i in @difference_range
+        length = 2 * (shifts[i+1] - shifts[i])
+        coverage += Array.new(length, @staffing_progression[i])
+      end
+
+      coverage
+    end
+
+# Would this be faster?
+#      (1...@set_size).each do |y|
+#        ( 2 * (shifts[y] - shifts[y-1]) ).times { coverage << @staffing_progression[y-1] }
+#      end
+
+    def valid?(shifts, min_shift) # checks to see if the open and close times in a shift are satisfiable given the @min_shift
+      midday_pairs_result = midday_pairs(shifts)
+      if (midday_pairs_result == @half_set_size)
+        return false
+      else
+        (0..(@half_set_size - midday_pairs_result - 1)).each do |x|
+          return false if (shifts[@half_set_size + midday_pairs_result + x] - shifts[x] < min_shift)
+        end
+      end
+      return true
+    end
+
+    def midday_pairs(shifts) # this method returns how many pairs of redundant open close pairs exist at midday
+      if shifts.index(@midday)
+        midday_opens = [@half_set_size - shifts.index(@midday), 0].max
+        midday_closes = [shifts.rindex(@midday) - @half_set_size + 1, 0].max
+        midday_pairs = [midday_opens, midday_closes].min
+      else
+        0
       end
     end
-    return true
-  end
-
-  def midday_pairs(shifts) # this method returns how many pairs of redundant open close pairs exist at midday
-    if shifts.index(@midday)
-      midday_opens = [@half_set_size - shifts.index(@midday), 0].max
-      midday_closes = [shifts.rindex(@midday) - @half_set_size + 1, 0].max
-      midday_pairs = [midday_opens, midday_closes].min
-    else
-      0
-    end
-  end
 end
