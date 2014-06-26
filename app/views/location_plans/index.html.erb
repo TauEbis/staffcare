@@ -1,7 +1,7 @@
 <%= render 'header' %>
 
-<% @zone.locations.each do |location| %>
-  <%= render 'basic', location_plan: location %>
+<% @location_plans.each do |location_plan| %>
+  <%= render 'basic', location_plan: location_plan %>
 <% end %>
 
 <%= link_to 'Edit', edit_schedule_path(@schedule) %> |

@@ -24,6 +24,8 @@ class OptimizerWorker
 
     schedule.optimize!
 
+    # TODO: After optimization we should generate coverages!
+
     at 100, "Optimizer finished"
     schedule.complete!
   end

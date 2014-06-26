@@ -1,2 +1,4 @@
-FooBar!!
-<%= params[:detail_date] %>
+<%= @date %>
+Coverage: <%= @grade.coverages[@date] %>
+Penalty: <%= @grade.penalties[@date] %>
+Points:  <%= @grade.points[@date] %>
