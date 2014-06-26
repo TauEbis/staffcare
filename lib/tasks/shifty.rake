@@ -34,6 +34,7 @@ namespace :shifty do
   end
 
   task :dummy_run => :environment do
+
     z = Zone.create(name: 'NYC')
 
     locations = [
@@ -41,9 +42,10 @@ namespace :shifty do
     ]
 
     schedule = Schedule.create!(starts_on: Date.parse("2014-06-06"), md_rate: 4.25, penalty_slack: 2.5, penalty_30min: 1, penalty_60min: 4, penalty_90min: 16, penalty_eod_unseen: 4, oren_shift: true)
+    schedule.custom_length(0)
+    schedule.save
 
     provider = DataProvider.new(:dummy)
-
     # Factory creates LocationPlans and VisitProjection
     factory = LocationPlansFactory.new({
                                            schedule: schedule,
@@ -60,5 +62,6 @@ namespace :shifty do
       puts grade.coverages.inspect
       puts grade.penalties.inspect
     end
+
   end
 end
