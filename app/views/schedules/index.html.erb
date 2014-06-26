@@ -50,4 +50,6 @@
   </div>
 <% end %>
 
-<%= link_to 'New Schedule', new_schedule_path %>
+<% if policy(Schedule).new? -%>
+  <%= link_to 'New Schedule', new_schedule_path %>
+<% end -%>

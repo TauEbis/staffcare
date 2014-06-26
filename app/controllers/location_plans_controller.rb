@@ -1,20 +1,15 @@
 class LocationPlansController < ApplicationController
   before_action :set_location_plan, only: [:show, :edit, :update, :destroy]
+  before_action :set_schedule, only: [:index, :show]
   before_action :set_zones, only: [:index, :show]
 
   # GET /schedule/:schedule_id/location_plans
   # Also expects a :zone_id param as a filter
   def index
-    @schedule = Schedule.find(params[:schedule_id])
-    authorize @schedule
   end
 
   # GET /location_plans/1
   def show
-    #@schedule = @location_plan.schedule(params[:schedule_id])
-    # TODO: Lookup the real schedule!
-    @schedule = Schedule.first
-    authorize @schedule
   end
 
   # POST /location_plans
@@ -40,6 +35,15 @@ class LocationPlansController < ApplicationController
 
   private
 
+  def set_schedule
+    if @location_plan
+      @schedule = @location_plan.schedule
+    else
+      @schedule = Schedule.find(params[:schedule_id])
+    end
+    authorize @schedule
+  end
+
   def set_zones
     @zones = user_zones.ordered
     @zone = if params[:zone_id]
@@ -47,12 +51,13 @@ class LocationPlansController < ApplicationController
             else
               user_zones.ordered.first
             end
+
+    @location_plans = @schedule.location_plans.for_zone(@zone).includes(:location)
   end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_location_plan
-    # TODO: This should be a lookup on LocationPlan id, but we don't have that model yet
-    @location_plan = Location.find(params[:id])
+    @location_plan = LocationPlan.find(params[:id])
     authorize @location_plan
   end
 

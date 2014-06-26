@@ -50,7 +50,11 @@ Learn more about [Installing Rails](http://railsapps.github.io/installing-rails.
 Database
 --------
 
-This application uses PostgreSQL with ActiveRecord.
+This application uses PostgreSQL with ActiveRecord.  It also requires Redis.
+
+It's assumed Redis is running on localhost:6379.
+If it isn't, set the ENV variable `REDIS_PROVIDER` to your Redis URL.
+e.g. redis://redis.example.com:7372/12
 
 Development
 -----------

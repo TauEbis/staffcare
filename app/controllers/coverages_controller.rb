@@ -3,8 +3,13 @@ class CoveragesController < ApplicationController
 
   # GET /coverages/1
   def show
-    @schedule = Schedule.first
-    authorize @schedule
+    @date = params[:detail_date]
+
+    @location_plan = policy_scope(LocationPlan).find(params[:id])
+    authorize @location_plan
+
+    # TODO: Really look up the grade
+    @grade = @location_plan.grades.first
   end
 
   private

@@ -12,6 +12,13 @@ class LocationPlan < ActiveRecord::Base
 
   OPTIMIZER_FIELDS = [:max_mds, :rooms, :min_openers, :min_closers, :open_times, :close_times]
 
+  delegate :name, to: :location
+
+  validates :location, presence: true
+  validates :schedule, presence: true
+
+  scope :for_zone, -> (zone) { where(location_id: zone.location_ids) }
+
   def solution_set_options(day)
     {open: open_times[day.wday()], close: close_times[day.wday()], max_mds: max_mds, min_openers: min_openers, min_closers: min_closers}
   end

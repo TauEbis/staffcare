@@ -41,6 +41,6 @@ class Location < ActiveRecord::Base
   end
 
   def close_times
-    @_close_times ||= DAYS.map {|day| send("#{day}_open") / 60 }
+    @_close_times ||= DAYS.map {|day| send("#{day}_close") / 60 }
   end
 end

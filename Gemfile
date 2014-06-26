@@ -29,6 +29,11 @@ gem 'bootstrap-datepicker-rails'
 gem 'newrelic_rpm'
 gem 'rollbar'
 
+# Sidekiq
+gem 'sidekiq'
+gem 'sidekiq-status', git: 'https://github.com/matthewrudy/sidekiq-status.git', branch: 'sidekiq-3.1'
+gem 'sinatra', '>= 1.3.0', :require => nil
+
 group :staging, :production do
   gem 'rails_12factor'
   gem 'unicorn'
@@ -36,7 +41,7 @@ group :staging, :production do
 end
 
 group :development do
-
+  gem 'bullet'
   gem "letter_opener"
   gem 'better_errors'
   gem 'binding_of_caller', :platforms=>[:mri_21]
