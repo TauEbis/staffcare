@@ -1,3 +1,4 @@
+# Creates a LocationPlan using the provided options and data source
 class LocationPlansFactory
 
   def initialize(opts = {})

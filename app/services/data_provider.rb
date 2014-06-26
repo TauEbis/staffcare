@@ -1,5 +1,6 @@
 require 'csv'
 
+# Wraps data representing visit/volume data from the CityMD report server.
 class DataProvider
 
   attr_reader :source
