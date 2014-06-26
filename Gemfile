@@ -41,7 +41,7 @@ group :staging, :production do
 end
 
 group :development do
-
+  gem 'bullet'
   gem "letter_opener"
   gem 'better_errors'
   gem 'binding_of_caller', :platforms=>[:mri_21]
