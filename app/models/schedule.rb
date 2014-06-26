@@ -4,13 +4,14 @@ class Schedule < ActiveRecord::Base
   has_many :visit_projections, dependent: :destroy
   has_many :location_plans, dependent: :destroy
 
-  # FIXME: What is the difference between active and published?
   enum state: [ :draft, :active, :published, :archived ]
 
-  scope :not_draft, -> { where("state <> ?", Schedule.states[:draft]) }
-  scope :ordered, -> { order(starts_on: :desc) }
+  enum optimizer_state: [ :not_run, :running, :complete, :error ]
 
-  default_scope -> { order(starts_on: :desc) }
+  scope :not_draft, -> { where("state <> ?", Schedule.states[:draft]) }
+  scope :ordered, -> { order(starts_on: :desc, id: :desc) }
+
+  default_scope -> { order(starts_on: :desc, id: :desc) }
 
   OPTIMIZER_FIELDS = [:penalty_30min, :penalty_60min, :penalty_90min, :penalty_eod_unseen, :penalty_slack, :md_rate, :oren_shift]
 

@@ -4,6 +4,16 @@
   <%= @schedule.state.to_s.humanize %>
 </div>
 
+<% unless @schedule.complete? -%>
+  <% jid = @schedule.optimizer_job_id -%>
+  <div class="alert alert-info" role="alert">
+    Status: <%= Sidekiq::Status::status(jid).to_s.humanize %> - <%= Sidekiq::Status::message jid %>
+    <%# Sidekiq::Status::at jid %>
+    <%# Sidekiq::Status::pct_complete %>
+    <%# Sidekiq::Status::total %>
+  </div>
+<% end -%>
+
 <div class="row">
   <ul id="zone-tabs" class="nav nav-pills">
     <% @zones.each do |zone| %>

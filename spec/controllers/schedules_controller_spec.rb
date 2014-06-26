@@ -87,7 +87,7 @@ RSpec.describe SchedulesController, :type => :controller do
 
       it "redirects to the created schedule" do
         post :create, {:schedule => valid_attributes}, valid_session
-        expect(response).to redirect_to(Schedule.last)
+        expect(response).to redirect_to(schedules_url)
       end
     end
 

@@ -28,7 +28,10 @@ class SchedulesController < ApplicationController
     authorize @schedule
 
     if @schedule.save
-      redirect_to @schedule, notice: 'Schedule was successfully created.'
+      job_id = OptimizerWorker.perform_async(@schedule.id)
+      @schedule.update_attribute( :optimizer_job_id, job_id )
+
+      redirect_to schedules_url, notice: 'Schedule was successfully created.'
     else
       render :new
     end
