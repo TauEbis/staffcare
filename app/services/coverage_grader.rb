@@ -42,10 +42,11 @@ class CoverageGrader
 
   def points
 		{
-			total_score: total_score,
-			md_sat_score: md_sat_score,
-			patient_sat_score: patient_sat_score,
-			cost_score: cost_score
+			total: total_score,
+			md_sat: md_sat_score,
+			patient_sat: patient_sat_score,
+			cost: cost_score,
+      hours: @hours_used
 		}
   end
 
@@ -81,6 +82,8 @@ class CoverageGrader
 											@penalty_60min_to_90min * @greater_than_sixty_min_wait[x]
 		end
 		@penalties[@time_slots] = @penalty_eod_unseen * @queue[@time_slots]
+
+    @hours_used = coverage.sum / 2
 
 		@total_penalty = @penalties.inject(0) { | sum, x | sum + x }
 	end

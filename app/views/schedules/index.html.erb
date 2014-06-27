@@ -23,21 +23,21 @@
               <%= state.to_s.humanize %>
             </span>
           </div>
-          <div class="col-sm-2 text-center bg-warning">
-            <h4>200 (B+)</h4>
+          <div class="col-sm-2 text-center">
+            <h4><%= schedule.unoptimized_summed_points(zone)['total'].round %> <span class="bg-danger">(B+)</span></h4>
             Overall
           </div>
-          <div class="col-sm-2 text-center bg-warning">
-            <h4>200 (B+)</h4>
+          <div class="col-sm-2 text-center">
+            <h4><%= schedule.unoptimized_summed_points(zone)['md_sat'].round %> <span class="bg-danger">(B+)</span></h4>
             Physician Sat
           </div>
-          <div class="col-sm-2 text-center bg-warning">
-            <h4>180 (A)</h4>
+          <div class="col-sm-2 text-center">
+            <h4><%= schedule.unoptimized_summed_points(zone)['patient_sat'].round %> <span class="bg-danger">(A)</span></h4>
             Patient Sat
           </div>
-          <div class="col-sm-2 text-center bg-warning">
-            <h4>$15k (B)</h4>
-            Savings
+          <div class="col-sm-2 text-center">
+            <h4><%= schedule.unoptimized_summed_points(zone)['cost'].round %> <span class="bg-danger">(B)</span></h4>
+            Cost Score
           </div>
         </div>
       <% end %>

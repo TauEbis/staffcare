@@ -1,14 +1,9 @@
 <h3><%= l @date, format: :with_dow %> <small> (Open <%= time_of_day @location_plan.open_times[@date.wday] %> - <%= time_of_day @location_plan.close_times[@date.wday] %>)</small></h3>
 
-<div class="bg-warning">
-  8am - 5pm<br>
-  10am - 7pm<br>
-  12pm - 9pm
+<div>
+  <% @location_plan.shifts(@grade, @date).each do |start, finish| -%>
+    <%= time_of_day start %> - <%= time_of_day finish %><br>
+  <% end -%>
 </div>
 
-<div> Drew, just left these methdods in for you to see what their names were. </div>
-<div> <%= @grade.coverages[@date_s].inspect %> </div>
-<div> <%= @location_plan.shift_opens(@grade, @date) %> </div>
-<div> <%= @location_plan.shift_closes(@grade, @date) %> </div>
-<div> <%= @location_plan.shifts(@grade, @date) %> </div>
-<div> <%= @grade.points.inspect %> </div>
+<div> <%= @grade.points[@date_s].inspect %> </div>

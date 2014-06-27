@@ -80,4 +80,13 @@ class Schedule < ActiveRecord::Base
       grade.save!
     end
   end
+
+  def unoptimized_summed_points(zone = nil)
+    @_points ||= {}
+    @_points[zone] ||= begin
+      lp = zone ? location_plans.for_zone(zone) : location_plans
+      # TODO lp = lp.includes(:chosen_grade)
+      Grade.unoptimized_sum(lp.map(&:crazy_grade))
+    end
+  end
 end

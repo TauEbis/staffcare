@@ -108,4 +108,12 @@ class LocationPlan < ActiveRecord::Base
     return open_set, close_set
 
   end
+
+  def crazy_grade
+    chosen_grade || grades.first
+  end
+
+  def unoptimized_summed_points
+    @_points ||= Grade.unoptimized_sum(crazy_grade)
+  end
 end

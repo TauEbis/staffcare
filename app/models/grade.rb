@@ -18,4 +18,18 @@ class Grade < ActiveRecord::Base
     end
   end
 
+  def self.unoptimized_sum(grades)
+    grades = Array(grades)
+    p = {}
+
+    grades.each do |g|
+      ['total', 'md_sat', 'patient_sat', 'cost', 'hours'].each do |field|
+        p[field] ||= 0
+        p[field] += g.points.sum {|k,v| v[field] } / grades.size
+      end
+    end
+
+    p
+  end
+
 end
