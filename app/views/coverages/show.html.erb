@@ -5,3 +5,9 @@
   10am - 7pm<br>
   12pm - 9pm
 </div>
+
+<div> Drew, just left these methdods in for you to see what their names were. </div>
+<div> <%= @grade.coverages[@date_s].inspect %> </div>
+<div> <%= @location_plan.shift_opens(@grade, @date) %> </div>
+<div> <%= @location_plan.shift_closes(@grade, @date) %> </div>
+<div> <%= @location_plan.shifts(@grade, @date) %> </div>

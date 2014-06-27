@@ -62,6 +62,7 @@ group :development, :test do
   gem 'rspec-rails', '>= 3.0.0.beta2'
   gem 'spring'
   gem 'spring-commands-rspec'
+  gem 'growl'
 end
 
 group :test do
@@ -70,4 +71,5 @@ group :test do
   gem 'faker'
   gem 'launchy'
   gem 'selenium-webdriver'
+  gem 'rspec-its'
 end
