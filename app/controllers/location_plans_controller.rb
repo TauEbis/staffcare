@@ -1,7 +1,9 @@
 class LocationPlansController < ApplicationController
   before_action :set_location_plan, only: [:show, :edit, :update, :destroy]
-  before_action :set_schedule, only: [:index, :show]
-  before_action :set_zones, only: [:index, :show]
+  before_action :set_location_plans, only: [:index]
+
+  skip_after_filter :verify_authorized, only: [:approve]
+  after_action :verify_policy_scoped, only: [:approve]
 
   # GET /schedule/:schedule_id/location_plans
   # Also expects a :zone_id param as a filter
@@ -33,32 +35,51 @@ class LocationPlansController < ApplicationController
     end
   end
 
-  private
+  def approve
+    ids = Array(params[:location_plan_ids])
 
-  def set_schedule
-    if @location_plan
-      @schedule = @location_plan.schedule
+    @location_plans = policy_scope(LocationPlan).where(id: ids)
+
+    if params[:reject]
+      @location_plans.update_all(approval_state: LocationPlan.approval_states[:pending])
     else
-      @schedule = Schedule.find(params[:schedule_id])
+      @location_plans.update_all(approval_state: LocationPlan.approval_states[:approved])
     end
-    authorize @schedule
+
+    lp = @location_plans.first
+    redirect_to schedule_location_plans_url(lp.schedule_id, zone_id: lp.location.zone_id)
   end
 
-  def set_zones
-    @zones = user_zones.ordered
+  private
+
+  # For index
+  def set_location_plans
+    @schedule = Schedule.find(params[:schedule_id])
+
     @zone = if params[:zone_id]
               user_zones.find(params[:zone_id].to_i)
             else
               user_zones.ordered.first
             end
 
+    authorize @zone
+
+    @zones = user_zones.ordered
     @location_plans = @schedule.location_plans.for_zone(@zone).includes(:location)
   end
 
-  # Use callbacks to share common setup or constraints between actions.
+  # For member actions
   def set_location_plan
     @location_plan = LocationPlan.find(params[:id])
     authorize @location_plan
+
+    @zone = @location_plan.location.zone
+
+    @schedule = @location_plan.schedule
+
+    # These are used for the nav header
+    @zones = user_zones.ordered
+    @location_plans = @schedule.location_plans.for_zone(@zone).includes(:location)
   end
 
   # Only allow a trusted parameter "white list" through.

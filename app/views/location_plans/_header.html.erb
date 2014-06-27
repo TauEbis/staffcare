@@ -1,7 +1,33 @@
 <h1>Shift Schedule for <%= schedule_date_span(@schedule) %></h1>
 
 <div class="pull-right">
-  <%= @schedule.state.to_s.humanize %>
+  <span class="label label-default"><%= @schedule.state.to_s.humanize %></span><br>
+  <% if @schedule.draft? -%>
+    <%= link_to 'Request approvals', schedule_path(@schedule, schedule: {state: 'active'}), method: :patch, class: 'btn btn-success' %>
+  <% end -%>
+
+  <% if @schedule.active? -%>
+    <% prefix = current_user.admin? ? 'Force ' : '' %>
+    <% btn_class = current_user.admin? ? 'btn-default ' : 'btn-success' %>
+
+    <% if policy(@schedule).update? -%>
+      <%= link_to 'Return to Draft', schedule_path(@schedule, schedule: {state: 'draft'}), method: :patch, class: 'btn btn-default' %>
+      <% if LocationPlan.collective_state(@schedule.location_plans) == 'approved' -%>
+        <%= link_to 'Publish', schedule_path(@schedule, schedule: {state: 'published'}), method: :patch, class: 'btn btn-primary' %>
+      <% end -%>
+    <% end -%>
+    <% if policy(@zone).approve? -%>
+      <% if LocationPlan.collective_state(@location_plans) == 'pending' -%>
+        <%= link_to "#{prefix} Approve entire zone", approve_location_plans_path(location_plan_ids: @location_plans.map(&:to_param)), method: :post, class: "btn #{btn_class}" %>
+      <% else -%>
+        <%= link_to "#{prefix} Un-Approve entire zone", approve_location_plans_path(location_plan_ids: @location_plans.map(&:to_param), reject: true), method: :post, class: 'btn btn-default' %>
+      <% end -%>
+    <% end -%>
+  <% end -%>
+
+  <% if @schedule.published? -%>
+    <%= link_to 'Un-Publish', schedule_path(@schedule, schedule: {state: 'active'}), method: :patch, class: 'btn btn-default' %>
+  <% end -%>
 </div>
 
 <% unless @schedule.complete? -%>

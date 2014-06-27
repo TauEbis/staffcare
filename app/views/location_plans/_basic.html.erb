@@ -14,7 +14,23 @@
   </div>
   <div class="col-sm-8">
     <div class="row">
-      <div class="bg-danger">Optimized Schedule <div class="pull-right">Approved</div></div>
+      <div class="bg-danger">Optimized Schedule
+        <div class="pull-right">
+          <span class="label label-default"><%= location_plan.approval_state.to_s.humanize %></span>
+          <% if @schedule.active? -%>
+            <% prefix = current_user.admin? ? 'Force ' : '' %>
+            <% btn_class = current_user.admin? ? 'btn-default ' : 'btn-success' %>
+
+            <% if policy(location_plan).approve? -%>
+              <% if location_plan.pending? -%>
+                <%= link_to "#{prefix} Approve", approve_location_plans_path(location_plan_ids: [location_plan]), method: :post, class: "btn btn-xs #{btn_class}" %>
+              <% else -%>
+                <%= link_to "#{prefix} Un-Approve", approve_location_plans_path(location_plan_ids: [location_plan], reject: true), method: :post, class: "btn btn-default btn-xs" %>
+              <% end -%>
+            <% end -%>
+          <% end -%>
+        </div>
+      </div>
 
     </div>
     <div class="row">

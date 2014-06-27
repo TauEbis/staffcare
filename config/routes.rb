@@ -3,6 +3,12 @@ Rails.application.routes.draw do
     resources :location_plans, shallow: true, only: [:index, :show, :update]
   end
 
+  resources :location_plans, only: [] do
+    collection do
+      post :approve
+    end
+  end
+
   resources :coverages, only: [:show] do
     get :hourly, on: :member
   end

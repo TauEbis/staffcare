@@ -1,4 +1,4 @@
-<h3><%= l @date, format: :with_dow %> <small> (Open <%= time_of_day @location_plan.location.open_times[@date.wday] %> - <%= time_of_day @location_plan.location.close_times[@date.wday] %>)</small></h3>
+<h3><%= l @date, format: :with_dow %> <small> (Open <%= time_of_day @location_plan.open_times[@date.wday] %> - <%= time_of_day @location_plan.close_times[@date.wday] %>)</small></h3>
 
 <div class="bg-warning">
   8am - 5pm<br>
