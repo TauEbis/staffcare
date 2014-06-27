@@ -18,7 +18,10 @@
         <div class="row">
           <div class="col-sm-4">
             <h5><%= link_to zone.name, schedule_location_plans_path(schedule, zone_id: zone.id) %></h5>
-            <span class="bg-danger">(pending approval)</span>
+            <% state = LocationPlan.collective_state(LocationPlan.for_zone(zone)) %>
+            <span class="label <%= state == 'pending' ? 'label-default' : 'label-success' %>">
+              <%= state.to_s.humanize %>
+            </span>
           </div>
           <div class="col-sm-2 text-center bg-warning">
             <h4>200 (B+)</h4>

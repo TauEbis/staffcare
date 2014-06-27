@@ -16,7 +16,6 @@
     <div class="row">
       <div class="bg-danger">Optimized Schedule
         <div class="pull-right">
-          <span class="label label-default"><%= location_plan.approval_state.to_s.humanize %></span>
           <% if @schedule.active? -%>
             <% prefix = current_user.admin? ? 'Force ' : '' %>
             <% btn_class = current_user.admin? ? 'btn-default ' : 'btn-success' %>

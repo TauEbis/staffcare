@@ -55,6 +55,7 @@ class LocationPlansController < ApplicationController
   # For index
   def set_location_plans
     @schedule = Schedule.find(params[:schedule_id])
+    authorize @schedule, :show?
 
     @zone = if params[:zone_id]
               user_zones.find(params[:zone_id].to_i)
@@ -65,7 +66,7 @@ class LocationPlansController < ApplicationController
     authorize @zone
 
     @zones = user_zones.ordered
-    @location_plans = @schedule.location_plans.for_zone(@zone).includes(:location)
+    @location_plans = @schedule.location_plans.for_zone(@zone).ordered
   end
 
   # For member actions
@@ -76,10 +77,11 @@ class LocationPlansController < ApplicationController
     @zone = @location_plan.location.zone
 
     @schedule = @location_plan.schedule
+    authorize @schedule, :show?
 
     # These are used for the nav header
     @zones = user_zones.ordered
-    @location_plans = @schedule.location_plans.for_zone(@zone).includes(:location)
+    @location_plans = @schedule.location_plans.for_zone(@zone).ordered
   end
 
   # Only allow a trusted parameter "white list" through.
