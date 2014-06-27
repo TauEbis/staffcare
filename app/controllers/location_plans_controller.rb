@@ -1,7 +1,6 @@
 class LocationPlansController < ApplicationController
   before_action :set_location_plan, only: [:show, :edit, :update, :destroy]
-  before_action :set_schedule, only: [:index, :show]
-  before_action :set_zones, only: [:index, :show]
+  before_action :set_location_plans, only: [:index]
 
   # GET /schedule/:schedule_id/location_plans
   # Also expects a :zone_id param as a filter
@@ -35,30 +34,34 @@ class LocationPlansController < ApplicationController
 
   private
 
-  def set_schedule
-    if @location_plan
-      @schedule = @location_plan.schedule
-    else
-      @schedule = Schedule.find(params[:schedule_id])
-    end
-    authorize @schedule
-  end
+  # For index
+  def set_location_plans
+    @schedule = Schedule.find(params[:schedule_id])
 
-  def set_zones
-    @zones = user_zones.ordered
     @zone = if params[:zone_id]
               user_zones.find(params[:zone_id].to_i)
             else
               user_zones.ordered.first
             end
 
+    authorize @zone
+
+    @zones = user_zones.ordered
     @location_plans = @schedule.location_plans.for_zone(@zone).includes(:location)
   end
 
-  # Use callbacks to share common setup or constraints between actions.
+  # For member actions
   def set_location_plan
     @location_plan = LocationPlan.find(params[:id])
     authorize @location_plan
+
+    @zone = @location_plan.location.zone
+
+    @schedule = @location_plan.schedule
+
+    # These are used for the nav header
+    @zones = user_zones.ordered
+    @location_plans = @schedule.location_plans.for_zone(@zone).includes(:location)
   end
 
   # Only allow a trusted parameter "white list" through.
