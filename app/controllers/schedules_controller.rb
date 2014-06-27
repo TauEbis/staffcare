@@ -9,7 +9,7 @@ class SchedulesController < ApplicationController
 
   # GET /schedules/1
   def show
-
+    redirect_to schedule_location_plans_url(params[:id])
   end
 
   # GET /schedules/new
@@ -61,6 +61,6 @@ class SchedulesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def schedule_params
-      params.require(:schedule).permit(:starts_on, *Schedule::OPTIMIZER_FIELDS)
+      params.require(:schedule).permit(:starts_on, :state, *Schedule::OPTIMIZER_FIELDS)
     end
 end

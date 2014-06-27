@@ -2,6 +2,9 @@ class LocationPlansController < ApplicationController
   before_action :set_location_plan, only: [:show, :edit, :update, :destroy]
   before_action :set_location_plans, only: [:index]
 
+  skip_after_filter :verify_authorized, only: [:approve]
+  after_action :verify_policy_scoped, only: [:approve]
+
   # GET /schedule/:schedule_id/location_plans
   # Also expects a :zone_id param as a filter
   def index
@@ -30,6 +33,21 @@ class LocationPlansController < ApplicationController
     else
       render :edit
     end
+  end
+
+  def approve
+    ids = Array(params[:location_plan_ids])
+
+    @location_plans = policy_scope(LocationPlan).where(id: ids)
+
+    if params[:reject]
+      @location_plans.update_all(approval_state: LocationPlan.approval_states[:pending])
+    else
+      @location_plans.update_all(approval_state: LocationPlan.approval_states[:approved])
+    end
+
+    lp = @location_plans.first
+    redirect_to schedule_location_plans_url(lp.schedule_id, zone_id: lp.location.zone_id)
   end
 
   private

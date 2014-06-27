@@ -1,5 +1,9 @@
 class LocationPlanPolicy < ApplicationPolicy
 
+  def approve?
+    user.admin? || user.location_ids.include?(record.location_id)
+  end
+
   def hourly?
     show?
   end
