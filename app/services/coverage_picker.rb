@@ -33,7 +33,7 @@ class CoveragePicker
 		end
 
 		def check_visits_length_and_coverage_span_agree # TODO
-			# raise StandardError if daily_visits_projection.size != solution_set.first.size )
+			# raise StandardError if daily_visits_projection.size != solution_set.first.size
 		end
 
 end
