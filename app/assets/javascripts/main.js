@@ -8,19 +8,40 @@ $(document).ready(function() {
     $(this.form).submit();
   });
 
-  $('#coverage_date_form').on('ajax:before', function(event){
+  $('.daygrid a').on('click', function(event){
+    event.preventDefault();
+
+    var lpid = $('.daygrid').data().locationPlanId;
+    var date  = $(this).data().date;
+
     $('#coverage_view').addClass('hidden');
     $('#coverage_view_load').removeClass('hidden');
-  })
-  .on('ajax:success', function(event, data, xhr, status){
-    $('#coverage_view').removeClass('hidden');
-    $('#coverage_view_load').addClass('hidden');
-    $('#coverage_view').html(data);
-  })
-  .on('ajax:error', function(event, xhr, status, error){
-    $('#coverage_view').removeClass('hidden');
-    $('#coverage_view_load').addClass('hidden');
-    $('#coverage_view').text("ERROR: " + status + " - " + error);
-    console.log(xhr.responseText);
+
+    $.ajax( "/coverages/" + lpid, {data: {date: date}} )
+        .done(function(data, status, xhr) {
+          inject_coverage_data('#coverage_view', data);
+        })
+        .fail(function(xhr, status, error) {
+          inject_coverage_fail('#coverage_view', xhr, status, error);
+        });
+
+    $.ajax( "/coverages/" + lpid + "/hourly", {data: {date: date}} )
+        .done(function(data, status, xhr) {
+          inject_coverage_data('#coverage_hourly', data);
+        })
+        .fail(function(xhr, status, error) {
+          inject_coverage_fail('#coverage_hourly', xhr, status, error);
+        });
   });
 });
+
+function inject_coverage_data(selector, data){
+  $(selector).removeClass('hidden').html(data);
+  $(selector + "_load").addClass('hidden');
+}
+
+function inject_coverage_fail(selector, xhr, status, error){
+  $(selector).removeClass('hidden').text("ERROR: " + status + " - " + error);
+  $(selector + "_load").addClass('hidden');
+  console.log(xhr.responseText);
+}

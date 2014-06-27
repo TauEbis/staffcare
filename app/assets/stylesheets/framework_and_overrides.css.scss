@@ -79,3 +79,15 @@ section {
   @extend .btn-primary;
   @extend .btn-xs;
 }
+
+.daygrid {
+  margin: 20px;
+
+  tr {
+    border-top: 1px solid #aaa;
+  }
+
+  td, th {
+    padding: 5px;
+  }
+}

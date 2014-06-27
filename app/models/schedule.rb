@@ -33,11 +33,16 @@ class Schedule < ActiveRecord::Base
     }
   end
 
+  def length
+    @_length ||= 27
+  end
+
   def ends_on
-    @_ends_on ||= starts_on + 27
+    @_ends_on ||= starts_on + length
   end
 
   def custom_length(length) # Method for faster testing
+    @_length = length
     @_ends_on = starts_on + length
   end
 

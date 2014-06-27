@@ -3,7 +3,9 @@ Rails.application.routes.draw do
     resources :location_plans, shallow: true, only: [:index, :show, :update]
   end
 
-  resources :coverages, only: [:show]
+  resources :coverages, only: [:show] do
+    get :hourly, on: :member
+  end
 
   resources :locations
 

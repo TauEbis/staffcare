@@ -1,4 +1,9 @@
 class LocationPlanPolicy < ApplicationPolicy
+
+  def hourly?
+    show?
+  end
+
   class Scope < Struct.new(:user, :scope)
     def resolve
       if user.admin?
