@@ -40,6 +40,15 @@ class CoverageGrader
     }
   end
 
+  def points
+		{
+			total_score: total_score,
+			md_sat_score: md_sat_score,
+			patient_sat_score: patient_sat_score,
+			cost_score: cost_score
+		}
+  end
+
 	def set_visits= (raw_visits)
 		visits = raw_visits.map{ |visit| visit.round(@round) }
 		@visits = visits
@@ -86,6 +95,31 @@ class CoverageGrader
 			@greater_than_sixty_min_wait = Array.new(@time_slots) # wait time per thirty min time slot
 			@queue = Array.new(@time_slots+1) # total queue length, 29th spot is unseen patients at end of day
 			@penalties=Array.new(@time_slots+1) # penalty per thirty min time slot
+		end
+
+		def total_score
+			@total_penalty.round(@round)
+		end
+
+		def md_sat_score
+			score = @penalty_eod_unseen * @queue[@time_slots]
+			score.round(@round)
+		end
+
+		def patient_sat_score
+			@patient_sat = []
+			@time_slots_range.each do |x|
+				@patient_sat[x] =	@penalty_30min * @thirty_min_wait[x] +
+													@penalty_60min * @greater_than_thirty_min_wait[x] +
+													@penalty_60min_to_90min * @greater_than_sixty_min_wait[x]
+			end
+			score = @patient_sat.inject(0) { | sum, x | sum + x }
+			score.round(@round)
+		end
+
+		def cost_score
+			score = @slack.inject(0) { | sum, x | sum + @penalty_slack * x }
+			score.round(@round)
 		end
 
 end

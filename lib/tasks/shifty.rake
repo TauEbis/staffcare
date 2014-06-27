@@ -29,7 +29,7 @@ namespace :shifty do
     schedule.location_plans.each do |lp|
       grade = lp.grades.order(id: :desc).first
       puts grade.coverages.inspect
-      puts grade.penalties.inspect
+      puts grade.breakdowns.inspect
     end
   end
 
@@ -60,7 +60,7 @@ namespace :shifty do
     schedule.location_plans.reload.each do |lp|
       grade = lp.grades.order(id: :desc).first
       puts grade.coverages.inspect
-      puts grade.penalties.inspect
+      puts grade.breakdowns.inspect
     end
 
   end

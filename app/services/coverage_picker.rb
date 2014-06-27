@@ -21,8 +21,9 @@ class CoveragePicker
 
     penalty(best_coverage)
     best_breakdown = @grader.breakdown
+    best_points = @grader.points
 
-    return best_coverage, best_breakdown
+    return best_coverage, best_breakdown, best_points
 	end
 
 

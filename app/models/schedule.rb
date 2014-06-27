@@ -62,18 +62,20 @@ class Schedule < ActiveRecord::Base
     location_plans.each do |location_plan|
       coverages = {}
       breakdowns = {}
+      points = {}
 
       days.each do |day|
         day_visits = location_plan.visits[day.to_s]
         # Load the valid shift start/stop times for that site and day
         solution_set = loader.load(location_plan, day)
 
-        best_coverage, best_breakdown = picker.pick_best(solution_set, day_visits)
+        best_coverage, best_breakdown, best_points = picker.pick_best(solution_set, day_visits)
         coverages[day.to_s] = best_coverage
         breakdowns[day.to_s] = best_breakdown
+        points[day.to_s] = best_points
       end
 
-      grade = location_plan.grades.new(source: 'optimizer', coverages: coverages, breakdowns: breakdowns)
+      grade = location_plan.grades.new(source: 'optimizer', coverages: coverages, breakdowns: breakdowns, points: points)
 
       grade.save!
     end
