@@ -28,4 +28,75 @@ class LocationPlan < ActiveRecord::Base
   def build_solution_set(day)
     SolutionSetBuilder.new(self, day).build
   end
+
+  def shifts(grade, day)
+    open_set = shift_opens(grade, day)
+    close_set = shift_closes(grade, day)
+
+    size_diff = open_set.size - close_set.size
+    if size_diff != 0
+      open_set, close_set = normalize(open_set, close_set, size_diff)
+    end
+
+    open_set.zip(close_set)
+  end
+
+  def shift_opens(grade, day)
+
+    coverage = grade.coverages[day.to_s]
+    morning = coverage[0..(coverage.size/2)]
+    opens_at = open_times[day.wday]
+
+    open_set=Array.new(morning[0], opens_at)
+
+    (1..(morning.size-1)).each do |index|
+      md_change = (morning[index] - morning[index-1])
+      md_change.times do |y|
+        hour = index/2 + opens_at
+        open_set << hour
+      end
+    end
+
+    open_set
+  end
+
+  def shift_closes(grade, day)
+
+    coverage = grade.coverages[day.to_s]
+    evening = coverage[(coverage.size/2 -1)..-1]
+    closes_at = close_times[day.wday()]
+    opens_at = open_times[day.wday]
+    midday = opens_at + (closes_at - opens_at)/2
+
+    close_set = []
+
+    (1..(evening.size-1)).each do |index|
+      md_change = (evening[index-1] - evening[index])
+      md_change.times do |y|
+        hour =  midday + (index-1)/2
+        close_set << hour
+      end
+    end
+
+    evening[-1].times { |i| close_set << closes_at}
+
+    close_set
+  end
+
+# TODO: determine if this case occurs and test it
+   def normalize(open_set, close_set, size_diff)
+    closes_at = close_times[day.wday()]
+    opens_at = open_times[day.wday]
+    midday = opens_at + (closes_at - opens_at)/2
+
+    if size_diff < 0
+      size_diff.times { |i| open_set << midday }
+    elsif size_diff > 0
+      size_diff.times { |i| close_set.unshift(midday) }
+    end
+
+    return open_set, close_set
+
+  end
+
 end
