@@ -9,8 +9,7 @@ class CoveragesController < ApplicationController
     @location_plan = policy_scope(LocationPlan).find(params[:id])
     authorize @location_plan
 
-    # TODO: Really look up the grade
-    @grade = @location_plan.grades.first
+    @grade = @location_plan.chosen_grade
 
     render layout: false
   end
@@ -22,8 +21,7 @@ class CoveragesController < ApplicationController
     @location_plan = policy_scope(LocationPlan).find(params[:id])
     authorize @location_plan
 
-    # TODO: Really look up the grade
-    @grade = @location_plan.grades.first
+    @grade = @location_plan.chosen_grade
 
     render layout: false
   end

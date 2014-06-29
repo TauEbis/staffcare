@@ -16,5 +16,6 @@
 //= require bootstrap
 //= require bootstrap-datepicker/core
 //= require chosen.jquery.min
+//= require knockout-3.1.0
 //= require turbolinks
 //= require_tree .

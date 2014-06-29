@@ -7,6 +7,21 @@ class Grade < ActiveRecord::Base
 
   enum source: [:optimizer, :last_month, :manual]
 
+  scope :ordered, -> { order(source: :asc, created_at: :desc) }
+
+  def label
+    case source
+      when 'optimizer'
+        "Optimized Coverage"
+      when 'manual'
+        "Manual Coverage #{created_at}"
+      when 'last_month'
+        'Coverage from previous month'
+      else
+        'Unknown'
+    end
+  end
+
   def calculate_grade!(days, grader)
     days.each do |day|
       day_visits = location_plan.visits[day.to_s]

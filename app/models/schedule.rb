@@ -78,6 +78,7 @@ class Schedule < ActiveRecord::Base
       grade = location_plan.grades.new(source: 'optimizer', coverages: coverages, breakdowns: breakdowns, points: points)
 
       grade.save!
+      location_plan.update_attribute(:chosen_grade_id, grade.id)
     end
   end
 
@@ -86,7 +87,7 @@ class Schedule < ActiveRecord::Base
     @_points[zone] ||= begin
       lp = zone ? location_plans.for_zone(zone) : location_plans
       # TODO lp = lp.includes(:chosen_grade)
-      Grade.unoptimized_sum(lp.map(&:crazy_grade))
+      Grade.unoptimized_sum(lp.map(&:chosen_grade))
     end
   end
 end

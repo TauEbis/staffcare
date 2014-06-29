@@ -1,7 +1,7 @@
 <%= render 'header' %>
 
-<div class="panel panel-default">
-  <%= render 'basic', location_plan: @location_plan %>
+<div class="panel panel-default location_plan_container">
+  <%= render 'basic', location_plan: @location_plan, show_form: true %>
 
   <div class="row">
     <div class="col-sm-3">
@@ -24,7 +24,7 @@
           <% schedule_daygrid(@schedule).each do |week| -%>
             <tr>
               <% week.each do |date| -%>
-                <td style="background-color: hsl<%= date ? color_for_score(@location_plan.crazy_grade.points[date.to_s]['total']) : '(0,0%,100%)' %>">
+                <td style="background-color: hsl<%= date ? color_for_score(@location_plan.chosen_grade.points[date.to_s]['total']) : '(0,0%,100%)' %>">
                   <%= link_to(date.day, '#', data: {date: date.to_s}) if date %>
                 </td>
               <% end -%>

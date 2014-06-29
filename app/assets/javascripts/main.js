@@ -20,6 +20,7 @@ $(document).ready(function() {
     $.ajax( "/coverages/" + lpid, {data: {date: date}} )
         .done(function(data, status, xhr) {
           inject_coverage_data('#coverage_view', data);
+          ko.applyBindings(new CoverageViewModel());
         })
         .fail(function(xhr, status, error) {
           inject_coverage_fail('#coverage_view', xhr, status, error);
@@ -33,6 +34,11 @@ $(document).ready(function() {
           inject_coverage_fail('#coverage_hourly', xhr, status, error);
         });
   });
+
+  $('#location_plan_chosen_grade_id').on('change', function(){
+    $(".location_plan_container").hide();
+    $(this.form).submit();
+  })
 });
 
 function inject_coverage_data(selector, data){

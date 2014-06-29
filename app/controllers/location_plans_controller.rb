@@ -28,10 +28,13 @@ class LocationPlansController < ApplicationController
 
   # PATCH/PUT /location_plans/1
   def update
-    if @location_plan.update(location_plan_params)
-      redirect_to @location_plan, notice: 'LocationPlan was successfully updated.'
+    if params[:copy_grade]
+      @location_plan.copy_grade!
+      redirect_to @location_plan, notice: 'You may now edit the coverage for this location.'
+    elsif @location_plan.update(location_plan_params)
+      redirect_to @location_plan#, notice: 'LocationPlan was successfully updated.'
     else
-      render :edit
+      render :show
     end
   end
 
@@ -66,7 +69,7 @@ class LocationPlansController < ApplicationController
     authorize @zone
 
     @zones = user_zones.ordered
-    @location_plans = @schedule.location_plans.for_zone(@zone).ordered
+    @location_plans = @schedule.location_plans.for_zone(@zone).includes(:location).ordered
   end
 
   # For member actions
@@ -81,11 +84,11 @@ class LocationPlansController < ApplicationController
 
     # These are used for the nav header
     @zones = user_zones.ordered
-    @location_plans = @schedule.location_plans.for_zone(@zone).ordered
+    @location_plans = @schedule.location_plans.for_zone(@zone).includes(:location).ordered
   end
 
   # Only allow a trusted parameter "white list" through.
   def location_plan_params
-    #params.require(:location_plan).permit(:name, :zone_id, :rooms, :max_mds, :report_server_id, *LocationPlan::DAY_PARAMS)
+    params.require(:location_plan).permit(:chosen_grade_id)
   end
 end
