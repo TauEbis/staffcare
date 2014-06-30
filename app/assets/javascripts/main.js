@@ -1,3 +1,5 @@
+var coverageContext;
+
 $(document).ready(function() {
   $('.dropdown-toggle').dropdown();
   $('.chosen-select').chosen();
@@ -7,6 +9,9 @@ $(document).ready(function() {
   $(".detail_date").on('change', function(){
     $(this.form).submit();
   });
+
+  coverageContext = new CoverageViewModel();
+  ko.applyBindings(coverageContext);
 
   $('.daygrid a').on('click', function(event){
     event.preventDefault();
@@ -19,10 +24,14 @@ $(document).ready(function() {
 
     $.ajax( "/coverages/" + lpid, {data: {date: date}} )
         .done(function(data, status, xhr) {
-          inject_coverage_data('#coverage_view', data);
+          coverageContext.load(data);
+          $('#coverage_view').removeClass('hidden');
+          $('#coverage_view_load').addClass('hidden');
         })
         .fail(function(xhr, status, error) {
-          inject_coverage_fail('#coverage_view', xhr, status, error);
+          alert("Load error" + status + error);
+          console.log(xhr.responseText);
+//          inject_coverage_fail('#coverage_view', xhr, status, error);
         });
 
     $.ajax( "/coverages/" + lpid + "/hourly", {data: {date: date}} )
@@ -33,6 +42,11 @@ $(document).ready(function() {
           inject_coverage_fail('#coverage_hourly', xhr, status, error);
         });
   });
+
+  $('#location_plan_chosen_grade_id').on('change', function(){
+    $(".location_plan_container").hide();
+    $(this.form).submit();
+  })
 });
 
 function inject_coverage_data(selector, data){

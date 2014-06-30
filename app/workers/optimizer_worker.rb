@@ -28,6 +28,8 @@ class OptimizerWorker
 
     # TODO: Bubble up Points to higher levels for cached viewing
 
+    # TODO: Copy coverage from previous month and grade!
+
     at 100, "Optimizer finished"
     schedule.complete!
   end

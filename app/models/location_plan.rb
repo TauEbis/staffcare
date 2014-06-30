@@ -8,7 +8,7 @@ class LocationPlan < ActiveRecord::Base
   # grades records the grading/score for the schedule for the given scheduling options-
   # e.g., use last months schedule, use manual coverage, etc.
   has_many :grades, dependent: :destroy
-  belongs_to :chosen_grade
+  belongs_to :chosen_grade, class_name: 'Grade'
 
   OPTIMIZER_FIELDS = [:max_mds, :rooms, :min_openers, :min_closers, :open_times, :close_times]
 
@@ -109,11 +109,17 @@ class LocationPlan < ActiveRecord::Base
 
   end
 
-  def crazy_grade
-    chosen_grade || grades.first
+  def unoptimized_summed_points
+    @_points ||= Grade.unoptimized_sum(chosen_grade)
   end
 
-  def unoptimized_summed_points
-    @_points ||= Grade.unoptimized_sum(crazy_grade)
+  # Copies the chosen grade to a new grade
+  def copy_grade!
+    LocationPlan.transaction do
+      g = self.grades.create!(chosen_grade.attributes.merge(id: nil, created_at: nil, source: 'manual'))
+      self.update_attribute(:chosen_grade_id, g.id)
+
+      g
+    end
   end
 end

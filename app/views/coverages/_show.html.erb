@@ -1,0 +1,46 @@
+<div data-bind="if: loaded">
+  <h3>
+    <span data-bind="text: formattedDate()"></span>
+    <small> (Open <span data-bind="text: timeOfDay(openTime())"></span> - <span data-bind="text: timeOfDay(closeTime())"></span>)</small>
+  </h3>
+
+  <div data-bind="ifnot: source() == 'manual'">
+    <div data-bind="foreach: shifts">
+        <span data-bind="text: formatted()"></span> (<span data-bind="text: hours() + ' hours'"></span>)<br>
+    </div>
+
+    <h5 data-bind="visible: totalHours() > 0">
+      Total hours: <span data-bind="text: totalHours()"></span>
+    </h5>
+  </div>
+
+  <div data-bind="if: source() == 'manual'">
+    <div data-bind="foreach: shifts">
+      <div class="row">
+        <div class="col-sm-2 form-group">
+          <select class="form-control" data-bind="options: $root.availableTimes(), value: starts, optionsText: 'formatted', optionsValue: 'num'"></select>
+        </div>
+        <div class="col-sm-1">&mdash;</div>
+        <div class="col-sm-2"><select class="form-control" data-bind="options: $root.availableTimes(), value: ends, optionsText: 'formatted', optionsValue: 'num'"></select></div>
+        <div class="col-sm-2" data-bind="text: hours() + ' hours'"></div>
+        <div class="col-sm-1"><a href="#" data-bind="click: $root.removeShift">
+          <span class="glyphicon glyphicon-remove"></span>
+        </a></div>
+        <br>
+      </div>
+    </div>
+
+    <h5 data-bind="visible: totalHours() > 0">
+      Total hours: <span data-bind="text: totalHours()"></span>
+    </h5>
+
+    <button data-bind="click: addShift" class="btn btn-default">
+      <span class="glyphicon glyphicon-plus"></span> Add Shift
+    </button>
+
+    <button data-bind="click: save" class="btn btn-default">
+      <span class="glyphicon glyphicon-refresh"></span> Save and Recalculate
+    </button>
+  </div>
+</div>
+
