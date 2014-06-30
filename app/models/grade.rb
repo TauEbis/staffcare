@@ -22,15 +22,57 @@ class Grade < ActiveRecord::Base
     end
   end
 
-  def calculate_grade!(days, grader)
-    days.each do |day|
-      day_visits = location_plan.visits[day.to_s]
+  def update_shift!(date_s, dow, shifts)
+    coverages_will_change!
+    start_time = location_plan.open_times[dow]
+    end_time   = location_plan.close_times[dow]
 
-      grader.penalty(self.coverages, day_visits)
+    self.coverages[date_s] = Grade.shifts_to_coverage(start_time,end_time,shifts)
 
-      self.breakdown = grader.breakdown
-      self.points = grader.points
+    calculate_grade!(date_s)
+    # TODO: unoptimized_sum is already recalculating, but if that is cached we'll need to recalc here
+
+    self.save!
+  end
+
+  # shifts comes in as [{"starts"=>8, "ends"=>12, "hours"=>4}, {"starts"=>12, "ends"=>20, "hours"=>8}]
+  # TODO This needs some testing!
+  def self.shifts_to_coverage(start_time, end_time, shifts)
+    starts = shifts.map{|s| s['starts']}.sort.reverse
+    ends   = shifts.map{|s| s['ends']}.sort.reverse
+
+    cnt = 0
+    cvg = []
+
+    (start_time...end_time).step(0.5) do |hour|
+      puts hour
+      while starts[-1] == hour
+        starts.pop
+        cnt +=1
+      end
+
+      while ends[-1] == hour
+        ends.pop
+        cnt -=1
+      end
+
+      cvg << cnt
     end
+
+    cvg
+  end
+
+  def calculate_grade!(date_s, grader = nil)
+    breakdowns_will_change!
+    points_will_change!
+
+    grader ||= CoverageGrader.new(self.location_plan.schedule.grader_weights)
+    day_visits = location_plan.visits[date_s]
+
+    grader.penalty(self.coverages[date_s], day_visits)
+
+    self.breakdowns[date_s] = grader.breakdown
+    self.points[date_s] = grader.points
   end
 
   def self.unoptimized_sum(grades)
