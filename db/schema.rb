@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140626205623) do
+ActiveRecord::Schema.define(version: 20140702131200) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 20140626205623) do
     t.json     "points",           default: {}, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.json     "shifts",           default: {}, null: false
   end
 
   create_table "location_plans", force: true do |t|

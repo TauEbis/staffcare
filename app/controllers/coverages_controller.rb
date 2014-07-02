@@ -7,7 +7,7 @@ class CoveragesController < ApplicationController
              date: @date.to_s,
              open_time: @location_plan.open_times[@date.wday],
              close_time: @location_plan.close_times[@date.wday],
-             shifts: @location_plan.shifts(@grade, @date),
+             shifts: @grade.shifts[@date.to_s],
              source: @grade.source,
              formatted_date: I18n.localize(@date, format: :with_dow)
             }
@@ -20,7 +20,7 @@ class CoveragesController < ApplicationController
 
   # PATCH /coverages/:location_plan_id
   def update
-    @grade.update_shift!(@date_s, @date.wday, params[:shifts])
+    @grade.update_shift!(@date, @date.wday, params[:shifts])
     render text: "OK!"
   end
 
