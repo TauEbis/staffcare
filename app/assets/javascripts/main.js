@@ -6,7 +6,7 @@ $(document).ready(function() {
 
   $('[data-behaviour~=datepicker]').datepicker({"format": "yyyy-mm-dd", "weekStart": 0, "autoclose": true});
 
-  $(".detail_date").on('change', function(){
+  $(".form_autoselector").on('change', function(){
     $(this.form).submit();
   });
 
