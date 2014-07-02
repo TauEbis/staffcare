@@ -19,28 +19,7 @@ $(document).ready(function() {
     var lpid = $('.daygrid').data().locationPlanId;
     var date  = $(this).data().date;
 
-    $('#coverage_view').addClass('hidden');
-    $('#coverage_view_load').removeClass('hidden');
-
-    $.ajax( "/grades/" + lpid, {data: {date: date}} )
-        .done(function(data, status, xhr) {
-          coverageContext.load(data);
-          $('#coverage_view').removeClass('hidden');
-          $('#coverage_view_load').addClass('hidden');
-        })
-        .fail(function(xhr, status, error) {
-          alert("Load error" + status + error);
-          console.log(xhr.responseText);
-//          inject_coverage_fail('#coverage_view', xhr, status, error);
-        });
-
-    $.ajax( "/grades/" + lpid + "/hourly", {data: {date: date}} )
-        .done(function(data, status, xhr) {
-          inject_coverage_data('#coverage_hourly', data);
-        })
-        .fail(function(xhr, status, error) {
-          inject_coverage_fail('#coverage_hourly', xhr, status, error);
-        });
+    load_day_info(lpid, date);
   });
 
   $('#location_plan_chosen_grade_id').on('change', function(){
@@ -48,6 +27,33 @@ $(document).ready(function() {
     $(this.form).submit();
   })
 });
+
+function load_day_info(location_plan_id, date){
+  var lpid = location_plan_id;
+
+  $('#coverage_view').addClass('hidden');
+  $('#coverage_view_load').removeClass('hidden');
+
+  $.ajax( "/grades/" + lpid, {data: {date: date}} )
+      .done(function(data, status, xhr) {
+        coverageContext.load(data);
+        $('#coverage_view').removeClass('hidden');
+        $('#coverage_view_load').addClass('hidden');
+      })
+      .fail(function(xhr, status, error) {
+        alert("Load error" + status + error);
+        console.log(xhr.responseText);
+//          inject_coverage_fail('#coverage_view', xhr, status, error);
+      });
+
+  $.ajax( "/grades/" + lpid + "/hourly", {data: {date: date}} )
+      .done(function(data, status, xhr) {
+        inject_coverage_data('#coverage_hourly', data);
+      })
+      .fail(function(xhr, status, error) {
+        inject_coverage_fail('#coverage_hourly', xhr, status, error);
+      });
+}
 
 function inject_coverage_data(selector, data){
   $(selector).removeClass('hidden').html(data);

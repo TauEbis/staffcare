@@ -11,46 +11,48 @@
         <div class="col-sm-4">
           <h4><span data-bind="text: day_hours()"></span> Physician hours</h4>
         </div>
-        <div class="col-sm-2 text-center">
-          <h4><span data-bind="text: Math.round(day_info().total())"></span> <span class=" bg-danger">(B+)</span></h4>
-          Overall
-        </div>
-        <div class="col-sm-2 text-center">
-          <h4><span data-bind="text: Math.round(day_info().md_sat())"></span> <span class=" bg-danger">(B+)</span></h4>
-          Physician Sat
-        </div>
-        <div class="col-sm-2 text-center">
-          <h4><span data-bind="text: Math.round(day_info().patient_sat())"></span> <span class=" bg-danger">(A)</span></h4>
-          Patient Sat
-        </div>
-        <div class="col-sm-2 text-center">
-          <h4><span data-bind="text: Math.round(day_info().cost())"></span> <span class=" bg-danger">(B)</span></h4>
-          Cost Score
+        <div data-bind="with: day_points">
+          <div class="col-sm-2 text-center">
+            <h4><span data-bind="text: Math.round(total())"></span> <span class=" bg-danger">(B+)</span></h4>
+            Overall
+          </div>
+          <div class="col-sm-2 text-center">
+            <h4><span data-bind="text: Math.round(md_sat())"></span> <span class=" bg-danger">(B+)</span></h4>
+            Physician Sat
+          </div>
+          <div class="col-sm-2 text-center">
+            <h4><span data-bind="text: Math.round(patient_sat())"></span> <span class=" bg-danger">(A)</span></h4>
+            Patient Sat
+          </div>
+          <div class="col-sm-2 text-center">
+            <h4><span data-bind="text: Math.round(cost())"></span> <span class=" bg-danger">(B)</span></h4>
+            Cost Score
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-
   <div data-bind="ifnot: day_info().source() == 'manual'">
     <div data-bind="foreach: shifts">
-        <span data-bind="text: formatted()"></span> (<span data-bind="text: hours() + ' hours'"></span>)<br>
+      <div class="row form-inline  form-group">
+        <div class="col-sm-4">
+         <span data-bind="text: timeOfDay(starts())"></span> - <span data-bind="text: timeOfDay(ends())"></span>
+        </div>
+        <div class="col-sm-2" data-bind="text: hours() + ' hours'"></div>
+      </div>
     </div>
-
-    <h5 data-bind="visible: day_hours() > 0">
-      Total hours: <span data-bind="text: day_hours()"></span>
-    </h5>
   </div>
 
   <div data-bind="if: day_info().source() == 'manual'">
     <div data-bind="foreach: shifts">
-      <div class="row form-inline  form-group">
+      <div class="row form-inline form-group">
         <div class="col-sm-4">
           <a href="#" data-bind="click: $root.removeShift">
             <span class="glyphicon glyphicon-remove"></span>
           </a>
           <select class="form-control" data-bind="options: $root.available_times(), value: starts, optionsText: 'formatted', optionsValue: 'num'"></select>
-        &mdash;
+          &mdash;
           <select class="form-control" data-bind="options: $root.available_times(), value: ends, optionsText: 'formatted', optionsValue: 'num'"></select>
         </div>
         <div class="col-sm-2" data-bind="text: hours() + ' hours'"></div>

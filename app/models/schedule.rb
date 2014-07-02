@@ -77,7 +77,7 @@ class Schedule < ActiveRecord::Base
         shifts[day.to_s] = ShiftCoverage.new(location_plan, day).coverage_to_shifts(best_coverage)
       end
 
-      grade = location_plan.grades.new(source: 'optimizer', grades: coverages, breakdowns: breakdowns, points: points, shifts: shifts)
+      grade = location_plan.grades.new(source: 'optimizer', coverages: coverages, breakdowns: breakdowns, points: points, shifts: shifts)
 
       grade.save!
       location_plan.update_attribute(:chosen_grade_id, grade.id)

@@ -23,12 +23,16 @@ function Shift(starts, ends) {
   });
 }
 
+function Points(data) {
+  var self = this;
+  self.total       = ko.observable(data.total);
+  self.md_sat      = ko.observable(data.md_sat);
+  self.patient_sat = ko.observable(data.patient_sat);
+  self.cost        = ko.observable(data.cost);
+}
+
 function DayInfo(data) {
   var self = this;
-  self.total  = ko.observable(data.total);
-  self.md_sat = ko.observable(data.md_sat);
-  self.patient_sat = ko.observable(data.patient_sat);
-  self.cost   = ko.observable(data.cost);
 
   self.open_time = ko.observable(data.open_time);
   self.close_time = ko.observable(data.close_time);
@@ -47,12 +51,20 @@ function CoverageViewModel() {
   self.available_times = ko.observableArray([]);
   self.loaded = ko.observable(false);
   self.day_info = ko.observable(null);
+  self.day_points = ko.observable(null);
+  self.grade_points = ko.observable(null);
+  self.grade_hours  = ko.observable(0);
 
   self.load = function(data) {
     console.log(data);
+
     self.location_plan_id = data.location_plan_id;
-    self.day_info(new DayInfo(data));
-    self.generateAvailableTimes(data.open_time, data.close_time);
+    self.day_info(new DayInfo(data.day_info));
+    self.day_points(new Points(data.day_points));
+    self.grade_points(new Points(data.grade_points));
+    self.grade_hours(data.grade_hours);
+
+    self.generateAvailableTimes(data.day_info.open_time, data.day_info.close_time);
 
     self.shifts.removeAll();
     for (var i = 0; i < data.shifts.length; i++){
@@ -87,7 +99,7 @@ function CoverageViewModel() {
       data: ko.toJSON({ date: self.day_info().date(), shifts: self.shifts() }),
       type: "patch", contentType: "application/json",
       success: function(result) {
-//        alert(result)
+        load_day_info(self.location_plan_id, self.day_info().date());
       }
     });
   };

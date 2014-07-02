@@ -3,20 +3,22 @@ class GradesController < ApplicationController
 
   # GET /coverages/1
   def show
-    pts = @grade.points[@date_s]
+    day_pts = @grade.points[@date_s]
+    pts     = Grade.unoptimized_sum(@grade)
 
     data = { location_plan_id: @location_plan.id,
-             total: pts['total'],
-             md_sat: pts['md_sat'],
-             patient_sat: pts['patient_sat'],
-             cost: pts['cost'],
-             date: @date.to_s,
-             formatted_date: I18n.localize(@date, format: :with_dow),
-             open_time: @location_plan.open_times[@date.wday],
-             close_time: @location_plan.close_times[@date.wday],
-             source: @grade.source,
 
-             shifts: @grade.shifts[@date.to_s]
+             shifts: @grade.shifts[@date.to_s],
+             day_info: {
+               date: @date.to_s,
+               formatted_date: I18n.localize(@date, format: :with_dow),
+               open_time: @location_plan.open_times[@date.wday],
+               close_time: @location_plan.close_times[@date.wday],
+               source: @grade.source
+             },
+             day_points:   day_pts,
+             grade_points: pts,
+             grade_hours:  pts['hours']
             }
 
     render json: data
