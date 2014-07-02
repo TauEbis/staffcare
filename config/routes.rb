@@ -9,7 +9,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :coverages, only: [:show, :update] do
+  resources :grades, only: [:show, :update] do
     get :hourly, on: :member
   end
 

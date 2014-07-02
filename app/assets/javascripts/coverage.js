@@ -10,8 +10,25 @@ function timeOfDay(t){
   }
 }
 
+function diffClass(num){
+  if(num < 1 && num > -1){
+    return ""
+  }else if( num > 0 ){
+    return "bg-danger"
+  }else{
+    return "bg-success"
+  }
+}
 
-
+function diffFormat(num){
+  if(num < 1 && num > -1){
+    return ""
+  }else if(num > 0){
+    return "+" + Math.round(num)
+  }else{
+    return Math.round(num)
+  }
+}
 
 // Class to represent a row in the list of all shifts for a day
 function Shift(starts, ends) {
@@ -26,30 +43,77 @@ function Shift(starts, ends) {
   });
 }
 
+function Points(data) {
+  var self = this;
+  self.total       = ko.observable(data.total);
+  self.md_sat      = ko.observable(data.md_sat);
+  self.patient_sat = ko.observable(data.patient_sat);
+  self.cost        = ko.observable(data.cost);
+}
+
+function DiffPoints(oldp, newp){
+  return new Points({
+    total:       newp.total() - oldp.total(),
+    md_sat:      newp.md_sat() - oldp.md_sat(),
+    patient_sat: newp.patient_sat() - oldp.patient_sat(),
+    cost:        newp.cost() - oldp.cost()
+  });
+}
+
+function DayInfo(data) {
+  var self = this;
+
+  self.open_time = ko.observable(data.open_time);
+  self.close_time = ko.observable(data.close_time);
+
+  self.formatted_date = ko.observable(data.formatted_date);
+  self.date = ko.observable(data.date);
+  self.source = ko.observable(data.source);
+}
+
 // Overall viewmodel for a day, along with initial state
 function CoverageViewModel() {
   var self = this;
 
   // Editable data
   self.shifts = ko.observableArray([]);
-  self.availableTimes = ko.observableArray([]);
-  self.date = ko.observable("");
-  self.formattedDate = ko.observable("");
-  self.openTime = ko.observable(0);
-  self.closeTime = ko.observable(0);
+  self.available_times = ko.observableArray([]);
   self.loaded = ko.observable(false);
-  self.source = ko.observable("");
+  self.day_info = ko.observable(null);
+
+  self.day_points = ko.observable(null);
+  self.grade_points = ko.observable(null);
+  self.grade_hours  = ko.observable(0);
+
+  // When an update for the SAME day is processed,
+  // Then we'll store the diffs here
+  self.diff_day_points = ko.observable(null);
+  self.diff_grade_points = ko.observable(null);
+  self.diff_grade_hours  = ko.observable(null);
+
+  self.prev_date = null;
 
   self.load = function(data) {
     console.log(data);
-    self.location_plan_id = data.location_plan_id;
-    self.date(data.date);
-    self.formattedDate(data.formatted_date);
-    self.openTime(data.open_time);
-    self.closeTime(data.close_time);
-    self.source(data.source);
 
-    self.generateAvailableTimes(data.open_time, data.close_time);
+    if(data.day_info.date == self.prev_date){
+      self.diff_day_points(   DiffPoints(self.day_points(),   new Points(data.day_points)));
+      self.diff_grade_points( DiffPoints(self.grade_points(), new Points(data.grade_points)));
+      self.diff_grade_hours(  data.grade_hours - self.grade_hours() );
+    }else{
+      self.diff_day_points(  null);
+      self.diff_grade_points(null);
+      self.diff_grade_hours( null);
+    }
+
+    self.location_plan_id = data.location_plan_id;
+    self.day_info(new DayInfo(data.day_info));
+    self.day_points(new Points(data.day_points));
+    self.grade_points(new Points(data.grade_points));
+    self.grade_hours(data.grade_hours);
+    self.prev_date = data.day_info.date;
+
+    self.generateAvailableTimes(data.day_info.open_time, data.day_info.close_time);
 
     self.shifts.removeAll();
     for (var i = 0; i < data.shifts.length; i++){
@@ -60,9 +124,9 @@ function CoverageViewModel() {
   }
 
   self.generateAvailableTimes = function(open_time, close_time) {
-    self.availableTimes.removeAll();
+    self.available_times.removeAll();
     for(var i = open_time; i <= close_time; i += 1){
-      self.availableTimes.push({num: i, formatted: timeOfDay(i)});
+      self.available_times.push({num: i, formatted: timeOfDay(i)});
     }
   }
 
@@ -72,7 +136,7 @@ function CoverageViewModel() {
 
   self.removeShift = function(shift) { self.shifts.remove(shift) };
 
-  self.totalHours = ko.computed(function() {
+  self.day_hours = ko.computed(function() {
     var total = 0;
     for (var i = 0; i < self.shifts().length; i++)
       total += self.shifts()[i].hours();
@@ -80,11 +144,11 @@ function CoverageViewModel() {
   });
 
   self.save = function() {
-    $.ajax("/coverages/" + self.location_plan_id, {
-      data: ko.toJSON({ date: self.date, shifts: self.shifts() }),
+    $.ajax("/grades/" + self.location_plan_id, {
+      data: ko.toJSON({ date: self.day_info().date(), shifts: self.shifts() }),
       type: "patch", contentType: "application/json",
       success: function(result) {
-//        alert(result)
+        load_day_info(self.location_plan_id, self.day_info().date());
       }
     });
   };

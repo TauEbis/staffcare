@@ -7,7 +7,11 @@ class LocationPlansController < ApplicationController
 
   # GET /schedule/:schedule_id/location_plans
   # Also expects a :zone_id param as a filter
+  # If it receives a location_plan_id, it redirects
   def index
+    if !params[:location_plan_id].blank?
+      redirect_to location_plan_url(params[:location_plan_id])
+    end
   end
 
   # GET /location_plans/1
