@@ -5,7 +5,7 @@ class CreateGrades < ActiveRecord::Migration
 
       t.integer :source, null: false, default: 0
 
-      t.json :coverages, null: false, default: {}
+      t.json :grades, null: false, default: {}
       t.json :penalties, null: false, default: {}
       t.json :points,    null: false, default: {}
 

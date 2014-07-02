@@ -22,7 +22,7 @@ $(document).ready(function() {
     $('#coverage_view').addClass('hidden');
     $('#coverage_view_load').removeClass('hidden');
 
-    $.ajax( "/coverages/" + lpid, {data: {date: date}} )
+    $.ajax( "/grades/" + lpid, {data: {date: date}} )
         .done(function(data, status, xhr) {
           coverageContext.load(data);
           $('#coverage_view').removeClass('hidden');
@@ -34,7 +34,7 @@ $(document).ready(function() {
 //          inject_coverage_fail('#coverage_view', xhr, status, error);
         });
 
-    $.ajax( "/coverages/" + lpid + "/hourly", {data: {date: date}} )
+    $.ajax( "/grades/" + lpid + "/hourly", {data: {date: date}} )
         .done(function(data, status, xhr) {
           inject_coverage_data('#coverage_hourly', data);
         })

@@ -1,16 +1,24 @@
-class CoveragesController < ApplicationController
-  before_action :set_coverage, only: [:show, :hourly, :update]
+class GradesController < ApplicationController
+  before_action :set_grade, only: [:show, :hourly, :update]
 
   # GET /coverages/1
   def show
+    pts = @grade.points[@date_s]
+
     data = { location_plan_id: @location_plan.id,
+             total: pts['total'],
+             md_sat: pts['md_sat'],
+             patient_sat: pts['patient_sat'],
+             cost: pts['cost'],
              date: @date.to_s,
+             formatted_date: I18n.localize(@date, format: :with_dow),
              open_time: @location_plan.open_times[@date.wday],
              close_time: @location_plan.close_times[@date.wday],
-             shifts: @grade.shifts[@date.to_s],
              source: @grade.source,
-             formatted_date: I18n.localize(@date, format: :with_dow)
+
+             shifts: @grade.shifts[@date.to_s]
             }
+
     render json: data
   end
 
@@ -26,7 +34,7 @@ class CoveragesController < ApplicationController
 
   private
 
-  def set_coverage
+  def set_grade
     @date = Date.parse params[:date]
     @date_s = params[:date]
 

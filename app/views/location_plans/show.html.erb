@@ -1,10 +1,28 @@
+<% location = @location_plan.location %>
+
 <%= render 'header' %>
 
-<div class="panel panel-default location_plan_container">
-  <%= render 'basic', location_plan: @location_plan, show_form: true %>
+<div class="location_plan_container">
 
   <div class="row">
-    <div class="col-sm-3">
+    <p class="bg-danger">Life Cycle 3 (650 suggested hrs)</p>
+  </div>
+
+  <%= simple_form_for @location_plan, wrapper: :horizontal_form,html: {class: 'form-inline'} do |f| %>
+    <div class="row">
+      <div class="col-sm-8">
+        <%= f.association :chosen_grade, collection: @location_plan.grades.ordered, label_method: :label, label: false, include_blank: false %>
+      </div>
+      <div class="pull-right">
+        <button class="btn btn-default" name="copy_grade">Copy &amp; edit</button>
+      </div>
+    </div>
+  <% end -%>
+
+  <br>
+
+  <div class="row">
+    <div class="col-md-3">
       <table class="daygrid" data-location-plan-id="<%= @location_plan.id %>">
         <thead>
           <tr>
@@ -33,11 +51,18 @@
         </tbody>
       </table>
     </div>
-    <div class="col-sm-8 hidden" id="coverage_view_load">
+
+    <div class="col-sm-8 col-sm-offset-1">
+      <%= render 'grades/overview' %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12 hidden" id="coverage_view_load">
       <img src="<%= image_path('load.gif') %>" alt="Loading">
     </div>
-    <div class="col-sm-8" id="coverage_view">
-      <%= render 'coverages/show' %>
+    <div class="col-sm-12" id="coverage_view">
+      <%= render 'grades/show' %>
     </div>
   </div>
 

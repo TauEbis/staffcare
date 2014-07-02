@@ -1,0 +1,75 @@
+<div data-bind="if: loaded">
+  <div class="row">
+    <div class="col-sm-3">
+      <h3>
+        <span data-bind="text: day_info().formatted_date()"></span><br>
+        <small> (Open <span data-bind="text: timeOfDay(day_info().open_time())"></span> - <span data-bind="text: timeOfDay(day_info().close_time())"></span>)</small>
+      </h3>
+    </div>
+    <div class="col-sm-8 col-sm-offset-1">
+      <div class="row">
+        <div class="col-sm-4">
+          <h4><span data-bind="text: day_hours()"></span> Physician hours</h4>
+        </div>
+        <div class="col-sm-2 text-center">
+          <h4><span data-bind="text: Math.round(day_info().total())"></span> <span class=" bg-danger">(B+)</span></h4>
+          Overall
+        </div>
+        <div class="col-sm-2 text-center">
+          <h4><span data-bind="text: Math.round(day_info().md_sat())"></span> <span class=" bg-danger">(B+)</span></h4>
+          Physician Sat
+        </div>
+        <div class="col-sm-2 text-center">
+          <h4><span data-bind="text: Math.round(day_info().patient_sat())"></span> <span class=" bg-danger">(A)</span></h4>
+          Patient Sat
+        </div>
+        <div class="col-sm-2 text-center">
+          <h4><span data-bind="text: Math.round(day_info().cost())"></span> <span class=" bg-danger">(B)</span></h4>
+          Cost Score
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div data-bind="ifnot: day_info().source() == 'manual'">
+    <div data-bind="foreach: shifts">
+        <span data-bind="text: formatted()"></span> (<span data-bind="text: hours() + ' hours'"></span>)<br>
+    </div>
+
+    <h5 data-bind="visible: day_hours() > 0">
+      Total hours: <span data-bind="text: day_hours()"></span>
+    </h5>
+  </div>
+
+  <div data-bind="if: day_info().source() == 'manual'">
+    <div data-bind="foreach: shifts">
+      <div class="row form-inline  form-group">
+        <div class="col-sm-4">
+          <a href="#" data-bind="click: $root.removeShift">
+            <span class="glyphicon glyphicon-remove"></span>
+          </a>
+          <select class="form-control" data-bind="options: $root.available_times(), value: starts, optionsText: 'formatted', optionsValue: 'num'"></select>
+        &mdash;
+          <select class="form-control" data-bind="options: $root.available_times(), value: ends, optionsText: 'formatted', optionsValue: 'num'"></select>
+        </div>
+        <div class="col-sm-2" data-bind="text: hours() + ' hours'"></div>
+        <br>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-4 form-group">
+        <a href="#" data-bind="click: addShift">
+          <span class="glyphicon glyphicon-plus"></span> Add Shift
+        </a>
+      </div>
+      <div class="pull-right">
+        <button data-bind="click: save" class="btn btn-default">
+          <span class="glyphicon glyphicon-refresh"></span> Save and Recalculate
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+

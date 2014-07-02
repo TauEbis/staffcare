@@ -2,7 +2,55 @@
 
 <% @location_plans.each do |location_plan| %>
   <div class="panel panel-default">
-    <%= render 'basic', location_plan: location_plan %>
+    <% location = location_plan.location %>
+
+    <div class="panel-body">
+      <div class="col-sm-4">
+        <div class="row">
+          <h3><%= link_to location.name, location_plan_path(location_plan) %></h3>
+        </div>
+        <div class="row">
+          <p class="bg-danger">Life Cycle 3 (650 suggested hrs)</p>
+        </div>
+        <div class="row">
+          <small><%= location_plan.rooms %> rooms &bull; Max <%= location_plan.max_mds %> MDs</small>
+        </div>
+      </div>
+      <div class="col-sm-8">
+        <div class="row">
+          <div>
+            <%= location_plan.chosen_grade.try(:label) -%>
+
+            <div class="pull-right">
+              <%= render 'location_plan_actions', location_plan: location_plan %>
+            </div>
+          </div>
+
+        </div>
+        <div class="row">
+          <div class="col-sm-4">
+            <h4><%= location_plan.unoptimized_summed_points['hours'].round %> Physician hours</h4>
+          </div>
+          <div class="col-sm-2 text-center">
+            <h4><%= location_plan.unoptimized_summed_points['total'].round %> <span class=" bg-danger">(B+)</span></h4>
+            Overall
+          </div>
+          <div class="col-sm-2 text-center">
+            <h4><%= location_plan.unoptimized_summed_points['md_sat'].round %> <span class=" bg-danger">(B+)</span></h4>
+            Physician Sat
+          </div>
+          <div class="col-sm-2 text-center">
+            <h4><%= location_plan.unoptimized_summed_points['patient_sat'].round %> <span class=" bg-danger">(A)</span></h4>
+            Patient Sat
+          </div>
+          <div class="col-sm-2 text-center">
+            <h4><%= location_plan.unoptimized_summed_points['cost'].round %> <span class=" bg-danger">(B)</span></h4>
+            Cost Score
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 <% end %>
 

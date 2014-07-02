@@ -1,0 +1,12 @@
+<% if @schedule.active? -%>
+  <% prefix = current_user.admin? ? 'Force ' : '' %>
+  <% btn_class = current_user.admin? ? 'btn-default ' : 'btn-success' %>
+
+  <% if policy(location_plan).approve? -%>
+    <% if location_plan.pending? -%>
+      <%= link_to "#{prefix} Approve", approve_location_plans_path(location_plan_ids: [location_plan]), method: :post, class: "btn #{btn_class}" %>
+    <% else -%>
+      <%= link_to "#{prefix} Un-Approve", approve_location_plans_path(location_plan_ids: [location_plan], reject: true), method: :post, class: "btn btn-default" %>
+    <% end -%>
+  <% end -%>
+<% end -%>

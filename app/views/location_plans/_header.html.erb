@@ -1,31 +1,37 @@
 <h1>Shift Schedule for <%= schedule_date_span(@schedule) %> <small> <%= @schedule.state.to_s.humanize %></small></h1>
 
 <div class="pull-right">
-  <% if @schedule.draft? -%>
-    <%= link_to 'Request approvals', schedule_path(@schedule, schedule: {state: 'active'}), method: :patch, class: 'btn btn-success' %>
-  <% end -%>
+  <% if @location_plan -%>
+    <%= render 'location_plan_actions', location_plan: @location_plan %>
+  <% else -%>
 
-  <% if @schedule.active? -%>
-    <% prefix = current_user.admin? ? 'Force ' : '' %>
-    <% btn_class = current_user.admin? ? 'btn-default ' : 'btn-success' %>
+    <% if @schedule.draft? -%>
+      <%= link_to 'Request approvals', schedule_path(@schedule, schedule: {state: 'active'}), method: :patch, class: 'btn btn-success' %>
+    <% end -%>
 
-    <% if policy(@schedule).update? -%>
-      <%= link_to 'Return to Draft', schedule_path(@schedule, schedule: {state: 'draft'}), method: :patch, class: 'btn btn-default' %>
-      <% if LocationPlan.collective_state(@schedule.location_plans) == 'approved' -%>
-        <%= link_to 'Publish', schedule_path(@schedule, schedule: {state: 'published'}), method: :patch, class: 'btn btn-primary' %>
+    <% if @schedule.active? -%>
+      <% prefix = current_user.admin? ? 'Force ' : '' %>
+      <% btn_class = current_user.admin? ? 'btn-default ' : 'btn-success' %>
+
+      <% if policy(@schedule).update? -%>
+        <%= link_to 'Return to Draft', schedule_path(@schedule, schedule: {state: 'draft'}), method: :patch, class: 'btn btn-default' %>
+        <% if LocationPlan.collective_state(@schedule.location_plans) == 'approved' -%>
+          <%= link_to 'Publish', schedule_path(@schedule, schedule: {state: 'published'}), method: :patch, class: 'btn btn-primary' %>
+        <% end -%>
+      <% end -%>
+      <% if policy(@zone).approve? -%>
+        <% if LocationPlan.collective_state(@location_plans) == 'pending' -%>
+          <%= link_to "#{prefix} Approve entire zone", approve_location_plans_path(location_plan_ids: @location_plans.map(&:to_param)), method: :post, class: "btn #{btn_class}" %>
+        <% else -%>
+          <%= link_to "#{prefix} Un-Approve entire zone", approve_location_plans_path(location_plan_ids: @location_plans.map(&:to_param), reject: true), method: :post, class: 'btn btn-default' %>
+        <% end -%>
       <% end -%>
     <% end -%>
-    <% if policy(@zone).approve? -%>
-      <% if LocationPlan.collective_state(@location_plans) == 'pending' -%>
-        <%= link_to "#{prefix} Approve entire zone", approve_location_plans_path(location_plan_ids: @location_plans.map(&:to_param)), method: :post, class: "btn #{btn_class}" %>
-      <% else -%>
-        <%= link_to "#{prefix} Un-Approve entire zone", approve_location_plans_path(location_plan_ids: @location_plans.map(&:to_param), reject: true), method: :post, class: 'btn btn-default' %>
-      <% end -%>
-    <% end -%>
-  <% end -%>
 
-  <% if @schedule.published? -%>
-    <%= link_to 'Un-Publish', schedule_path(@schedule, schedule: {state: 'active'}), method: :patch, class: 'btn btn-default' %>
+    <% if @schedule.published? -%>
+      <%= link_to 'Un-Publish', schedule_path(@schedule, schedule: {state: 'active'}), method: :patch, class: 'btn btn-default' %>
+    <% end -%>
+
   <% end -%>
 </div>
 
@@ -42,7 +48,7 @@
 <div class="row">
   <div class="col-sm-3">
     <form accept-charset="UTF-8" action="<%= schedule_location_plans_path(@schedule) %>" method="get">
-      <select class="form_autoselector form-control" id="location_plan_zone_select" name="zone_id">
+      <select class="form_autoselector form-control input-lg" id="location_plan_zone_select" name="zone_id">
         <%= options_from_collection_for_select @zones, :id, :name, @zone.id %>
       </select>
     </form>
@@ -51,11 +57,15 @@
   <% if @location_plan %>
     <div class="col-sm-3">
       <form accept-charset="UTF-8" action="<%= schedule_location_plans_path(@schedule, zone_id: @zone.id) %>" method="get">
-        <select class="form_autoselector form-control" id="location_plan_select" name="location_plan_id">
+        <select class="form_autoselector form-control input-lg" id="location_plan_select" name="location_plan_id">
           <option value="">-- Overview</option>
           <%= options_from_collection_for_select @location_plans, :id, :name, @location_plan.id %>
         </select>
       </form>
+    </div>
+
+    <div class="col-sm-2">
+      <small><%= @location_plan.rooms %> rooms &bull; Max <%= @location_plan.max_mds %> MDs</small>
     </div>
   <% end -%>
 </div>
