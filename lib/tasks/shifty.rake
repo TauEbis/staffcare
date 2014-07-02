@@ -30,6 +30,7 @@ namespace :shifty do
       grade = lp.grades.order(id: :desc).first
       puts grade.coverages.inspect
       puts grade.breakdowns.inspect
+      puts grade.shifts.inspect
     end
   end
 
@@ -61,6 +62,7 @@ namespace :shifty do
       grade = lp.grades.order(id: :desc).first
       puts grade.coverages.inspect
       puts grade.breakdowns.inspect
+      puts grade.shifts.inspect
     end
 
   end

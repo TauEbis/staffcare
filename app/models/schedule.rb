@@ -63,6 +63,7 @@ class Schedule < ActiveRecord::Base
       coverages = {}
       breakdowns = {}
       points = {}
+      shifts = {}
 
       days.each do |day|
         day_visits = location_plan.visits[day.to_s]
@@ -73,9 +74,10 @@ class Schedule < ActiveRecord::Base
         coverages[day.to_s] = best_coverage
         breakdowns[day.to_s] = best_breakdown
         points[day.to_s] = best_points
+        shifts[day.to_s] = ShiftCoverage.new(location_plan, day).coverage_to_shifts(best_coverage)
       end
 
-      grade = location_plan.grades.new(source: 'optimizer', coverages: coverages, breakdowns: breakdowns, points: points)
+      grade = location_plan.grades.new(source: 'optimizer', coverages: coverages, breakdowns: breakdowns, points: points, shifts: shifts)
 
       grade.save!
       location_plan.update_attribute(:chosen_grade_id, grade.id)

@@ -22,44 +22,22 @@ class Grade < ActiveRecord::Base
     end
   end
 
-  def update_shift!(date_s, dow, shifts)
+  # shifts comes in as [{"starts"=>8, "ends"=>12, "hours"=>4}, {"starts"=>12, "ends"=>20, "hours"=>8}]
+  def update_shift!(date, dow, shifts)
+    shifts_will_change!
     coverages_will_change!
+
     start_time = location_plan.open_times[dow]
     end_time   = location_plan.close_times[dow]
+    date_s = date.to_s
 
-    self.coverages[date_s] = Grade.shifts_to_coverage(start_time,end_time,shifts)
+    self.shifts[date_s] = shifts.map{|s| [ s['starts'], s['ends'] ] }
+    self.coverages[date_s] = ShiftCoverage.new(location_plan, date).shifts_to_coverage(shifts)
 
     calculate_grade!(date_s)
     # TODO: unoptimized_sum is already recalculating, but if that is cached we'll need to recalc here
 
     self.save!
-  end
-
-  # shifts comes in as [{"starts"=>8, "ends"=>12, "hours"=>4}, {"starts"=>12, "ends"=>20, "hours"=>8}]
-  # TODO This needs some testing!
-  def self.shifts_to_coverage(start_time, end_time, shifts)
-    starts = shifts.map{|s| s['starts']}.sort.reverse
-    ends   = shifts.map{|s| s['ends']}.sort.reverse
-
-    cnt = 0
-    cvg = []
-
-    (start_time...end_time).step(0.5) do |hour|
-      puts hour
-      while starts[-1] == hour
-        starts.pop
-        cnt +=1
-      end
-
-      while ends[-1] == hour
-        ends.pop
-        cnt -=1
-      end
-
-      cvg << cnt
-    end
-
-    cvg
   end
 
   def calculate_grade!(date_s, grader = nil)
