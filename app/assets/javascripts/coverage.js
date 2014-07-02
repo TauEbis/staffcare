@@ -10,6 +10,26 @@ function timeOfDay(t){
   }
 }
 
+function diffClass(num){
+  if(num < 1 && num > -1){
+    return ""
+  }else if( num > 0 ){
+    return "bg-danger"
+  }else{
+    return "bg-success"
+  }
+}
+
+function diffFormat(num){
+  if(num < 1 && num > -1){
+    return ""
+  }else if(num > 0){
+    return "+" + Math.round(num)
+  }else{
+    return Math.round(num)
+  }
+}
+
 // Class to represent a row in the list of all shifts for a day
 function Shift(starts, ends) {
   var self = this;
@@ -29,6 +49,15 @@ function Points(data) {
   self.md_sat      = ko.observable(data.md_sat);
   self.patient_sat = ko.observable(data.patient_sat);
   self.cost        = ko.observable(data.cost);
+}
+
+function DiffPoints(oldp, newp){
+  return new Points({
+    total:       newp.total() - oldp.total(),
+    md_sat:      newp.md_sat() - oldp.md_sat(),
+    patient_sat: newp.patient_sat() - oldp.patient_sat(),
+    cost:        newp.cost() - oldp.cost()
+  });
 }
 
 function DayInfo(data) {
@@ -51,18 +80,38 @@ function CoverageViewModel() {
   self.available_times = ko.observableArray([]);
   self.loaded = ko.observable(false);
   self.day_info = ko.observable(null);
+
   self.day_points = ko.observable(null);
   self.grade_points = ko.observable(null);
   self.grade_hours  = ko.observable(0);
 
+  // When an update for the SAME day is processed,
+  // Then we'll store the diffs here
+  self.diff_day_points = ko.observable(null);
+  self.diff_grade_points = ko.observable(null);
+  self.diff_grade_hours  = ko.observable(null);
+
+  self.prev_date = null;
+
   self.load = function(data) {
     console.log(data);
+
+    if(data.day_info.date == self.prev_date){
+      self.diff_day_points(   DiffPoints(self.day_points(),   new Points(data.day_points)));
+      self.diff_grade_points( DiffPoints(self.grade_points(), new Points(data.grade_points)));
+      self.diff_grade_hours(  data.grade_hours - self.grade_hours() );
+    }else{
+      self.diff_day_points(  null);
+      self.diff_grade_points(null);
+      self.diff_grade_hours( null);
+    }
 
     self.location_plan_id = data.location_plan_id;
     self.day_info(new DayInfo(data.day_info));
     self.day_points(new Points(data.day_points));
     self.grade_points(new Points(data.grade_points));
     self.grade_hours(data.grade_hours);
+    self.prev_date = data.day_info.date;
 
     self.generateAvailableTimes(data.day_info.open_time, data.day_info.close_time);
 
