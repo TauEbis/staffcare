@@ -4,7 +4,7 @@ class CreateInputProjections < ActiveRecord::Migration
       t.date :start_date
       t.date :end_date
       t.string :location_name
-      t.int :volume
+      t.integer :volume
     end
   end
 end
