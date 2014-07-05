@@ -2,6 +2,7 @@
 # a location was configured when a schedule was generated.
 class Location < ActiveRecord::Base
   belongs_to :zone
+  belongs_to :input_projection
 
   validates :zone, presence: true
   validates :rooms, numericality: { greater_than: 0, less_than: 100 }
