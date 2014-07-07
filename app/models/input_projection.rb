@@ -8,7 +8,7 @@ class InputProjection < ActiveRecord::Base
   validates :location, presence: true
   validates :volume, numericality: { greater_than: 0 }
   # TODO: Appear to be several ways to validate a date string is good- want ISO (yyy-mm-dd) format
-  validates :start_date, presense: true
+  validates :start_date, presence: true
   validates :end_date, presence: true
 
   #scope :ordered, -> { order(name: :asc) }
