@@ -20,8 +20,8 @@ class VisitProjection < ActiveRecord::Base
   end
 
 	def self.import!(data_provider, schedule, locations)
-    all_volumes = data_provider.volume_querry(locations, schedule)
-    all_heat_maps = data_provider.heat_map_querry(locations, schedule)
+    all_volumes = data_provider.volume_query(locations, schedule)
+    all_heat_maps = data_provider.heat_map_query(locations, schedule)
 
     projections = {}
 
