@@ -9,11 +9,11 @@ class DataProvider
 		@source = source
 	end
 
-	def volume_querry(locations, schedule)
+	def volume_query(locations, schedule)
 		self.send("read_and_parse_#{@source}_volume_data".to_sym, locations, schedule)
 	end
 
-	def heat_map_querry(locations, schedule)
+	def heat_map_query(locations, schedule)
 		heat_maps = Hash.new
 		locations.each do |location|
 			heat_maps[location.report_server_id] = self.send("read_and_parse_#{@source}_heat_map".to_sym, location, schedule)
