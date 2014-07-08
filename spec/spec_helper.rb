@@ -2,8 +2,11 @@
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
-require "pundit/rspec"
 require 'rspec/its'
+
+RSpec.configure { |c| c.deprecation_stream = 'log/deprecations.log' } # Configuration set here because pundit also sets the deprecation stream
+require "pundit/rspec"
+
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are

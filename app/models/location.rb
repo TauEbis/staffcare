@@ -5,8 +5,9 @@ class Location < ActiveRecord::Base
   belongs_to :input_projection
 
   validates :zone, presence: true
-  validates :rooms, numericality: { greater_than: 0, less_than: 100 }
-  validates :max_mds, numericality: { greater_than: 0, less_than: 100 }
+  validates :rooms, presence: true, numericality: { greater_than: 0, less_than: 100 }
+  validates :max_mds, presence: true, numericality: { greater_than: 0, less_than: 100 }
+  validates :min_openers, :min_closers, presence: true, numericality: { greater_than: 0, less_than_or_equal_to: :max_mds }, unless: "max_mds.nil?"
 
   scope :ordered, -> { order(name: :asc) }
 
@@ -18,6 +19,14 @@ class Location < ActiveRecord::Base
   DAY_PARAMS = DAYS.inject([]) do |acc, day|
     ['open', 'close'].each {|tod| acc << "#{day}_#{tod}".to_sym }
     acc
+  end
+
+  DAY_PARAMS.each do |day_param|
+    validates day_param, presence: true, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 1440 }
+  end
+
+  DAYS.each do |day|
+    validates "#{day}_open".to_sym, numericality: { less_than_or_equal_to: "#{day}_close".to_sym }, unless: "send(\"#{day}_close\").nil?"
   end
 
   # For compatibility with shifty Location
@@ -44,4 +53,5 @@ class Location < ActiveRecord::Base
   def close_times
     @_close_times ||= DAYS.map {|day| send("#{day}_close") / 60 }
   end
+
 end
