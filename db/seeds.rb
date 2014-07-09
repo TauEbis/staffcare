@@ -14,11 +14,17 @@ if Rails.env.development?
 
   puts "Created Admin User: #{user.email} / password"
 
-  user = User.find_or_create_by!(email: 'scheduler@scheduler.com') do |user|
+  user = User.find_or_create_by!(email: 'manager@manager.com') do |user|
     user.password = user.password_confirmation = 'password'
   end
 
-  puts "Created Scheduler User: #{user.email} / password"
+  puts "Created Manager User: #{user.email} / password"
+
+  user2 = User.find_or_create_by!(email: 'gm@gm.com') do |user|
+    user.password = user.password_confirmation = 'password'
+  end
+
+  puts "Created GM User: #{user.email} / password"
 
   z = Zone.create(name: 'NYC1')
   user.zones << z

@@ -7,7 +7,7 @@
 
     <%= f.input :email, class: 'form-control' %>
 
-    <%= f.input :role, collection: [['Scheduler', 'scheduler'], ['Admin', 'admin']], include_blank: false, class: 'form-control' %>
+    <%= f.input :role, collection: [['Manager', 'manager'],['GM', 'gm'], ['Admin', 'admin']], include_blank: false, class: 'form-control' %>
 
     <%= f.association :zones, as: :check_boxes, wrapper: :vertical_radio_and_checkboxes %>
 

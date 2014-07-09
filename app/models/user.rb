@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
          #:zxcvbnable,
          :lockable, :timeoutable, :invitable
 
-  enum role: [:nobody, :admin, :scheduler]
+  enum role: [:nobody, :admin, :manager, :gm]
   after_initialize :set_default_role, :if => :new_record?
 
   has_many :memberships
