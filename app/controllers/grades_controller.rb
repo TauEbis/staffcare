@@ -1,5 +1,12 @@
 class GradesController < ApplicationController
+  before_action :set_location_plan, only: [:create]
   before_action :set_grade, only: [:show, :hourly, :update]
+
+  def create
+    authorize Grade.new(location_plan: @location_plan), :create?  # Fake grade, the real one to be created later
+    @location_plan.copy_grade!(current_user)
+    redirect_to @location_plan, notice: 'You may now edit the coverage for this location.'
+  end
 
   # GET /coverages/1
   def show
@@ -40,9 +47,13 @@ class GradesController < ApplicationController
     @date = Date.parse params[:date]
     @date_s = params[:date]
 
-    @location_plan = policy_scope(LocationPlan).find(params[:id])
-    authorize @location_plan
+    @grade = policy_scope(Grade).find(params[:id])
+    authorize @grade
 
-    @grade = @location_plan.chosen_grade
+    @location_plan = @grade.location_plan
+  end
+
+  def set_location_plan
+    @location_plan = policy_scope(LocationPlan).find(params[:location_plan_id])
   end
 end

@@ -1,6 +1,7 @@
 class LocationPlansController < ApplicationController
-  before_action :set_location_plan, only: [:show, :edit, :update, :destroy]
+  before_action :set_location_plan, only: [:show, :edit, :update]
   before_action :set_location_plans, only: [:index]
+  before_action :set_basics, only: [:index, :show, :edit, :update]
 
   skip_after_filter :verify_authorized, only: [:approve]
   after_action :verify_policy_scoped, only: [:approve]
@@ -32,10 +33,7 @@ class LocationPlansController < ApplicationController
 
   # PATCH/PUT /location_plans/1
   def update
-    if params[:copy_grade]
-      @location_plan.copy_grade!
-      redirect_to @location_plan, notice: 'You may now edit the coverage for this location.'
-    elsif @location_plan.update(location_plan_params)
+    if @location_plan.update(location_plan_params)
       redirect_to @location_plan#, notice: 'LocationPlan was successfully updated.'
     else
       render :show
@@ -62,18 +60,12 @@ class LocationPlansController < ApplicationController
   # For index
   def set_location_plans
     @schedule = Schedule.find(params[:schedule_id])
-    authorize @schedule, :show?
 
     @zone = if params[:zone_id]
               user_zones.find(params[:zone_id].to_i)
             else
               user_zones.ordered.first
             end
-
-    authorize @zone
-
-    @zones = user_zones.ordered
-    @location_plans = @schedule.location_plans.for_zone(@zone).where(location_id: user_locations.map(&:id)).includes(:location).ordered
   end
 
   # For member actions
@@ -81,14 +73,19 @@ class LocationPlansController < ApplicationController
     @location_plan = LocationPlan.find(params[:id])
     authorize @location_plan
 
-    @zone = @location_plan.location.zone
-
+    @zone     = @location_plan.location.zone
     @schedule = @location_plan.schedule
+  end
+
+  def set_basics
     authorize @schedule, :show?
 
     # These are used for the nav header
     @zones = user_zones.ordered
-    @location_plans = @schedule.location_plans.for_zone(@zone).where(location_id: user_locations.map(&:id)).includes(:location).ordered
+    @location_plans = @schedule.
+        location_plans.includes(:location).ordered.
+        for_zone(@zone).                              # For this zone
+        merge(user_locations)                         # And for this user
   end
 
   # Only allow a trusted parameter "white list" through.

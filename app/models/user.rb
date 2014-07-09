@@ -13,6 +13,10 @@ class User < ActiveRecord::Base
   has_many :locations, through: :memberships
   #has_many :zones, -> { distinct }, through: :locations
 
+  def label
+    name.blank? ? email : name
+  end
+
   def set_default_role
     self.role ||= :nobody
   end

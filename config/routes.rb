@@ -9,8 +9,10 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :grades, only: [:show, :update] do
-    get :hourly, on: :member
+  resources :grades, only: [:create, :show, :update] do
+    member do
+      get :hourly
+    end
   end
 
   resources :locations

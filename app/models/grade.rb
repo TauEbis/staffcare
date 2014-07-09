@@ -4,6 +4,7 @@
 # that the grade belongs to.
 class Grade < ActiveRecord::Base
   belongs_to :location_plan
+  belongs_to :user
 
   enum source: [:optimizer, :last_month, :manual]
 
@@ -14,7 +15,7 @@ class Grade < ActiveRecord::Base
       when 'optimizer'
         "Optimized Coverage"
       when 'manual'
-        "Manual Coverage #{created_at}"
+        "Manual Coverage by #{user.try(:label)} [ #{I18n.localize created_at} ]"
       when 'last_month'
         'Coverage from previous month'
       else
