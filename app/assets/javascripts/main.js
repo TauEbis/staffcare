@@ -10,6 +10,16 @@ $(document).ready(function() {
     $(this.form).submit();
   });
 
+  $(".select-all").on('click', function(e){
+    e.preventDefault();
+    $(this).closest('fieldset').find(':checkbox').prop( "checked", true );
+  });
+
+  $(".select-none").on('click', function(e){
+    e.preventDefault();
+    $(this).closest('fieldset').find(':checkbox').prop( "checked", false);
+  });
+
   coverageContext = new CoverageViewModel();
   ko.applyBindings(coverageContext);
 

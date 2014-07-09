@@ -3,6 +3,6 @@
 FactoryGirl.define do
   factory :membership do
     user nil
-    zone nil
+    location nil
   end
 end
