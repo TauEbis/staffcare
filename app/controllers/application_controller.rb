@@ -32,4 +32,8 @@ class ApplicationController < ActionController::Base
     policy_scope(Zone)
   end
 
+  def user_locations
+    policy_scope(Location)
+  end
+
 end

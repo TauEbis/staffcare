@@ -73,7 +73,7 @@ class LocationPlansController < ApplicationController
     authorize @zone
 
     @zones = user_zones.ordered
-    @location_plans = @schedule.location_plans.for_zone(@zone).includes(:location).ordered
+    @location_plans = @schedule.location_plans.for_zone(@zone).where(location_id: user_locations.map(&:id)).includes(:location).ordered
   end
 
   # For member actions
@@ -88,7 +88,7 @@ class LocationPlansController < ApplicationController
 
     # These are used for the nav header
     @zones = user_zones.ordered
-    @location_plans = @schedule.location_plans.for_zone(@zone).includes(:location).ordered
+    @location_plans = @schedule.location_plans.for_zone(@zone).where(location_id: user_locations.map(&:id)).includes(:location).ordered
   end
 
   # Only allow a trusted parameter "white list" through.
