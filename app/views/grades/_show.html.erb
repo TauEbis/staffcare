@@ -33,7 +33,7 @@
     </div>
   </div>
 
-  <div data-bind="ifnot: day_info().source() == 'manual'">
+  <div data-bind="ifnot: editable">
     <div data-bind="foreach: shifts">
       <div class="row form-inline  form-group">
         <div class="col-sm-4">
@@ -44,7 +44,7 @@
     </div>
   </div>
 
-  <div data-bind="if: day_info().source() == 'manual'">
+  <div data-bind="if: editable">
     <div data-bind="foreach: shifts">
       <div class="row form-inline form-group">
         <div class="col-sm-4">

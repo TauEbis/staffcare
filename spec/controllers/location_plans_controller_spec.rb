@@ -43,6 +43,8 @@ describe LocationPlansController, :type => :controller do
   end
 
   describe "GET show" do
+    render_views(false)
+
     it "assigns the requested location_plan as @location_plan" do
       location_plan = create(:location_plan)
       get :show, {:id => location_plan.to_param}, valid_session

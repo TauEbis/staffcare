@@ -1,5 +1,10 @@
 <h1>Editing schedule</h1>
 
+<p class="bg-danger">
+  Editing the weights of an existing schedule WILL result in undefined behavior!<br><br>
+  Until this is addressed, you are better off deleting this whole schedule and generating a new one!
+</p>
+
 <%= render 'form' %>
 
 <%= link_to 'Show', @schedule %> |

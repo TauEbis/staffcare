@@ -3,11 +3,22 @@ var coverageContext;
 $(document).ready(function() {
   $('.dropdown-toggle').dropdown();
   $('.chosen-select').chosen();
+  $('[data-toggle="tooltip"]').tooltip();
 
   $('[data-behaviour~=datepicker]').datepicker({"format": "yyyy-mm-dd", "weekStart": 0, "autoclose": true});
 
   $(".form_autoselector").on('change', function(){
     $(this.form).submit();
+  });
+
+  $(".select-all").on('click', function(e){
+    e.preventDefault();
+    $(this).closest('fieldset').find(':checkbox').prop( "checked", true );
+  });
+
+  $(".select-none").on('click', function(e){
+    e.preventDefault();
+    $(this).closest('fieldset').find(':checkbox').prop( "checked", false);
   });
 
   coverageContext = new CoverageViewModel();
@@ -16,10 +27,10 @@ $(document).ready(function() {
   $('.daygrid a').on('click', function(event){
     event.preventDefault();
 
-    var lpid = $('.daygrid').data().locationPlanId;
+    var chosen_grade_id = $('.daygrid').data().chosenGradeId;
     var date  = $(this).data().date;
 
-    load_day_info(lpid, date);
+    load_day_info(chosen_grade_id, date);
   });
 
   $('#location_plan_chosen_grade_id').on('change', function(){
@@ -28,13 +39,11 @@ $(document).ready(function() {
   })
 });
 
-function load_day_info(location_plan_id, date){
-  var lpid = location_plan_id;
-
+function load_day_info(chosen_grade_id, date){
   $('#coverage_view').addClass('hidden');
   $('#coverage_view_load').removeClass('hidden');
 
-  $.ajax( "/grades/" + lpid, {data: {date: date}} )
+  $.ajax( "/grades/" + chosen_grade_id, {data: {date: date}} )
       .done(function(data, status, xhr) {
         coverageContext.load(data);
         $('#coverage_view').removeClass('hidden');
@@ -46,7 +55,7 @@ function load_day_info(location_plan_id, date){
 //          inject_coverage_fail('#coverage_view', xhr, status, error);
       });
 
-  $.ajax( "/grades/" + lpid + "/hourly", {data: {date: date}} )
+  $.ajax( "/grades/" + chosen_grade_id + "/hourly", {data: {date: date}} )
       .done(function(data, status, xhr) {
         inject_coverage_data('#coverage_hourly', data);
       })

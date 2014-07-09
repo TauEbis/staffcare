@@ -29,7 +29,11 @@ class ApplicationController < ActionController::Base
 
   # Zones that are available to the logged-in user
   def user_zones
-    policy_scope(Zone)
+    policy_scope(Zone.all)
+  end
+
+  def user_locations
+    policy_scope(Location.all)
   end
 
 end

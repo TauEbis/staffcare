@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140703154037) do
+ActiveRecord::Schema.define(version: 20140709135549) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,7 +25,10 @@ ActiveRecord::Schema.define(version: 20140703154037) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.json     "shifts",           default: {}, null: false
+    t.integer  "user_id"
   end
+
+  add_index "grades", ["user_id"], name: "index_grades_on_user_id", using: :btree
 
   create_table "input_projections", force: true do |t|
     t.date    "start_date"
@@ -78,14 +81,13 @@ ActiveRecord::Schema.define(version: 20140703154037) do
   add_index "locations", ["zone_id"], name: "index_locations_on_zone_id", using: :btree
 
   create_table "memberships", force: true do |t|
-    t.integer  "user_id",    null: false
-    t.integer  "zone_id",    null: false
+    t.integer  "user_id",     null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "location_id", null: false
   end
 
   add_index "memberships", ["user_id"], name: "index_memberships_on_user_id", using: :btree
-  add_index "memberships", ["zone_id"], name: "index_memberships_on_zone_id", using: :btree
 
   create_table "schedules", force: true do |t|
     t.date     "starts_on"

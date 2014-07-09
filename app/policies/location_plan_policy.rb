@@ -1,11 +1,12 @@
 class LocationPlanPolicy < ApplicationPolicy
 
   def approve?
-    user.admin? || user.location_ids.include?(record.location_id)
+    update?
   end
 
-  def hourly?
-    show?
+  def update?
+    user.admin? ||
+    ( user.location_ids.include?(record.location_id) && record.schedule.active? )
   end
 
   class Scope < Struct.new(:user, :scope)

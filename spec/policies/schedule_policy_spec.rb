@@ -6,8 +6,8 @@ describe SchedulePolicy do
       expect(subject).to permit(User.new(role: 'admin'), Schedule.new)
     end
 
-    it "does not allow a scheduler to create a schedule" do
-      expect(subject).not_to permit(User.new(role: 'scheduler'), Schedule.new)
+    it "does not allow a manager to create a schedule" do
+      expect(subject).not_to permit(User.new(role: 'manager'), Schedule.new)
     end
   end
 

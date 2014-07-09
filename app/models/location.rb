@@ -4,6 +4,9 @@ class Location < ActiveRecord::Base
   belongs_to :zone
   belongs_to :input_projection
 
+  has_many :memberships
+  has_many :users, through: :memberships
+
   validates :zone, presence: true
   validates :rooms, presence: true, numericality: { greater_than: 0, less_than: 100 }
   validates :max_mds, presence: true, numericality: { greater_than: 0, less_than: 100 }
@@ -11,7 +14,8 @@ class Location < ActiveRecord::Base
 
   scope :ordered, -> { order(name: :asc) }
 
-  default_scope -> { order(name: :asc) }
+  # Removed because it interferes with distinct
+  #default_scope -> { order(name: :asc) }
 
 
   DAYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
