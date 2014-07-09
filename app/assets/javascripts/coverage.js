@@ -106,7 +106,7 @@ function CoverageViewModel() {
       self.diff_grade_hours( null);
     }
 
-    self.location_plan_id = data.location_plan_id;
+    self.chosen_grade_id = data.chosen_grade_id;
     self.day_info(new DayInfo(data.day_info));
     self.day_points(new Points(data.day_points));
     self.grade_points(new Points(data.grade_points));
@@ -144,11 +144,11 @@ function CoverageViewModel() {
   });
 
   self.save = function() {
-    $.ajax("/grades/" + self.location_plan_id, {
+    $.ajax("/grades/" + self.chosen_grade_id, {
       data: ko.toJSON({ date: self.day_info().date(), shifts: self.shifts() }),
       type: "patch", contentType: "application/json",
       success: function(result) {
-        load_day_info(self.location_plan_id, self.day_info().date());
+        load_day_info(self.chosen_grade_id, self.day_info().date());
       }
     });
   };

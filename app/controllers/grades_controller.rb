@@ -4,7 +4,7 @@ class GradesController < ApplicationController
 
   def create
     authorize Grade.new(location_plan: @location_plan), :create?  # Fake grade, the real one to be created later
-    @location_plan.copy_grade!(current_user)
+    @grade = @location_plan.copy_grade!(current_user)
     redirect_to @location_plan, notice: 'You may now edit the coverage for this location.'
   end
 
@@ -13,7 +13,7 @@ class GradesController < ApplicationController
     day_pts = @grade.points[@date_s]
     pts     = Grade.unoptimized_sum(@grade)
 
-    data = { location_plan_id: @location_plan.id,
+    data = { chosen_grade_id: @grade.id,
 
              shifts: @grade.shifts[@date.to_s],
              day_info: {

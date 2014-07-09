@@ -1,5 +1,9 @@
 class GradePolicy < ApplicationPolicy
 
+  def create?
+    user.admin? || Pundit.policy!(user, record.location_plan).update?
+  end
+
   def hourly?
     show?
   end
