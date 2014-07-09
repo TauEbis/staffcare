@@ -3,6 +3,7 @@ var coverageContext;
 $(document).ready(function() {
   $('.dropdown-toggle').dropdown();
   $('.chosen-select').chosen();
+  $('[data-toggle="tooltip"]').tooltip();
 
   $('[data-behaviour~=datepicker]').datepicker({"format": "yyyy-mm-dd", "weekStart": 0, "autoclose": true});
 

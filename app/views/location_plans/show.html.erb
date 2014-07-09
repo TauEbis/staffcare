@@ -12,6 +12,12 @@
     <div class="col-sm-8">
       <%= simple_form_for @location_plan, wrapper: :horizontal_form,html: {class: 'form-inline'} do |f| %>
         <%= f.association :chosen_grade, collection: @location_plan.grades.ordered, label_method: :label, label: false, include_blank: false %>
+        <% unless policy(@location_plan.chosen_grade).update? -%>
+          <span data-toggle="tooltip" title="You can only edit your own coverage solution.  Use Copy & Edit to make your own copy">
+            (un-editable)
+            <span class="glyphicon glyphicon-question-sign"></span>
+          </span>
+        <% end -%>
       <% end -%>
     </div>
     <div class="pull-right">

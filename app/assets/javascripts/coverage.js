@@ -68,7 +68,6 @@ function DayInfo(data) {
 
   self.formatted_date = ko.observable(data.formatted_date);
   self.date = ko.observable(data.date);
-  self.source = ko.observable(data.source);
 }
 
 // Overall viewmodel for a day, along with initial state
@@ -92,6 +91,8 @@ function CoverageViewModel() {
   self.diff_grade_hours  = ko.observable(null);
 
   self.prev_date = null;
+  self.source    = null;
+  self.editable  = null;
 
   self.load = function(data) {
     console.log(data);
@@ -107,6 +108,9 @@ function CoverageViewModel() {
     }
 
     self.chosen_grade_id = data.chosen_grade_id;
+    self.source = data.source;
+    self.editable = data.editable;
+
     self.day_info(new DayInfo(data.day_info));
     self.day_points(new Points(data.day_points));
     self.grade_points(new Points(data.grade_points));

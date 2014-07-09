@@ -9,8 +9,13 @@ class GradePolicy < ApplicationPolicy
   end
 
   def update?
-    user.admin? ||
-    ( policy(record.location_plan).update? && record.user == user )
+    case record.source
+      when 'manual'
+        Pundit.policy!(user, record.location_plan).update? && record.user == user
+      else
+        false
+    end
+
   end
 
   class Scope < Struct.new(:user, :scope)

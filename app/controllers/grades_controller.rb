@@ -14,6 +14,8 @@ class GradesController < ApplicationController
     pts     = Grade.unoptimized_sum(@grade)
 
     data = { chosen_grade_id: @grade.id,
+             source: @grade.source,
+             editable: policy(@grade).update?,
 
              shifts: @grade.shifts[@date.to_s],
              day_info: {
@@ -21,7 +23,6 @@ class GradesController < ApplicationController
                formatted_date: I18n.localize(@date, format: :with_dow),
                open_time: @location_plan.open_times[@date.wday],
                close_time: @location_plan.close_times[@date.wday],
-               source: @grade.source
              },
              day_points:   day_pts,
              grade_points: pts,
