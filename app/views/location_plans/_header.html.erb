@@ -2,7 +2,7 @@
 
 <div class="pull-right">
   <% if @location_plan -%>
-    <%= render 'location_plan_actions', location_plan: @location_plan %>
+    <%= action_links @location_plan %>
   <% else -%>
 
     <% if @schedule.draft? -%>
@@ -15,16 +15,12 @@
 
       <% if policy(@schedule).update? -%>
         <%= link_to 'Return to Draft', schedule_path(@schedule, schedule: {state: 'draft'}), method: :patch, class: 'btn btn-default' %>
-        <% if LocationPlan.collective_state(@schedule.location_plans) == 'approved' -%>
+        <% if LocationPlan.collective_state(@schedule.location_plans) == 'gm_approved' -%>
           <%= link_to 'Publish', schedule_path(@schedule, schedule: {state: 'published'}), method: :patch, class: 'btn btn-primary' %>
         <% end -%>
       <% end -%>
-      <% if policy(@zone).approve? -%>
-        <% if LocationPlan.collective_state(@location_plans) == 'pending' -%>
-          <%= link_to "#{prefix} Approve entire zone", approve_location_plans_path(location_plan_ids: @location_plans.map(&:to_param)), method: :post, class: "btn #{btn_class}" %>
-        <% else -%>
-          <%= link_to "#{prefix} Un-Approve entire zone", approve_location_plans_path(location_plan_ids: @location_plans.map(&:to_param), reject: true), method: :post, class: 'btn btn-default' %>
-        <% end -%>
+      <% if current_user.admin? -%>
+        <%= link_to "Admin Force Approve entire zone", change_state_location_plans_path(location_plan_ids: @location_plans.map(&:to_param), state: 'gm_approved'), method: :post, class: 'btn btn-warning' %>
       <% end -%>
     <% end -%>
 

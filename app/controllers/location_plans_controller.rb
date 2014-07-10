@@ -3,8 +3,8 @@ class LocationPlansController < ApplicationController
   before_action :set_location_plans, only: [:index]
   before_action :set_basics, only: [:index, :show, :edit, :update]
 
-  skip_after_filter :verify_authorized, only: [:approve]
-  after_action :verify_policy_scoped, only: [:approve]
+  skip_after_filter :verify_authorized, only: [:change_state]
+  after_action :verify_policy_scoped, only: [:change_state]
 
   # GET /schedule/:schedule_id/location_plans
   # Also expects a :zone_id param as a filter
@@ -40,15 +40,16 @@ class LocationPlansController < ApplicationController
     end
   end
 
-  def approve
+  def change_state
     ids = Array(params[:location_plan_ids])
 
     @location_plans = policy_scope(LocationPlan).where(id: ids)
 
-    if params[:reject]
-      @location_plans.update_all(approval_state: LocationPlan.approval_states[:pending])
+    state = LocationPlan.approval_states[params[:state]]
+    if state
+      @location_plans.update_all(approval_state: state)
     else
-      @location_plans.update_all(approval_state: LocationPlan.approval_states[:approved])
+      flash[:alert] = "#{params[:state]} is not a valid state"
     end
 
     lp = @location_plans.first
