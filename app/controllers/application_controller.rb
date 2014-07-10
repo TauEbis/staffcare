@@ -6,6 +6,8 @@ class ApplicationController < ActionController::Base
 
   before_action :authenticate_user!, unless: :devise_controller?
 
+  around_filter :set_time_zone
+
   include Pundit
   after_action :verify_authorized, except: :index, unless: :devise_controller?
   after_action :verify_policy_scoped, only: :index, unless: :devise_controller?
@@ -36,4 +38,11 @@ class ApplicationController < ActionController::Base
     policy_scope(Location.all)
   end
 
+  def set_time_zone
+    old_time_zone = Time.zone
+    Time.zone = current_user.time_zone if user_signed_in?
+    yield
+  ensure
+    Time.zone = old_time_zone
+  end
 end
