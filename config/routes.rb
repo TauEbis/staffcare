@@ -15,7 +15,9 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :input_projections, except: [:show]
+  resources :input_projections, except: [:show] do
+    collection { post :import }
+  end
 
   resources :locations
 

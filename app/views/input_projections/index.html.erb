@@ -2,6 +2,12 @@
 
 <h1>Listing input projections</h1>
 
+<p>
+  Download:
+  <%= link_to "CSV", input_projections_path(format: "csv") %> |
+  <%= link_to "Excel", input_projections_path(format: "xls") %>
+</p>
+
 <% unless @projections.blank? %>
 <table class="table">
   <thead>
@@ -31,6 +37,16 @@
 </table>
 
 <% end %>
-<br>
 
+<br>
 <%= link_to 'New Input Projection', new_input_projection_path %>
+
+<h3>Import Input Projections</h3>
+
+<%= form_tag import_input_projections_path, multipart: true do %>
+  <%= file_field_tag :file, class: 'form-actions' %>
+
+  </br>
+
+  <%= submit_tag "Import", class: 'form-actions' %>
+<% end %>

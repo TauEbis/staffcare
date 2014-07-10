@@ -8,12 +8,12 @@ class InputProjectionPolicy < ApplicationPolicy
     create?
   end
 
-  def edit?
-    update?
-  end
-
   def create?
     user.admin?
+  end
+
+  def edit?
+    update?
   end
 
   def update?
@@ -21,6 +21,10 @@ class InputProjectionPolicy < ApplicationPolicy
   end
 
   def destroy?
+    user.admin?
+  end
+
+  def import?
     user.admin?
   end
 

@@ -2,11 +2,17 @@ class InputProjectionsController < ApplicationController
 
   before_action :set_input_projection, only: [:new, :edit, :update, :destroy]
   before_action :set_locations, only: [:index, :new, :edit, :create, :update ]
+  skip_after_filter :verify_authorized, only: [:import]
 
   # GET /input_projections
   def index
     @projections = policy_scope(InputProjection).ordered
     authorize @projections
+    respond_to do |format|
+      format.html
+      format.csv { send_data @projections.to_csv }
+      format.xls # { send_data @projections.to_csv(col_sep: "\t") } # this seems like it might be suffficient
+    end
   end
 
   # GET /input_projections/new
@@ -45,6 +51,8 @@ class InputProjectionsController < ApplicationController
 
   # POST
   def import
+    InputProjection.import(params[:file])
+    redirect_to input_projections_url, notice: 'Input Projections successfully imported.'
   end
 
   private
