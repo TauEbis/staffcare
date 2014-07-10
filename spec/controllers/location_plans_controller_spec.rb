@@ -52,21 +52,21 @@ describe LocationPlansController, :type => :controller do
     end
   end
 
-  describe "POST approve" do
+  describe "POST change_state" do
     it "approves a location_plan" do
       location_plan = create(:location_plan)
       expect(location_plan.approval_state).to eq('pending')
 
-      post :approve, {:location_plan_ids => [location_plan.to_param]}, valid_session
+      post :change_state, {:location_plan_ids => [location_plan.to_param], :state => 'manager_approved'}, valid_session
       location_plan.reload
-      expect(location_plan.approval_state).to eq('approved')
+      expect(location_plan.approval_state).to eq('manager_approved')
     end
 
     it "unapproves a location_plan" do
-      location_plan = create(:location_plan, approval_state: 'approved')
-      expect(location_plan.approval_state).to eq('approved')
+      location_plan = create(:location_plan, approval_state: 'gm_approved')
+      expect(location_plan.approval_state).to eq('gm_approved')
 
-      post :approve, {:location_plan_ids => [location_plan.to_param], :reject => true}, valid_session
+      post :change_state, {:location_plan_ids => [location_plan.to_param], :state => 'pending'}, valid_session
       location_plan.reload
       expect(location_plan.approval_state).to eq('pending')
     end
