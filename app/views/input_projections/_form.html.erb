@@ -1,0 +1,33 @@
+<%= simple_form_for(@input_projection, html: { class: 'form-vertical' }) do |f| %>
+  <%= f.error_notification %>
+  <%= display_base_errors @input_projection %>
+
+  <div class="form-inputs">
+    <div class="row">
+      <div class="col-sm-4">
+        <%= f.input :start_date, required: true, wrapper: :vertical_input_group do %>
+          <%= f.input_field :start_date, as: :string, class: 'form-control', data: {behaviour: "datepicker"} %>
+          <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+        <% end %>
+
+        <%= f.input :end_date, required: true, wrapper: :vertical_input_group do %>
+          <%= f.input_field :end_date, as: :string, class: 'form-control', data: {behaviour: "datepicker"} %>
+          <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+        <% end %>
+
+		    <% @locations.each do |l| %>
+				    <%= f.label("volume_by_location[#{l.id}]", l.name) %> <br />
+				    <%= f.input_field "volume_by_location[#{l.id}]", as: :string, class: 'form-control',
+                value: @input_projection.volume_by_location[l.id.to_s] %>
+            <br />
+				<% end %>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>
+</br>

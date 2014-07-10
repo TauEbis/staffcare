@@ -2,7 +2,7 @@
 
 FactoryGirl.define do
   factory :location do
-    name "MyString"
+    sequence(:name) 				{ |n| "Location #{n}" }
     zone
     rooms 5
     max_mds 3

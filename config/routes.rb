@@ -15,6 +15,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :input_projections, except: [:show]
+
   resources :locations
 
   resources :zones

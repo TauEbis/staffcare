@@ -2,6 +2,6 @@
 
 FactoryGirl.define do
   factory :zone do
-    name "MyString"
+    sequence(:name) 				{ |n| "Zone #{n}" }
   end
 end

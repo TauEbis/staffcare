@@ -1,0 +1,36 @@
+<%provide(:title, 'All input projections')%>
+
+<h1>Listing input projections</h1>
+
+<% unless @projections.blank? %>
+<table class="table">
+  <thead>
+  <tr>
+    	<th>Start Date</th>
+    	<th>End Date</th>
+    <% @locations.map(&:name).each do |l_name| %>
+    	<th><%= l_name %></th>
+    <% end %>
+    	<th colspan="2"></th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @projections.each do |projection| %>
+    <tr>
+	      <td><%= projection.start_date %></td>
+	      <td><%= projection.end_date %></td>
+	    <% @locations.map(&:id).each do |l_id| %>
+     		<td><%= projection.volume_by_location[l_id.to_s] %></td>
+     	<% end %>
+      <td><%= link_to 'Edit', edit_input_projection_path(projection) %></td>
+      <td><%= link_to 'Delete', projection, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<% end %>
+<br>
+
+<%= link_to 'New Input Projection', new_input_projection_path %>

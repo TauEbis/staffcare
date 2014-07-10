@@ -1,3 +1,4 @@
+<%provide(:title, 'Dashboard')%>
 <h1>Dashboard</h1>
 
 <p>Currently <%= Sidekiq::Queue.new.size %> background jobs queued.  The oldest job is <%= Sidekiq::Queue.new.latency %> seconds old</p>
