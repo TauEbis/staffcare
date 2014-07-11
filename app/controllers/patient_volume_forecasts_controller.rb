@@ -51,10 +51,10 @@ class PatientVolumeForecastsController < ApplicationController
 
   # POST
   def import
+    authorize current_user, :create?
     unless (params[:file])
          redirect_to patient_volume_forecasts_url, notice: 'Please select a file to import.'
     else
-         authorize current_user, :create?
          PatientVolumeForecast.import(params[:file])
          redirect_to patient_volume_forecasts_url, notice: 'Patient Volume Forecasts successfully imported.'
     end

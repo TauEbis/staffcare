@@ -20,7 +20,7 @@ if Rails.env.development?
 
   puts "Created Manager User: #{user.email} / password"
 
-  user2 = User.find_or_create_by!(email: 'gm@gm.com') do |user|
+  user = User.find_or_create_by!(email: 'gm@gm.com') do |user|
     user.password = user.password_confirmation = 'password'
   end
 

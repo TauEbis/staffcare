@@ -25,9 +25,4 @@ module SchedulesHelper
 
     buf
   end
-
-  def color_for_score(score)
-    v = 80 - [((score - 30) / 100 * 100), 100].min
-    "(#{v},90%,90%)"
-  end
 end
