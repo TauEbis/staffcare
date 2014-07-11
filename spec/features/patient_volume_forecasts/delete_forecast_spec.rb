@@ -14,7 +14,7 @@ feature "Deleting a patient volume forecast: " do
 			visit patient_volume_forecasts_path
 		end
 
-		it { should have_link('Delete', href: patient_volume_forecast_path(earlier_input_projection) ) }
+		it { should have_link('Delete', href: patient_volume_forecast_path(earlier_forecast) ) }
 
 		scenario "when he clicks a delete link, then it deletes an Patient Volume Forecast" do
 			expect { click_link('Delete', match: :first) }.to change(PatientVolumeForecast, :count).by(-1)

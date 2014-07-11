@@ -83,6 +83,8 @@ class PatientVolumeForecast < ActiveRecord::Base
 			result = {}
 			result["start_date"] = Date.parse(row["start_date"])
 			result["end_date"] = Date.parse(row["end_date"])
+      # result["start_date"] = row['start_date'].include?('/') ? Date.strptime(row['start_date'], '%m/%d/%y') : result["start_date"]
+      # something like this ....
 			result["volume_by_location"] = {}
 			locations.each do |location|
 				result["volume_by_location"][location.id.to_s] = row[location.name]
@@ -94,9 +96,8 @@ class PatientVolumeForecast < ActiveRecord::Base
         projection = PatientVolumeForecast.new
       end
 
-  	  projection.update(result)
-  	  binding.pry unless projection.valid?
-  	  projection.save!
+  		projection.update(result)
+  		projection.save!
   	end
   end
 
