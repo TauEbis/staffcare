@@ -2,13 +2,59 @@
 #    VisitProjections are computed from these projections by applying them to a heat map.
 class PatientVolumeForecast < ActiveRecord::Base
 
-  validates :volume_by_location, presence: true #TODO validate hash is greater than 0 and real locations
+  validates :volume_by_location, presence: true 
   # TODO: Appear to be several ways to validate a date string is good- want ISO (yyy-mm-dd) format
-  validates :start_date, presence: true
+  validates :start_date, presence: true, uniqueness: true
   validates :end_date, presence: true
+  #validate :legal_volume_by_location
+  validate :valid_start_date, unless: "start_date.blank?"
+  validate :valid_end_date, unless: "start_date.blank?"
 
   scope :ordered, -> { order(start_date: :desc, id: :desc) }
   default_scope -> { order(start_date: :desc, id: :desc) }
+
+
+  def valid_start_date
+    unless start_date.is_a? Date
+      errors.add(:start_date, "Please select a starting date.")
+      return
+    end
+
+    unless start_date.sunday?
+      errors.add(:start_date, "Forecast week must start on a Sunday.")
+    end
+  end
+
+  def valid_end_date
+    unless end_date.is_a? Date
+      errors.add(:end_date, "Please select an end date")
+      return
+    end
+
+    unless end_date == start_date + 6
+      errors.add(:end_date, "End data and start date must be one week apart")
+    end
+  end
+
+  #TODO validate hash is greater than 0 and real locations
+  def legal_volume_by_location
+    if volume_by_location.keys.length <= 0
+         errors.add(:volume_by_location, "must include at least one location")
+    end
+    volumes = volume_by_location.values
+    volumes.each do |volume|
+         if volume < 0
+              errors.add(:volume_by_location, "volumes must be greater than zero")
+         end
+    end
+
+    locations = Location.all
+    location_names = locations.map(&:name)
+    good_names = location_names & volume_by_location.keys
+    if good_names.length < volume_by_location.keys.length
+         errors.add(:volume_by_location, "invalid location name in volume data")
+    end
+  end
 
   def self.to_csv(options = {})
   	CSV.generate(options) do |csv|

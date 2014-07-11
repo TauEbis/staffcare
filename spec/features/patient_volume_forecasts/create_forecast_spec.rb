@@ -50,7 +50,7 @@ feature "Creating a patient volume forecast " do
     end
 
     context "when invalid information is entered" do
-    	scenario "and submitted then a user is not created" do
+    	scenario "and submitted then a volume forecast is not created" do
 	    	expect { click_button submit }.not_to change(PatientVolumeForecast, :count)
 			end
 

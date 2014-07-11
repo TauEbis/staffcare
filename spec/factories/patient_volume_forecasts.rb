@@ -6,8 +6,8 @@ FactoryGirl.define do
   		locations { [ create(:location), create(:location)] }
   	end
 
-    sequence(:start_date) { |n| Date.today + n }
-    end_date { start_date + 27 }
+    sequence(:start_date) { |n| Date.parse('2014-06-29') + (7 * n) }
+    end_date { start_date + 6 }
 
     sequence(:volume_by_location) do |n|
 			acc=Hash.new
