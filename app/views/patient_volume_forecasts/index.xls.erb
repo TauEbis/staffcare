@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+  xmlns:x="urn:schemas-microsoft-com:office:excel"
+  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:html="http://www.w3.org/TR/REC-html40">
+<Styles>
+  <Style ss:ID="Default" ss:Name="Normal">
+   <Alignment ss:Vertical="Bottom"/>
+   <Borders/>
+   <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="12" ss:Color="#000000"/>
+   <Interior/>
+   <NumberFormat/>
+   <Protection/>
+  </Style>
+  <Style ss:ID="s63">
+   <NumberFormat ss:Format="m/d/yyyy;@"/>
+  </Style>
+ </Styles>
+  <Worksheet ss:Name="Sheet1">
+    <Table>
+      <Row>
+        <Cell><Data ss:Type="String">Start Date</Data></Cell>
+        <Cell><Data ss:Type="String">End Date</Data></Cell>
+    <% @locations.each do |location| %>
+        <Cell><Data ss:Type="String"><%= location.name %></Data></Cell>
+    <% end %>
+      </Row>
+    <% @patient_volume_forecasts.each do |projection| %>
+         <% if projection.start_date > Date.today %>
+      <Row>
+        <Cell ss:StyleID="s63"><Data ss:Type="DateTime"><%= projection.start_date %></Data></Cell>
+        <Cell ss:StyleID="s63"><Data ss:Type="DateTime"><%= projection.end_date %></Data></Cell>
+      <% @locations.each do |location| %>
+        <Cell><Data ss:Type="Number"><%= projection.volume_by_location[location.id.to_s] %></Data></Cell>
+      <% end %>
+      </Row>
+ <% end %>
+    <% end %>
+    </Table>
+  </Worksheet>
+</Workbook>

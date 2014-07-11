@@ -2,7 +2,6 @@
 # a location was configured when a schedule was generated.
 class Location < ActiveRecord::Base
   belongs_to :zone
-  belongs_to :input_projection
 
   has_many :memberships
   has_many :users, through: :memberships

@@ -14,14 +14,12 @@ feature 'Sign in', :devise do
   #   Then I am successfully signed in
   scenario 'successful sign in' do
     user = create(:admin_user)
-
     expect(User.count).to eq(1)
 
-    visit new_user_session_path
-    fill_in 'Email', with: user.email
-    fill_in 'Password', with: 'password'
-    click_button 'Sign in'
+    visit root_path
+    expect(page).to have_link('Sign in', href: new_user_session_path)
 
+    signin user
     expect(page).to have_content 'Signed in successfully'
   end
 

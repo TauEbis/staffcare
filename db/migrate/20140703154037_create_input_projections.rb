@@ -3,8 +3,7 @@ class CreateInputProjections < ActiveRecord::Migration
     create_table :input_projections do |t|
       t.date :start_date
       t.date :end_date
-      t.string :location_name
-      t.integer :volume
+      t.json :volume_by_location, null: false, default: {}
     end
   end
 end

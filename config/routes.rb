@@ -15,6 +15,10 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :patient_volume_forecasts, except: [:show] do
+    collection { post :import }
+  end
+
   resources :locations
 
   resources :zones
