@@ -3,7 +3,7 @@
 FactoryGirl.define do
   factory :schedule do
     starts_on { 1.weeks.from_now.to_date }
-    state 'draft'
+    state 'active'
 
     
     penalty_30min 1
