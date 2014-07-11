@@ -4,8 +4,11 @@ $(document).ready(function() {
   ///////   Grade-specific LocationPlan#Show stuff
   coverageContext = new CoverageViewModel();
   ko.applyBindings(coverageContext);
-  var chosen_grade_id = $('.daygrid').data().chosenGradeId;
-  if(chosen_grade_id){
+
+  // Initial load of daygrid
+  var d = $('.daygrid').data();
+  if(d){
+    var chosen_grade_id = d.chosenGradeId;
     load_grade_info(chosen_grade_id);
     colorCalendar();
   }
