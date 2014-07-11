@@ -17,6 +17,7 @@ class LocationPlansController < ApplicationController
 
   # GET /location_plans/1
   def show
+    @grade = @location_plan.chosen_grade
   end
 
   # POST /location_plans

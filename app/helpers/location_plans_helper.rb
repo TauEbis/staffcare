@@ -1,21 +1,34 @@
 module LocationPlansHelper
 
+  APPROVAL_STATE_MAP = {
+    'pending' => {
+      css: 'warning',
+      label: 'Un-approved'
+    },
+    'manager_approved' => {
+      css: 'info',
+      label: 'Manager approved'
+    },
+    'gm_approved' => {
+      css: 'success',
+      label: 'GM approved'
+    }
+  }
+
+  def collective_state_label(state)
+    %{<span class="label label-#{APPROVAL_STATE_MAP[state][:css]}">#{APPROVAL_STATE_MAP[state][:label]}</span>}.html_safe
+  end
+
+  def state_label(location_plan)
+    %{<a class="btn btn-#{APPROVAL_STATE_MAP[location_plan.approval_state][:css]} disabled">#{APPROVAL_STATE_MAP[location_plan.approval_state][:label]}</a>}.html_safe
+  end
+
   def action_links(location_plan)
     p = policy(location_plan)
     return unless p.change_state?
 
-    p_class = case location_plan.approval_state
-                when 'pending'
-                  'btn-warning'
-                when 'manager_approved'
-                  'btn-info'
-                when 'gm_approved'
-                  'btn-success'
-              end
-
     ((p.state_downgrade? ? down_action_link(location_plan) : '') + ' ' +
-     (p.state_upgrade? ? up_action_link(location_plan) :   '') + ' ' +
-     %{<a class="btn #{p_class} disabled">#{location_plan.approval_state.humanize}</a>}.html_safe
+     (p.state_upgrade? ? up_action_link(location_plan) :   '')
     ).html_safe
   end
 

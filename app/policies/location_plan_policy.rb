@@ -40,7 +40,10 @@ class LocationPlanPolicy < ApplicationPolicy
   end
 
   def update?
-    (user.admin? || user.location_ids.include?(record.location_id)) && record.schedule.active?
+    record.schedule.active? &&
+    ( user.admin? ||
+      (user.location_ids.include?(record.location_id) && (state_upgrade? || state_downgrade?))
+    )
   end
 
   class Scope < Struct.new(:user, :scope)

@@ -95,36 +95,43 @@ function CoverageViewModel() {
   self.editable  = null;
 
   self.load = function(data) {
-    console.log(data);
+//    console.log(data);
 
-    if(data.day_info.date == self.prev_date){
-      self.diff_day_points(   DiffPoints(self.day_points(),   new Points(data.day_points)));
-      self.diff_grade_points( DiffPoints(self.grade_points(), new Points(data.grade_points)));
-      self.diff_grade_hours(  data.grade_hours - self.grade_hours() );
-    }else{
-      self.diff_day_points(  null);
-      self.diff_grade_points(null);
-      self.diff_grade_hours( null);
+    if(data.day_info){
+
+      if(data.day_info.date == self.prev_date){
+        self.diff_day_points(   DiffPoints(self.day_points(),   new Points(data.day_points)));
+        self.diff_grade_points( DiffPoints(self.grade_points(), new Points(data.grade_points)));
+        self.diff_grade_hours(  data.grade_hours - self.grade_hours() );
+      }else{
+        self.diff_day_points(   null);
+        self.diff_grade_points( null);
+        self.diff_grade_hours(  null);
+      }
+
+      self.day_info(new DayInfo(data.day_info));
+      self.day_points(new Points(data.day_points));
+      self.prev_date = data.day_info.date;
     }
 
     self.chosen_grade_id = data.chosen_grade_id;
     self.source = data.source;
     self.editable = data.editable;
 
-    self.day_info(new DayInfo(data.day_info));
-    self.day_points(new Points(data.day_points));
     self.grade_points(new Points(data.grade_points));
     self.grade_hours(data.grade_hours);
-    self.prev_date = data.day_info.date;
 
-    self.generateAvailableTimes(data.day_info.open_time, data.day_info.close_time);
+    if(data.day_info){
+      self.generateAvailableTimes(data.day_info.open_time, data.day_info.close_time);
 
-    self.shifts.removeAll();
-    for (var i = 0; i < data.shifts.length; i++){
-      self.shifts.push( new Shift(data.shifts[i][0], data.shifts[i][1]) );
+      self.shifts.removeAll();
+      for (var i = 0; i < data.shifts.length; i++){
+        self.shifts.push( new Shift(data.shifts[i][0], data.shifts[i][1]) );
+      }
+
+      // We dont' want to set loaded until we've loaded a DAY, not just the grade-wide data
+      self.loaded(true);
     }
-
-    self.loaded(true);
   }
 
   self.generateAvailableTimes = function(open_time, close_time) {

@@ -1,6 +1,6 @@
 class GradesController < ApplicationController
   before_action :set_location_plan, only: [:create]
-  before_action :set_grade, only: [:show, :hourly, :update]
+  before_action :set_grade, only: [:show, :hourly, :update, :destroy]
 
   def create
     authorize Grade.new(location_plan: @location_plan), :create?  # Fake grade, the real one to be created later
@@ -10,7 +10,6 @@ class GradesController < ApplicationController
 
   # GET /coverages/1
   def show
-    day_pts = @grade.points[@date_s]
     pts     = Grade.unoptimized_sum(@grade)
 
     data = { chosen_grade_id: @grade.id,
@@ -18,16 +17,19 @@ class GradesController < ApplicationController
              editable: policy(@grade).update?,
 
              shifts: @grade.shifts[@date.to_s],
-             day_info: {
-               date: @date.to_s,
-               formatted_date: I18n.localize(@date, format: :with_dow),
-               open_time: @location_plan.open_times[@date.wday],
-               close_time: @location_plan.close_times[@date.wday],
-             },
-             day_points:   day_pts,
              grade_points: pts,
              grade_hours:  pts['hours']
             }
+
+    if @date
+      data[:day_info] = {
+        date: @date.to_s,
+        formatted_date: I18n.localize(@date, format: :with_dow),
+        open_time: @location_plan.open_times[@date.wday],
+        close_time: @location_plan.close_times[@date.wday],
+      }
+      data[:day_points] = @grade.points[@date_s]
+    end
 
     render json: data
   end
@@ -42,11 +44,18 @@ class GradesController < ApplicationController
     render text: "OK!"
   end
 
+  def destroy
+    @grade.destroy
+    redirect_to @location_plan, notice: 'Coverage plan was successfully destroyed.'
+  end
+
   private
 
   def set_grade
-    @date = Date.parse params[:date]
-    @date_s = params[:date]
+    if params[:date]
+      @date = Date.parse params[:date]
+      @date_s = params[:date]
+    end
 
     @grade = policy_scope(Grade).find(params[:id])
     authorize @grade
