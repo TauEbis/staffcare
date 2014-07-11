@@ -3,6 +3,7 @@
 <div class="pull-right">
   <% if @location_plan -%>
     <%= action_links @location_plan %>
+    <%= state_label @location_plan %>
   <% else -%>
 
     <% if @schedule.draft? -%>

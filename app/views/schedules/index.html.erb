@@ -28,9 +28,7 @@
           <div class="col-sm-4">
             <h5><%= link_to zone.name, schedule_location_plans_path(schedule, zone_id: zone.id) %></h5>
             <% state = LocationPlan.collective_state(LocationPlan.for_zone(zone)) %>
-            <span class="label <%= state == 'pending' ? 'label-default' : 'label-success' %>">
-              <%= state.to_s.humanize %>
-            </span>
+            <%= collective_state_label(state) %>
           </div>
           <% if schedule.complete? -%>
             <div class="col-sm-2 text-center">
