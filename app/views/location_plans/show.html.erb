@@ -72,7 +72,7 @@
           <% schedule_daygrid(@schedule).each do |week| -%>
             <tr>
               <% week.each do |date| -%>
-                <td style="background-color: hsl<%= date ? color_for_score(@location_plan.chosen_grade.points[date.to_s]['total']) : '(0,0%,100%)' %>">
+                <td data-date="<%= date.to_s %>" data-grade-score="<%= date ? @location_plan.chosen_grade.points[date.to_s]['total'] : '' %>">
                   <%= link_to(date.day, '#', data: {date: date.to_s}) if date %>
                 </td>
               <% end -%>
