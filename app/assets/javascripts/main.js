@@ -20,26 +20,6 @@ $(document).ready(function() {
     e.preventDefault();
     $(this).closest('fieldset').find(':checkbox').prop( "checked", false);
   });
-
-  coverageContext = new CoverageViewModel();
-  ko.applyBindings(coverageContext);
-  var chosen_grade_id = $('.daygrid').data().chosenGradeId;
-  if(chosen_grade_id){
-    load_grade_info(chosen_grade_id);
-  }
-
-  $('.daygrid a').on('click', function(event){
-    event.preventDefault();
-    var chosen_grade_id = $('.daygrid').data().chosenGradeId;
-    var date  = $(this).data().date;
-
-    load_day_info(chosen_grade_id, date);
-  });
-
-  $('#location_plan_chosen_grade_id').on('change', function(){
-    $(".location_plan_container").hide();
-    $(this.form).submit();
-  })
 });
 
 function load_day_info(chosen_grade_id, date){
