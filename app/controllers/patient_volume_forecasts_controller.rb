@@ -2,7 +2,6 @@ class PatientVolumeForecastsController < ApplicationController
 
   before_action :set_patient_volume_forecast, only: [:new, :edit, :update, :destroy]
   before_action :set_locations, only: [:index, :new, :edit, :create, :update ]
-  skip_after_filter :verify_authorized, only: [:import]
 
   # GET /patient_volume_forecasts
   def index
@@ -12,7 +11,7 @@ class PatientVolumeForecastsController < ApplicationController
       format.html
       format.csv { send_data @patient_volume_forecasts.to_csv }
       format.xls # this seems like it might be sufficient
-      # { send_data @patient_volume_forecasts.to_csv(col_sep: "\t") } 
+      # { send_data @patient_volume_forecasts.to_csv(col_sep: "\t") }
     end
   end
 
@@ -52,6 +51,7 @@ class PatientVolumeForecastsController < ApplicationController
 
   # POST
   def import
+    authorize current_user, :create?
     PatientVolumeForecast.import(params[:file])
     redirect_to patient_volume_forecasts_url, notice: 'Patient Volume Forecasts successfully imported.'
   end

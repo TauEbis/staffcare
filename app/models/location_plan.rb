@@ -23,7 +23,7 @@ class LocationPlan < ActiveRecord::Base
 
   scope :ordered, -> { joins(:location).order('location_plans.approval_state ASC, locations.name ASC')}
 
-  # For a give collection of location_plans, return their 'base' state
+  # For a given collection of location_plans, return their 'base' state
   # If any are pending, then the whole collective state is pending
   def self.collective_state(location_plans)
     location_plans.map(&:approval_state).any?{|s| s == 'pending'} ? 'pending' : 'approved'
