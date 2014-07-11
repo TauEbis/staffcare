@@ -26,6 +26,9 @@
           <div class="col-sm-2">
             <%= f.input_field "#{day}_#{tod}", as: :select, collection: hours_options, include_blank: false, class: 'form-control chosen-select' %>
           </div>
+          <% if @location.errors.include? "#{day}_#{tod}".to_sym %>
+            <div class="col-sm-4 has-error"><%= f.error "#{day}_#{tod}" %></div>
+          <% end -%>
         <% end -%>
       </div>
     <% end -%>
