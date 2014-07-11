@@ -1,4 +1,13 @@
-<h1>Schedules</h1>
+<h1>
+  Schedules
+  <% if policy(Schedule).new? -%>
+    <div class="pull-right">
+      <%= link_to new_schedule_path, class: 'btn btn-default' do %>
+        <span class="glyphicon glyphicon-plus"> </span> New Schedule
+      <% end %>
+    </div>
+  <% end -%>
+</h1>
 
 <% @schedules.each do |schedule| %>
   <div class="panel panel-default">
@@ -60,7 +69,3 @@
     </div>
   </div>
 <% end %>
-
-<% if policy(Schedule).new? -%>
-  <%= link_to 'New Schedule', new_schedule_path %>
-<% end -%>

@@ -5,7 +5,7 @@ Rails.application.routes.draw do
 
   resources :location_plans, only: [] do
     collection do
-      post :approve
+      post :change_state
     end
   end
 

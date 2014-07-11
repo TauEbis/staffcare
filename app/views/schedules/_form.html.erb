@@ -5,10 +5,9 @@
   <div class="form-inputs">
     <div class="row">
       <div class="col-sm-4">
-        <%= f.input :starts_on, required: true, wrapper: :vertical_input_group do %>
-          <%= f.input_field :starts_on, as: :string, class: 'form-control', data: {behaviour: "datepicker"} %>
-          <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-        <% end %>
+        <%= f.input :starts_on, required: true,
+                    input_html: { data: {behaviour: "datepicker"}},
+                    as: :string %>
 
         <% Schedule::OPTIMIZER_FIELDS.each do |field| %>
           <%= f.input field, required: true %>

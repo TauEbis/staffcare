@@ -12,7 +12,7 @@ class LocationPlan < ActiveRecord::Base
 
   OPTIMIZER_FIELDS = [:max_mds, :rooms, :min_openers, :min_closers, :open_times, :close_times]
 
-  enum approval_state: [:pending, :approved]
+  enum approval_state: [:pending, :manager_approved, :gm_approved]
 
   delegate :name, to: :location
 
@@ -21,12 +21,13 @@ class LocationPlan < ActiveRecord::Base
 
   scope :for_zone, -> (zone) { where(location_id: zone.location_ids) }
 
-  scope :ordered, -> { joins(:location).order('location_plans.approval_state ASC, locations.name ASC')}
+  scope :ordered, -> { joins(:location).order('locations.name ASC')}
 
   # For a give collection of location_plans, return their 'base' state
   # If any are pending, then the whole collective state is pending
   def self.collective_state(location_plans)
-    location_plans.map(&:approval_state).any?{|s| s == 'pending'} ? 'pending' : 'approved'
+    int_states = location_plans.map{|lp| lp[:approval_state]}
+    LocationPlan.approval_states.key(int_states.min || 0)
   end
 
   def solution_set_options(day)
