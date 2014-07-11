@@ -30,7 +30,7 @@ class Location < ActiveRecord::Base
   end
 
   DAYS.each do |day|
-    validates "#{day}_open".to_sym, numericality: { less_than_or_equal_to: "#{day}_close".to_sym }, unless: "send(\"#{day}_close\").nil?"
+    validates "#{day}_close".to_sym, numericality: { greater_than_or_equal_to: "#{day}_open".to_sym, message: "Closing time must be greater than opening time"}, unless: "send(\"#{day}_open\").nil?"
   end
 
   # For compatibility with shifty Location
