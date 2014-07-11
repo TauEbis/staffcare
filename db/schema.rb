@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140709135549) do
+ActiveRecord::Schema.define(version: 20140710200329) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,12 +29,6 @@ ActiveRecord::Schema.define(version: 20140709135549) do
   end
 
   add_index "grades", ["user_id"], name: "index_grades_on_user_id", using: :btree
-
-  create_table "input_projections", force: true do |t|
-    t.date "start_date"
-    t.date "end_date"
-    t.json "volume_by_location", default: {}, null: false
-  end
 
   create_table "location_plans", force: true do |t|
     t.integer "location_id",                      null: false
@@ -87,6 +81,12 @@ ActiveRecord::Schema.define(version: 20140709135549) do
   end
 
   add_index "memberships", ["user_id"], name: "index_memberships_on_user_id", using: :btree
+
+  create_table "patient_volume_forecasts", force: true do |t|
+    t.date "start_date"
+    t.date "end_date"
+    t.json "volume_by_location", default: {}, null: false
+  end
 
   create_table "schedules", force: true do |t|
     t.date     "starts_on"

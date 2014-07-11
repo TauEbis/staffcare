@@ -15,7 +15,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :input_projections, except: [:show] do
+  resources :patient_volume_forecasts, except: [:show] do
     collection { post :import }
   end
 

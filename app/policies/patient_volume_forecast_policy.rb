@@ -1,4 +1,4 @@
-class InputProjectionPolicy < ApplicationPolicy
+class PatientVolumeForecastPolicy < ApplicationPolicy
 
   def index?
     user.admin?

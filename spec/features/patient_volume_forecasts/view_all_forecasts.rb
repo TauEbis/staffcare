@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-feature "Viewing all input projections: " do
+feature "Viewing all patient volume forecasts: " do
 
   subject { page }
   given(:locations)  { [ FactoryGirl.create(:location), FactoryGirl.create(:location) ] }
@@ -9,11 +9,11 @@ feature "Viewing all input projections: " do
 		given(:user) { FactoryGirl.create(:user) }
 		background do
 			signin user
-			visit input_projections_path
+			visit patient_volume_forecasts_path
 		end
 
   	describe "then the index page is not rendered:" do
-			it { should_not have_title full_title('All input projections') }
+			it { should_not have_title full_title('All patient volume forecasts') }
 			it { should have_title full_title('Dashboard') }
 		end
 
@@ -23,16 +23,16 @@ feature "Viewing all input projections: " do
 		given(:admin) { FactoryGirl.create(:admin_user) }
 		background do
 			signin admin
-			visit input_projections_path
+			visit patient_volume_forecasts_path
 		end
 
   	describe "then the index page is rendered:" do
-			it { should have_title full_title('All input projections') }
+			it { should have_title full_title('All patient volume forecasts') }
 		end
 
 		context "when there are input_projections" do
-			given!(:earlier_input_projection) { FactoryGirl.create(:input_projection, start_date: Date.today, locations: locations) }
-			given!(:later_input_projection) { FactoryGirl.create(:input_projection, start_date: Date.today + 14, locations: locations) }
+			given!(:earlier_input_projection) { FactoryGirl.create(:patient_volume_forecast, start_date: Date.today, locations: locations) }
+			given!(:later_input_projection) { FactoryGirl.create(:patient_volume_forecast, start_date: Date.today + 14, locations: locations) }
 			background { visit current_path }
 
 			it { should have_content(earlier_input_projection.start_date) }

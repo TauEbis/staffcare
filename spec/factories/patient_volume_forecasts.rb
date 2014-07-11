@@ -1,7 +1,7 @@
 # Read about factories at https://github.com/thoughtbot/factory_girl
 
 FactoryGirl.define do
-  factory :input_projection do
+  factory :patient_volume_forecast do
   	ignore do
   		locations { [ create(:location), create(:location)] }
   	end

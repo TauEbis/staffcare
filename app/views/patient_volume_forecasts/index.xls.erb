@@ -26,7 +26,7 @@
         <Cell><Data ss:Type="String"><%= location.name %></Data></Cell>
     <% end %>
       </Row>
-    <% @projections.each do |projection| %>
+    <% @patient_volume_forecasts.each do |projection| %>
       <Row>
         <Cell ss:StyleID="s63"><Data ss:Type="DateTime"><%= projection.start_date %></Data></Cell>
         <Cell ss:StyleID="s63"><Data ss:Type="DateTime"><%= projection.end_date %></Data></Cell>

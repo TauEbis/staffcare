@@ -1,0 +1,52 @@
+<%provide(:title, 'All patient volume forecasts')%>
+
+<h1>Listing patient volume forecasts</h1>
+
+<p>
+  Download:
+  <%= link_to "CSV", patient_volume_forecasts_path(format: "csv") %> |
+  <%= link_to "Excel", patient_volume_forecasts_path(format: "xls") %>
+</p>
+
+<% unless @patient_volume_forecasts.blank? %>
+<table class="table">
+  <thead>
+  <tr>
+    	<th>Start Date</th>
+    	<th>End Date</th>
+    <% @locations.map(&:name).each do |l_name| %>
+    	<th><%= l_name %></th>
+    <% end %>
+    	<th colspan="2"></th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @patient_volume_forecasts.each do |forecast| %>
+    <tr>
+	      <td><%= forecast.start_date %></td>
+	      <td><%= forecast.end_date %></td>
+	    <% @locations.map(&:id).each do |l_id| %>
+     		<td><%= forecast.volume_by_location[l_id.to_s] %></td>
+     	<% end %>
+      <td><%= link_to 'Edit', edit_patient_volume_forecast_path(forecast) %></td>
+      <td><%= link_to 'Delete', forecast, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<% end %>
+
+<br>
+<%= link_to 'New Volume Forecast', new_patient_volume_forecast_path %>
+
+<h3>Import Patient Volume Forecast</h3>
+
+<%= form_tag import_patient_volume_forecasts_path, multipart: true do %>
+  <%= file_field_tag :file, class: 'form-actions' %>
+
+  </br>
+
+  <%= submit_tag "Import", class: 'form-actions' %>
+<% end %>

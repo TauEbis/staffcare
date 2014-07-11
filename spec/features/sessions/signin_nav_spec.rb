@@ -18,7 +18,7 @@ feature 'Signed-in navigation bar: ', :devise do
       it { should_not have_link('Locations', href: locations_path) }
       it { should_not have_link('Zones', href: zones_path) }
       it { should_not have_link('Users', href: users_path) }
-      it { should_not have_link('Input Projections', href: input_projections_path) }
+      it { should_not have_link('Volume Forecasts', href: patient_volume_forecasts_path) }
 
       it { should_not have_link('Sign in', href: new_user_session_path) }
 
@@ -40,7 +40,7 @@ feature 'Signed-in navigation bar: ', :devise do
       it { should have_link('Locations', href: locations_path) }
       it { should have_link('Zones', href: zones_path) }
       it { should have_link('Users', href: users_path) }
-      it { should have_link('Input Projections', href: input_projections_path) }
+      it { should have_link('Volume Forecasts', href: patient_volume_forecasts_path) }
 
       it { should_not have_link('Sign in', href: new_user_session_path) }
     end

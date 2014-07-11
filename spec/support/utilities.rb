@@ -15,14 +15,14 @@ def signin(user, options={})
 	end
 end
 
-def new_input_projection(projection, locations, options={})
-	fill_in_projection_info(projection, locations)
-	click_button "Create Input projection" if options[:submit]
+def new_patient_volume_forecast(forecast, locations, options={})
+	fill_in_forecast_info(forecast, locations)
+	click_button "Create Patient volume forecast" if options[:submit]
 end
 
-def edit_input_projection(projection, locations, options={})
-	fill_in_projection_info(projection, locations)
-	click_button "Update Input projection" if options[:submit]
+def edit_patient_volume_forecast(forecast, locations, options={})
+	fill_in_forecast_info(forecast, locations)
+	click_button "Update Patient volume forecast" if options[:submit]
 end
 
 RSpec::Matchers.define :have_error_message do | message |
@@ -39,11 +39,11 @@ end
 
 	private
 
-	def fill_in_projection_info(projection, locations)
-			fill_in "Start date", 						with: projection.start_date
-			fill_in "End date", 							with: projection.end_date
+	def fill_in_forecast_info(forecast, locations)
+			fill_in "Start date", 						with: forecast.start_date
+			fill_in "End date", 							with: forecast.end_date
 		locations.each do |l|
-			fill_in l.name.to_s,			 							with: projection.volume_by_location[l.id.to_s]
+			fill_in l.name.to_s,			 							with: forecast.volume_by_location[l.id.to_s]
 		end
 	end
 

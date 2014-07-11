@@ -1,6 +1,6 @@
 # Represents a projection of future volume at a particular location with 1-week granularity
 #    VisitProjections are computed from these projections by applying them to a heat map.
-class InputProjection < ActiveRecord::Base
+class PatientVolumeForecast < ActiveRecord::Base
 
   validates :volume_by_location, presence: true #TODO validate hash is greater than 0 and real locations
   # TODO: Appear to be several ways to validate a date string is good- want ISO (yyy-mm-dd) format
@@ -41,7 +41,7 @@ class InputProjection < ActiveRecord::Base
 			locations.each do |location|
 				result["volume_by_location"][location.id.to_s] = row[location.name]
 			end
-			projection = InputProjection.find(row["id"]) || new
+			projection = PatientVolumeForecast.find(row["id"]) || new
 
   		projection.update(result)
   		binding.pry unless projection.valid?

@@ -1,6 +1,6 @@
-<%= simple_form_for(@input_projection, html: { class: 'form-vertical' }) do |f| %>
+<%= simple_form_for(@patient_volume_forecast, html: { class: 'form-vertical' }) do |f| %>
   <%= f.error_notification %>
-  <%= display_base_errors @input_projection %>
+  <%= display_base_errors @patient_volume_forecast %>
 
   <div class="form-inputs">
     <div class="row">
@@ -18,7 +18,7 @@
 		    <% @locations.each do |l| %>
 				    <%= f.label("volume_by_location[#{l.id}]", l.name) %> <br />
 				    <%= f.input_field "volume_by_location[#{l.id}]", as: :string, class: 'form-control',
-                value: @input_projection.volume_by_location[l.id.to_s] %>
+                value: @patient_volume_forecast.volume_by_location[l.id.to_s] %>
             <br />
 				<% end %>
 
