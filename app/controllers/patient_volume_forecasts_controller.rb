@@ -52,8 +52,12 @@ class PatientVolumeForecastsController < ApplicationController
 
   # POST
   def import
-    PatientVolumeForecast.import(params[:file])
-    redirect_to patient_volume_forecasts_url, notice: 'Patient Volume Forecasts successfully imported.'
+    unless (params[:file])
+         redirect_to patient_volume_forecasts_url, notice: 'Please select a file to import.'
+    else
+         PatientVolumeForecast.import(params[:file])
+         redirect_to patient_volume_forecasts_url, notice: 'Patient Volume Forecasts successfully imported.'
+    end
   end
 
   private
