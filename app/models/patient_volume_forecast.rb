@@ -40,12 +40,17 @@ class PatientVolumeForecast < ActiveRecord::Base
 			result["volume_by_location"] = {}
 			locations.each do |location|
 				result["volume_by_location"][location.id.to_s] = row[location.name]
-			end
-			projection = PatientVolumeForecast.find(row["id"]) || new
+		  end
+      projection = nil
+      begin
+		    projection = PatientVolumeForecast.find(row["id"]) 
+      rescue ActiveRecord::RecordNotFound
+        projection = PatientVolumeForecast.new
+      end
 
-  		projection.update(result)
-  		binding.pry unless projection.valid?
-  		projection.save!
+  	  projection.update(result)
+  	  binding.pry unless projection.valid?
+  	  projection.save!
   	end
   end
 
