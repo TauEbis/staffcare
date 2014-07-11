@@ -29,6 +29,7 @@ gem 'bootstrap-datepicker-rails'
 gem 'newrelic_rpm'
 gem 'rollbar'
 gem 'roo'
+gem 'simple_xlsx_writer'
 
 # Sidekiq
 gem 'sidekiq'

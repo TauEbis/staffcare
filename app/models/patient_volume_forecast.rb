@@ -80,6 +80,7 @@ class PatientVolumeForecast < ActiveRecord::Base
 		end
   end
 
+
 =begin
   def self.import(file)
   	locations = Location.ordered.all
@@ -115,12 +116,12 @@ class PatientVolumeForecast < ActiveRecord::Base
 
       forecast = nil
       begin
-        forecast = find_by_id(row["id"])
+        forecast = PatientVolumeForecast.find(row["id"])
       rescue ActiveRecord::RecordNotFound
         forecast = PatientVolumeForecast.new
       end
 
-      forecast.attributes = row.to_hash.slice(*accessible_attributes)
+      forecast.update(row.to_hash)
       forecast.save!
     end
   end
