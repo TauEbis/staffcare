@@ -27,6 +27,7 @@
     <% end %>
       </Row>
     <% @patient_volume_forecasts.each do |projection| %>
+         <% if projection.start_date > Date.today %>
       <Row>
         <Cell ss:StyleID="s63"><Data ss:Type="DateTime"><%= projection.start_date %></Data></Cell>
         <Cell ss:StyleID="s63"><Data ss:Type="DateTime"><%= projection.end_date %></Data></Cell>
@@ -34,6 +35,7 @@
         <Cell><Data ss:Type="Number"><%= projection.volume_by_location[location.id.to_s] %></Data></Cell>
       <% end %>
       </Row>
+ <% end %>
     <% end %>
     </Table>
   </Worksheet>

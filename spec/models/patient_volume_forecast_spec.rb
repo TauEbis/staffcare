@@ -36,14 +36,14 @@ describe PatientVolumeForecast, :type => :model do
 
 
     describe "ordered" do
-      it "should be in descending order by start date and then id" do
-        expect(PatientVolumeForecast.ordered.to_a).to eq [later_projection_2, later_projection_1, earlier_projection]
+      it "should be in ascending order by start date and then id" do
+        expect(PatientVolumeForecast.ordered.to_a).to eq [earlier_projection, later_projection_1, later_projection_2]
       end
     end
 
     describe "default" do
       it "should be in descending order by start date and then id" do
-        expect(PatientVolumeForecast.ordered.to_a).to eq [later_projection_2, later_projection_1, earlier_projection]
+        expect(PatientVolumeForecast.ordered.to_a).to eq [earlier_projection, later_projection_1, later_projection_2]
       end
     end
   end

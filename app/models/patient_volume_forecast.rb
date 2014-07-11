@@ -10,8 +10,8 @@ class PatientVolumeForecast < ActiveRecord::Base
   validate :valid_start_date, unless: "start_date.blank?"
   validate :valid_end_date, unless: "start_date.blank?"
 
-  scope :ordered, -> { order(start_date: :desc, id: :desc) }
-  default_scope -> { order(start_date: :desc, id: :desc) }
+  scope :ordered, -> { order(start_date: :asc, id: :desc) }
+  default_scope -> { order(start_date: :asc, id: :desc) }
 
 
   def valid_start_date
@@ -56,6 +56,7 @@ class PatientVolumeForecast < ActiveRecord::Base
     end
   end
 
+  # Exports only forecasts that start on a date after today
   def self.to_csv(options = {})
   	CSV.generate(options) do |csv|
   		locations = Location.ordered.all
@@ -66,6 +67,9 @@ class PatientVolumeForecast < ActiveRecord::Base
   		csv << columns
 
   		ordered.all.each do |projection|
+        unless projection.start_date > Date.today
+          next
+        end
   			attribute_rows = projection.attributes.values_at(*attribute_columns)
   			location_rows = projection.volume_by_location.values_at(*locations.map(&:id).map(&:to_s))
 				row = [projection.id] + attribute_rows + location_rows
