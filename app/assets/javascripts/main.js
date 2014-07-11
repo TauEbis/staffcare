@@ -23,10 +23,13 @@ $(document).ready(function() {
 
   coverageContext = new CoverageViewModel();
   ko.applyBindings(coverageContext);
+  var chosen_grade_id = $('.daygrid').data().chosenGradeId;
+  if(chosen_grade_id){
+    load_grade_info(chosen_grade_id);
+  }
 
   $('.daygrid a').on('click', function(event){
     event.preventDefault();
-
     var chosen_grade_id = $('.daygrid').data().chosenGradeId;
     var date  = $(this).data().date;
 
@@ -43,17 +46,7 @@ function load_day_info(chosen_grade_id, date){
   $('#coverage_view').addClass('hidden');
   $('#coverage_view_load').removeClass('hidden');
 
-  $.ajax( "/grades/" + chosen_grade_id, {data: {date: date}} )
-      .done(function(data, status, xhr) {
-        coverageContext.load(data);
-        $('#coverage_view').removeClass('hidden');
-        $('#coverage_view_load').addClass('hidden');
-      })
-      .fail(function(xhr, status, error) {
-        alert("Load error" + status + error);
-        console.log(xhr.responseText);
-//          inject_coverage_fail('#coverage_view', xhr, status, error);
-      });
+  load_grade_info(chosen_grade_id, {date: date});
 
   $.ajax( "/grades/" + chosen_grade_id + "/hourly", {data: {date: date}} )
       .done(function(data, status, xhr) {
@@ -61,6 +54,20 @@ function load_day_info(chosen_grade_id, date){
       })
       .fail(function(xhr, status, error) {
         inject_coverage_fail('#coverage_hourly', xhr, status, error);
+      });
+}
+
+// A wrapper function that can include or NOT include the date if we want to load just the grade-overview data
+function load_grade_info(chosen_grade_id, data){
+  $.ajax( "/grades/" + chosen_grade_id, {data: data} )
+      .done(function(data, status, xhr) {
+        coverageContext.load(data);
+        $('#coverage_view').removeClass('hidden');
+        $('#coverage_view_load').addClass('hidden');
+      })
+      .fail(function(xhr, status, error) {
+        alert("Load error: " + status + error);
+        console.log(xhr.responseText);
       });
 }
 
