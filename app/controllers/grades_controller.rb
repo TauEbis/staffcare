@@ -1,6 +1,6 @@
 class GradesController < ApplicationController
   before_action :set_location_plan, only: [:create]
-  before_action :set_grade, only: [:show, :hourly, :update]
+  before_action :set_grade, only: [:show, :hourly, :update, :destroy]
 
   def create
     authorize Grade.new(location_plan: @location_plan), :create?  # Fake grade, the real one to be created later
@@ -42,11 +42,18 @@ class GradesController < ApplicationController
     render text: "OK!"
   end
 
+  def destroy
+    @grade.destroy
+    redirect_to @location_plan, notice: 'Coverage plan was successfully destroyed.'
+  end
+
   private
 
   def set_grade
-    @date = Date.parse params[:date]
-    @date_s = params[:date]
+    if params[:date]
+      @date = Date.parse params[:date]
+      @date_s = params[:date]
+    end
 
     @grade = policy_scope(Grade).find(params[:id])
     authorize @grade

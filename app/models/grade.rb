@@ -10,6 +10,8 @@ class Grade < ActiveRecord::Base
 
   scope :ordered, -> { order(source: :asc, created_at: :desc) }
 
+  before_destroy :reset_chosen_grade
+
   def label
     case source
       when 'optimizer'
@@ -66,6 +68,13 @@ class Grade < ActiveRecord::Base
     end
 
     p
+  end
+
+  def reset_chosen_grade
+    if location_plan.chosen_grade == self
+      new_grade_id = location_plan.grades.where('id <> ?', id).order(id: :asc).first.try(:id)
+      location_plan.update_attribute(:chosen_grade_id, new_grade_id) if new_grade_id
+    end
   end
 
 end

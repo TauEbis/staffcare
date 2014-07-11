@@ -1,7 +1,7 @@
 class GradePolicy < ApplicationPolicy
 
   def create?
-    user.admin? || Pundit.policy!(user, record.location_plan).update?
+    Pundit.policy!(user, record.location_plan).update?
   end
 
   def hourly?
@@ -15,7 +15,10 @@ class GradePolicy < ApplicationPolicy
       else
         false
     end
+  end
 
+  def destroy?
+    update?
   end
 
   class Scope < Struct.new(:user, :scope)
