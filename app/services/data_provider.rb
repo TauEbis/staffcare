@@ -11,10 +11,10 @@ class DataProvider
 
   # Returns patient volume projections as a two-level (location, day) hash
 	def volume_query(locations, schedule)
-    unless @source == 'database'
-		  self.send("read_and_parse_#{@source}_volume_data".to_sym, locations, schedule)
+    if @source != 'database'
+      self.send("read_and_parse_#{@source}_volume_data".to_sym, locations, schedule)
     else
-      return @get_volume_data(locations, schedule)
+      return get_volume_data(locations, schedule)
     end
 	end
 
@@ -116,3 +116,4 @@ class DataProvider
 			heat_map[0..6]
 		end
 end
+
