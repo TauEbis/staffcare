@@ -71,7 +71,7 @@ class PatientVolumeForecast < ActiveRecord::Base
           next
         end
   			attribute_rows = projection.attributes.values_at(*attribute_columns)
-  			location_rows = projection.volume_by_location.values_at(*locations.map(&:id).map(&:to_s))
+  			location_rows = projection.volume_by_location.values_at(*locations.map(&:name))
 				row = [projection.id] + attribute_rows + location_rows
 
 				csv << row
@@ -121,16 +121,37 @@ class PatientVolumeForecast < ActiveRecord::Base
         forecast = PatientVolumeForecast.new
       end
 
-      forecast.update(row.to_hash)
+      result = {}
+      result['volume_by_location'] = {}
+      row.keys.each do |key|
+        if key == 'start_date' or key == 'end_date' or key == 'id'
+             result[key] = format_date(row[key])
+        else
+             result['volume_by_location'][key] = row[key]
+        end
+      end
+
+      #raise TypeError
+      forecast.update(result)
       forecast.save!
     end
   end
 
+  def self.format_date(suspect)
+     if suspect.include? '/'
+       return Date.strptime(suspect, "%m/%d/%Y").to_s
+     else
+       return suspect
+     end
+  end
+
+
+
   def self.open_spreadsheet(file)
     case File.extname(file.original_filename)
-      when ".csv" then Roo::Csv.new(file.path, nil, :ignore)
-      when ".xls" then Roo::Excel.new(file.path, nil, :ignore)
-      when ".xlsx" then Roo::Excelx.new(file.path, nil, :ignore)
+      when ".csv" then Roo::CSV.new(file.path)
+      when ".xls" then Roo::Excel.new(file.path)
+      when ".xlsx" then Roo::Excelx.new(file.path)
       else raise "Unknown file type: #{file.original_filename}"
     end
   end
