@@ -9,8 +9,13 @@ class DataProvider
 		@source = source
 	end
 
+  # Returns patient volume projections as a two-level (location, day) hash
 	def volume_query(locations, schedule)
-		self.send("read_and_parse_#{@source}_volume_data".to_sym, locations, schedule)
+    unless @source == 'database'
+		  self.send("read_and_parse_#{@source}_volume_data".to_sym, locations, schedule)
+    else
+      return @get_volume_data(locations, schedule)
+    end
 	end
 
 	def heat_map_query(locations, schedule)
@@ -22,6 +27,23 @@ class DataProvider
 	end
 
 	private
+
+    def get_volume_data(locations, schedule)
+			vol = Hash.new{ |hash, key| hash[key] = Hash.new }
+      forecasts = PatientVolumeForecast.ordered
+
+      locations.each do |location|
+           schedule.days.each do |day|
+                forecasts.each do |forecast|
+                     # TODO: Warn/error if no forecast block contains the location/day
+                     if forecast.contains_day? day and forecast.contains_location? location
+                          vol[location.report_server_id][day.to_s] = 
+                                   forecast.get_volume(location.report_server_id, day.to_s)
+                     end
+                end
+           end
+      end
+    end
 
 		def read_and_parse_sample_run_volume_data(locations, schedule)
 			table = CSV.table("mock_data/sample_run/volume_data_short.csv")
