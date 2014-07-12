@@ -23,6 +23,7 @@ gem 'devise_invitable'
 gem 'pg'
 gem 'pundit'
 
+
 gem 'simple_form', '>= 3.1.0.rc1'
 gem 'bootstrap-datepicker-rails'
 
@@ -59,6 +60,10 @@ group :development, :test do
   gem 'factory_girl_rails'
   gem 'pry-rails'
   gem 'pry-rescue'
+  gem 'pry'
+  gem 'pry-remote'
+  gem 'pry-stack_explorer'
+  gem 'pry-byebug'
   gem 'rspec-rails', '>= 3.0.0.beta2'
   gem 'spring'
   gem 'spring-commands-rspec'

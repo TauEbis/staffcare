@@ -16,7 +16,8 @@ class PatientVolumeForecast < ActiveRecord::Base
 
   # checks if the forecast includes data for the given date
   def contains_day?(date)
-    if date >= @start_date and date <= @end_date
+    #binding.pry
+    if date >= self.start_date and date <= self.end_date
       return true
     else
       return false
@@ -24,7 +25,7 @@ class PatientVolumeForecast < ActiveRecord::Base
   end
 
   def contains_location?(loc)
-    return @volume_by_location.has_key?(loc)
+    return self.volume_by_location.has_key?(loc)
   end
 
   #Returns the projected volume for the given location and day
