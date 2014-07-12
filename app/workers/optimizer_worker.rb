@@ -8,7 +8,8 @@ class OptimizerWorker
     schedule = Schedule.find(schedule_id)
     schedule.running!
 
-    provider = DataProvider.new(:sample_run)
+    provider = DataProvider.new("database")
+    #provider = DataProvider.new(:sample_run)
 
     at 5, "Loading location plans"
 

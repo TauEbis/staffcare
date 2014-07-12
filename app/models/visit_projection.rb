@@ -14,7 +14,7 @@ class VisitProjection < ActiveRecord::Base
     self.visits = {}
 
     schedule.days.each do |day|
-      daily_vol = volumes[day.to_s]
+      daily_vol = self.volumes[day.to_s]
       self.visits[day.to_s] = heat_maps[day.wday].map{ |percent| percent * daily_vol }
     end
   end

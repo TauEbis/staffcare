@@ -14,14 +14,33 @@ class PatientVolumeForecast < ActiveRecord::Base
   default_scope -> { order(start_date: :asc, id: :desc) }
 
 
+  # checks if the forecast includes data for the given date
+  def contains_day?(date)
+    if date >= self.start_date and date <= self.end_date
+      return true
+    else
+      return false
+    end
+  end
+
+  def contains_location?(loc)
+    return self.volume_by_location.has_key?(loc.name)
+  end
+
+  #Returns the projected volume for the given location and day
+  #NB: Right now returns the week volume for that day to match heatmaps
+  def get_volume(location, day)
+    return self.volume_by_location[location]
+  end
+
   def valid_start_date
     unless start_date.is_a? Date
       errors.add(:start_date, "Please select a starting date.")
       return
     end
 
-    unless start_date.sunday?
-      errors.add(:start_date, "Forecast week must start on a Sunday.")
+    unless start_date.friday?
+      errors.add(:start_date, "Forecast week must start on a Friday.")
     end
   end
 
@@ -99,7 +118,7 @@ class PatientVolumeForecast < ActiveRecord::Base
         if key == 'start_date' or key == 'end_date' or key == 'id'
              result[key] = format_date(row[key])
         else
-             result['volume_by_location'][key] = row[key]
+             result['volume_by_location'][key] = row[key].to_f
         end
       end
 
