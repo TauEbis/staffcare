@@ -28,6 +28,8 @@ gem 'bootstrap-datepicker-rails'
 
 gem 'newrelic_rpm'
 gem 'rollbar'
+gem 'roo'
+gem 'iconv'
 
 # Sidekiq
 gem 'sidekiq'

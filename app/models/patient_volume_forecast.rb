@@ -71,7 +71,7 @@ class PatientVolumeForecast < ActiveRecord::Base
           next
         end
   			attribute_rows = projection.attributes.values_at(*attribute_columns)
-  			location_rows = projection.volume_by_location.values_at(*locations.map(&:id).map(&:to_s))
+  			location_rows = projection.volume_by_location.values_at(*locations.map(&:name))
 				row = [projection.id] + attribute_rows + location_rows
 
 				csv << row
@@ -81,28 +81,49 @@ class PatientVolumeForecast < ActiveRecord::Base
   end
 
   def self.import(file)
-  	locations = Location.ordered.all
-  	CSV.foreach(file.path, headers:true) do |row|
-			row = row.to_hash
-			result = {}
-			result["start_date"] = Date.parse(row["start_date"])
-			result["end_date"] = Date.parse(row["end_date"])
-      # result["start_date"] = row['start_date'].include?('/') ? Date.strptime(row['start_date'], '%m/%d/%y') : result["start_date"]
-      # something like this ....
-			result["volume_by_location"] = {}
-			locations.each do |location|
-				result["volume_by_location"][location.id.to_s] = row[location.name]
-		  end
-      projection = nil
+    spreadsheet = open_spreadsheet(file)
+    header = spreadsheet.row(1)
+    (2..spreadsheet.last_row).each do |i|
+      row = Hash[[header, spreadsheet.row(i)].transpose]
+
+      forecast = nil
       begin
-		    projection = PatientVolumeForecast.find(row["id"]) 
+        forecast = PatientVolumeForecast.find(row["id"])
       rescue ActiveRecord::RecordNotFound
-        projection = PatientVolumeForecast.new
+        forecast = PatientVolumeForecast.new
       end
 
-  		projection.update(result)
-  		projection.save!
-  	end
+      result = {}
+      result['volume_by_location'] = {}
+      row.keys.each do |key|
+        if key == 'start_date' or key == 'end_date' or key == 'id'
+             result[key] = format_date(row[key])
+        else
+             result['volume_by_location'][key] = row[key]
+        end
+      end
+
+      forecast.update(result)
+      forecast.save!
+    end
   end
 
+  def self.format_date(suspect)
+     if suspect.include? '/'
+       return Date.strptime(suspect, "%m/%d/%Y").to_s
+     else
+       return suspect
+     end
+  end
+
+
+
+  def self.open_spreadsheet(file)
+    case File.extname(file.original_filename)
+      when ".csv" then Roo::CSV.new(file.path)
+      when ".xls" then Roo::Excel.new(file.path)
+      when ".xlsx" then Roo::Excelx.new(file.path)
+      else raise "Unknown file type: #{file.original_filename}"
+    end
+  end
 end
