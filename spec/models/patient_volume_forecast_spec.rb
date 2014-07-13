@@ -29,10 +29,10 @@ describe PatientVolumeForecast, :type => :model do
 
 # Scope
   describe "scope" do
-    sunday = Date.parse('2014-07-06')
-		let!(:earlier_projection) { FactoryGirl.create(:patient_volume_forecast, start_date: sunday) }
-		let!(:later_projection_1) { FactoryGirl.create(:patient_volume_forecast, start_date: sunday + 7) }
-		let!(:later_projection_2) { FactoryGirl.create(:patient_volume_forecast, start_date: sunday + 14) }
+    friday = Date.parse('2014-07-18')
+		let!(:earlier_projection) { FactoryGirl.create(:patient_volume_forecast, start_date: friday) }
+		let!(:later_projection_1) { FactoryGirl.create(:patient_volume_forecast, start_date: friday + 7) }
+		let!(:later_projection_2) { FactoryGirl.create(:patient_volume_forecast, start_date: friday + 14) }
 
 
     describe "ordered" do

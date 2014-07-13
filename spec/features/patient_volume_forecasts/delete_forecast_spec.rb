@@ -4,8 +4,8 @@ feature "Deleting a patient volume forecast: " do
 
   subject { page }
   given(:locations)  { [ FactoryGirl.create(:location), FactoryGirl.create(:location) ] }
-	given!(:earlier_volume_forecast) { FactoryGirl.create(:patient_volume_forecast, start_date: Date.parse('2014-07-13'), locations: locations) }
-	given!(:later_volume_forecast) { FactoryGirl.create(:patient_volume_forecast, start_date: Date.parse('2014-07-13') + 14, locations: locations) }
+	given!(:earlier_volume_forecast) { FactoryGirl.create(:patient_volume_forecast, start_date: Date.parse('2014-07-18'), locations: locations) }
+	given!(:later_volume_forecast) { FactoryGirl.create(:patient_volume_forecast, start_date: Date.parse('2014-07-18') + 14, locations: locations) }
 
   describe "Given am admin visits the index page," do
 		given(:admin) { FactoryGirl.create(:admin_user) }
