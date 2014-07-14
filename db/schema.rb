@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140710204901) do
+ActiveRecord::Schema.define(version: 20140711200409) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -103,6 +103,18 @@ ActiveRecord::Schema.define(version: 20140710204901) do
     t.integer  "optimizer_state",                            default: 0,     null: false
     t.string   "optimizer_job_id"
   end
+
+  create_table "speeds", force: true do |t|
+    t.integer  "doctors",                             null: false
+    t.decimal  "normal",      precision: 5, scale: 2, null: false
+    t.decimal  "max",         precision: 5, scale: 2, null: false
+    t.integer  "location_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "speeds", ["doctors", "location_id"], name: "index_speeds_on_doctors_and_location_id", unique: true, using: :btree
+  add_index "speeds", ["location_id"], name: "index_speeds_on_location_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "",                           null: false
