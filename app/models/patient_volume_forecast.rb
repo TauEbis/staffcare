@@ -2,7 +2,7 @@
 #    VisitProjections are computed from these projections by applying them to a heat map.
 class PatientVolumeForecast < ActiveRecord::Base
 
-  validates :volume_by_location, presence: true 
+  validates :volume_by_location, presence: true
   # TODO: Appear to be several ways to validate a date string is good- want ISO (yyy-mm-dd) format
   validates :start_date, presence: true, uniqueness: true
   validates :end_date, presence: true
@@ -129,7 +129,7 @@ class PatientVolumeForecast < ActiveRecord::Base
 
   def self.format_date(suspect)
      if suspect.include? '/'
-       return Date.strptime(suspect, "%m/%d/%Y").to_s
+       return Date.strptime(suspect, "%m/%d/%y").to_s
      else
        return suspect
      end
