@@ -10,8 +10,8 @@ FactoryGirl.define do
     penalty_60min 4
     penalty_90min 16
     penalty_eod_unseen 2
-    penalty_slack 2.5
-    md_rate 4.25
+    penalty_slack 2
+    penalty_turbo 3
     oren_shift true
 
   end

@@ -25,7 +25,7 @@ describe LocationsController, :type => :controller do
   # adjust the attributes here as well.
   let(:valid_attributes) { { "name" => "MyString", 'zone_id' => zone.id, 'rooms' => 4, 'max_mds' => 2, 'speeds_attributes' => { '0' => { 'doctors' => 1, 'normal' => 4, 'max' => 6 } } } }
   let(:valid_update_attributes) { { "name" => "MyString", 'zone_id' => zone.id, 'rooms' => 4, 'max_mds' => 2 } }
-
+  #TODO Check that the valid_update_attributes are still a reasonable test
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in

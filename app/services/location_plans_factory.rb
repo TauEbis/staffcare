@@ -18,7 +18,9 @@ class LocationPlansFactory
                    visit_projection: @visit_projections[location.report_server_id],
                    visits: @visit_projections[location.report_server_id].visits,
                    open_times: location.open_times,
-                   close_times: location.close_times
+                   close_times: location.close_times,
+                   normal: location.speeds.map(&:normal),
+                   max: location.speeds.map(&:max)
                  })
 
       lp = LocationPlan.new attr

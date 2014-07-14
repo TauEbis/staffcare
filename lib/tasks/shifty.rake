@@ -11,6 +11,14 @@ namespace :shifty do
         z.locations.create!(name: "CityMD_88th_St", report_server_id: "CityMD_88th_St", max_mds: 3, rooms: 12, open_times: [9,8,8,8,8,8,9], close_times: [21,22,22,22,22,22,21]),
     ]
 
+    locations.each do |location|
+      location.speeds.create(doctors: 1, normal: 4, max: 6)
+      location.speeds.create(doctors: 2, normal: 8, max: 12)
+      location.speeds.create(doctors: 3, normal: 12, max: 18)
+      location.speeds.create(doctors: 4, normal: 16, max: 24)
+      location.speeds.create(doctors: 5, normal: 20, max: 30)
+    end
+
     schedule = Schedule.create!(starts_on: Date.parse("2014-06-06"), md_rate: 4.25, penalty_slack: 2.5, penalty_30min: 1, penalty_60min: 4, penalty_90min: 16, penalty_eod_unseen: 4, oren_shift: true)
 
     provider = DataProvider.new(:sample_run)
@@ -41,6 +49,14 @@ namespace :shifty do
     locations = [
         z.locations.create!(name: "CityMD_14th_St", report_server_id: "CityMD_14th_St", max_mds: 3, rooms: 12, open_times: [8,8,8,8,8,8,8], close_times: [22,22,22,22,22,22,22]),
     ]
+
+    locations.each do |location|
+      location.speeds.create(doctors: 1, normal: 4, max: 6)
+      location.speeds.create(doctors: 2, normal: 8, max: 12)
+      location.speeds.create(doctors: 3, normal: 12, max: 18)
+      location.speeds.create(doctors: 4, normal: 16, max: 24)
+      location.speeds.create(doctors: 5, normal: 20, max: 30)
+    end
 
     schedule = Schedule.create!(starts_on: Date.parse("2014-06-06"), md_rate: 4.25, penalty_slack: 2.5, penalty_30min: 1, penalty_60min: 4, penalty_90min: 16, penalty_eod_unseen: 4, oren_shift: true)
     schedule.custom_length(0)

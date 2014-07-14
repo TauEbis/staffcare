@@ -33,7 +33,10 @@
       </div>
     <% end -%>
 
-      <div class="row"><h2> Physician work rates </h2></div>
+      <div class="row">
+        <h2> Physician work rates </h2>
+        <h4> Consider acuity of cases at this location and the number of available rooms  </h4>
+      </div>
 
       <%= f.simple_fields_for(:speeds) do |builder| %>
         <%= render 'speed_fields', f: builder %>

@@ -13,7 +13,7 @@ class Schedule < ActiveRecord::Base
 
   default_scope -> { order(starts_on: :desc, id: :desc) }
 
-  OPTIMIZER_FIELDS = [:penalty_30min, :penalty_60min, :penalty_90min, :penalty_eod_unseen, :penalty_slack, :md_rate, :oren_shift]
+  OPTIMIZER_FIELDS = [:penalty_30min, :penalty_60min, :penalty_90min, :penalty_eod_unseen, :penalty_turbo, :penalty_slack, :oren_shift]
 
   OPTIMIZER_FIELDS.each do |field|
     validates field, presence: true
@@ -27,8 +27,8 @@ class Schedule < ActiveRecord::Base
       penalty_60min: 4,
       penalty_90min: 16,
       penalty_eod_unseen: 2,
-      penalty_slack: 2.5,
-      md_rate: 4.25,
+      penalty_turbo: 3,
+      penalty_slack: 2,
       oren_shift: true
     }
   end
@@ -64,6 +64,7 @@ class Schedule < ActiveRecord::Base
       breakdowns = {}
       points = {}
       shifts = {}
+      grader.set_speeds location_plan.normal, location_plan.max
 
       days.each do |day|
         day_visits = location_plan.visits[day.to_s]

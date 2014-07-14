@@ -36,12 +36,17 @@ class SolutionSetBuilder
   def build
     @set = Array.new
 
-    combinations = (1..(@openings + @openers_to_assign - 1 )).to_a.combination(@openers_to_assign).to_a
+    am_combinations = (1..(@openings + @openers_to_assign - 1 )).to_a.combination(@openers_to_assign).to_a
+    if @min_openers == @min_closers
+      pm_combinations = am_combinations
+    else
+      pm_combinations = (1..(@closings + @closers_to_assign - 1 )).to_a.combination(@closers_to_assign).to_a
+    end
 
-    combinations.each do |am_combos|
+    am_combinations.each do |am_combos|
       am_steps = am_combos.map.with_index { |el, index | el + @open - (index + 1) }
 
-      combinations.each do |pm_combos|
+      pm_combinations.each do |pm_combos|
         pm_steps = pm_combos.map.with_index { |el, index | el + @first_possible_close - (index + 1) }
         steps = am_steps + pm_steps
 

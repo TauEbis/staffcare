@@ -39,4 +39,12 @@ if Rails.env.development?
   z.locations.create!(name: "CityMD_67th_St", report_server_id: "CityMD_67th_St", max_mds: 3, rooms: 12, open_times: [9,8,8,8,8,8,9], close_times: [21,22,22,22,22,22,21])
   z.locations.create!(name: "CityMD_86th_St", report_server_id: "CityMD_86th_St", max_mds: 3, rooms: 12, open_times: [9,8,8,8,8,8,9], close_times: [21,22,22,22,22,22,21])
   z.locations.create!(name: "CityMD_88th_St", report_server_id: "CityMD_88th_St", max_mds: 3, rooms: 12, open_times: [9,8,8,8,8,8,9], close_times: [21,22,22,22,22,22,21])
+
+  Location.all.each do |location|
+    location.speeds.create(doctors: 1, normal: 4, max: 6)
+    location.speeds.create(doctors: 2, normal: 8, max: 12)
+    location.speeds.create(doctors: 3, normal: 12, max: 18)
+    location.speeds.create(doctors: 4, normal: 16, max: 24)
+    location.speeds.create(doctors: 5, normal: 20, max: 30)
+  end
 end

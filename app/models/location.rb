@@ -65,7 +65,7 @@ class Location < ActiveRecord::Base
     max = doctor_set.length
     errors.add(:base, "Physician number must be unique") if doctor_set.uniq.length != max
     errors.add(:base, "Physician numbers must be sequential") if doctor_set != (1..max).to_a
-    errors.add(:base, "Must have at least one work rate") if speeds.empty?
+    #errors.add(:base, "Must have at least one work rate") if speeds.empty?
   end
 
 end
