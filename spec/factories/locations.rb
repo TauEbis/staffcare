@@ -8,5 +8,8 @@ FactoryGirl.define do
     max_mds 3
     min_openers 1
     min_closers 1
+
+    after(:build)  { |location| location.speeds << FactoryGirl.build(:speed, location: location) }
+    before(:create)  { |location| location.speeds.each { |speed| speed.save } }
   end
 end
