@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140710204901) do
+ActiveRecord::Schema.define(version: 20140714123620) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,6 +43,8 @@ ActiveRecord::Schema.define(version: 20140710204901) do
     t.integer "min_closers"
     t.integer "open_times",          default: [],              array: true
     t.integer "close_times",         default: [],              array: true
+    t.string  "normal",              default: [], null: false, array: true
+    t.string  "max",                 default: [], null: false, array: true
   end
 
   create_table "locations", force: true do |t|
@@ -98,11 +100,23 @@ ActiveRecord::Schema.define(version: 20140710204901) do
     t.decimal  "penalty_90min",      precision: 8, scale: 4,                 null: false
     t.decimal  "penalty_eod_unseen", precision: 8, scale: 4,                 null: false
     t.decimal  "penalty_slack",      precision: 8, scale: 4,                 null: false
-    t.decimal  "md_rate",            precision: 8, scale: 4,                 null: false
     t.boolean  "oren_shift",                                 default: false, null: false
     t.integer  "optimizer_state",                            default: 0,     null: false
     t.string   "optimizer_job_id"
+    t.decimal  "penalty_turbo",      precision: 8, scale: 4,                 null: false
   end
+
+  create_table "speeds", force: true do |t|
+    t.integer  "doctors",                             null: false
+    t.decimal  "normal",      precision: 5, scale: 2, null: false
+    t.decimal  "max",         precision: 5, scale: 2, null: false
+    t.integer  "location_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "speeds", ["doctors", "location_id"], name: "index_speeds_on_doctors_and_location_id", unique: true, using: :btree
+  add_index "speeds", ["location_id"], name: "index_speeds_on_location_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "",                           null: false

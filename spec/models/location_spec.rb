@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Location do
   let(:zone) { FactoryGirl.create(:zone) }
   let (:location) { FactoryGirl.build(:location, zone: zone) }
+  #let!(:soeed) { FactoryGirl.build(:speed, location: location) }
   day_params = Location::DAY_PARAMS
   days = Location::DAYS
   subject { location }

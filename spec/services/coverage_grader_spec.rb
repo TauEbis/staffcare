@@ -11,7 +11,7 @@ describe CoverageGrader, :type => :service do
 		it { should respond_to(:penalty) }
 		it { should respond_to(:set_visits=) }
 		it { should respond_to(:penalty_with_set_visits) }
-
+=begin
 		describe "#set_visits" do
 
 			before { grader.set_visits=visits }
@@ -22,5 +22,5 @@ describe CoverageGrader, :type => :service do
 			end
 
 		end
-
+=end
 end

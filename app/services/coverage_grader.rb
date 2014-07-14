@@ -4,9 +4,9 @@ class CoverageGrader
 
 	  # Grader Function Coefficients
 
-		@md_rate = weights[:md_rate].to_f # how many patients an MD sees an hour
-
 		@penalty_slack = weights[:penalty_slack].to_f # penalty weight for doctor waiting with no patients to see
+
+		@penalty_turbo = weights[:penalty_turbo].to_f # penalty weight for doctor working above normal speed
 
 		@penalty_30min = weights[:penalty_30min].to_i # penalty weight for patient waiting 30 mins before seeing a doctor
 
@@ -20,8 +20,6 @@ class CoverageGrader
 
 		# Derived Constants
 
-		@md_half_hr_rate = @md_rate/2 # how many patients an MD sees in a half_hour
-
 		@penalty_60min_to_90min = @penalty_90min - @penalty_60min
 
 	end
@@ -34,6 +32,8 @@ class CoverageGrader
   def breakdown
     {
       queue: @queue,
+      seen: @seen,
+      turbo: @turbo,
       slack: @slack,
       penalties: @penalties,
       penalty: @total_penalty
@@ -50,6 +50,11 @@ class CoverageGrader
 		}
   end
 
+	def set_speeds normal, max
+		@normal_speeds = normal.map(&:to_f)
+		@max_speeds = max.map(&:to_f)
+	end
+
 	def set_visits= (raw_visits)
 		visits = raw_visits.map{ |visit| visit.round(@round) }
 		@visits = visits
@@ -59,7 +64,10 @@ class CoverageGrader
 	end
 
 	def penalty_with_set_visits(coverage)
-		capacity = coverage.collect { |n| n * @md_half_hr_rate } # Physician capacity to see patients
+
+		# Physician capacity to see patients
+		normal_capacity = coverage.map { |n| @normal_speeds[n-1]/2 }
+		max_capacity = coverage.map { |n| @max_speeds[n-1]/2 }
 
 		# Reset the initial conditions
 		@queue[0], @thirty_min_wait[0], @greater_than_thirty_min_wait[0],
@@ -67,8 +75,12 @@ class CoverageGrader
 
 		# Calculate slack and wait/queue arrays
 		@time_slots_range.each do |x|
-			@queue[x+1] = [ (@visits[x] + @queue[x] - capacity[x]), 0 ].max
-			@slack[x] = [ capacity[x] - @visits[x] - @queue[x] , 0].max
+			@seen[x] = [ @visits[x] + @queue[x], max_capacity[x] ].min
+			delta = normal_capacity[x] - @seen[x]
+			@slack[x] = [ delta , 0 ].max
+			@turbo[x] = [ delta * (-1) , 0 ].max
+
+			@queue[x+1] = @visits[x] + @queue[x] - @seen[x]
 			@greater_than_thirty_min_wait[x] = [ @queue[x] - @visits[x-1] , 0].max if x >= 1
 			@thirty_min_wait[x] = @queue[x] - @greater_than_thirty_min_wait[x] if x >= 1
 			@greater_than_sixty_min_wait[x] = [ @queue[x] - @visits[x-1] - @visits[x-2] , 0].max if x >= 2
@@ -77,6 +89,7 @@ class CoverageGrader
 		# Calculate Penalty
 		@time_slots_range.each do |x|
 			@penalties[x] = @penalty_slack * @slack[x] +
+											@penalty_turbo * @turbo[x] +
 											@penalty_30min * @thirty_min_wait[x] +
 											@penalty_60min * @greater_than_thirty_min_wait[x] +
 											@penalty_60min_to_90min * @greater_than_sixty_min_wait[x]
@@ -92,7 +105,9 @@ class CoverageGrader
 
 		def build_arrays
 			# Create arrays for penalty calc
+			@seen = Array.new(@time_slots) # How should we type cast these? they are floats for now
 			@slack = Array.new(@time_slots) # How should we type cast these? they are floats for now
+			@turbo = Array.new(@time_slots) # How should we type cast these? they are floats for now
 			@greater_than_thirty_min_wait = Array.new(@time_slots) # greater than thirty min wait time per thirty min time slot
 			@thirty_min_wait = Array.new(@time_slots) # wait time per thirty min time slot
 			@greater_than_sixty_min_wait = Array.new(@time_slots) # wait time per thirty min time slot
@@ -105,7 +120,8 @@ class CoverageGrader
 		end
 
 		def md_sat_score
-			score = @penalty_eod_unseen * @queue[@time_slots]
+			score = @turbo.inject(0) { | sum, x | sum + @penalty_turbo * x }
+			score += @penalty_eod_unseen * @queue[@time_slots]
 			score.round(@round)
 		end
 

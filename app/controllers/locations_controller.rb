@@ -13,6 +13,7 @@ class LocationsController < ApplicationController
   # GET /locations/new
   def new
     @location = Location.new
+    @speed = @location.speeds.new
     authorize @location
   end
 
@@ -37,6 +38,7 @@ class LocationsController < ApplicationController
     if @location.update(location_params)
       redirect_to @location, notice: 'Location was successfully updated.'
     else
+      #binding.pry
       render :edit
     end
   end
@@ -56,6 +58,8 @@ class LocationsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def location_params
-      params.require(:location).permit(:name, :zone_id, :rooms, :max_mds, :report_server_id, *Location::DAY_PARAMS)
+      params.require(:location).permit(:name, :zone_id, :rooms, :max_mds, :report_server_id,
+       *Location::DAY_PARAMS, speeds_attributes: [:id, :doctors, :normal, :max, :_destroy] )
     end
+
 end

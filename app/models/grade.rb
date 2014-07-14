@@ -48,6 +48,7 @@ class Grade < ActiveRecord::Base
     points_will_change!
 
     grader ||= CoverageGrader.new(self.location_plan.schedule.grader_weights)
+    grader.set_speeds self.location_plan.normal, self.location_plan.max
     day_visits = location_plan.visits[date_s]
 
     grader.penalty(self.coverages[date_s], day_visits)

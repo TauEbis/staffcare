@@ -1,0 +1,17 @@
+<fieldset>
+<div class="row form-group">
+    <div class="col-sm-1">
+      <%= f.input :doctors  %>
+    </div>
+    <div class="col-sm-1">
+      <%= f.input :normal  %>
+    </div>
+    <div class="col-sm-1">
+      <%= f.input :max  %>
+    </div>
+    <div class="col-sm-1">
+      <%= f.hidden_field :_destroy %>
+      <%= link_to "remove", '#', class: "remove_fields" %>
+    </div>
+</div>
+</fieldset>

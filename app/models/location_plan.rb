@@ -31,14 +31,46 @@ class LocationPlan < ActiveRecord::Base
   end
 
   def solution_set_options(day)
+    set_solution_set_inputs(day)
     {open: open_times[day.wday()], close: close_times[day.wday()], max_mds: max_mds, min_openers: min_openers, min_closers: min_closers}
   end
 
   # Loads the set of possible shift coverages for a single day
   # given the stored LocationPlan location configuration
   def build_solution_set(day)
+    set_solution_set_inputs(day)
     SolutionSetBuilder.new(self, day).build
   end
+
+#TODO should these am_min method be called on visits rather than VisitProjection?
+  def set_solution_set_inputs(day)
+    max = self.visit_projection.day_max(day)
+    self.max_mds = normal.length
+    normal.each_with_index do |speed, i|
+      if speed/2 > max
+        self.max_mds= i + 1
+        break
+      end
+    end
+    am_min = self.visit_projection.am_min(day)
+    self.min_openers= 1
+    normal.each_with_index do |speed, i|
+      if speed/2 > am_min && i > 0
+        self.min_openers= i
+        break
+      end
+    end
+    pm_min = self.visit_projection.pm_min(day)
+    self.min_closers= 1
+    normal.each_with_index do |speed, i|
+      if speed/2 > pm_min && i > 0
+        self.min_closers= i
+        break
+      end
+    end
+    self.save!
+  end
+
 
   def unoptimized_summed_points
     @_points ||= Grade.unoptimized_sum(chosen_grade)
@@ -53,4 +85,14 @@ class LocationPlan < ActiveRecord::Base
       g
     end
   end
+
+# Arrays of decimals are stored as as strings in Postgres
+  def normal
+    read_attribute(:normal).map(&:to_f)
+  end
+
+  def max
+    read_attribute(:max).map(&:to_f)
+  end
+
 end
