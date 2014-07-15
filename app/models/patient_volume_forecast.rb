@@ -6,7 +6,7 @@ class PatientVolumeForecast < ActiveRecord::Base
   # TODO: Appear to be several ways to validate a date string is good- want ISO (yyy-mm-dd) format
   validates :start_date, presence: true, uniqueness: true
   validates :end_date, presence: true
-  #validate :legal_volume_by_location
+  validate :legal_volume_by_location
   validate :valid_start_date, unless: "start_date.blank?"
   validate :valid_end_date, unless: "start_date.blank?"
 
@@ -57,22 +57,20 @@ class PatientVolumeForecast < ActiveRecord::Base
 
   #TODO validate hash is greater than 0 and real locations
   def legal_volume_by_location
-    if volume_by_location.keys.length <= 0
-         errors.add(:volume_by_location, "must include at least one location")
-    end
-    volumes = volume_by_location.values
-    volumes.each do |volume|
-         if volume < 0
-              errors.add(:volume_by_location, "volumes must be greater than zero")
+    volume_by_location.each do |site, volume|
+         if volume.to_f < 0
+              errors.add(:base, "#{site}: Value must be greater than zero")
          end
     end
 
+=begin
     locations = Location.all
     location_names = locations.map(&:name)
     good_names = location_names & volume_by_location.keys
     if good_names.length < volume_by_location.keys.length
          errors.add(:volume_by_location, "invalid location name in volume data")
     end
+=end
   end
 
   # Exports only forecasts that start on a date after today
