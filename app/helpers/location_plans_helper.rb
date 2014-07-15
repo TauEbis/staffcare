@@ -52,11 +52,11 @@ module LocationPlansHelper
   def up_action_link(location_plan)
     case location_plan.approval_state
       when 'pending'
-        text = current_user.manager? ? 'Approve' : 'Force to manager-approved'
+        text = current_user.manager? ? 'Approve' : 'Manager Approval - Forced'
         btn_class = current_user.manager? ? 'btn-success' : 'btn-default'
         change_state_link(text, 'manager_approved', btn_class, location_plan)
       when 'manager_approved'
-        text = current_user.gm? ? 'Approve' : 'Force to gm-approved'
+        text = current_user.gm? ? 'Approve' : 'GM Approval - Forced'
         btn_class = current_user.gm? ? 'btn-success' : 'btn-default'
         change_state_link(text, 'gm_approved', btn_class, location_plan)
       else
