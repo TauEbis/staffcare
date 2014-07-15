@@ -12,7 +12,7 @@ FactoryGirl.define do
     sequence(:volume_by_location) do |n|
 			acc=Hash.new
 			locations.each do |location|
-				acc[location.id.to_s] = 800 + 3*n + 40*location.id - 15
+				acc[location.report_server_id.to_s] = 800 + 3*n + 40*location.id - 15
 			end
 			acc
 		end

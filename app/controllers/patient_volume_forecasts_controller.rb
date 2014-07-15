@@ -76,12 +76,12 @@ class PatientVolumeForecastsController < ApplicationController
 
     # Strong params -- only allow a trusted parameter "white list" through.
     def patient_volume_forecast_params
-      volume_by_location_to_i
+      #volume_by_location_to_i
       params.require(:patient_volume_forecast).permit(:start_date, :end_date, :volume_by_location => Location.pluck(:report_server_id))
     end
 
     def volume_by_location_to_i
-      params[:patient_volume_forecast][:volume_by_location].each do |k, v|
+      params[:patient_volume_forecast][:volume_by_location].keys.each do |k, v|
         params[:patient_volume_forecast][:volume_by_location][k] = v.to_f
       end
     end
