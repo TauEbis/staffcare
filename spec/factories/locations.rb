@@ -3,6 +3,7 @@
 FactoryGirl.define do
   factory :location do
     sequence(:name) 				{ |n| "Location #{n}" }
+    sequence(:report_server_id) { |n| "Location_#{n}" }
     zone
     rooms 5
     max_mds 3

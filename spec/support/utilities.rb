@@ -43,7 +43,7 @@ end
 			fill_in "Start date", 						with: forecast.start_date
 			fill_in "End date", 							with: forecast.end_date
 		locations.each do |l|
-			fill_in l.name.to_s,			 							with: forecast.volume_by_location[l.id.to_s]
+			fill_in l.name.to_s,			 							with: forecast.volume_by_location[l.report_server_id]
 		end
 	end
 

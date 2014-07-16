@@ -30,9 +30,10 @@ feature "Viewing all patient volume forecasts: " do
 			it { should have_title full_title('All patient volume forecasts') }
 		end
 
+    friday = Date.parse('2014-07-11')
 		context "when there are input_projections" do
-			given!(:earlier_input_projection) { FactoryGirl.create(:patient_volume_forecast, start_date: Date.today, locations: locations) }
-			given!(:later_input_projection) { FactoryGirl.create(:patient_volume_forecast, start_date: Date.today + 14, locations: locations) }
+			given!(:earlier_input_projection) { FactoryGirl.create(:patient_volume_forecast, start_date: friday, locations: locations) }
+			given!(:later_input_projection) { FactoryGirl.create(:patient_volume_forecast, start_date: friday + 14, locations: locations) }
 			background { visit current_path }
 
 			it { should have_content(earlier_input_projection.start_date) }
@@ -42,15 +43,15 @@ feature "Viewing all patient volume forecasts: " do
 			end
 
 			it "then it should have the correct volume data" do
-				locations.map(&:id).each do |l_id|
+				locations.map(&:report_server_id).each do |l_id|
 					volume = earlier_input_projection.volume_by_location[l_id.to_s]
 					expect(volume).not_to be_nil
 					expect(page).to have_content(volume)
 				end
 			end
 
-			it "then the volume data should be in the descending order by start date" do
-				expect(find('tr td', match: :first)).to have_content(later_input_projection.start_date)
+			it "then the volume data should be in the ascending order by start date" do
+				expect(find('tr td', match: :first)).to have_content(earlier_input_projection.start_date)
 			end
 
 		end
