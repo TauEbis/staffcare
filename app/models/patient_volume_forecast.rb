@@ -6,7 +6,7 @@ class PatientVolumeForecast < ActiveRecord::Base
   # TODO: Appear to be several ways to validate a date string is good- want ISO (yyy-mm-dd) format
   validates :start_date, presence: true, uniqueness: true
   validates :end_date, presence: true
-  validate :legal_volume_by_location
+  validate :legal_volume_by_location, unless: "volume_by_location.blank?"
   validate :valid_start_date, unless: "start_date.blank?"
   validate :valid_end_date, unless: "start_date.blank?"
 
