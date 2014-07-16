@@ -81,8 +81,8 @@ ActiveRecord::Schema.define(version: 20141114141451) do
     t.integer  "min_closers"
     t.integer  "open_times",          default: [],                                 array: true
     t.integer  "close_times",         default: [],                                 array: true
-    t.string   "normal",              default: [],                    null: false, array: true
-    t.string   "max",                 default: [],                    null: false, array: true
+    t.decimal "normal",              precision: 8, scale: 4, default: [], null: false, array: true
+    t.decimal "max",                 precision: 8, scale: 4, default: [], null: false, array: true
     t.integer  "wiw_sync",            default: 0,                     null: false
     t.datetime "created_at",          default: '2014-10-01 00:00:00', null: false
     t.datetime "updated_at",          default: '2014-10-01 00:00:00', null: false

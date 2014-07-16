@@ -135,14 +135,7 @@ class LocationPlan < ActiveRecord::Base
     end
   end
 
-# FIXME: Arrays of decimals are stored as as strings in Postgres
-  def normal
-    read_attribute(:normal).map(&:to_f)
-  end
-
-  def max
-    read_attribute(:max).map(&:to_f)
-  end
+# Arrays of decimals are stored as as strings in Postgres
 
   def dirty!
     update_attribute(:wiw_sync, :dirty) if synced?
