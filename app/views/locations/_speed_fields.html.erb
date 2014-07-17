@@ -10,8 +10,7 @@
       <%= f.input :max  %>
     </div>
     <div class="col-sm-1">
-      <%= f.hidden_field :_destroy %>
-      <%= link_to "remove", '#', class: "remove_fields" %>
+      <%= link_to_delete_speed "remove", f.object %>
     </div>
 </div>
 </fieldset>
