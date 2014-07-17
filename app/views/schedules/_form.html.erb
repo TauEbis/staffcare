@@ -6,7 +6,7 @@
     <div class="row">
       <div class="col-sm-4">
         <%= f.input :starts_on, required: true,
-                    input_html: { data: {behaviour: "datepicker"}},
+                    input_html: { data: {behaviour: "monthpicker"}},
                     as: :string %>
 
         <% Schedule::OPTIMIZER_FIELDS.each do |field| %>

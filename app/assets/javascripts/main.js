@@ -6,6 +6,7 @@ $(document).ready(function() {
   $('[data-toggle="tooltip"]').tooltip();
 
   $('[data-behaviour~=datepicker]').datepicker({"format": "yyyy-mm-dd", "weekStart": 0, "autoclose": true});
+  $('[data-behaviour~=monthpicker]').datepicker({"format": "yyyy-mm-01", "viewMode": "months", "minViewMode": "months", "weekStart": 0, "autoclose": true});
 
   $(".form_autoselector").on('change', function(){
     $(this.form).submit();
