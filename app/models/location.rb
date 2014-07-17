@@ -5,14 +5,14 @@ class Location < ActiveRecord::Base
 
   has_many :memberships
   has_many :users, through: :memberships
-  has_many :speeds, dependent: :destroy
-  accepts_nested_attributes_for :speeds, allow_destroy: true
+  has_many :speeds, dependent: :destroy, inverse_of: :location
+  accepts_nested_attributes_for :speeds, reject_if: proc { |attributes| attributes['doctors'].blank? }
 
   validates :zone, presence: true
   validates :rooms, presence: true, numericality: { greater_than: 0, less_than: 100 }
   validates :max_mds, presence: true, numericality: { greater_than: 0, less_than: 100 }
   validates :min_openers, :min_closers, presence: true, numericality: { greater_than: 0, less_than_or_equal_to: :max_mds }, unless: "max_mds.nil?"
-  validate :validate_nested_speeds
+  validate :validate_nested_speeds_sequence
 
   scope :ordered, -> { order(name: :asc) }
 
@@ -60,12 +60,17 @@ class Location < ActiveRecord::Base
     @_close_times ||= DAYS.map {|day| send("#{day}_close") / 60 }
   end
 
-  def validate_nested_speeds
+  def validate_nested_speeds_sequence
     doctor_set = speeds.map(&:doctors).sort
     max = doctor_set.length
-    errors.add(:base, "Physician number must be unique") if doctor_set.uniq.length != max
-    errors.add(:base, "Physician numbers must be sequential") if doctor_set != (1..max).to_a
-    #errors.add(:base, "Must have at least one work rate") if speeds.empty?
+
+    if doctor_set.empty?
+      errors.add(:base, "Must have at least one work rate")
+    elsif doctor_set.uniq.length != max
+      errors.add(:base, "Physician numbers must be unique")
+    elsif doctor_set != (1..max).to_a
+      errors.add(:base, "Physician numbers must be sequential")
+    end
   end
 
 end

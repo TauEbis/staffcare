@@ -25,7 +25,6 @@ class LocationsController < ApplicationController
   def create
     @location = Location.new(location_params)
     authorize @location
-
     if @location.save
       redirect_to @location, notice: 'Location was successfully created.'
     else
@@ -38,7 +37,6 @@ class LocationsController < ApplicationController
     if @location.update(location_params)
       redirect_to @location, notice: 'Location was successfully updated.'
     else
-      #binding.pry
       render :edit
     end
   end
@@ -59,7 +57,7 @@ class LocationsController < ApplicationController
     # Only allow a trusted parameter "white list" through.
     def location_params
       params.require(:location).permit(:name, :zone_id, :rooms, :max_mds, :report_server_id,
-       *Location::DAY_PARAMS, speeds_attributes: [:id, :doctors, :normal, :max, :_destroy] )
+       *Location::DAY_PARAMS, speeds_attributes: [:id, :doctors, :normal, :max] )
     end
 
 end
