@@ -1,6 +1,6 @@
 class SpeedPolicy < ApplicationPolicy
 
   def destroy?
-    true
+    user.admin?
   end
 end
