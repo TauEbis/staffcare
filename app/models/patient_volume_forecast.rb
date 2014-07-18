@@ -113,8 +113,10 @@ class PatientVolumeForecast < ActiveRecord::Base
       result = {}
       result['volume_by_location'] = {}
       row.keys.each do |key|
-        if key == 'start_date' or key == 'end_date' or key == 'id'
+        if key == 'start_date' || key == 'end_date'
              result[key] = format_date(row[key])
+        elsif key == 'id' && !forecast.new_record?
+             result[key] = row[key]
         else
              result['volume_by_location'][key] = row[key].to_f
         end

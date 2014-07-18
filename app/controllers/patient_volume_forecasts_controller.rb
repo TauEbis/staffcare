@@ -1,7 +1,7 @@
 class PatientVolumeForecastsController < ApplicationController
 
-  before_action :set_patient_volume_forecast, only: [:new, :edit, :update, :destroy]
-  before_action :set_locations, only: [:index, :new, :edit, :create, :update ]
+  before_action :set_patient_volume_forecast, only: [:edit, :update, :destroy]
+  before_action :set_locations, only: [:index, :new, :edit, :create, :update, :destroy ]
 
   # GET /patient_volume_forecasts
   def index
@@ -17,6 +17,8 @@ class PatientVolumeForecastsController < ApplicationController
 
   # GET /patient_volume_forecasts/new
   def new
+    @patient_volume_forecast = PatientVolumeForecast.new
+    authorize @patient_volume_forecast
   end
 
   # POST /patient_volume_forecasts
@@ -56,7 +58,6 @@ class PatientVolumeForecastsController < ApplicationController
          redirect_to patient_volume_forecasts_url, notice: 'Please select a file to import.'
     else
          PatientVolumeForecast.import(params[:file])
-         ActiveRecord::Base.connection.reset_pk_sequence!('patient_volume_forecasts')
          redirect_to patient_volume_forecasts_url, notice: 'Patient Volume Forecasts successfully imported.'
     end
   end
@@ -65,9 +66,8 @@ class PatientVolumeForecastsController < ApplicationController
 
     # Use callbacks to share common setup or constraints between actions.
     def set_patient_volume_forecast
-      @patient_volume_forecast =  params[:id] ? PatientVolumeForecast.find(params[:id]) : PatientVolumeForecast.new
+      @patient_volume_forecast =  PatientVolumeForecast.find(params[:id])
       authorize @patient_volume_forecast
-      @locations = Location.ordered.all
     end
 
     def set_locations
