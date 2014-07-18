@@ -18,7 +18,7 @@ class User < ActiveRecord::Base
   end
 
   def set_default_role
-    self.role ||= :nobody
+    self.role ||= :manager
   end
 
   def admin?

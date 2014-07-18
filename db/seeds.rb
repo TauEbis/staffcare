@@ -16,19 +16,19 @@ if Rails.env.development?
 
   user = User.find_or_create_by!(email: 'manager@manager.com') do |user|
     user.password = user.password_confirmation = 'password'
+    user.role = :manager
   end
 
   puts "Created Manager User: #{user.email} / password"
 
   user = User.find_or_create_by!(email: 'gm@gm.com') do |user|
     user.password = user.password_confirmation = 'password'
+    user.role = :gm
   end
 
   puts "Created GM User: #{user.email} / password"
 
   z1 = Zone.find_or_create_by(name: 'NYC1')
-  user.zones << z1
-  user.save!
 
   if z1.locations.empty?
     z1.locations.build(name: "CityMD_14th_St", report_server_id: "CityMD_14th_St", max_mds: 3, rooms: 12, open_times: [9,8,8,8,8,8,9], close_times: [21,22,22,22,22,22,21])
@@ -61,6 +61,15 @@ if Rails.env.development?
       location.save!
     end
   end
+
+  gm = User.find_by email: 'gm@gm.com'
+  z1.locations.each do |location|
+    gm.locations << location unless gm.locations.include?(location)
+  end
+
+  manager = User.find_by email: 'manager@manager.com'
+  l= Location.find_by name: "CityMD_14th_St"
+  manager.locations << l unless manager.locations.include?(l)
 
   if PatientVolumeForecast.all.empty?
     f = File.open("mock_data/volume_data_1.csv", "r")
