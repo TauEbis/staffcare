@@ -7,6 +7,19 @@
 
   <%= f.input :email %>
 
+  <%= f.input :role, collection: [['Manager', 'manager'],['GM', 'gm'], ['Admin', 'admin']], include_blank: false, class: 'form-control' %>
+
+	<% Zone.ordered.each do |zone| -%>
+	  <fieldset>
+	    <label><%= zone.name %></label>
+	    <%= f.association :locations, label: false, collection: zone.locations.ordered, as: :check_boxes, wrapper: :vertical_radio_and_checkboxes %>
+	    <div class="pull-right">
+	      <a href="#" class="select-all">All</a> | <a href="#" class="select-none">None</a>
+	    </div>
+	  </fieldset>
+
+	<% end -%>
+
   <%= f.button :submit %>
 <% end %>
 
