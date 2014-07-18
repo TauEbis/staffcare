@@ -10,8 +10,8 @@ class PatientVolumeForecast < ActiveRecord::Base
   validate :valid_start_date, unless: "start_date.blank?"
   validate :valid_end_date, unless: "start_date.blank?"
 
-  scope :ordered, -> { order(start_date: :desc, id: :desc) }
-  default_scope -> { order(start_date: :desc, id: :desc) }
+  scope :ordered, -> { order(start_date: :asc, id: :desc) }
+  default_scope -> { order(start_date: :asc, id: :desc) }
 
 
   # checks if the forecast includes data for the given date
