@@ -38,10 +38,10 @@ module LocationPlansHelper
   def down_action_link(location_plan)
     case location_plan.approval_state
       when 'manager_approved'
-        text = current_user.manager? ? 'Downgrade to un-approved' : 'Force downgrade to un-approved'
+        text = current_user.manager? ? 'Cancel Approval' : "Cancel Manager's Approval"
         change_state_link(text, 'pending', 'btn-default', location_plan)
       when 'gm_approved'
-        text = current_user.gm? ? 'Downgrade to manager-approved' : 'Force downgrade to manager-approved'
+        text = current_user.gm? ? 'Cancel Approval' : "Cancel GM's Approval"
         change_state_link(text, 'manager_approved', 'btn-default', location_plan)
       else
         ''
