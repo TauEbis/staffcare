@@ -118,6 +118,9 @@ GEM
       guard (~> 2.1)
       rspec (>= 2.14, < 4.0)
     hike (1.2.3)
+    httparty (0.13.1)
+      json (~> 1.8)
+      multi_xml (>= 0.5.2)
     i18n (0.6.9)
     iconv (1.0.4)
     interception (0.5)
@@ -146,6 +149,7 @@ GEM
     mini_portile (0.6.0)
     minitest (5.3.5)
     multi_json (1.10.1)
+    multi_xml (0.5.5)
     newrelic_rpm (3.9.0.229)
     nokogiri (1.6.2.1)
       mini_portile (= 0.6.0)
@@ -326,6 +330,7 @@ DEPENDENCIES
   growl
   guard-bundler
   guard-rspec
+  httparty
   iconv
   jquery-rails
   jquery-turbolinks
