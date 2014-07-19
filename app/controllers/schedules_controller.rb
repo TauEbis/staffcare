@@ -1,9 +1,12 @@
 class SchedulesController < ApplicationController
   before_action :set_schedule, only: [:show, :edit, :update, :destroy]
 
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized, only: [:index]
+
   # GET /schedules
   def index
-    @schedules = policy_scope(Schedule).ordered.all
+    @schedules = policy_scope(Schedule).ordered
+    authorize @schedules
     @zones = user_zones.ordered
   end
 
@@ -63,4 +66,10 @@ class SchedulesController < ApplicationController
     def schedule_params
       params.require(:schedule).permit(:starts_on, :state, *Schedule::OPTIMIZER_FIELDS)
     end
+
+    def user_not_authorized
+      flash[:error] = "No active schedules"
+      redirect_to(request.referrer || root_path)
+    end
+
 end

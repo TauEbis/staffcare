@@ -9,6 +9,8 @@ class User < ActiveRecord::Base
   enum role: [:nobody, :admin, :manager, :gm]
   after_initialize :set_default_role, :if => :new_record?
 
+  scope :ordered, -> { order(name: :asc) }
+
   has_many :memberships
   has_many :locations, through: :memberships
   #has_many :zones, -> { distinct }, through: :locations
