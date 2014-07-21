@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   before_action :set_user, only: [:edit, :profile, :update, :destroy, :update_profile]
 
   def index
-    @users = policy_scope(User)
+    @users = policy_scope(User).ordered
   end
 
   def new

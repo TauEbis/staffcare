@@ -40,7 +40,7 @@ describe UsersController, :type => :controller do
     it "assigns all users as @users" do
       user = FactoryGirl.create(:user)
       get :index, {}, valid_session
-      expect(assigns(:users)).to eq(User.all)
+      expect(assigns(:users)).to eq(User.ordered)
     end
   end
 
