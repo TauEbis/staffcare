@@ -25,7 +25,7 @@ RSpec.describe ShiftCoverage, :type => :model do
 
       expect( shifts.length ).to eql(1)
       expect( shifts.first.starts_at.hour ).to eql(10)
-      expect( shifts.first.ends_at.hour ).to eql(18)
+      expect( shifts.first.ends_at.hour ).to eql(17)
     end
   end
 end

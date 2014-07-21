@@ -15,4 +15,8 @@ class Shift < ActiveRecord::Base
   def ends_hour
     @_ends_hour   ||= ends_at.in_time_zone(TZ).hour
   end
+
+  def to_knockout
+    {id: id, starts_hour: starts_hour, ends_hour: ends_hour}
+  end
 end

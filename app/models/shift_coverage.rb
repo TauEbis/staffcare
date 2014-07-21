@@ -47,7 +47,7 @@ class ShiftCoverage
     end
 
     (opens.zip(closes)).map do |starts_at, ends_at|
-      Shift.new(starts_at: @time + starts_at.hours, ends_at: @time + (ends_at+1).hours )
+      Shift.new(starts_at: @time + starts_at.hours, ends_at: @time + ends_at.hours )
     end
   end
 

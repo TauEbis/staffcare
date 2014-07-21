@@ -13,6 +13,8 @@ class Grade < ActiveRecord::Base
 
   before_destroy :reset_chosen_grade
 
+  accepts_nested_attributes_for :shifts
+
   def label
     case source
       when 'optimizer'
@@ -27,6 +29,7 @@ class Grade < ActiveRecord::Base
   end
 
   # shifts comes in as [{"starts"=>8, "ends"=>12, "hours"=>4}, {"starts"=>12, "ends"=>20, "hours"=>8}]
+  # TODO: NEEDS MAJOR FIXING WITH NEW SHIFT MODEL
   def update_shift!(date, dow, shifts)
     shifts_will_change!
     coverages_will_change!

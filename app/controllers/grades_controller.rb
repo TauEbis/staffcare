@@ -15,8 +15,6 @@ class GradesController < ApplicationController
     data = { chosen_grade_id: @grade.id,
              source: @grade.source,
              editable: policy(@grade).update?,
-
-             shifts: @grade.shifts.for_day(@date),
              grade_points: pts,
              grade_hours:  pts['hours']
             }
@@ -29,6 +27,7 @@ class GradesController < ApplicationController
         close_time: @location_plan.close_times[@date.wday],
       }
       data[:day_points] = @grade.points[@date_s]
+      data[:shifts]     = @grade.shifts.for_day(@date).map(&:to_knockout)
     end
 
     render json: data
