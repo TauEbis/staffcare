@@ -4,6 +4,10 @@ describe Grade, :type => :model do
   let (:location_plan) { create(:location_plan) }
 	let (:grade)         { location_plan.chosen_grade }
 
+  it "comes out of the factory correctly" do
+    expect(grade.location_plan.chosen_grade).to eql(grade)
+  end
+
 
   describe "Deleting a grade" do
     it "ensures that the location_plan has a chosen grade" do

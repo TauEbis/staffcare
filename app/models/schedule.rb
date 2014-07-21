@@ -63,7 +63,7 @@ class Schedule < ActiveRecord::Base
       coverages = {}
       breakdowns = {}
       points = {}
-      shifts = {}
+      shifts = []
       grader.set_speeds location_plan.normal, location_plan.max
 
       days.each do |day|
@@ -75,7 +75,7 @@ class Schedule < ActiveRecord::Base
         coverages[day.to_s] = best_coverage
         breakdowns[day.to_s] = best_breakdown
         points[day.to_s] = best_points
-        shifts[day.to_s] = ShiftCoverage.new(location_plan, day).coverage_to_shifts(best_coverage)
+        shifts += ShiftCoverage.new(location_plan, day).coverage_to_shifts(best_coverage)
       end
 
       grade = location_plan.grades.new(source: 'optimizer', coverages: coverages, breakdowns: breakdowns, points: points, shifts: shifts)

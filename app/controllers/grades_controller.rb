@@ -16,7 +16,7 @@ class GradesController < ApplicationController
              source: @grade.source,
              editable: policy(@grade).update?,
 
-             shifts: @grade.shifts[@date.to_s],
+             shifts: @grade.shifts.for_day(@date),
              grade_points: pts,
              grade_hours:  pts['hours']
             }

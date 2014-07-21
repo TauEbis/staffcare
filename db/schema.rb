@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140714123620) do
+ActiveRecord::Schema.define(version: 20140718152558) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,7 +24,6 @@ ActiveRecord::Schema.define(version: 20140714123620) do
     t.json     "points",           default: {}, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.json     "shifts",           default: {}, null: false
     t.integer  "user_id"
   end
 
@@ -105,6 +104,17 @@ ActiveRecord::Schema.define(version: 20140714123620) do
     t.string   "optimizer_job_id"
     t.decimal  "penalty_turbo",      precision: 8, scale: 4,                 null: false
   end
+
+  create_table "shifts", force: true do |t|
+    t.integer  "grade_id",   null: false
+    t.datetime "starts_at",  null: false
+    t.datetime "ends_at",    null: false
+    t.string   "wiw_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "shifts", ["grade_id", "starts_at"], name: "index_shifts_on_grade_id_and_starts_at", using: :btree
 
   create_table "speeds", force: true do |t|
     t.integer  "doctors",                             null: false

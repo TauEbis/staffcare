@@ -5,6 +5,7 @@
 class Grade < ActiveRecord::Base
   belongs_to :location_plan
   belongs_to :user
+  has_many :shifts
 
   enum source: [:optimizer, :last_month, :manual]
 

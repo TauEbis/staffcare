@@ -11,8 +11,8 @@ FactoryGirl.define do
     close_times [22,21,21,21,21,21,22]
 
     after(:create) do |location_plan, evaluator|
-      grades = create_list(:grade, 1, location_plan: location_plan)
-      location_plan.update_attribute(:chosen_grade_id, grades.first.id )
+      g = location_plan.grades(true).first || create(:grade, location_plan: location_plan)
+      location_plan.update_attribute(:chosen_grade_id, g.id )
     end
   end
 end
