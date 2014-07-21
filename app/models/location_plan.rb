@@ -80,6 +80,7 @@ class LocationPlan < ActiveRecord::Base
   def copy_grade!(user)
     LocationPlan.transaction do
       g = self.grades.create!(chosen_grade.attributes.merge(id: nil, created_at: nil, source: 'manual', user: user))
+      g.clone_shifts_from!(chosen_grade)
       self.update_attribute(:chosen_grade_id, g.id)
 
       g

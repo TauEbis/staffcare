@@ -79,4 +79,12 @@ class Grade < ActiveRecord::Base
     end
   end
 
+  def clone_shifts_from!(other_grade)
+    other_grade.shifts.each do |other_shift|
+      self.shifts.build(other_shift.attributes.except('id', 'grade_id'))
+    end
+
+    self.save!
+  end
+
 end

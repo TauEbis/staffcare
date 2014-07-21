@@ -21,4 +21,21 @@ describe Grade, :type => :model do
       expect(location_plan.reload.chosen_grade).to eql(extra_grade)
     end
   end
+
+  describe "Cloning shifts" do
+    before do
+      3.times do |i|
+        create(:shift, grade: grade)
+      end
+    end
+
+    it "duplicates the shifts and their attributes" do
+      expect(Shift.count).to eql(3)
+
+      g = Grade.new(grade.attributes.except('id'))
+      g.clone_shifts_from!(grade)
+
+      expect(Shift.count).to eql(6)
+    end
+  end
 end
