@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140718152558) do
+ActiveRecord::Schema.define(version: 20140721201529) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -70,6 +70,7 @@ ActiveRecord::Schema.define(version: 20140718152558) do
     t.integer  "min_openers",      default: 1,    null: false
     t.integer  "min_closers",      default: 1,    null: false
     t.string   "report_server_id"
+    t.string   "wiw_id"
   end
 
   add_index "locations", ["zone_id"], name: "index_locations_on_zone_id", using: :btree

@@ -10,6 +10,8 @@ FactoryGirl.define do
     min_openers 1
     min_closers 1
 
+    wiw_id '153524'
+
     after(:build)  { |location| location.speeds << FactoryGirl.build(:speed, location: location) }
     before(:create)  { |location| location.speeds.each { |speed| speed.save } }
   end
