@@ -38,6 +38,8 @@ gem 'sidekiq'
 gem 'sidekiq-status', git: 'https://github.com/matthewrudy/sidekiq-status.git', branch: 'sidekiq-3.1'
 gem 'sinatra', '>= 1.3.0', :require => nil
 
+gem 'httparty'
+
 group :staging, :production do
   gem 'rails_12factor'
   gem 'unicorn'
@@ -80,4 +82,6 @@ group :test do
   gem 'launchy'
   gem 'selenium-webdriver'
   gem 'rspec-its'
+  gem 'webmock'
+  gem 'vcr'
 end

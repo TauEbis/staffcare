@@ -7,6 +7,9 @@ require 'rspec/its'
 RSpec.configure { |c| c.deprecation_stream = 'log/deprecations.log' } # Configuration set here because pundit also sets the deprecation stream
 require "pundit/rspec"
 
+require 'webmock/rspec'
+require 'vcr'
+
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -20,6 +23,11 @@ Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 # Checks for pending migrations before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
 ActiveRecord::Migration.maintain_test_schema!
+
+VCR.configure do |c|
+  c.cassette_library_dir = 'spec/cassettes'
+  c.hook_into :webmock # or :fakeweb
+end
 
 RSpec.configure do |config|
   # ## Mock Framework

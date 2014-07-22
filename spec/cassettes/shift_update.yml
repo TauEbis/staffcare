@@ -1,0 +1,49 @@
+---
+http_interactions:
+- request:
+    method: put
+    uri: https://api.wheniwork.com/2/shifts/42537130
+    body:
+      encoding: UTF-8
+      string: '{"location_id":"153524","position_id":680362,"start_time":"2014-07-22T10:00:00-04:00","end_time":"2014-07-22T18:00:00-04:00","id":42537130}'
+    headers:
+      W-Token:
+      - d1a42f5a3f2106497f98b4a0d5e2b313be7e18f7
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.6.0
+      Date:
+      - Tue, 22 Jul 2014 14:40:13 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - PHP/5.5.14-2+deb.sury.org~precise+1
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, PUT, PATCH, DELETE, OPTIONS
+      Access-Control-Allow-Headers:
+      - Origin, X-Requested-With, Content-Type, Accept
+    body:
+      encoding: UTF-8
+      string: '{"shift":{"id":42537130,"account_id":100312,"user_id":0,"location_id":153524,"position_id":680362,"site_id":0,"start_time":"Tue,
+        22 Jul 2014 09:00:00 -0500","end_time":"Tue, 22 Jul 2014 17:00:00 -0500","break_time":0,"color":"cccccc","notes":"","alerted":false,"linked_users":null,"shiftchain_key":"","published":false,"published_date":"Tue,
+        29 Nov -001 18:00:00 -0600","notified_at":"Tue, 29 Nov -001 18:00:00 -0600","created_at":"Tue,
+        22 Jul 2014 09:33:55 -0500","updated_at":"Tue, 22 Jul 2014 09:40:13 -0500","acknowledged":0,"is_open":true,"actionable":false,"block_id":0},"locations":[{"id":153524,"account_id":100312,"is_default":0,"name":"CityMD_14th_St","sort":0,"max_hours":0,"address":"","coordinates":[],"latitude":0,"longitude":0,"ip_address":"","created_at":"Tue,
+        08 Jul 2014 15:51:04 -0500","updated_at":"Mon, 21 Jul 2014 15:30:54 -0500","is_deleted":false}],"positions":[{"id":680362,"account_id":100312,"name":"Doctor","color":"","sort":0,"created_at":"Tue,
+        08 Jul 2014 15:51:25 -0500","updated_at":"Tue, 08 Jul 2014 15:51:25 -0500","is_deleted":false}]}'
+    http_version: 
+  recorded_at: Tue, 22 Jul 2014 14:40:13 GMT
+recorded_with: VCR 2.9.2
