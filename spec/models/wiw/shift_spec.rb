@@ -7,8 +7,9 @@ RSpec.describe Wiw::Shift, :type => :model do
       wiw_shift = Wiw::Shift.build_from_shift(shift)
 
       VCR.use_cassette('shift_create') do
-        r = wiw_shift.create
-        expect(r.code).to eql(200)
+        response = wiw_shift.create
+        expect(response.code).to eql(200)
+        expect(response['shift']['id']).to eql(42448351)
       end
     end
   end
@@ -33,6 +34,20 @@ RSpec.describe Wiw::Shift, :type => :model do
       VCR.use_cassette('shift_delete') do
         r = wiw_shift.delete
         expect(r.code).to eql(200)
+      end
+    end
+  end
+
+  describe "Listing shifts in WIW" do
+    let(:schedule) { create(:schedule, starts_on: Date.parse("2014-07-01")) }
+    let(:location_plan) { create(:location_plan, schedule: schedule) }
+
+    it "returns all the shifts" do
+      VCR.use_cassette('shift_list_location_plan') do
+        results = Wiw::Shift.find_all_for_location_plan(location_plan)
+
+        expect(results.length).to eql(2)
+        expect(results[0].id).to eql(40210383)
       end
     end
   end
