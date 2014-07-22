@@ -35,4 +35,16 @@ describe WiwPusher, :type => :service do
       expect(wiw_pusher.deletes).to eql(expected)
     end
   end
+
+  describe "Push!" do
+    it "creates a push record that has the details of its plan" do
+      Wiw::Shift.stub(:find_all_for_location_plan).and_return([])
+
+      expect {
+        wiw_pusher.push!
+      }.to change{Push.count}.by(1)
+
+      expect(wiw_pusher.push.theory).to eql({'creates' => [], 'updates' => [], 'deletes' => []})
+    end
+  end
 end

@@ -1,0 +1,11 @@
+<h1>Plan to push data to When I Work</h1>
+
+<% ['creates', 'updates', 'deletes'].each do |action| -%>
+  <h3><%= action.humanize %></h3>
+
+  <ul class="list-group">
+    <% @pusher.send(action).each do |entry| -%>
+      <li class="list-group-item"><%= l entry['start_time'] %> - <%= l entry['end_time'], format: :only_time %> </li>
+    <% end -%>
+  </ul>
+<% end -%>

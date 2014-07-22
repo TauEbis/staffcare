@@ -60,6 +60,7 @@
 
     <div class="col-sm-2">
       <small><%= @location_plan.rooms %> rooms &bull; Max <%= @location_plan.max_mds %> MDs</small>
+      <%= link_to "Push", new_push_path(location_plan_id: @location_plan.to_param), class: 'btn btn-success' %>
     </div>
   <% end -%>
 </div>

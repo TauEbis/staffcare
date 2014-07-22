@@ -10,6 +10,8 @@ class LocationPlan < ActiveRecord::Base
   has_many :grades, dependent: :destroy
   belongs_to :chosen_grade, class_name: 'Grade'
 
+  has_many :pushes
+
   OPTIMIZER_FIELDS = [:max_mds, :rooms, :min_openers, :min_closers, :open_times, :close_times]
 
   enum approval_state: [:pending, :manager_approved, :gm_approved]

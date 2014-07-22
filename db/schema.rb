@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140721201529) do
+ActiveRecord::Schema.define(version: 20140722183628) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -89,6 +89,16 @@ ActiveRecord::Schema.define(version: 20140721201529) do
     t.date "end_date"
     t.json "volume_by_location", default: {}, null: false
   end
+
+  create_table "pushes", force: true do |t|
+    t.integer  "location_plan_id"
+    t.json     "theory",           default: {}, null: false
+    t.json     "log",              default: {}, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "pushes", ["location_plan_id"], name: "index_pushes_on_location_plan_id", using: :btree
 
   create_table "schedules", force: true do |t|
     t.date     "starts_on"
