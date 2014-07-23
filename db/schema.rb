@@ -70,7 +70,7 @@ ActiveRecord::Schema.define(version: 20140722183628) do
     t.integer  "min_openers",      default: 1,    null: false
     t.integer  "min_closers",      default: 1,    null: false
     t.string   "report_server_id"
-    t.string   "wiw_id"
+    t.integer  "wiw_id"
   end
 
   add_index "locations", ["zone_id"], name: "index_locations_on_zone_id", using: :btree
@@ -123,7 +123,7 @@ ActiveRecord::Schema.define(version: 20140722183628) do
     t.integer  "grade_id",   null: false
     t.datetime "starts_at",  null: false
     t.datetime "ends_at",    null: false
-    t.string   "wiw_id"
+    t.integer  "wiw_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

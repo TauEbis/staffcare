@@ -5,7 +5,7 @@ class CreateShifts < ActiveRecord::Migration
       t.datetime :starts_at, null: false
       t.datetime :ends_at, null: false
 
-      t.string :wiw_id
+      t.integer :wiw_id
 
       t.timestamps
     end
