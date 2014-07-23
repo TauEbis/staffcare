@@ -22,6 +22,10 @@ class Push < ActiveRecord::Base
     theory['no_changes'] || []
   end
 
+  def remote_updates
+    theory['remote_updates'] || {}
+  end
+
   def total_length
     # Don't include no_changes
     creates.length + updates.length + deletes.length

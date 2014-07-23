@@ -29,18 +29,21 @@ class WiwPusher
     @creates = []
     @deletes = []
     @updates = []
+    @remote_updates = {}
     @no_changes = []
 
     local_shifts.each do |shift|
       ws = Wiw::Shift.build_from_shift(shift)
 
       if shift.wiw_id
-        rs = remote_shifts[shift.wiw_id.to_i]
+        id = shift.wiw_id
+        rs = remote_shifts[id]
 
         if rs && !rs.should_update?(shift)
           @no_changes << ws
         else
           @updates << ws
+          @remote_updates[id] = rs
         end
       else
         @creates << ws
@@ -57,7 +60,7 @@ class WiwPusher
       end
     end
 
-    @push.theory = {'creates' => @creates, 'updates' => @updates, 'deletes' => @deletes, 'no_changes' => @no_changes}
+    @push.theory = {'creates' => @creates, 'updates' => @updates, 'remote_updates' => @remote_updates, 'deletes' => @deletes, 'no_changes' => @no_changes}
   end
 
   def local_shifts
@@ -70,19 +73,26 @@ class WiwPusher
 
   # Synchronizes the shifts in the chosen grade to When I Work
   def push!
+    # Initial save saves the theory state just prior to the run
+    @push.save!
+    @push.log_will_change!
+
     @creates.each do |ws|
       response = ws.create
+      @push.log[ws.id] = response
       ws.source_shift.update_attribute(:wiw_id, response['shift']['id'])
       yield if block_given?
     end
 
     @updates.each do |ws|
-      ws.update
+      response = ws.update
+      @push.log[ws.id] = response
       yield if block_given?
     end
 
     @deletes.each do |ws|
       ws.delete
+      @push.log[ws.id] = response
       yield if block_given?
     end
 

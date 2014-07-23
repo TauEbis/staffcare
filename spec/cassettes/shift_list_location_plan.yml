@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.wheniwork.com/2/shifts/?end=2014-08-01T00:00:00-04:00&location_id=153524&position_id=680362&start=2014-07-01T00:00:00-04:00
+    uri: https://api.wheniwork.com/2/shifts/?end=2014-08-01T00:00:00-04:00&include_allopen=true&include_pending=true&location_id=153524&position_id=680362&start=2014-07-01T00:00:00-04:00
     body:
       encoding: US-ASCII
       string: ''

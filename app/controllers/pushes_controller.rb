@@ -15,16 +15,15 @@ class PushesController < ApplicationController
   end
 
   def confirm
-
+    @pushers = @location_plans.inject({}){|acc, lp| acc[lp.id] = WiwPusher.new(lp); acc }
   end
 
   def create
     group_id = Time.now.utc.to_i
 
     # This isn't wrapped in a transaction because it's generally okay if some get pushed and some don't
-    @pushers.each do |lp_id, pusher|
-      push = pusher.push
-      push.save!
+    @location_plans.each do |location_plan|
+      push = location_plan.pushes.create!
 
       job_id = PushWorker.perform_async(push.id)
       push.update_attributes( job_id: job_id, group_id: group_id )
@@ -53,7 +52,6 @@ class PushesController < ApplicationController
   def set_location_plans
     @location_plans = policy_scope(LocationPlan).where(id: Array(params[:location_plan_ids]))
     @location_plans.each {|lp| authorize lp, 'push?'}
-    @pushers = @location_plans.inject({}){|acc, lp| acc[lp.id] = WiwPusher.new(lp); acc }
   end
 
   def set_push

@@ -1,4 +1,12 @@
-<h1>Pushes from Schedule (<%= schedule_date_span(@schedule) %> <small> <%= @schedule.state.to_s.humanize %>)</small></h1>
+<br>
+<div class="pull-right">
+  <%= link_to new_push_path(schedule_id: @schedule.to_param), class: 'btn btn-success' do %>
+    New Push
+    <span class="glyphicon glyphicon-chevron-right"></span>
+  <% end %>
+</div>
+
+<h1>Pushes from Schedule (<%= schedule_date_span(@schedule) %>) <small> <%= @schedule.state.to_s.humanize %></small></h1>
 
 <div class="panel panel-default">
   <div class="panel-body">

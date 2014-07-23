@@ -57,11 +57,6 @@
         </select>
       </form>
     </div>
-
-    <div class="col-sm-2">
-      <small><%= @location_plan.rooms %> rooms &bull; Max <%= @location_plan.max_mds %> MDs</small>
-      <%= link_to "Push", confirm_pushes_path(location_plan_ids: @location_plan.to_param), class: 'btn btn-success' %>
-    </div>
   <% end -%>
 </div>
 

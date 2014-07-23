@@ -60,4 +60,7 @@
 <% if policy(@schedule).edit? -%>
   <%= link_to 'Edit', edit_schedule_path(@schedule) %> |
 <% end -%>
-<%= link_to 'Back', schedules_path %>
+<%= link_to 'Back', schedules_path %> |
+<% if policy(@schedule).push? -%>
+  <%= link_to 'Sync with When I Work', pushes_path(schedule_id: @schedule.to_param) %>
+<% end -%>
