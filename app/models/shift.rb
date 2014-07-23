@@ -19,4 +19,10 @@ class Shift < ActiveRecord::Base
   def to_knockout
     {id: id, starts_hour: starts_hour, ends_hour: ends_hour}
   end
+
+  def wiw_shift
+    if wiw_id
+      Wiw::Shift.find(wiw_id)
+    end
+  end
 end

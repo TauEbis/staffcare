@@ -16,7 +16,12 @@ class Push < ActiveRecord::Base
     theory['deletes'] || []
   end
 
+  def no_changes
+    theory['no_changes'] || []
+  end
+
   def total_length
+    # Don't include no_changes
     creates.length + updates.length + deletes.length
   end
 end

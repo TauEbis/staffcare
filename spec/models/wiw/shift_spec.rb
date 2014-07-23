@@ -51,4 +51,33 @@ RSpec.describe Wiw::Shift, :type => :model do
       end
     end
   end
+
+  describe "Determining if an update is needed" do
+    before do
+      starts = Time.zone.now
+      ends   = starts + 1.hour
+
+      @local_shift  = create(:shift, starts_at: starts, ends_at: ends)
+      @remote_shift = Wiw::Shift.new(location_id: @local_shift.grade.location_plan.location.wiw_id, position_id: Wiw::Shift.position_id,
+                                    start_time: starts.change(usec: 0).iso8601,   # No microseconds come back from WIW
+                                    end_time: ends.change(usec: 0).iso8601        #
+      )
+    end
+
+    it "indicates no update when the records are equal" do
+      ### Sanity Checks!
+      fake = Wiw::Shift.build_from_shift(@local_shift)
+      expect(fake.attributes).to eql(@remote_shift.attributes)
+      expect(fake).to eql(@remote_shift)
+      ###
+
+      expect( @remote_shift.should_update?(@local_shift) ).to eql(false)
+    end
+
+    it "indicates an update is required when the records are not equal" do
+      @local_shift.ends_at = Time.now + 2.hour
+
+      expect( @remote_shift.should_update?(@local_shift) ).to eql(true)
+    end
+  end
 end

@@ -44,7 +44,7 @@ describe WiwPusher, :type => :service do
         wiw_pusher.push!
       }.to change{Push.count}.by(1)
 
-      expect(wiw_pusher.push.theory).to eql({'creates' => [], 'updates' => [], 'deletes' => []})
+      expect(wiw_pusher.push.theory).to eql({'creates' => [], 'updates' => [], 'deletes' => [], 'no_changes' => []})
     end
   end
 end

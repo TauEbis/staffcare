@@ -29,12 +29,19 @@ class WiwPusher
     @creates = []
     @deletes = []
     @updates = []
+    @no_changes = []
 
     local_shifts.each do |shift|
       ws = Wiw::Shift.build_from_shift(shift)
 
       if shift.wiw_id
-        @updates << ws
+        rs = remote_shifts[shift.wiw_id.to_i]
+
+        if rs && !rs.should_update?(shift)
+          @no_changes << ws
+        else
+          @updates << ws
+        end
       else
         @creates << ws
       end
@@ -42,7 +49,7 @@ class WiwPusher
 
     id_list = Set.new local_shifts.map(&:wiw_id).compact
 
-    remote_shifts.each do |rs|
+    remote_shifts.each do |id, rs|
       if id_list.include? rs.id
         # Do nothing because it'll be updated above
       else
@@ -50,15 +57,15 @@ class WiwPusher
       end
     end
 
-    @push.theory = {'creates' => @creates, 'updates' => @updates, 'deletes' => @deletes}
+    @push.theory = {'creates' => @creates, 'updates' => @updates, 'deletes' => @deletes, 'no_changes' => @no_changes}
   end
 
   def local_shifts
-    @location_plan.chosen_grade.shifts.includes(:grade).all
+    @_local_shifts ||= @location_plan.chosen_grade.shifts.includes(:grade).all
   end
 
   def remote_shifts
-    Wiw::Shift.find_all_for_location_plan(@location_plan)
+    @_remote_shifts ||= Wiw::Shift.find_all_for_location_plan(@location_plan).index_by(&:id)
   end
 
   # Synchronizes the shifts in the chosen grade to When I Work

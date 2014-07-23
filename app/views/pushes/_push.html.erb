@@ -11,10 +11,14 @@
     Deletes
     <span class="label label-danger"><%= push.deletes.length %></span>
   </a></li>
+  <li><a href="#anchor_no_changes" data-toggle="tab">
+    No Changes
+    <span class="label label-info"><%= push.no_changes.length %></span>
+  </a></li>
 </ul>
 
 <div class="tab-content">
-  <% ['creates', 'updates', 'deletes'].each do |action| -%>
+  <% ['creates', 'updates', 'deletes', 'no_changes'].each do |action| -%>
     <div class="tab-pane" id="anchor_<%= action %>">
 
       <h3><%= action.humanize %></h3>

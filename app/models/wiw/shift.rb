@@ -4,6 +4,7 @@ module Wiw
     base_uri 'https://api.wheniwork.com/2/shifts'
     headers 'W-Token' => Rails.application.secrets.wiw_token, 'Accept' => 'application/json', 'Content-Type' => 'application/json'
     format :json
+    debug_output $stderr if Rails.env.development?
 
     attr_accessor :source_shift
 
@@ -24,16 +25,17 @@ module Wiw
       return results
     end
 
-    def self.find_for_day(day)
-
+    def self.find(id)
+      response = get "/#{id}"
+      new(response['shift'])
     end
 
     def self.build_from_shift(shift)
       s = new(
         location_id: shift.grade.location_plan.location.wiw_id,
         position_id: position_id,
-        start_time: shift.starts_at,
-        end_time: shift.ends_at
+        start_time: shift.starts_at.iso8601,
+        end_time: shift.ends_at.iso8601
       )
 
       # We store ids as strings to be safe, but they come from WIW as integers
@@ -64,5 +66,9 @@ module Wiw
       self.class.delete "/#{id}"
     end
 
+    # Given a regular Shift object, determine if this Wiw::Shift should be updated
+    def should_update?(shift)
+      Wiw::Shift.build_from_shift(shift) != self
+    end
   end
 end
