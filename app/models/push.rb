@@ -4,6 +4,8 @@ class Push < ActiveRecord::Base
 
   enum state: [ :not_run, :running, :complete, :error ]
 
+  scope :ordered, -> { order(id: :desc) }
+
   def creates
     theory['creates'] || []
   end

@@ -8,6 +8,8 @@ class CreatePushes < ActiveRecord::Migration
       t.integer :state, default: 0, null: false
       t.string  :job_id
 
+      t.integer :group_id
+
       t.timestamps
     end
   end

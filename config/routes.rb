@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
-  resources :pushes, only: [:new, :create, :show]
+  resources :pushes, only: [:index, :new, :create, :show] do
+    collection do
+      get :confirm
+    end
+  end
 
   resources :schedules do
     resources :location_plans, shallow: true, only: [:index, :show, :update]

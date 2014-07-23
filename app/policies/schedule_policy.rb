@@ -3,6 +3,10 @@ class SchedulePolicy < ApplicationPolicy
     user.admin? || !record.draft?
   end
 
+  def push?
+    user.admin?
+  end
+
   class Scope < Struct.new(:user, :scope)
     def resolve
       if user.admin?

@@ -1,10 +1,24 @@
-<h1>Plan to push data to When I Work</h1>
+<h1>Select locations to push to When I Work</h1>
 
-<div class="pull-right">
-  <%= link_to pushes_path(location_plan_id: @location_plan), method: :post, class: 'btn btn-success' do %>
-    Execute
-    <span class="glyphicon glyphicon-chevron-right"></span>
-  <% end %>
-</div>
+<%= form_tag confirm_pushes_path, method: :get, html: {class: 'form-horizontal'} do %>
+  <% @zones.each do |zone| %>
+    <fieldset>
+      <legend>
+        <%= zone.name %>
+        <small><a href="#" class="select-all">All</a> | <a href="#" class="select-none">None</a></small>
+      </legend>
 
-<%= render 'push', push: @push %>
+      <ul>
+        <% @location_plans[zone.id].each do |location_plan| -%>
+          <li>
+            <%= check_box_tag 'location_plan_ids[]', location_plan.id %> <%= location_plan.name %>
+          </li>
+        <% end -%>
+      </ul>
+    </fieldset>
+  <% end -%>
+
+  <div class="form-actions">
+    <%= submit_tag 'Review push', class: 'btn btn-success' %>
+  </div>
+<% end %>
