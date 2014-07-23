@@ -1,10 +1,11 @@
 // Knockout specific parts of Coverage management
 
 // Class to represent a row in the list of all shifts for a day
-function Shift(starts, ends) {
+function Shift(shift_info) {
   var self = this;
-  self.starts = ko.observable(starts);
-  self.ends = ko.observable(ends);
+  self.id = shift_info.id;
+  self.starts = ko.observable(shift_info.starts_hour);
+  self.ends = ko.observable(shift_info.ends_hour);
   self.hours = ko.computed(function(){
     return self.ends() - self.starts();
   });
@@ -69,6 +70,8 @@ function CoverageViewModel() {
 
     if(data.day_info){
 
+      console.log(data);
+
       if(data.day_info.date == self.prev_date){
         self.diff_day_points(   DiffPoints(self.day_points(),   new Points(data.day_points)));
         self.diff_grade_points( DiffPoints(self.grade_points(), new Points(data.grade_points)));
@@ -96,7 +99,7 @@ function CoverageViewModel() {
 
       self.shifts.removeAll();
       for (var i = 0; i < data.shifts.length; i++){
-        self.shifts.push( new Shift(data.shifts[i][0], data.shifts[i][1]) );
+        self.shifts.push( new Shift(data.shifts[i]) );
       }
 
       colorNewDay(data.day_info.date, data.day_points.total);

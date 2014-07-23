@@ -5,12 +5,15 @@
 class Grade < ActiveRecord::Base
   belongs_to :location_plan
   belongs_to :user
+  has_many :shifts
 
   enum source: [:optimizer, :last_month, :manual]
 
   scope :ordered, -> { order(source: :asc, created_at: :desc) }
 
   before_destroy :reset_chosen_grade
+
+  accepts_nested_attributes_for :shifts
 
   def label
     case source
@@ -26,6 +29,7 @@ class Grade < ActiveRecord::Base
   end
 
   # shifts comes in as [{"starts"=>8, "ends"=>12, "hours"=>4}, {"starts"=>12, "ends"=>20, "hours"=>8}]
+  # TODO: NEEDS MAJOR FIXING WITH NEW SHIFT MODEL
   def update_shift!(date, dow, shifts)
     shifts_will_change!
     coverages_will_change!
@@ -76,6 +80,14 @@ class Grade < ActiveRecord::Base
       new_grade_id = location_plan.grades.where('id <> ?', id).order(id: :asc).first.try(:id)
       location_plan.update_attribute(:chosen_grade_id, new_grade_id) if new_grade_id
     end
+  end
+
+  def clone_shifts_from!(other_grade)
+    other_grade.shifts.each do |other_shift|
+      self.shifts.build(other_shift.attributes.except('id', 'grade_id'))
+    end
+
+    self.save!
   end
 
 end

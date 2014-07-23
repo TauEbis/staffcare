@@ -10,6 +10,8 @@ class LocationPlan < ActiveRecord::Base
   has_many :grades, dependent: :destroy
   belongs_to :chosen_grade, class_name: 'Grade'
 
+  has_many :pushes
+
   OPTIMIZER_FIELDS = [:max_mds, :rooms, :min_openers, :min_closers, :open_times, :close_times]
 
   enum approval_state: [:pending, :manager_approved, :gm_approved]
@@ -80,6 +82,7 @@ class LocationPlan < ActiveRecord::Base
   def copy_grade!(user)
     LocationPlan.transaction do
       g = self.grades.create!(chosen_grade.attributes.merge(id: nil, created_at: nil, source: 'manual', user: user))
+      g.clone_shifts_from!(chosen_grade)
       self.update_attribute(:chosen_grade_id, g.id)
 
       g

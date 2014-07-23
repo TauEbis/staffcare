@@ -38,6 +38,10 @@ describe LocationsController, :type => :controller do
     sign_in create(:admin_user)
   end
 
+  before do
+    allow(Wiw::Location).to receive(:find_all_collection).and_return(['Name', 123])
+  end
+
   describe "GET index" do
     it "assigns all locations as @locations" do
       location = Location.create! valid_attributes

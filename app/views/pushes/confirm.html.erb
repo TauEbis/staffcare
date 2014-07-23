@@ -1,0 +1,24 @@
+<h1>Plan to push data to When I Work</h1>
+
+<div class="pull-right">
+  <%= link_to pushes_path(location_plan_ids: @location_plans.map(&:id)), method: :post, class: 'btn btn-success' do %>
+    Execute
+    <span class="glyphicon glyphicon-chevron-right"></span>
+  <% end %>
+</div>
+
+<div class="row">
+  <%= render 'nav' %>
+
+  <div class="col-sm-10">
+    <div class="tab-content">
+      <% @location_plans.each do |location_plan| -%>
+        <div class="tab-pane" id="<%= dom_id(location_plan) %>">
+          <h3><%= location_plan.name %></h3>
+
+          <%= render 'push', push: @pushers[location_plan.id].push %>
+        </div>
+      <% end -%>
+    </div>
+  </div>
+</div>

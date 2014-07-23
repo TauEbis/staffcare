@@ -26,6 +26,7 @@ gem 'pundit'
 
 gem 'simple_form', '>= 3.1.0.rc1'
 gem 'bootstrap-datepicker-rails'
+gem 'kaminari'
 
 gem 'newrelic_rpm'
 gem 'rollbar'
@@ -37,6 +38,8 @@ gem 'httparty'
 gem 'sidekiq'
 gem 'sidekiq-status', git: 'https://github.com/matthewrudy/sidekiq-status.git', branch: 'sidekiq-3.1'
 gem 'sinatra', '>= 1.3.0', :require => nil
+
+gem 'httparty'
 
 group :staging, :production do
   gem 'rails_12factor'
@@ -80,4 +83,6 @@ group :test do
   gem 'launchy'
   gem 'selenium-webdriver'
   gem 'rspec-its'
+  gem 'webmock'
+  gem 'vcr'
 end

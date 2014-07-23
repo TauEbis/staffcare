@@ -1,0 +1,44 @@
+---
+http_interactions:
+- request:
+    method: delete
+    uri: https://api.wheniwork.com/2/shifts/42537379
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      W-Token:
+      - d1a42f5a3f2106497f98b4a0d5e2b313be7e18f7
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.6.0
+      Date:
+      - Tue, 22 Jul 2014 14:40:12 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - PHP/5.5.14-2+deb.sury.org~precise+1
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, PUT, PATCH, DELETE, OPTIONS
+      Access-Control-Allow-Headers:
+      - Origin, X-Requested-With, Content-Type, Accept
+    body:
+      encoding: UTF-8
+      string: '{"success":true}'
+    http_version: 
+  recorded_at: Tue, 22 Jul 2014 14:40:12 GMT
+recorded_with: VCR 2.9.2

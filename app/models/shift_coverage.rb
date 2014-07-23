@@ -4,6 +4,7 @@ class ShiftCoverage
 		@location_plan = location_plan
 		@day = day
 		@day_s = @day.to_s
+    @time = @day.in_time_zone
 		@opens_at = @location_plan.open_times[day.wday]
 		@closes_at = @location_plan.close_times[day.wday()]
 		@midday = ( @opens_at + @closes_at )/2
@@ -13,14 +14,13 @@ class ShiftCoverage
   # TODO This needs some testing!
   def shifts_to_coverage(shifts)
   	@shifts = shifts
-    starts = @shifts.map{|s| s['starts']}.sort.reverse
-    ends   = @shifts.map{|s| s['ends']}.sort.reverse
+    starts = @shifts.map{|s| s.starts_hour}.sort.reverse
+    ends   = @shifts.map{|s| s.ends_hour}.sort.reverse
 
     cnt = 0
     @coverage = []
 
     (@opens_at...@closes_at).step(0.5) do |hour|
-      puts hour
       while starts[-1] == hour
         starts.pop
         cnt +=1
@@ -46,7 +46,9 @@ class ShiftCoverage
       opens, closes = normalize(opens, closes, diff)
     end
 
-    @shifts = opens.zip(closes)
+    (opens.zip(closes)).map do |starts_at, ends_at|
+      Shift.new(starts_at: @time + starts_at.hours, ends_at: @time + ends_at.hours )
+    end
   end
 
 	private

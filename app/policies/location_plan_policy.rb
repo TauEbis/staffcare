@@ -46,6 +46,10 @@ class LocationPlanPolicy < ApplicationPolicy
     )
   end
 
+  def push?
+    true
+  end
+
   class Scope < Struct.new(:user, :scope)
     def resolve
       if user.admin?

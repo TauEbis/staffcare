@@ -8,6 +8,10 @@ class SchedulePolicy < ApplicationPolicy
     user.admin? || (!record.draft? && !user.locations.empty?)
   end
 
+  def push?
+    user.admin?
+  end
+
   class Scope < Struct.new(:user, :scope)
     def resolve
       if user.admin?

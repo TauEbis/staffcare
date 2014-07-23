@@ -1,0 +1,7 @@
+<div class="col-sm-2">
+  <ul class="nav nav-pills nav-stacked">
+    <% @location_plans.each do |location_plan| -%>
+      <li><a href="#<%= dom_id location_plan %>" data-toggle="tab"><%= location_plan.name %></a></li>
+    <% end -%>
+  </ul>
+</div>

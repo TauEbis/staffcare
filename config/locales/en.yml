@@ -23,6 +23,7 @@ en:
   time:
     formats:
       default: '%b %-d, %Y %l:%M%P'
+      only_time: '%l:%M%P'
   date:
     formats:
       default: '%b %-d, %Y'
