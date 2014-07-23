@@ -1,0 +1,20 @@
+<h1>
+  Push initiated <%= l @push.created_at %>
+  <small><%= @push.location_plan.name %></small>
+</h1>
+
+<% if @push.complete? -%>
+  <div class="alert alert-success" role="alert">
+    Push completed successfully at <%= l @push.updated_at %> --
+    <%= @push.total_length %> Shifts updates
+  </div>
+<% else -%>
+  <% jid = @push.job_id -%>
+  <div class="alert alert-info" role="alert">
+    Status: <%= Sidekiq::Status::status(jid).to_s.humanize %> - <%= Sidekiq::Status::message jid %>
+    <%= Sidekiq::Status::at jid %> of <%= Sidekiq::Status::total jid %> shifts synced
+    <%# Sidekiq::Status::pct_complete %>
+  </div>
+<% end -%>
+
+<%= render 'push', push: @push %>

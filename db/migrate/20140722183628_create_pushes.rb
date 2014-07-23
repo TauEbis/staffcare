@@ -5,6 +5,9 @@ class CreatePushes < ActiveRecord::Migration
       t.json :theory, default: {}, null: false
       t.json :log, default: {}, null: false
 
+      t.integer :state, default: 0, null: false
+      t.string  :job_id
+
       t.timestamps
     end
   end

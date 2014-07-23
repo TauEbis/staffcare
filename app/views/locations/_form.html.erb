@@ -14,24 +14,29 @@
         <%= f.input :max_mds, label: "Maximum physicians" %>
 
         <%= f.input :report_server_id, label: "Report server ID" %>
+
+        <%#= f.input :wiw_id, label: "When I Work ID", collection: Wiw::Location.find_all_collection %>
       </div>
     </div>
 
-    <% Location::DAYS.each do |day| -%>
-      <div class="row form-group">
-        <div class="col-sm-1">
-          <label><%= day.humanize %></label>
-        </div>
-        <% ['open', 'close'].each do |tod| -%>
-          <div class="col-sm-2">
-            <%= f.input_field "#{day}_#{tod}", as: :select, collection: hours_options, include_blank: false, class: 'form-control chosen-select' %>
+    <fieldset>
+      <legend>Open/Close times</legend>
+      <% Location::DAYS.each do |day| -%>
+        <div class="row form-group">
+          <div class="col-sm-1">
+            <label><%= day.humanize %></label>
           </div>
-          <% if @location.errors.include? "#{day}_#{tod}".to_sym %>
-            <div class="col-sm-4 has-error"><%= f.error "#{day}_#{tod}" %></div>
+          <% ['open', 'close'].each do |tod| -%>
+            <div class="col-sm-2">
+              <%= f.input_field "#{day}_#{tod}", as: :select, collection: hours_options, include_blank: false, class: 'form-control chosen-select' %>
+            </div>
+            <% if @location.errors.include? "#{day}_#{tod}".to_sym %>
+              <div class="col-sm-4 has-error"><%= f.error "#{day}_#{tod}" %></div>
+            <% end -%>
           <% end -%>
-        <% end -%>
-      </div>
-    <% end -%>
+        </div>
+      <% end -%>
+    </fieldset>
 
       <div class="row">
         <h2> Physician work rates </h2>

@@ -94,6 +94,8 @@ ActiveRecord::Schema.define(version: 20140722183628) do
     t.integer  "location_plan_id"
     t.json     "theory",           default: {}, null: false
     t.json     "log",              default: {}, null: false
+    t.integer  "state",            default: 0,  null: false
+    t.string   "job_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

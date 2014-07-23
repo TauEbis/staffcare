@@ -1,0 +1,40 @@
+<ul class="nav nav-tabs" role="tablist">
+  <li><a href="#anchor_creates" data-toggle="tab">
+    Creates
+    <span class="label label-success"><%= push.creates.length %></span>
+  </a></li>
+  <li><a href="#anchor_updates" data-toggle="tab">
+    Updates
+    <span class="label label-warning"><%= push.updates.length %></span>
+  </a></li>
+  <li><a href="#anchor_deletes" data-toggle="tab">
+    Deletes
+    <span class="label label-danger"><%= push.deletes.length %></span>
+  </a></li>
+</ul>
+
+<div class="tab-content">
+  <% ['creates', 'updates', 'deletes'].each do |action| -%>
+    <div class="tab-pane" id="anchor_<%= action %>">
+
+      <h3><%= action.humanize %></h3>
+
+      <% push.send(action).group_by{|e| cast_time(e['start_time']).to_date }.each do |date, entries| -%>
+        <div class="panel panel-default">
+          <div class="panel-heading"><%= l date %></div>
+          <div class="panel-body">
+            <ul>
+              <% entries.each do |entry| -%>
+                <li>
+                  <%= l cast_time(entry['start_time']), format: :only_time %> -
+                  <%= l cast_time(entry['end_time']), format: :only_time %>
+                </li>
+              <% end -%>
+            </ul>
+          </div>
+        </div> <!-- end panel -->
+      <% end -%>
+
+    </div> <!-- end tab-pane -->
+  <% end -%>
+</div> <!-- end tab-content -->

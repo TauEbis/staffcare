@@ -40,4 +40,14 @@ module ApplicationHelper
     end
   end
 
+  # Accepts either a Time/DateTime/Date object
+  # or a String (should be in iso8601) and ensures it's a Time object
+  def cast_time(time_or_str)
+    case time_or_str
+      when String
+        Time.zone.parse time_or_str
+      else
+        time_or_str
+    end
+  end
 end

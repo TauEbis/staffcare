@@ -2,15 +2,21 @@
 class Push < ActiveRecord::Base
   belongs_to :location_plan
 
+  enum state: [ :not_run, :running, :complete, :error ]
+
   def creates
-    theory['creates']
+    theory['creates'] || []
   end
 
   def updates
-    theory['updates']
+    theory['updates'] || []
   end
 
   def deletes
-    theory['deletes']
+    theory['deletes'] || []
+  end
+
+  def total_length
+    creates.length + updates.length + deletes.length
   end
 end

@@ -32,8 +32,8 @@ module Wiw
       s = new(
         location_id: shift.grade.location_plan.location.wiw_id,
         position_id: position_id,
-        start_time: shift.starts_at.iso8601,
-        end_time: shift.ends_at.iso8601
+        start_time: shift.starts_at,
+        end_time: shift.ends_at
       )
 
       # We store ids as strings to be safe, but they come from WIW as integers

@@ -1,11 +1,10 @@
 <h1>Plan to push data to When I Work</h1>
 
-<% ['creates', 'updates', 'deletes'].each do |action| -%>
-  <h3><%= action.humanize %></h3>
+<div class="pull-right">
+  <%= link_to pushes_path(location_plan_id: @location_plan), method: :post, class: 'btn btn-success' do %>
+    Execute
+    <span class="glyphicon glyphicon-chevron-right"></span>
+  <% end %>
+</div>
 
-  <ul class="list-group">
-    <% @pusher.send(action).each do |entry| -%>
-      <li class="list-group-item"><%= l entry['start_time'] %> - <%= l entry['end_time'], format: :only_time %> </li>
-    <% end -%>
-  </ul>
-<% end -%>
+<%= render 'push', push: @push %>
