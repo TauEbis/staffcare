@@ -91,7 +91,7 @@ class WiwPusher
     end
 
     @deletes.each do |ws|
-      ws.delete
+      response = ws.delete
       @push.log[ws.id] = response
       yield if block_given?
     end
