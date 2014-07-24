@@ -3,6 +3,7 @@ require 'spec_helper'
 describe VolumeHistoryImporter, :type => :service do
   day = Date.parse('2014-07-01')
   let(:importer) { VolumeHistoryImporter.new(day, day, '414F0BD3-0460-405D-9136-0F16DB212BA9') }
+  let(:all_importer) { VolumeHistoryImporter.new(day, day, 'ALL') }
   subject { importer }
 
 # Attributes
@@ -92,6 +93,27 @@ describe VolumeHistoryImporter, :type => :service do
         session = importer.session_id
         importer.fetch_data!()
         expect(session).to eq importer.session_id
+      end
+    end
+
+    context "when called with a single location" do
+      it "should retrieve data for only one site" do
+        data = importer.fetch_data!()
+        data.each do |record|
+          expect(record['ServiceSiteUid']).to eq "414f0bd3-0460-405d-9136-0f16db212ba9"
+          expect(record['Name']).to eq "CityMD 57th St"
+        end
+      end
+    end
+
+    context "when called with all locations specified" do
+      it "shoudld retrieve data for all locations" do
+        data = all_importer.fetch_data!()
+        locations = {}
+        data.each do |record|
+          locations[record['Name']] = 1
+        end
+        expect(locations.keys.length).to be > 10
       end
     end
 
