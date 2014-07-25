@@ -28,17 +28,29 @@ class Grade < ActiveRecord::Base
     end
   end
 
-  # shifts comes in as [{"starts"=>8, "ends"=>12, "hours"=>4}, {"starts"=>12, "ends"=>20, "hours"=>8}]
-  # TODO: NEEDS MAJOR FIXING WITH NEW SHIFT MODEL
-  def update_shift!(date, dow, shifts)
-    shifts_will_change!
-    coverages_will_change!
-
-    start_time = location_plan.open_times[dow]
-    end_time   = location_plan.close_times[dow]
+  # shifts comes in as [{"id"=>612, "starts"=>8, "ends"=>12, "hours"=>4}, {"id"=>613, "starts"=>12, "ends"=>20, "hours"=>8}]
+  def update_shift!(date, raw_shifts)
     date_s = date.to_s
 
-    self.shifts[date_s] = shifts.map{|s| [ s['starts'], s['ends'] ] }
+    old_shifts = self.shifts.for_day(date).index_by(&:id)
+    old_ids    = old_shifts.keys
+
+    new_ids    = raw_shifts.map{|s| s['id']}
+    shifts = []
+
+    raw_shifts.each do |raw_shift|
+      shift = old_shifts[raw_shift['id']] || self.shifts.build
+      shift = shift.from_knockout(date, raw_shift)
+      shift.save!
+      shifts << shift
+    end
+
+    # Deletes
+    (old_ids - new_ids).each do |id|
+      old_shifts[id].destroy
+    end
+
+    coverages_will_change!
     self.coverages[date_s] = ShiftCoverage.new(location_plan, date).shifts_to_coverage(shifts)
 
     calculate_grade!(date_s)
