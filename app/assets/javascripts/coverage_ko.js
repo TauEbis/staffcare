@@ -4,6 +4,7 @@
 function Shift(shift_info) {
   var self = this;
   self.id = shift_info.id;
+  self.date   = ko.observable(shift_info.date);
   self.starts = ko.observable(shift_info.starts_hour);
   self.ends = ko.observable(shift_info.ends_hour);
   self.hours = ko.computed(function(){

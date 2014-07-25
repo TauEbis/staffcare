@@ -39,7 +39,7 @@ class GradesController < ApplicationController
 
   # PATCH /coverages/:location_plan_id
   def update
-    @grade.update_shift!(@date, @date.wday, params[:shifts])
+    @grade.update_shift!(@date, params[:shifts])
     render text: "OK!"
   end
 

@@ -33,11 +33,15 @@
                   <%= l cast_time(entry['start_time']), format: :only_time %> -
                   <%= l cast_time(entry['end_time']), format: :only_time %>
                   <% if action == 'updates' -%>
-                    ( Replacing
                     <% remote_entry = push.remote_updates[entry['id'].to_s] -%>
-                    <%= l cast_time(remote_entry['start_time']), format: :only_time %> -
-                    <%= l cast_time(remote_entry['end_time']), format: :only_time %>
-                    )
+                    <% if remote_entry -%>
+                      ( Replacing
+                      <%= l cast_time(remote_entry['start_time']), format: :only_time %> -
+                      <%= l cast_time(remote_entry['end_time']), format: :only_time %>
+                      )
+                    <% else -%>
+                      ( Remote shift missing )
+                    <% end -%>
                   <% end -%>
                 </li>
               <% end -%>

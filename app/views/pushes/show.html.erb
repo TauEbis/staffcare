@@ -18,3 +18,11 @@
 <% end -%>
 
 <%= render 'push', push: @push %>
+
+<% if params[:details] -%>
+<pre>
+  <code>
+    <%= @push.log.to_yaml %>
+  </code>
+</pre>
+<% end -%>
