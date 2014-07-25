@@ -23,6 +23,8 @@ class LocationPlan < ActiveRecord::Base
 
   scope :for_zone, -> (zone) { where(location_id: zone.location_ids) }
 
+  scope :for_user, -> (user) { where(location_id: user.relevant_locations.pluck(:id)) }
+
   scope :ordered, -> { joins(:location).order('locations.name ASC')}
 
   # For a given collection of location_plans, return their 'base' state

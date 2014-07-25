@@ -1,6 +1,5 @@
 class SchedulesController < ApplicationController
   before_action :set_schedule, only: [:show, :edit, :update, :destroy]
-  before_action :set_schedule, only: [:show, :edit, :update, :destroy]
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized, only: [:index]
 

@@ -23,16 +23,8 @@ class User < ActiveRecord::Base
     self.role ||= :manager
   end
 
-  def admin?
-    self.role == 'admin'
-  end
-
-  def gm?
-    self.role == 'gm'
-  end
-
-  def manager?
-    self.role == 'manager'
+  def single_manager?
+    manager? && locations.size == 1
   end
 
   def zone_ids
@@ -41,6 +33,14 @@ class User < ActiveRecord::Base
 
   def zones
     @_zones ||= Zone.where(id: zone_ids)
+  end
+
+  def relevant_locations
+    if admin?
+      Location.all
+    else
+      locations
+    end
   end
 
 end

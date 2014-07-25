@@ -25,4 +25,31 @@ module SchedulesHelper
 
     buf
   end
+
+  def total_points(schedule, zone = nil)
+    points(schedule, zone, 'total')
+  end
+
+  def md_sat_points(schedule, zone = nil)
+    points(schedule, zone, 'md_sat')
+  end
+
+  def patient_sat_points(schedule, zone = nil)
+    points(schedule, zone, 'patient_sat')
+  end
+
+  def cost_points(schedule, zone = nil)
+    points(schedule, zone, 'cost')
+  end
+
+  private
+
+    def points(schedule, zone, category)
+      if current_user.single_manager?
+        location_plan = schedule.location_plans.for_user(current_user).first
+        location_plan.unoptimized_summed_points[category].try(:round)
+      else
+        schedule.unoptimized_summed_points(zone)[category].try(:round)
+      end
+    end
 end
