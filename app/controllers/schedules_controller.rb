@@ -1,5 +1,6 @@
 class SchedulesController < ApplicationController
   before_action :set_schedule, only: [:show, :edit, :update, :destroy]
+  before_action :set_schedule, only: [:show, :edit, :update, :destroy]
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized, only: [:index]
 
@@ -67,6 +68,7 @@ class SchedulesController < ApplicationController
       params.require(:schedule).permit(:starts_on, :state, *Schedule::OPTIMIZER_FIELDS)
     end
 
+    # Custom Pundit error message.
     def user_not_authorized
       flash[:error] = "No active schedules"
       redirect_to(request.referrer || root_path)

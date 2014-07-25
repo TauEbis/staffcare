@@ -1,6 +1,7 @@
 class LocationPlansController < ApplicationController
   before_action :set_location_plan, only: [:show, :edit, :update]
   before_action :set_location_plans, only: [:index]
+  before_action :send_manager_to_location_plan, only: [:index]
   before_action :set_basics, only: [:index, :show, :edit, :update]
 
   skip_after_filter :verify_authorized, only: [:change_state]
@@ -68,6 +69,16 @@ class LocationPlansController < ApplicationController
             else
               user_zones.ordered.first
             end
+  end
+
+  def send_manager_to_location_plan
+    if current_user.manager? && current_user.locations.size == 1
+      @location_plan = @schedule.
+      location_plans.includes(:location).ordered.
+      merge(user_locations).first
+
+      params[:location_plan_id] = @location_plan.id
+    end
   end
 
   # For member actions
