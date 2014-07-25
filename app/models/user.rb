@@ -27,6 +27,14 @@ class User < ActiveRecord::Base
     self.role == 'admin'
   end
 
+  def gm?
+    self.role == 'gm'
+  end
+
+  def manager?
+    self.role == 'manager'
+  end
+
   def zone_ids
     @_zone_ids ||= locations.select(:zone_id).distinct
   end

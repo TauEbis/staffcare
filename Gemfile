@@ -32,7 +32,6 @@ gem 'newrelic_rpm'
 gem 'rollbar'
 gem 'roo'
 gem 'iconv'
-gem 'httparty'
 
 # Sidekiq
 gem 'sidekiq'
