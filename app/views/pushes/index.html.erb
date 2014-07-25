@@ -24,7 +24,7 @@
 <% @pushes.group_by(&:group_id).each do |group, pushes| -%>
   <div class="panel panel-default">
     <div class="panel-heading">
-      <%=l pushes.first.created_at %>
+      Push initiated at <%=l pushes.first.created_at %>
     </div>
     <div class="panel-body">
       <% pushes.each do |push| -%>

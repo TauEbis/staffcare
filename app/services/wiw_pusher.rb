@@ -75,27 +75,33 @@ class WiwPusher
   def push!
     # Initial save saves the theory state just prior to the run
     @push.save!
-    @push.log_will_change!
-
-    @creates.each do |ws|
-      response = ws.create
-      @push.log[ws.id] = response
-      ws.source_shift.update_attribute(:wiw_id, response['shift']['id'])
-      yield if block_given?
-    end
+    log = {}
 
     @updates.each do |ws|
       response = ws.update
-      @push.log[ws.id] = response
+
+      # Create if the update failed
+      unless response.success?
+        @creates << ws
+      end
+
+      log[ws.id] = {action: 'update', shift: ws, response: response}
+      yield if block_given?
+    end
+
+    @creates.each do |ws|
+      response = ws.create
+      log[ws.id] = {action: 'create', shift: ws, response: response}
+      ws.source_shift.update_attribute(:wiw_id, response['shift']['id'])
       yield if block_given?
     end
 
     @deletes.each do |ws|
       response = ws.delete
-      @push.log[ws.id] = response
+      log[ws.id] = {action: 'delete', shift: ws, response: response}
       yield if block_given?
     end
 
-    @push.save!
+    @push.update_attribute(:log, log)
   end
 end
