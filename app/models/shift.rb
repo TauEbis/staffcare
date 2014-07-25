@@ -16,8 +16,21 @@ class Shift < ActiveRecord::Base
     @_ends_hour   ||= ends_at.in_time_zone(TZ).hour
   end
 
+  def date
+    @_date        ||= starts_at.in_time_zone(TZ).to_date
+  end
+
   def to_knockout
-    {id: id, starts_hour: starts_hour, ends_hour: ends_hour}
+    {id: id, starts_hour: starts_hour, ends_hour: ends_hour, date: date}
+  end
+
+  def from_knockout(date, params)
+    @_date        = date.in_time_zone(TZ)
+    @_starts_hour = params['starts']
+    @_ends_hour   = params['ends']
+    self.starts_at = @_date.advance(hours: @_starts_hour)
+    self.ends_at   = @_date.advance(hours: @_ends_hour)
+    self
   end
 
   def wiw_shift
