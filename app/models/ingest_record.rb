@@ -5,8 +5,15 @@ require 'time'
 class IngestRecord < ActiveRecord::Base
   belongs_to :report_server_ingest
 
-  def initialize(location_name)
-    @name = location_name
+  validates :name, presence:true
+  validates :days, presence:true
+  validates :total_visits, presence: true
+
+  after_initialize :init
+
+  attr_accessor :name, :total_visits
+
+  def init
     @days = {}
     @total_visits = 0.0
     Date::DAYNAMES.each do |day|

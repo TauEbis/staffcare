@@ -1,8 +1,13 @@
 class Heatmap < ActiveRecord::Base
-  belongs_to :report_server_ingest
+  validates :days, presence:true
 
-  def initialize(loc_name)
-    @name = loc_name
+  belongs_to :location
+  has_one :report_server_ingest
+
+  after_initialize :init
+
+  def init
+    @days = {}
     Date::DAYNAMES.each do |day|
       @days[day] = {}
     end

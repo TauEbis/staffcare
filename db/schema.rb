@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140722183628) do
+ActiveRecord::Schema.define(version: 20140726221159) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,6 +28,20 @@ ActiveRecord::Schema.define(version: 20140722183628) do
   end
 
   add_index "grades", ["user_id"], name: "index_grades_on_user_id", using: :btree
+
+  create_table "heatmaps", force: true do |t|
+    t.string "name"
+    t.string "days"
+  end
+
+  create_table "ingest_records", force: true do |t|
+    t.string  "name"
+    t.string  "days"
+    t.float   "total_vists"
+    t.integer "report_server_ingest_id"
+  end
+
+  add_index "ingest_records", ["report_server_ingest_id"], name: "index_ingest_records_on_report_server_ingest_id", using: :btree
 
   create_table "location_plans", force: true do |t|
     t.integer "location_id",                      null: false
@@ -102,6 +116,14 @@ ActiveRecord::Schema.define(version: 20140722183628) do
   end
 
   add_index "pushes", ["location_plan_id"], name: "index_pushes_on_location_plan_id", using: :btree
+
+  create_table "report_server_ingests", force: true do |t|
+    t.date   "start_date"
+    t.date   "end_date"
+    t.string "locations"
+    t.string "heatmaps"
+    t.string "totals"
+  end
 
   create_table "schedules", force: true do |t|
     t.date     "starts_on"
