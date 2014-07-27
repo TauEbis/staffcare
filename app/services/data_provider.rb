@@ -27,9 +27,9 @@ class DataProvider
 		  end
     else
       heat_maps = {}
-      all_maps = Heatmaps.all
+      all_maps = Heatmap.all
       all_maps.each do |map|
-        location = Location.get_by(uid: map.uid)
+        location = Location.find_by(uid: map.uid)
         heat_maps[location.report_server_id] = map
       end
     end

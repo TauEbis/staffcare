@@ -5,7 +5,7 @@ class VisitProjection < ActiveRecord::Base
   has_one :location_plan
 
 		# visits  # visits data hashed by day
-		# heat_map = a Heatmap object
+		# heat_maps = a Heatmap object
 		# volumes = # patient volume data hashed by day
 										#(currently only available per week, but client wants per day)
 
@@ -30,7 +30,7 @@ class VisitProjection < ActiveRecord::Base
 
     schedule.days.each do |day|
       daily_vol = self.volumes[day.to_s]
-      self.visits[day.to_s] = heat_map.build_day_volume(daily_vol, day.dow)
+      self.visits[day.to_s] = heat_maps.build_day_volume(daily_vol, day.wday)
     end
   end
 
@@ -48,7 +48,7 @@ class VisitProjection < ActiveRecord::Base
         schedule: schedule,
         location: location,
         volumes: all_volumes[rsid],
-        heat_map: all_heat_maps[rsid]
+        heat_maps: all_heat_maps[rsid]
       )
 
       projection.build_visits
