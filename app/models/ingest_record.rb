@@ -1,19 +1,15 @@
 require 'date'
 require 'time'
 
-# Record for a single location for the given time period
-class IngestRecord < ActiveRecord::Base
-  belongs_to :report_server_ingest
+# Record for a single location for the given time period- not an ActiveRecord model, just
+# used as an intermediate form for calculating heatmaps.
+class IngestRecord 
 
-  validates :name, presence:true
-  validates :days, presence:true
-  validates :total_visits, presence: true
+  attr_accessor :name, :total_visits, :uid
 
-  after_initialize :init
-
-  attr_accessor :name, :total_visits
-
-  def init
+  def initialize(loc, uid)
+    @name = loc
+    @uid = uid
     @days = {}
     @total_visits = 0.0
     Date::DAYNAMES.each do |day|
@@ -22,7 +18,7 @@ class IngestRecord < ActiveRecord::Base
   end
 
   def add_block(dow, hour, count)
-    @days[Date::DAYNAMES[dow.to_i]][Time.parse(hour)] = count.to_f
+    @days[Date::DAYNAMES[dow.to_i]][hour] = count.to_f
     @total_visits += count
   end
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140726221159) do
+ActiveRecord::Schema.define(version: 20140727030900) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,17 +31,11 @@ ActiveRecord::Schema.define(version: 20140726221159) do
 
   create_table "heatmaps", force: true do |t|
     t.string "name"
-    t.string "days"
+    t.text   "days"
+    t.string "uid"
   end
 
-  create_table "ingest_records", force: true do |t|
-    t.string  "name"
-    t.string  "days"
-    t.float   "total_vists"
-    t.integer "report_server_ingest_id"
-  end
-
-  add_index "ingest_records", ["report_server_ingest_id"], name: "index_ingest_records_on_report_server_ingest_id", using: :btree
+  add_index "heatmaps", ["uid"], name: "index_heatmaps_on_uid", using: :btree
 
   create_table "location_plans", force: true do |t|
     t.integer "location_id",                      null: false
@@ -85,8 +79,10 @@ ActiveRecord::Schema.define(version: 20140726221159) do
     t.integer  "min_closers",      default: 1,    null: false
     t.string   "report_server_id"
     t.integer  "wiw_id"
+    t.string   "uid"
   end
 
+  add_index "locations", ["uid"], name: "index_locations_on_uid", using: :btree
   add_index "locations", ["zone_id"], name: "index_locations_on_zone_id", using: :btree
 
   create_table "memberships", force: true do |t|
@@ -118,11 +114,14 @@ ActiveRecord::Schema.define(version: 20140726221159) do
   add_index "pushes", ["location_plan_id"], name: "index_pushes_on_location_plan_id", using: :btree
 
   create_table "report_server_ingests", force: true do |t|
-    t.date   "start_date"
-    t.date   "end_date"
-    t.string "locations"
-    t.string "heatmaps"
-    t.string "totals"
+    t.date     "start_date"
+    t.date     "end_date"
+    t.string   "locations"
+    t.string   "heatmaps"
+    t.string   "totals"
+    t.text     "data"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "schedules", force: true do |t|

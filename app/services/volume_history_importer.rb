@@ -70,7 +70,7 @@ class VolumeHistoryImporter
     end
     response = self.class.get('/patientload', @options)
     if response.code == 200
-      return JSON.parse(response.body)
+      return response.body
     else
       raise IOError, "Error retrieving data- got #{response.message} (#{response.code}) from server."
     end

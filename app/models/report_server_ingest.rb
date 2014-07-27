@@ -1,28 +1,21 @@
 class ReportServerIngest < ActiveRecord::Base
   validates :end_date, presence: true
   validates :start_date, presence: true
-  validates :locations, presence:true
-  validates :heatmaps, presence: true
-  validates :totals, presence: true
+  validates :data, presence: true 
 
   after_initialize :init
-  has_many :ingest_records
-  validates_associated :ingest_records
-  has_many :heatmaps
-  validates_associated :heatmaps
 
-  attr_accessor :totals, :locations, :heatmaps
+  #has_many :heatmaps
+  #validates_associated :heatmaps
 
   def init
     @locations = {}
-    @heatmaps = {}
     @totals = {}
   end
 
-  def add_record(loc_name, dow, hour, count)
+  def add_record(loc_name, uid, dow, hour, count)
     if !@locations.has_key?(loc_name)
-      @locations[loc_name] = IngestRecord.new
-      @locations[loc_name].name = loc_name
+      @locations[loc_name] = IngestRecord.new(loc_name, uid)
       @totals[loc_name] = 0.0
     end
 
@@ -35,9 +28,16 @@ class ReportServerIngest < ActiveRecord::Base
   end
 
   def create_heatmaps!(granularity)
+    heatmaps = Hash.new
+    records = JSON.parse(self.data)
+    records.each do |record|
+       self.add_record(record['Name'], record['ServiceSiteUid'], 
+                       record['VisitDay'], record['VisitHour'], record['VisitCount'])
+    end
+      
     @locations.each do |location, record|
       heatmap = Heatmap.new
-      heatmap.name = location
+      heatmap.uid = record.uid
       if granularity == 15 
         Date::DAYNAMES.each do |day|
           record.get_day(day).keys.sort.each do |hour|
@@ -52,8 +52,9 @@ class ReportServerIngest < ActiveRecord::Base
           end
         end
       end
-      @heatmaps[record.name] = heatmap
+      heatmaps[record.name] = heatmap
     end
+    return heatmaps
   end
 
 
