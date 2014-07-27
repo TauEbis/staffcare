@@ -17,5 +17,10 @@ class Heatmap < ActiveRecord::Base
     return self.days
   end
 
+  def build_day_volume(total_volume, dow)
+    return self.days[Date::DAYNAMES[dow]].keys.map{ |percent| percent * total_volume }
+  end
+
+
 end
 
