@@ -19,7 +19,8 @@ class ReportServerIngest < ActiveRecord::Base
       @totals[loc_name] = 0.0
     end
 
-    @locations[loc_name].add_block(dow, hour, count)
+    # Note that the VisitDay is indexed for Sunday = 1, not 0
+    @locations[loc_name].add_block(dow - 1, hour, count)
     @totals[loc_name] += count.to_f
   end
 
