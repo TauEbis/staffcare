@@ -51,7 +51,11 @@ describe VolumeHistoryImporter, :type => :service do
   describe "#authenticate" do
 
     context "when a correct username and password are provided" do
-      before { importer.authenticate!() }
+      before { 
+        VCR.use_cassette('report_server_auth_good') do
+          importer.authenticate!() 
+        end
+      }
       it "should establish a session when authenticate() is called" do
         expect(importer.authenticated?).to eq true
       end
@@ -66,14 +70,18 @@ describe VolumeHistoryImporter, :type => :service do
     context "when an invalid username is provided" do
       before { importer.username = "oir" }
       it "should raise an exception" do
-        expect{ importer.authenticate!() }.to raise_error(SecurityError, "Authentication error- Bad username.")
+        VCR.use_cassette('report_server_auth_bad_user') do
+          expect{ importer.authenticate!() }.to raise_error(SecurityError, "Authentication error- Bad username.")
+        end
       end
     end
 
     context "when an invalid password is provided" do
       before { importer.password = "badpass" }
       it "should raise an exception" do
-        expect{ importer.authenticate!() }.to raise_error(SecurityError, "Authentication error- Bad password.")
+        VCR.use_cassette('report_server_auth_bad_pass') do
+          expect{ importer.authenticate!() }.to raise_error(SecurityError, "Authentication error- Bad password.")
+        end
       end
     end
   end
@@ -81,43 +89,51 @@ describe VolumeHistoryImporter, :type => :service do
   describe "#fetch_data!" do
 
     context "when called before authenticate" do
-      before { importer.fetch_data!() }
+      before { 
+        VCR.use_cassette('report_server_fetch_then_auth') do
+          importer.fetch_data!() 
+        end
+      }
       it "should call authenticate and create a session" do
         expect(importer.authenticated?).to eq true
       end
     end
 
     context "when called after authenticate" do
-      before { importer.authenticate!() }
       it "should not authenticate again before fetching data" do
-        session = importer.session_id
-        importer.fetch_data!()
-        expect(session).to eq importer.session_id
+        VCR.use_cassette('report_server_auth_then_fetch') do
+          importer.authenticate!()
+          session = importer.session_id
+          importer.fetch_data!()
+          expect(session).to eq importer.session_id
+        end
       end
     end
 
     context "when called with a single location" do
       it "should retrieve data for only one site" do
-        data = importer.fetch_data!()
-        data.each do |record|
-          expect(record['ServiceSiteUid']).to eq "414f0bd3-0460-405d-9136-0f16db212ba9"
-          expect(record['Name']).to eq "CityMD 57th St"
+        VCR.use_cassette('report_server_single_site') do
+          data = importer.fetch_data!()
+          JSON.parse(data).each do |record|
+            expect(record['ServiceSiteUid']).to eq "414f0bd3-0460-405d-9136-0f16db212ba9"
+            expect(record['Name']).to eq "CityMD 57th St"
+          end
         end
       end
     end
 
     context "when called with all locations specified" do
-      it "shoudld retrieve data for all locations" do
-        data = all_importer.fetch_data!()
-        locations = {}
-        data.each do |record|
-          locations[record['Name']] = 1
+      it "should retrieve data for all locations" do
+        VCR.use_cassette('report_server_all_sites') do
+          data = all_importer.fetch_data!()
+          locations = {}
+          JSON.parse(data).each do |record|
+            locations[record['Name']] = 1
+          end
+          expect(locations.keys.length).to be > 10
         end
-        expect(locations.keys.length).to be > 10
       end
     end
 
   end
-
-
 end
