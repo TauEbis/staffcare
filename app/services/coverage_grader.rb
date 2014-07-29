@@ -75,8 +75,8 @@ class CoverageGrader
 
 		# Calculate slack and wait/queue arrays
 		@time_slots_range.each do |x|
-			@seen[x] = [ @visits[x] + @queue[x], max_capacity[x] ].min
-			delta = normal_capacity[x] - @seen[x]
+			@seen[x] = [ @visits[x] + @queue[x], max_capacity[x].to_f ].min
+			delta = normal_capacity[x].to_f - @seen[x]
 			@slack[x] = [ delta , 0 ].max
 			@turbo[x] = [ delta * (-1) , 0 ].max
 
