@@ -24,10 +24,6 @@ task :report_server_ingest => :environment do
   ingest.data = data
 
   z0 = Zone.find_or_create_by(name: 'Unassigned')
-  # Somewhat hacky- prevents validation errors and leaving locations unassigned.
-  unless z0.locations.empty?
-    raise "Unassigned locations already exist- remove them before requesting new data!"
-  end
   heatmaps = ingest.create_heatmaps!(30)
   heatmaps.each do |name, heatmap|
     begin
@@ -43,10 +39,6 @@ task :report_server_ingest => :environment do
        location.speeds.build(doctors: 4, normal: 16, max: 24) 
        location.speeds.build(doctors: 5, normal: 20, max: 30) 
        location.save!
-
-      #z0.locations.build(name: name, report_server_id: name, max_mds: 3, 
-      #                 rooms: 12, open_times: [9,8,8,8,8,8,9], 
-      #                 close_times: [21,22,22,22,22,22,21], uid: heatmap.uid)
     end
 
     heatmap.save!
