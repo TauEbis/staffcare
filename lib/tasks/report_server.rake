@@ -14,9 +14,9 @@ task :report_server_ingest => :environment do
   puts end_date
   importer = VolumeHistoryImporter.new(start_date, end_date, 'ALL')
 
-  #importer.authenticate!
+  importer.authenticate!
 
-  #data = importer.fetch_data!
+  data = importer.fetch_data!
   data = File.read("/home/ccollier/data.json")
 
   ingest = ReportServerIngest.new
