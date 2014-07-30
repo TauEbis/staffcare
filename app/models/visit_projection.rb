@@ -51,7 +51,6 @@ class VisitProjection < ActiveRecord::Base
         heat_maps: all_heat_maps[rsid]
       )
 
-      puts rsid
       projection.build_visits
 
       projection.save!

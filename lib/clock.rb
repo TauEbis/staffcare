@@ -30,7 +30,7 @@ class ReportServerJob
 	      location = Location.find_by!(uid: heatmap.uid)
 	    rescue ActiveRecord::RecordNotFound
 	      # Create new locations in the Unassigned zone if we haven't heard of this UID before.
-	      location = z0.locations.build(name: name, report_server_id: name, max_mds: 3, 
+	      location = z0.locations.build(name: name, report_server_id: name.gsub(' ', '_'), max_mds: 3, 
 	                       rooms: 12, open_times: [9,8,8,8,8,8,9], 
 	                       close_times: [21,22,22,22,22,22,21], uid: heatmap.uid)
 	      location.speeds.build(doctors: 1, normal: 4, max: 6)
