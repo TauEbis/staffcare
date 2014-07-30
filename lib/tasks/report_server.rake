@@ -17,7 +17,6 @@ task :report_server_ingest => :environment do
   importer.authenticate!
 
   data = importer.fetch_data!
-  data = File.read("/home/ccollier/data.json")
 
   ingest = ReportServerIngest.new
   ingest.start_date = start_date
