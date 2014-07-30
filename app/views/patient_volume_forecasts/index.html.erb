@@ -26,7 +26,7 @@
 	      <td><%= forecast.start_date %></td>
 	      <td><%= forecast.end_date %></td>
 	    <% @locations.map(&:report_server_id).each do |l_name| %>
-     		<td><%= forecast.volume_by_location[rsid] %></td>
+     		<td><%= forecast.volume_by_location[report_server_id] %></td>
      	<% end %>
       <td><%= link_to 'Edit', edit_patient_volume_forecast_path(forecast) %></td>
       <td><%= link_to 'Delete', forecast, method: :delete, data: { confirm: 'Are you sure?' } %></td>
