@@ -1,0 +1,126 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.citymd.com/rio/authenticate?password=CitymdRio&username=Rio
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers: {}
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - private
+      Content-Type:
+      - text/html; charset=utf-8
+      Server:
+      - Microsoft-IIS/8.5
+      Set-Cookie:
+      - ".ASPXAUTH=D5B3D4FF6E14BB37FED1D0AE837A89710CD526919C415FE0C7EF36F628843D5C7E3F0473931A1D724EB886935D7A2CB4B7BBAF9F3F3D7BCE55AA670E8C07CAA1938A0794C80B943E32F7850CBEF44B101EB90C1E51F0C8704EC06893C22C45FE;
+        path=/; HttpOnly"
+      - ASP.NET_SessionId=0lrlb134qxjfxec234gagztz; path=/; HttpOnly
+      X-Aspnetmvc-Version:
+      - '5.1'
+      X-Aspnet-Version:
+      - 4.0.30319
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Tue, 29 Jul 2014 20:37:31 GMT
+      Content-Length:
+      - '36'
+    body:
+      encoding: UTF-8
+      string: 424c3899-02de-47ad-b9d8-d1f77681158e
+    http_version: 
+  recorded_at: Tue, 29 Jul 2014 20:37:26 GMT
+- request:
+    method: get
+    uri: https://api.citymd.com/rio/patientload?enddate=2014-07-01&servicesiteuid=414F0BD3-0460-405D-9136-0F16DB212BA9&sessionID=424c3899-02de-47ad-b9d8-d1f77681158e&startdate=2014-07-01
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Cookie:
+      - ASP.NET_SessionId=0lrlb134qxjfxec234gagztz; path=/; HttpOnly, .ASPXAUTH=D5B3D4FF6E14BB37FED1D0AE837A89710CD526919C415FE0C7EF36F628843D5C7E3F0473931A1D724EB886935D7A2CB4B7BBAF9F3F3D7BCE55AA670E8C07CAA1938A0794C80B943E32F7850CBEF44B101EB90C1E51F0C8704EC06893C22C45FE;
+        path=/; HttpOnly
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - private
+      Content-Type:
+      - application/json; charset=utf-8
+      Server:
+      - Microsoft-IIS/8.5
+      X-Aspnetmvc-Version:
+      - '5.1'
+      X-Aspnet-Version:
+      - 4.0.30319
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Tue, 29 Jul 2014 20:37:32 GMT
+      Content-Length:
+      - '7141'
+    body:
+      encoding: UTF-8
+      string: '[{"Name":"CityMD 57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"08:00:00","VisitCount":6.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"08:30:00","VisitCount":3.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"08:45:00","VisitCount":2.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"09:15:00","VisitCount":2.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"09:30:00","VisitCount":3.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"09:45:00","VisitCount":3.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"10:00:00","VisitCount":3.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"10:15:00","VisitCount":4.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"10:30:00","VisitCount":2.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"10:45:00","VisitCount":5.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"11:00:00","VisitCount":3.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"11:15:00","VisitCount":3.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"11:30:00","VisitCount":4.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"11:45:00","VisitCount":2.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"12:00:00","VisitCount":5.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"12:15:00","VisitCount":4.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"12:30:00","VisitCount":4.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"12:45:00","VisitCount":5.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"13:00:00","VisitCount":2.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"13:30:00","VisitCount":2.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"13:45:00","VisitCount":1.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"14:00:00","VisitCount":6.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"14:15:00","VisitCount":1.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"14:30:00","VisitCount":2.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"14:45:00","VisitCount":2.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"15:00:00","VisitCount":1.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"15:15:00","VisitCount":3.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"15:30:00","VisitCount":3.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"15:45:00","VisitCount":1.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"16:00:00","VisitCount":1.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"16:15:00","VisitCount":2.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"16:30:00","VisitCount":5.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"16:45:00","VisitCount":2.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"17:00:00","VisitCount":3.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"17:30:00","VisitCount":5.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"17:45:00","VisitCount":2.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"18:00:00","VisitCount":3.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"18:15:00","VisitCount":1.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"18:30:00","VisitCount":2.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"18:45:00","VisitCount":1.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"19:00:00","VisitCount":1.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"19:15:00","VisitCount":1.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"19:30:00","VisitCount":3.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"19:45:00","VisitCount":2.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"20:00:00","VisitCount":3.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"20:15:00","VisitCount":2.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"20:30:00","VisitCount":4.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"20:45:00","VisitCount":1.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"21:00:00","VisitCount":2.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"21:15:00","VisitCount":1.000000},{"Name":"CityMD
+        57th St","ServiceSiteUid":"414f0bd3-0460-405d-9136-0f16db212ba9","VisitDay":3,"VisitHour":"21:30:00","VisitCount":1.000000}]'
+    http_version: 
+  recorded_at: Tue, 29 Jul 2014 20:37:27 GMT
+recorded_with: VCR 2.9.2

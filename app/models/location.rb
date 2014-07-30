@@ -3,11 +3,13 @@
 class Location < ActiveRecord::Base
   belongs_to :zone
 
+  has_one :heatmap
   has_many :memberships
   has_many :users, through: :memberships
   has_many :speeds, dependent: :destroy, inverse_of: :location
   accepts_nested_attributes_for :speeds, reject_if: proc { |attributes| attributes['doctors'].blank? }
 
+  validates :uid, presence: true
   validates :zone, presence: true
   validates :rooms, presence: true, numericality: { greater_than: 0, less_than: 100 }
   validates :max_mds, presence: true, numericality: { greater_than: 0, less_than: 100 }

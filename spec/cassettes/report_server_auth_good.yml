@@ -1,0 +1,40 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.citymd.com/rio/authenticate?password=CitymdRio&username=Rio
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers: {}
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - private
+      Content-Type:
+      - text/html; charset=utf-8
+      Server:
+      - Microsoft-IIS/8.5
+      X-Aspnetmvc-Version:
+      - '5.1'
+      X-Aspnet-Version:
+      - 4.0.30319
+      Set-Cookie:
+      - ".ASPXAUTH=6E1CAFCA27FE3E9B4FD7FE26D4DAFAEF045073D9FED51C5B6770277DEF5BC7D599A600BA93D3B2A931A086F55F1E435D05EC7BA0D46E614C54F404A1E72F0BDCB336412545A515EE15CD9E86C34E8EE198E0F3865F6AE0BD55061C7D2ECA6AE8;
+        path=/; HttpOnly"
+      - ASP.NET_SessionId=b3qfm2pkwodowdtdnawtulsr; path=/; HttpOnly
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Tue, 29 Jul 2014 20:18:00 GMT
+      Content-Length:
+      - '36'
+    body:
+      encoding: UTF-8
+      string: 3a588529-f561-4f81-81cb-2cfa4a4fc1d0
+    http_version: 
+  recorded_at: Tue, 29 Jul 2014 20:17:55 GMT
+recorded_with: VCR 2.9.2

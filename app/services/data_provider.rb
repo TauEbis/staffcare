@@ -19,15 +19,22 @@ class DataProvider
 	end
 
 	def heat_map_query(locations, schedule)
-    fake_source = @source
-    if @source == 'database'
-      fake_source = 'sample_run'
+    if @source != 'database'
+		  heat_maps = {}
+		  locations.each do |location|
+			  heat_maps[location.report_server_id] = 
+                self.send("read_and_parse_#{fake_source}_heat_map".to_sym, location, schedule)
+		  end
+    else
+      heat_maps = {}
+      all_maps = Heatmap.all
+      all_maps.each do |map|
+        location = Location.find_by(uid: map.uid)
+        heat_maps[location.report_server_id] = map
+      end
     end
-		heat_maps = Hash.new
-		locations.each do |location|
-			heat_maps[location.report_server_id] = self.send("read_and_parse_#{fake_source}_heat_map".to_sym, location, schedule)
-		end
-		heat_maps
+
+		return heat_maps
 	end
 
 	private

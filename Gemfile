@@ -39,6 +39,7 @@ gem 'sidekiq-status', git: 'https://github.com/matthewrudy/sidekiq-status.git', 
 gem 'sinatra', '>= 1.3.0', :require => nil
 
 gem 'httparty'
+gem 'clockwork'
 
 group :staging, :production do
   gem 'rails_12factor'

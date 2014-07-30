@@ -5,7 +5,7 @@ class VisitProjection < ActiveRecord::Base
   has_one :location_plan
 
 		# visits  # visits data hashed by day
-		# heat_maps = Array.new(7,Array.new)) #  eg. heat_maps[day_of_week_as_int] is an Array of half hourly percentages
+		# heat_maps = a Heatmap object
 		# volumes = # patient volume data hashed by day
 										#(currently only available per week, but client wants per day)
 
@@ -30,7 +30,7 @@ class VisitProjection < ActiveRecord::Base
 
     schedule.days.each do |day|
       daily_vol = self.volumes[day.to_s]
-      self.visits[day.to_s] = heat_maps[day.wday].map{ |percent| percent * daily_vol }
+      self.visits[day.to_s] = heat_maps.build_day_volume(daily_vol, day.wday)
     end
   end
 

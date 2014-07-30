@@ -2,6 +2,8 @@ class OptimizerWorker
   include Sidekiq::Worker
   include Sidekiq::Status::Worker
 
+  sidekiq_options retry: false
+
   def perform(schedule_id)
     at 0, "Beginning"
 
@@ -14,9 +16,11 @@ class OptimizerWorker
     at 5, "Loading location plans"
 
     # Factory creates LocationPlans and VisitProjection
+    # Exclude Locations in the 'Unassigned' zone
+    z0 = Zone.find_by(name: 'Unassigned')
     factory = LocationPlansFactory.new({
                                            schedule: schedule,
-                                           locations: Location.all,
+                                           locations: Location.where.not(zone: z0),
                                            data_provider: provider})
 
     factory.create
