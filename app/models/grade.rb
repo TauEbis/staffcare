@@ -28,6 +28,34 @@ class Grade < ActiveRecord::Base
     end
   end
 
+
+  def for_highcharts(date)
+    date_s = date.to_s
+    b = breakdowns[date_s]
+    size = location_plan.visits[date_s].size
+
+    ary = (0...size).map do |i|
+      (b['slack'][i] - b['queue'][i] - b['turbo'][i]).round(2)
+    end
+
+    max_turbo_data = (0...size).map do |i|
+      num_mds = coverages[date_s][i]
+      ((location_plan.max[num_mds - 1] - location_plan.normal[num_mds - 1]) / -2.0).round(2)
+    end
+
+    start = location_plan.location.open_times[date.wday]
+    x_axis = (0...size).map {|i| (start + (i / 2.0)).to_time_of_day }
+
+    {
+      visits_data: location_plan.visits[date_s].map{|i| i.round(2)},
+      mds_data: coverages[date_s],
+      stack_data: ary,
+      penalty_data: b['penalties'].map{|i| i.round(2)},
+      max_turbo_data: max_turbo_data,
+      x_axis: x_axis
+    }
+  end
+
   # shifts comes in as [{"id"=>612, "starts"=>8, "ends"=>12, "hours"=>4}, {"id"=>613, "starts"=>12, "ends"=>20, "hours"=>8}]
   def update_shift!(date, raw_shifts)
     date_s = date.to_s
