@@ -23,7 +23,7 @@ task :report_server_ingest => :environment do
   ingest.end_date = end_date
   ingest.data = data
 
-  z0 = Zone.find_by(name: 'Unassigned')
+  z0 = Zone.find_or_create_by(name: 'Unassigned')
   # Somewhat hacky- prevents validation errors and leaving locations unassigned.
   unless z0.locations.empty?
     raise "Unassigned locations already exist- remove them before requesting new data!"
