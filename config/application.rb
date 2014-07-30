@@ -19,6 +19,8 @@ Bundler.require(*Rails.groups)
 
 GC::Profiler.enable unless ENV['RAILS_ENV'] == 'production'
 
+require_relative '../lib/ext/float'
+
 module StaffCare
   class Application < Rails::Application
 

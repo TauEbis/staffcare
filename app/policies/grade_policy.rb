@@ -8,6 +8,10 @@ class GradePolicy < ApplicationPolicy
     show?
   end
 
+  def highcharts?
+    show?
+  end
+
   def update?
     case record.source
       when 'manual'

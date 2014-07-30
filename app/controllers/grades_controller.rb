@@ -1,6 +1,6 @@
 class GradesController < ApplicationController
   before_action :set_location_plan, only: [:create]
-  before_action :set_grade, only: [:show, :hourly, :update, :destroy]
+  before_action :set_grade, only: [:show, :highcharts, :hourly, :update, :destroy]
 
   def create
     authorize Grade.new(location_plan: @location_plan), :create?  # Fake grade, the real one to be created later
@@ -31,6 +31,10 @@ class GradesController < ApplicationController
     end
 
     render json: data
+  end
+
+  def highcharts
+    render json: @grade.for_highcharts(@date)
   end
 
   def hourly

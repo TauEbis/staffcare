@@ -108,14 +108,14 @@ function CoverageViewModel() {
       // We dont' want to set loaded until we've loaded a DAY, not just the grade-wide data
       self.loaded(true);
     }
-  }
+  };
 
   self.generateAvailableTimes = function(open_time, close_time) {
     self.available_times.removeAll();
     for(var i = open_time; i <= close_time; i += 1){
       self.available_times.push({num: i, formatted: timeOfDay(i)});
     }
-  }
+  };
 
   self.addShift = function() {
     self.shifts.push(new Shift(10,20));
