@@ -60,7 +60,6 @@ class Schedule < ActiveRecord::Base
     loader = SpeedySolutionSetLoader.new
 
     location_plans.each do |location_plan|
-      puts location_plan.location.name
       coverages = {}
       breakdowns = {}
       points = {}
