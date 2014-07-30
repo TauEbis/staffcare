@@ -78,7 +78,7 @@ class PatientVolumeForecast < ActiveRecord::Base
   	CSV.generate(options) do |csv|
   		locations = Location.ordered.all
   		attribute_columns = [ 'start_date', 'end_date' ]
-  		location_columns = locations.map(&:name)
+  		location_columns = locations.map(&:report_server_id)
   		columns = ['id'] + attribute_columns + location_columns
 
   		csv << columns
