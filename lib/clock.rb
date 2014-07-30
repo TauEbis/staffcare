@@ -8,9 +8,9 @@ class ReportServerJob
   def perform(start_date, end_date)
 	  # Look back three months + 1 week
 	  # TODO: Make this configurable
-	  start_date = (Date.today << 3 ) - 7 
+	  start_date = Date.parse('2014-05-01')
 	  # Always wait a week before pulling data so it can settle
-	  end_date = Date.today - 7
+	  end_date = Date.parse('2014-06-01')
 	
 	  importer = VolumeHistoryImporter.new(start_date, end_date, 'ALL')
 	
@@ -49,7 +49,8 @@ class ReportServerJob
 end
 
 module Clockwork
-  every 1.day, :if => lambda { |t| t.day == 1) do
+  every 10.minute do
+  #every 1.day, :if => lambda { |t| t.day == 1) do
     ReportServerJob.perform_async() 
   end
 end

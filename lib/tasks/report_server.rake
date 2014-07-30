@@ -8,8 +8,8 @@ task :report_server_ingest => :environment do
   end_date = Date.today - 7
 
   # FIXME: For testing purposes only- waiting for an issue with the server to be fixed.
-  start_date = Date.parse('2014-05-01')
-  end_date = Date.parse('2014-06-30')
+  #start_date = Date.parse('2014-05-01')
+  #end_date = Date.parse('2014-06-30')
   puts start_date
   puts end_date
   importer = VolumeHistoryImporter.new(start_date, end_date, 'ALL')
