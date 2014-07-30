@@ -6,7 +6,6 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-if Rails.env.development?
   user = User.find_or_create_by!(email: 'admin@admin.com') do |user|
     user.password = user.password_confirmation = 'password'
     user.admin!
@@ -80,4 +79,3 @@ if Rails.env.development?
     PatientVolumeForecast.import(f)
     f.close
   end
-end
