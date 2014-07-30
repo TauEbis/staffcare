@@ -30,7 +30,7 @@ class VisitProjection < ActiveRecord::Base
 
     schedule.days.each do |day|
       daily_vol = self.volumes[day.to_s]
-      self.visits[day.to_s] = heat_maps.build_day_volume(daily_vol.to_f, day.wday)
+      self.visits[day.to_s] = heat_maps.build_day_volume(daily_vol, day.wday)
     end
   end
 
