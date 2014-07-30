@@ -31,22 +31,22 @@
           </div>
           <div class="row">
             <div class="col-sm-4">
-              <h4><%= location_plan.unoptimized_summed_points['hours'].round %> Physician hours</h4>
+              <h4><%= hour_points(location_plan) %> Physician hours</h4>
             </div>
             <div class="col-sm-2 text-center">
-              <h4><%= location_plan.unoptimized_summed_points['total'].round %> <span class=" bg-danger">(B+)</span></h4>
+              <h4><%= total_points(location_plan) %> <span class=" bg-danger">(B+)</span></h4>
               Overall
             </div>
             <div class="col-sm-2 text-center">
-              <h4><%= location_plan.unoptimized_summed_points['md_sat'].round %> <span class=" bg-danger">(B+)</span></h4>
+              <h4><%= md_sat_points(location_plan) %> <span class=" bg-danger">(B+)</span></h4>
               Physician Sat
             </div>
             <div class="col-sm-2 text-center">
-              <h4><%= location_plan.unoptimized_summed_points['patient_sat'].round %> <span class=" bg-danger">(A)</span></h4>
+              <h4><%= patient_sat_points(location_plan) %> <span class=" bg-danger">(A)</span></h4>
               Patient Sat
             </div>
             <div class="col-sm-2 text-center">
-              <h4><%= location_plan.unoptimized_summed_points['cost'].round %> <span class=" bg-danger">(B)</span></h4>
+              <h4><%= cost_points(location_plan) %> <span class=" bg-danger">(B)</span></h4>
               Cost Score
             </div>
           </div>

@@ -35,7 +35,7 @@ class ApplicationController < ActionController::Base
   end
 
   def user_locations
-    policy_scope(Location.all)
+    policy_scope(current_user.relevant_locations)
   end
 
   def set_time_zone

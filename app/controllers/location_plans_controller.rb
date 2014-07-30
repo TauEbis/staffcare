@@ -72,12 +72,8 @@ class LocationPlansController < ApplicationController
   end
 
   def send_manager_to_location_plan
-    if current_user.manager? && current_user.locations.size == 1
-      @location_plan = @schedule.
-      location_plans.includes(:location).ordered.
-      merge(user_locations).first
-
-      params[:location_plan_id] = @location_plan.id
+    if current_user.single_manager?
+      params[:location_plan_id] = @schedule.location_plans.for_user(current_user).first
     end
   end
 
@@ -96,9 +92,9 @@ class LocationPlansController < ApplicationController
     # These are used for the nav header
     @zones = user_zones.ordered
     @location_plans = @schedule.
-        location_plans.includes(:location).ordered.
+        location_plans.ordered.
         for_zone(@zone).                              # For this zone
-        merge(user_locations)                         # And for this user
+        for_user(current_user)                        # And for this user
   end
 
   # Only allow a trusted parameter "white list" through.
