@@ -88,7 +88,7 @@ class PatientVolumeForecast < ActiveRecord::Base
           next
         end
   			attribute_rows = projection.attributes.values_at(*attribute_columns)
-  			location_rows = projection.volume_by_location.values_at(*locations.map(&:name))
+  			location_rows = projection.volume_by_location.values_at(*locations.map(&:report_server_id))
 				row = [projection.id] + attribute_rows + location_rows
 
 				csv << row

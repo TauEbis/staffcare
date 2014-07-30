@@ -47,7 +47,6 @@ class DataProvider
            schedule.days.each do |day|
                 found_it = false
                 forecasts.each do |forecast|
-                     # TODO: Warn/error if no forecast block contains the location/day
                      if forecast.contains_day? day and forecast.contains_location? location
                           vol[location.report_server_id][day.to_s] = 
                                    forecast.get_volume(location.report_server_id, day.to_s)
