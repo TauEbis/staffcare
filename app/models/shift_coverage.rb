@@ -6,7 +6,7 @@ class ShiftCoverage
 		@day_s = @day.to_s
     @time = @day.in_time_zone
 		@opens_at = @location_plan.open_times[day.wday]
-		@closes_at = @location_plan.close_times[day.wday()]
+		@closes_at = @location_plan.close_times[day.wday]
 		@midday = ( @opens_at + @closes_at )/2
 	end
 
