@@ -24,7 +24,7 @@ class PatientVolumeForecast < ActiveRecord::Base
   end
 
   def contains_location?(loc)
-    return self.volume_by_location.has_key?(loc.report_server_id)
+    return self.volume_by_location.has_key?(loc.name)
   end
 
   #Returns the projected volume for the given location and day
