@@ -17,8 +17,17 @@ class Heatmap < ActiveRecord::Base
     return self.days
   end
 
-  def build_day_volume(total_volume, dow)
-    return self.days[Date::DAYNAMES[dow]].values.map{ |percent| percent * total_volume }
+  def build_day_volume(total_volume, day, location)
+    percents = self.days[Date::DAYNAMES[day.wday]].values
+
+    start_time = location.open_times[day.wday]
+    end_time   = location.close_times[day.wday]
+
+    # Assuming percents is always 28 starting at 8am
+    start_index = (start_time - 8) * 2
+    end_index   = (end_time - 8) * 2
+
+    percents[start_index...end_index].map{ |percent| percent * total_volume }
   end
 
 
