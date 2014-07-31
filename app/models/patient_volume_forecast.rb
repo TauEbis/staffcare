@@ -30,7 +30,7 @@ class PatientVolumeForecast < ActiveRecord::Base
   #Returns the projected volume for the given location and day
   #NB: Right now returns the week volume for that day to match heatmaps
   def get_volume(location, day)
-    return self.volume_by_location[location.report_serer_id]
+    return self.volume_by_location[location.report_server_id]
   end
 
   def valid_start_date
