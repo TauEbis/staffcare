@@ -49,7 +49,7 @@ class DataProvider
                 forecasts.each do |forecast|
                      if forecast.contains_day? day and forecast.contains_location? location
                           vol[location.report_server_id][day.to_s] = 
-                                   forecast.get_volume(location.report_server_id, day.to_s)
+                                   forecast.get_volume(location, day.to_s)
                           found_it = true
                      end
                 end
