@@ -3,6 +3,7 @@
   <tr>
     <th>Time</th>
     <th>MDs</th>
+    <th>Work Rate</th>
     <th>Visits</th>
     <th>Seen</th>
     <th>Queue</th>
@@ -18,6 +19,7 @@
     <tr>
       <td><%= time_of_day start + (i / 2.0) %></td>
       <td><%= @grade.coverages[@date_s][i] %></td>
+      <td><%= (@grade.breakdowns[@date_s]['seen'][i] / @grade.coverages[@date_s][i]).round(2) %></td>
       <td><%= @location_plan.visits[@date_s][i].round(2) %></td>
       <td><%= @grade.breakdowns[@date_s]['seen'][i].round(2) %></td>
       <td><%= @grade.breakdowns[@date_s]['queue'][i].round(2) %></td>

@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   resources :grades, only: [:create, :show, :update, :destroy] do
     member do
       get :hourly
+      get :highcharts
     end
   end
 
