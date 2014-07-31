@@ -33,25 +33,39 @@ class Grade < ActiveRecord::Base
     date_s = date.to_s
     b = breakdowns[date_s]
     size = location_plan.visits[date_s].size
+    range = (0...size)
 
-    ary = (0...size).map do |i|
-      (b['slack'][i] - b['queue'][i] - b['turbo'][i]).round(2)
+    normal_data = range.map do |i|
+      num_mds = coverages[date_s][i]
+      (location_plan.normal[num_mds - 1] / 2.0).round(2)  # Div 2.0 for half hours instad of hours
     end
 
-    max_turbo_data = (0...size).map do |i|
+    max_data = range.map do |i|
       num_mds = coverages[date_s][i]
-      ((location_plan.max[num_mds - 1] - location_plan.normal[num_mds - 1]) / -2.0).round(2)
+      (location_plan.max[num_mds - 1] / 2.0).round(2)  # Div 2.0 for half hours instad of hours
+    end
+
+    seen_normal_data = range.map do |i|
+      (b['seen'][i] - b['turbo'][i]).round(2)
+    end
+
+    waiting_data = range.map do |i|
+      location_plan.visits[date_s][i].round(2) + b['queue'][i].round(2)
     end
 
     start = location_plan.location.open_times[date.wday]
-    x_axis = (0...size).map {|i| (start + (i / 2.0)).to_time_of_day }
+    x_axis = range.map {|i| (start + (i / 2.0)).to_time_of_day }
 
     {
       visits_data: location_plan.visits[date_s].map{|i| i.round(2)},
-      mds_data: coverages[date_s],
-      stack_data: ary,
-      penalty_data: b['penalties'].map{|i| i.round(2)},
-      max_turbo_data: max_turbo_data,
+      seen_normal_data: seen_normal_data,
+      queue_data: b['queue'].map{|i| i.round(2)},
+      turbo_data: b['turbo'].map{|i| i.round(2)},
+      slack_data: b['slack'].map{|i| i.round(2)},
+      waiting_data: waiting_data,
+      # penalty_data: b['penalties'].map{|i| i.round(2)},
+      normal_data: normal_data,
+      max_data: max_data,
       x_axis: x_axis
     }
   end
