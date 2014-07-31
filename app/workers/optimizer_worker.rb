@@ -10,7 +10,8 @@ class OptimizerWorker
     schedule = Schedule.find(schedule_id)
     schedule.running!
 
-    provider = DataProvider.new("database")
+    source = Rails.env.development? ? :sample_run : "database"
+    provider = DataProvider.new(source)
 
     at 5, "Loading location plans"
 

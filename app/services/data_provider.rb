@@ -12,7 +12,8 @@ class DataProvider
   # Returns patient volume projections as a two-level (location, day) hash
 	def volume_query(locations, schedule)
     if @source != 'database'
-      self.send("read_and_parse_#{@source}_volume_data".to_sym, locations, schedule)
+      #self.send("read_and_parse_#{@source}_volume_data".to_sym, locations, schedule)
+      get_volume_data(locations, schedule)
     else
       return get_volume_data(locations, schedule)
     end
@@ -22,8 +23,8 @@ class DataProvider
     if @source != 'database'
 		  heat_maps = {}
 		  locations.each do |location|
-			  heat_maps[location.report_server_id] = 
-                self.send("read_and_parse_#{fake_source}_heat_map".to_sym, location, schedule)
+			  heat_maps[location.report_server_id] =
+                self.send("read_and_parse_#{@source}_heat_map".to_sym, location, schedule)
 		  end
     else
       heat_maps = {}
@@ -48,7 +49,7 @@ class DataProvider
                 found_it = false
                 forecasts.each do |forecast|
                      if forecast.contains_day? day and forecast.contains_location? location
-                          vol[location.report_server_id][day.to_s] = 
+                          vol[location.report_server_id][day.to_s] =
                                    forecast.get_volume(location, day.to_s)
                           found_it = true
                      end

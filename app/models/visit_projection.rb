@@ -30,8 +30,13 @@ class VisitProjection < ActiveRecord::Base
 
     schedule.days.each do |day|
       daily_vol = self.volumes[day.to_s]
-      self.visits[day.to_s] = heat_maps.build_day_volume(daily_vol, day.wday)
+      unless source == :sample_run || source == :dummy_run
+        self.visits[day.to_s] = heat_maps.build_day_volume(daily_vol, day.wday)
+      else
+        self.visits[day.to_s] = heat_maps[day.wday].map{ |percent| percent * daily_vol }
+      end
     end
+
   end
 
 	def self.import!(data_provider, schedule, locations)
