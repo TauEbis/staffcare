@@ -80,7 +80,7 @@ function build_highcharts(source){
       data: [],
       yAxis: 1,
       type: 'column',
-      name: "Waste"
+      name: "Inefficiency"
     };
 
     $.each(source.stack_data, function(itemNo, item) {
@@ -129,20 +129,21 @@ function build_highcharts(source){
         shared: true
       },
       title: {
-        text: 'Performance'
+        text: 'Schedule Efficiency'
       },
       yAxis: [{
         min: -6,
 //        max: 12,
+        opposite: true,
         allowDecimals: false,
-        title: {enabled: false},
+        title: {text: "People"},
         gridLineWidth: 0
       },{
         min: -6,
         max: 6,
-        opposite: true,
+
         allowDecimals: false,
-        title: {text: "Waste"},
+        title: {text: "Inefficiency"},
         plotBands: [{
           from: 0.0,
           to: 6,
@@ -179,7 +180,7 @@ function build_highcharts(source){
       series: [
         stack,
         {
-          name: 'Visits',
+          name: 'Visitors',
           data: source.visits_data,
           type: 'spline',
           color: 'Purple'
