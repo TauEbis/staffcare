@@ -27,23 +27,23 @@ module SchedulesHelper
   end
 
   def total_points(record, zone = nil)
-    points(record, zone, 'total')
+    "$#{points(record, zone, 'total')}"
   end
 
   def md_sat_points(record, zone = nil)
-    points(record, zone, 'md_sat')
+    "$#{points(record, zone, 'md_sat')}"
   end
 
   def patient_sat_points(record, zone = nil)
-    points(record, zone, 'patient_sat')
+    "$#{points(record, zone, 'patient_sat')}"
   end
 
   def cost_points(record, zone = nil)
-    points(record, zone, 'cost')
+    "$#{points(record, zone, 'cost')}"
   end
 
   def hour_points(record, zone = nil)
-    points(record, zone, 'hour')
+    points(record, zone, 'hours')
   end
 
   private
