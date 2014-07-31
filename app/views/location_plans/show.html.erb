@@ -5,7 +5,7 @@
 <div class="location_plan_container">
 
   <div class="row">
-    <p class="bg-danger">Life Cycle 3 (650 suggested hrs)</p>
+    <%= life_cycle_info(@location_plan) %>
   </div>
 
   <div class="row">
@@ -23,10 +23,16 @@
       <% else -%>
         <h4><%= @location_plan.chosen_grade.label %>
           <small>
-            <span data-toggle="tooltip" title="The coverage is now GM approved and can no longer be edited">
-              (un-editable)
-              <span class="glyphicon glyphicon-question-sign"></span>
-            </span>
+            <% if policy(@schedule).state_draft? %>
+              <span data-toggle="tooltip" title="You must first request approvals before editing">
+            <% elsif policy(@schedule).state_published? %>
+              <span data-toggle="tooltip" title="You must first un-publish the schedule before editing">
+            <% else %>
+              <span data-toggle="tooltip" title="The coverage is now GM approved and can no longer be edited">
+            <% end %>
+                (un-editable)
+                <span class="glyphicon glyphicon-question-sign"></span>
+              </span>
           </small>
         </h4>
       <% end -%>

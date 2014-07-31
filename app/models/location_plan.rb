@@ -14,6 +14,15 @@ class LocationPlan < ActiveRecord::Base
 
   OPTIMIZER_FIELDS = [:max_mds, :rooms, :min_openers, :min_closers, :open_times, :close_times]
 
+  LIFE_CYCLE = [  [0, 0],
+                  [1, 94],                      # life cycle 1
+                  [51, 143],                    # life cycle 2
+                  [76, 188],                    # etc...
+                  [101, 237],
+                  [131, 282],
+                  [166, 330],
+                  [201, 376] ]                  # [min_daily_patients_in_life_cycle, max_weekly_physician_hours_for_life_cycle]
+
   enum approval_state: [:pending, :manager_approved, :gm_approved]
 
   delegate :name, to: :location
@@ -32,6 +41,23 @@ class LocationPlan < ActiveRecord::Base
   def self.collective_state(location_plans)
     int_states = location_plans.map{|lp| lp[:approval_state]}
     LocationPlan.approval_states.key(int_states.min || 0)
+  end
+
+  def life_cycle
+    avg = visit_projection.daily_avg
+
+    for i in (0...LIFE_CYCLE.size)
+      lc = i if (avg > LIFE_CYCLE[i][0])
+    end
+    lc
+  end
+
+  def life_cycle_max_daily_hours
+    LIFE_CYCLE[life_cycle][1] / 7.0
+  end
+
+  def life_cycle_max_total_hours
+    life_cycle_max_daily_hours * visit_projection.total_days
   end
 
   def solution_set_options(day)

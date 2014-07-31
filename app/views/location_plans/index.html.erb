@@ -11,7 +11,7 @@
             <h3><%= link_to location.name, location_plan_path(location_plan) %></h3>
           </div>
           <div class="row">
-            <p class="bg-danger">Life Cycle 3 (650 suggested hrs)</p>
+            <%= life_cycle_info(location_plan) %>
           </div>
           <div class="row">
             <small><%= location_plan.rooms %> rooms &bull; Max <%= location_plan.max_mds %> MDs</small>

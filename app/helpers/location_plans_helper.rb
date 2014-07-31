@@ -32,6 +32,10 @@ module LocationPlansHelper
     ).html_safe
   end
 
+  def life_cycle_info(location_plan)
+    %{<p> Life Cycle #{location_plan.life_cycle} (#{location_plan.life_cycle_max_total_hours.round(0)} suggested hrs) </p>}.html_safe
+  end
+
   private
 
   # WARNING: Does NOT check schedule.active? or location_plan ownership!

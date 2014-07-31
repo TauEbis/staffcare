@@ -25,6 +25,22 @@ class VisitProjection < ActiveRecord::Base
     visits[day.to_s][(length/2)..-1].min
   end
 
+  def sum
+    visits.each_value.inject(0) { | total, v | total + v.sum }
+  end
+
+  def daily_avg
+    sum / total_days
+  end
+
+  def week_avg
+    daily_avg * 7
+  end
+
+  def total_days
+    visits.size
+  end
+
   def build_visits
     self.visits = {}
 
