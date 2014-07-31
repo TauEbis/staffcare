@@ -12,6 +12,19 @@ class SchedulePolicy < ApplicationPolicy
     user.admin?
   end
 
+  def state_draft?
+    user.admin? && record.draft?
+  end
+
+  def state_active?
+    record.active?
+  end
+
+  def state_published?
+    user.admin? && record.published?
+  end
+
+
   class Scope < Struct.new(:user, :scope)
     def resolve
       if user.admin?
