@@ -24,13 +24,13 @@ class PatientVolumeForecast < ActiveRecord::Base
   end
 
   def contains_location?(loc)
-    return self.volume_by_location.has_key?(loc.name)
+    return self.volume_by_location.has_key?(loc.report_server_id)
   end
 
   #Returns the projected volume for the given location and day
   #NB: Right now returns the week volume for that day to match heatmaps
   def get_volume(location, day)
-    return self.volume_by_location[location]
+    return self.volume_by_location[location.report_server_id]
   end
 
   def valid_start_date
@@ -78,7 +78,7 @@ class PatientVolumeForecast < ActiveRecord::Base
   	CSV.generate(options) do |csv|
   		locations = Location.ordered.all
   		attribute_columns = [ 'start_date', 'end_date' ]
-  		location_columns = locations.map(&:name)
+  		location_columns = locations.map(&:report_server_id)
   		columns = ['id'] + attribute_columns + location_columns
 
   		csv << columns
@@ -88,7 +88,7 @@ class PatientVolumeForecast < ActiveRecord::Base
           next
         end
   			attribute_rows = projection.attributes.values_at(*attribute_columns)
-  			location_rows = projection.volume_by_location.values_at(*locations.map(&:name))
+  			location_rows = projection.volume_by_location.values_at(*locations.map(&:report_server_id))
 				row = [projection.id] + attribute_rows + location_rows
 
 				csv << row
