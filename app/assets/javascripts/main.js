@@ -79,8 +79,12 @@ function build_highcharts(source){
     var stack = {
       data: [],
       yAxis: 1,
+      name: "Inefficiency",
       type: 'column',
-      name: "Inefficiency"
+      color: 'rgba(159,194,120,1)',
+      legend: {
+        enabled: false
+      }
     };
 
     $.each(source.stack_data, function(itemNo, item) {
@@ -88,14 +92,14 @@ function build_highcharts(source){
       data.y = parseFloat(item);
 
       if (data.y > 0.5 ) {
-        data.color = 'Yellow';
+        data.color = 'rgba(238,225,141,1)'; // Yellow
       }
       else if (data.y < 0.5 && data.y > -0.5) {
-        data.color = 'Green';
+        data.color = 'rgba(159,194,120,1)'; //Green
       }else if (data.y < -0.5 && data.y > source.max_turbo_data[itemNo]){
-        data.color = "Orange";
+        data.color = "rgba(227,165,84,1)"; //Orange
       }else{
-        data.color = "Red";
+        data.color = "rgba(178,80,76,1)"; // Red
       }
 
       stack.data.push(data);
@@ -120,13 +124,19 @@ function build_highcharts(source){
         column: {
           states: {
             hover: {
-              size: 9
+              brightness: 0.25
             }
           }
         }
       },
       tooltip: {
-        shared: true
+        shared: true,
+        style: {
+          padding: 12,
+          fontWeight: 'bold',
+          fontSize: '14px'
+        },
+        headerFormat: '{point.key}<br>'
       },
       title: {
         text: 'Schedule Efficiency'
@@ -145,23 +155,30 @@ function build_highcharts(source){
         allowDecimals: false,
         title: {text: "Inefficiency"},
         plotBands: [{
-          from: 0.0,
+          from: 0.5,
           to: 6,
-          color: 'rgba(68, 170, 213, 0.05)',
+          color: 'rgba(238,225,141,0.1)', //Yellow
           label: {
             text: 'Slack'
           }
         }, {
-          from: 0.0,
+          from: 0.5,
+          to: -0.5,
+          color: 'rgba(159,194,120,0.2)',
+          label: {
+            text: ''
+          }
+        }, {
+          from: -0.5,
           to: -2.0,
-          color: 'rgba(68, 170, 213, 0.12)',
+          color: 'rgba(227,165,84,0.1)',  //Orange
           label: {
             text: 'Turbo'
           }
         }, {
           from: -2.0,
           to: -6.0,
-          color: 'rgba(68, 170, 213, 0.12)',
+          color: 'rgba(178,80,76,0.1)', //Red
           label: {
             text: 'Queue'
           }
@@ -183,12 +200,12 @@ function build_highcharts(source){
           name: 'Visitors',
           data: source.visits_data,
           type: 'spline',
-          color: 'Purple'
+          color: 'rgba(135,118,194,1)' // Purple
         }, {
           name: "MDs",
           data: source.mds_data,
           type: 'spline',
-          color: 'Blue'
+          color: 'rgba(98,161,194,1)' // Blue
         }, {
           name: "Max Turbo",
           data: source.max_turbo_data,
