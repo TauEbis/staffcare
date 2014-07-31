@@ -8,8 +8,8 @@ class PushesController < ApplicationController
   end
 
   def new
-    @zones = Zone.ordered.where.not(name: 'Unassigned')
-    @location_plans = @location_plans.group_by{|lp| lp.location.zone_id }
+    @zones = Zone.assigned
+    @location_plans = @location_plans.assigned.group_by{|lp| lp.location.zone_id }
     #set_location_plans unless @schedule
     #redirect_to '/', alert: "Must have a location or a schedule to start a push" if !@schedule && !@location_plans
   end

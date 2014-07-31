@@ -17,6 +17,7 @@ class Location < ActiveRecord::Base
   validate :validate_nested_speeds_sequence
 
   scope :ordered, -> { order(name: :asc) }
+  scope :assigned, -> { where( zone_id: Zone.assigned.pluck(:id) ) }
 
   # Removed because it interferes with distinct
   #default_scope -> { order(name: :asc) }

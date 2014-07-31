@@ -3,6 +3,7 @@ class Zone < ActiveRecord::Base
   has_many :locations
 
   scope :ordered, -> { order(name: :asc) }
+  scope :assigned, -> { where.not(name: "Unassigned") }
 
   # Removed because it interferes with distinct
   #default_scope -> { order(name: :asc) }
