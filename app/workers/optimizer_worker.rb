@@ -13,7 +13,7 @@ class OptimizerWorker
     source = Rails.env.development? ? :sample_run : "database"
     provider = DataProvider.new(source)
 
-    at 5, "Loading location plans"
+    at 0, "Loading location plans"
 
     # Factory creates LocationPlans and VisitProjection
     # Exclude Locations in the 'Unassigned' zone
@@ -25,9 +25,15 @@ class OptimizerWorker
 
     factory.create
 
-    at 10, "Optimizing"
+    at 0, "Optimizing"
 
-    schedule.optimize!
+    num = 0
+    total schedule.total_length_to_optimize
+
+    schedule.optimize! {
+      num += 1
+      at num, "Optimizing"
+    }
 
     # TODO: After optimization we should generate shift coverages!
 
@@ -35,7 +41,7 @@ class OptimizerWorker
 
     # TODO: Copy coverage from previous month and grade!
 
-    at 100, "Optimizer finished"
+    at num, "Optimizer finished"
     schedule.complete!
   end
 end

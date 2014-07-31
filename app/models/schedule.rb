@@ -54,6 +54,10 @@ class Schedule < ActiveRecord::Base
     @_grader_weights ||= self.attributes.slice(*OPTIMIZER_FIELDS.map(&:to_s)).symbolize_keys
   end
 
+  def total_length_to_optimize
+    days.length * location_plans.length
+  end
+
   def optimize!
     grader = CoverageGrader.new(grader_weights)
     picker = CoveragePicker.new(grader)
@@ -76,6 +80,8 @@ class Schedule < ActiveRecord::Base
         breakdowns[day.to_s] = best_breakdown
         points[day.to_s] = best_points
         shifts += ShiftCoverage.new(location_plan, day).coverage_to_shifts(best_coverage)
+
+        yield if block_given?
       end
 
       grade = location_plan.grades.new(source: 'optimizer', coverages: coverages, breakdowns: breakdowns, points: points, shifts: shifts)
