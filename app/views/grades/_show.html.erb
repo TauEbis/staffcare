@@ -13,19 +13,19 @@
         </div>
         <div data-bind="with: day_points">
           <div class="col-sm-2 text-center">
-            <h4><span data-bind="text: Math.round(total())"></span> <span class=" bg-danger">(B+)</span></h4>
+            <h4><span data-bind="text: '$' + Math.round(total())"></span> <span class=" bg-danger">(B+)</span></h4>
             Overall
           </div>
           <div class="col-sm-2 text-center">
-            <h4><span data-bind="text: Math.round(md_sat())"></span> <span class=" bg-danger">(B+)</span></h4>
+            <h4><span data-bind="text: '$' + Math.round(md_sat())"></span> <span class=" bg-danger">(B+)</span></h4>
             Physician Sat
           </div>
           <div class="col-sm-2 text-center">
-            <h4><span data-bind="text: Math.round(patient_sat())"></span> <span class=" bg-danger">(A)</span></h4>
+            <h4><span data-bind="text: '$' + Math.round(patient_sat())"></span> <span class=" bg-danger">(A)</span></h4>
             Patient Sat
           </div>
           <div class="col-sm-2 text-center">
-            <h4><span data-bind="text: Math.round(cost())"></span> <span class=" bg-danger">(B)</span></h4>
+            <h4><span data-bind="text: '$' + Math.round(cost())"></span> <span class=" bg-danger">(B)</span></h4>
             Cost Score
           </div>
         </div>

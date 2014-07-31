@@ -16,8 +16,6 @@ class CoverageGrader
 
 		@penalty_eod_unseen = weights[:penalty_eod_unseen].to_i # penalty weight for patient not getting seen by end of day
 
-		@round = weights[:round] || 2 # decimal places to calculate visits to
-
 		# Derived Constants
 
 		@penalty_60min_to_90min = @penalty_90min - @penalty_60min
@@ -56,8 +54,7 @@ class CoverageGrader
 	end
 
 	def set_visits= (raw_visits)
-		visits = raw_visits.map{ |visit| visit.round(@round) }
-		@visits = visits
+		@visits = raw_visits
 		@time_slots = @visits.size unless @visits.nil? # @time_slots is half hours slots in the work day
 		@time_slots_range = (0...@time_slots)
 		build_arrays
@@ -68,6 +65,8 @@ class CoverageGrader
 		# Physician capacity to see patients
 		normal_capacity = coverage.map { |n| @normal_speeds[n-1]/2 }
 		max_capacity = coverage.map { |n| @max_speeds[n-1]/2 }
+		@penalty_slack_vector = nil
+		@penalty_slack_vector = coverage.map { |n| (n) * @penalty_slack / @normal_speeds[n-1] }
 
 		# Reset the initial conditions
 		@queue[0], @thirty_min_wait[0], @greater_than_thirty_min_wait[0],
@@ -88,7 +87,7 @@ class CoverageGrader
 
 		# Calculate Penalty
 		@time_slots_range.each do |x|
-			@penalties[x] = @penalty_slack * @slack[x] +
+			@penalties[x] = @penalty_slack_vector[x] * @slack[x] +
 											@penalty_turbo * @turbo[x] +
 											@penalty_30min * @thirty_min_wait[x] +
 											@penalty_60min * @greater_than_thirty_min_wait[x] +
@@ -116,13 +115,13 @@ class CoverageGrader
 		end
 
 		def total_score
-			@total_penalty.round(@round)
+			@total_penalty
 		end
 
 		def md_sat_score
 			score = @turbo.inject(0) { | sum, x | sum + @penalty_turbo * x }
 			score += @penalty_eod_unseen * @queue[@time_slots]
-			score.round(@round)
+			score
 		end
 
 		def patient_sat_score
@@ -133,12 +132,12 @@ class CoverageGrader
 													@penalty_60min_to_90min * @greater_than_sixty_min_wait[x]
 			end
 			score = @patient_sat.inject(0) { | sum, x | sum + x }
-			score.round(@round)
+			score
 		end
 
 		def cost_score
-			score = @slack.inject(0) { | sum, x | sum + @penalty_slack * x }
-			score.round(@round)
+			score = @slack.inject(0) { | sum, x | sum + @penalty_slack_vector[x] * x }
+			score
 		end
 
 end

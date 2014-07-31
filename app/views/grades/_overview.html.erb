@@ -7,30 +7,30 @@
   </div>
   <div data-bind="with: grade_points">
     <div class="col-sm-2 text-center">
-      <h4><span data-bind="text: Math.round(total())"></span> <span class=" bg-danger">(B+)</span></h4>
+      <h4><span data-bind="text: '$' + Math.round(total())"></span> <span class=" bg-danger">(B+)</span></h4>
       <div data-bind="if: $root.diff_grade_points">
-        <span data-bind="text: diffFormat($root.diff_grade_points().total()), css: diffClass($root.diff_grade_points().total())"></span>
+        <span data-bind="text: '$' + diffFormat($root.diff_grade_points().total()), css: diffClass($root.diff_grade_points().total())"></span>
       </div>
       Overall
     </div>
     <div class="col-sm-2 text-center">
-      <h4><span data-bind="text: Math.round(md_sat())"></span> <span class=" bg-danger">(B+)</span></h4>
+      <h4><span data-bind="text: '$' + Math.round(md_sat())"></span> <span class=" bg-danger">(B+)</span></h4>
       <div data-bind="if: $root.diff_grade_points">
-        <span data-bind="text: diffFormat($root.diff_grade_points().md_sat()), css: diffClass($root.diff_grade_points().md_sat())"></span>
+        <span data-bind="text: '$' + diffFormat($root.diff_grade_points().md_sat()), css: diffClass($root.diff_grade_points().md_sat())"></span>
       </div>
       Physician Sat
     </div>
     <div class="col-sm-2 text-center">
-      <h4><span data-bind="text: Math.round(patient_sat())"></span> <span class=" bg-danger">(A)</span></h4>
+      <h4><span data-bind="text: '$' + Math.round(patient_sat())"></span> <span class=" bg-danger">(A)</span></h4>
       <div data-bind="if: $root.diff_grade_points">
-        <span data-bind="text: diffFormat($root.diff_grade_points().patient_sat()), css: diffClass($root.diff_grade_points().patient_sat())"></span>
+        <span data-bind="text: '$' + diffFormat($root.diff_grade_points().patient_sat()), css: diffClass($root.diff_grade_points().patient_sat())"></span>
       </div>
       Patient Sat
     </div>
     <div class="col-sm-2 text-center">
-      <h4><span data-bind="text: Math.round(cost())"></span> <span class=" bg-danger">(B)</span></h4>
+      <h4><span data-bind="text: '$' + Math.round(cost())"></span> <span class=" bg-danger">(B)</span></h4>
       <div data-bind="if: $root.diff_grade_points">
-        <span data-bind="text: diffFormat($root.diff_grade_points().cost()), css: diffClass($root.diff_grade_points().cost())"></span>
+        <span data-bind="text: '$' + diffFormat($root.diff_grade_points().cost()), css: diffClass($root.diff_grade_points().cost())"></span>
       </div>
       Cost Score
     </div>

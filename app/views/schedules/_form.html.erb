@@ -9,9 +9,14 @@
                     input_html: { data: {behaviour: "monthpicker"}},
                     as: :string %>
 
-        <% Schedule::OPTIMIZER_FIELDS.each do |field| %>
-          <%= f.input field, required: true %>
-        <% end %>
+          <%= f.input :penalty_30min, required: true, label: "Cost of a patient waiting 30 minutes" %>
+          <%= f.input :penalty_60min, required: true, label: "Cost of a patient waiting 60 minutes" %>
+          <%= f.input :penalty_90min, required: true, label: "Cost of a patient waiting 90 minutes or more" %>
+          <%= f.input :penalty_eod_unseen, required: true, label: "Cost of a patient not getting seen by closing" %>
+          <%= f.input :penalty_turbo, required: true, label: "Cost of overworking physician by 1 patient" %>
+          <%= f.input :penalty_slack, required: true, label: "Physician Hourly" %>
+          <%= f.hidden_field :oren_shift, required: true %>
+
       </div>
     </div>
   </div>

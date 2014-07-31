@@ -62,7 +62,7 @@ function diffFormat(num){
 
 function scoreToColor(score){
   if(score && score > 0){
-    var v = 80 - Math.min(((score - 30) / 100 * 100), 100);
+    var v = 80 - Math.min(((score/15 - 30) / 100 * 100), 100);
     return "hsl(" + v + ",90%,90%)"
   } else {
     return 'hsl(0,0%,100%)'
