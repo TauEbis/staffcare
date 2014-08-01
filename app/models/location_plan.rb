@@ -34,7 +34,7 @@ class LocationPlan < ActiveRecord::Base
 
   scope :for_user, -> (user) { where(location_id: user.relevant_locations.pluck(:id)) }
 
-  scope :assigned, -> { where( location_id: Zone.assigned.map(&:location_ids) ) }
+  scope :assigned, -> { where(location_id: Location.assigned.pluck(:id)) }
 
   scope :ordered, -> { joins(:location).order('locations.name ASC')}
 

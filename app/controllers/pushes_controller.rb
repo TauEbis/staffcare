@@ -9,7 +9,7 @@ class PushesController < ApplicationController
 
   def new
     @zones = Zone.assigned
-    @location_plans = @location_plans.assigned.group_by{|lp| lp.location.zone_id }
+    @location_plans = @location_plans.group_by{|lp| lp.location.zone_id }
     #set_location_plans unless @schedule
     #redirect_to '/', alert: "Must have a location or a schedule to start a push" if !@schedule && !@location_plans
   end
@@ -41,9 +41,9 @@ class PushesController < ApplicationController
     if params[:schedule_id]
       @schedule = policy_scope(Schedule).find(params[:schedule_id])
       authorize @schedule, 'push?'
-      @location_plans = @schedule.location_plans.includes(:location).ordered.merge(user_locations)
+      @location_plans = @schedule.location_plans.includes(:location).ordered.merge(user_locations).assigned
     elsif params[:location_plan_id]
-      @location_plans = [policy_scope(LocationPlan).find(params[:location_plan_id])]
+      @location_plans = [policy_scope(LocationPlan).find(params[:location_plan_id])].assigned
       @schedule = @location_plans.first.schedule_id
       authorize @schedule, 'push?'
     end
