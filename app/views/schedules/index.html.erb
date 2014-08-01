@@ -32,20 +32,20 @@
           </div>
           <% if schedule.complete? -%>
             <div class="col-sm-2 text-center">
-              <h4><%= total_points(schedule, zone) %> <span class="bg-danger">(B+)</span></h4>
-              Overall
+              <h4><%= patient_sat_points(schedule, zone) %> <span class="bg-danger">(A)</span></h4>
+              Patient Sat
             </div>
             <div class="col-sm-2 text-center">
               <h4><%= md_sat_points(schedule, zone) %> <span class="bg-danger">(B+)</span></h4>
               Physician Sat
             </div>
             <div class="col-sm-2 text-center">
-              <h4><%= patient_sat_points(schedule, zone) %> <span class="bg-danger">(A)</span></h4>
-              Patient Sat
-            </div>
-            <div class="col-sm-2 text-center">
               <h4><%= cost_points(schedule, zone) %> <span class="bg-danger">(B)</span></h4>
               Cost Score
+            </div>
+            <div class="col-sm-2 text-center">
+              <h4><%= total_points(schedule, zone) %> <span class="bg-danger">(B+)</span></h4>
+              Overall
             </div>
           <% end -%>
         </div>
