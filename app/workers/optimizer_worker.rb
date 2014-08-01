@@ -17,10 +17,9 @@ class OptimizerWorker
 
     # Factory creates LocationPlans and VisitProjection
     # Exclude Locations in the 'Unassigned' zone
-    z0 = Zone.find_by(name: 'Unassigned')
     factory = LocationPlansFactory.new({
                                            schedule: schedule,
-                                           locations: Location.where.not(zone: z0),
+                                           locations: Location.assigned,
                                            data_provider: provider})
 
     factory.create
