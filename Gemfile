@@ -27,6 +27,8 @@ gem 'pundit'
 gem 'simple_form', '>= 3.1.0.rc1'
 gem 'bootstrap-datepicker-rails'
 gem 'kaminari'
+gem 'friendly_id'
+gem 'kramdown'
 
 gem 'newrelic_rpm'
 gem 'rollbar'

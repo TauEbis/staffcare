@@ -12,6 +12,7 @@
       </ul>
     </li>
   <% end -%>
+  <li><%= link_to 'Help', pages_path %></li>
   <li><%= link_to current_user.email, profile_user_path(current_user) %></li>
   <li><%= link_to 'Sign out', destroy_user_session_path, :method=>'delete' %></li>
 <% else %>

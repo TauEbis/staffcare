@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :pages
+
   resources :pushes, only: [:index, :new, :create, :show] do
     collection do
       get :confirm
