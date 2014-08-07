@@ -1,0 +1,50 @@
+<%= simple_form_for(@page, html: { class: 'form-vertical' }) do |f| %>
+  <%= f.error_notification %>
+  <%= @page.errors.full_messages if @page.errors.any? %>
+
+  <div class="form-inputs">
+    <%= f.input :name %>
+
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="wmd-panel">
+          <div id="wmd-button-bar"></div>
+          <%= f.input :body, input_html: {class: 'wmd-input', id: 'wmd-input'} %>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <h5>Preview</h5>
+        <div id="wmd-preview" class="wmd-panel wmd-preview"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>
+
+<%= javascript_include_tag "Markdown.Converter.js" %>
+<%= javascript_include_tag "Markdown.Sanitizer.js" %>
+<%= javascript_include_tag "Markdown.Editor.js" %>
+
+<script type="text/javascript">
+  (function () {
+//    var converter1 = Markdown.getSanitizingConverter();
+    var converter1 = new Markdown.Converter();
+
+//    converter1.hooks.chain("plainLinkText", function (url) {
+//      return "This is a link to " + url.replace(/^https?:\/\//, "");
+//    });
+
+    var options = {
+//      helpButton: { handler: help },
+//      strings: { quoteexample: "whatever you're quoting, put it right here" }
+    };
+
+    var editor1 = new Markdown.Editor(converter1, "", options);
+
+    editor1.run();
+  })();
+</script>
