@@ -9,7 +9,7 @@
   <% else -%>
 
     <% if @schedule.draft? -%>
-      <%= link_to 'Request approvals', schedule_path(@schedule, schedule: {state: 'active'}), method: :patch, class: 'btn btn-success' %>
+      <%= link_to 'Request approvals', request_approvals_schedule_path(@schedule), class: 'btn btn-success' %>
     <% end -%>
 
     <% if @schedule.active? -%>

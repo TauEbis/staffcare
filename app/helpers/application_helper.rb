@@ -35,4 +35,8 @@ module ApplicationHelper
         time_or_str
     end
   end
+
+  def datepicker_opts(overrides = {})
+    {required: true, input_html: { data: {behaviour: "datepicker"}}, as: :string}.merge(overrides)
+  end
 end

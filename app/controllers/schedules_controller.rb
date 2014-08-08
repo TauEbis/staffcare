@@ -1,5 +1,5 @@
 class SchedulesController < ApplicationController
-  before_action :set_schedule, only: [:show, :edit, :update, :destroy]
+  before_action :set_schedule, only: [:show, :edit, :request_approvals, :update, :destroy]
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized, only: [:index]
 
@@ -23,6 +23,13 @@ class SchedulesController < ApplicationController
 
   # GET /schedules/1/edit
   def edit
+  end
+
+  def request_approvals
+    @schedule.manager_deadline ||= @schedule.starts_on - 21
+    @schedule.gm_deadline ||= @schedule.starts_on - 14
+    @schedule.sync_deadline ||= @schedule.starts_on - 7
+    @schedule.state = :active
   end
 
   # POST /schedules
@@ -64,7 +71,7 @@ class SchedulesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def schedule_params
-      params.require(:schedule).permit(:starts_on, :state, *Schedule::OPTIMIZER_FIELDS)
+      params.require(:schedule).permit(:starts_on, :state, :manager_deadline, :gm_deadline, :sync_deadline, *Schedule::OPTIMIZER_FIELDS)
     end
 
     # Custom Pundit error message.

@@ -8,6 +8,9 @@ Rails.application.routes.draw do
   end
 
   resources :schedules do
+    member do
+      get :request_approvals
+    end
     resources :location_plans, shallow: true, only: [:index, :show, :update]
   end
 
