@@ -1,5 +1,23 @@
 <%provide(:title, 'Dashboard')%>
 <h1>Dashboard</h1>
 
-<p>Currently <%= Sidekiq::Queue.new.size %> background jobs queued.  The oldest job is <%= Sidekiq::Queue.new.latency %> seconds old</p>
-<p>There are <%= Sidekiq::ProcessSet.new.size %> active processes</p>
+<div class="row">
+  <div class="col-lg-6">
+    <h2>My Todos</h2>
+
+    <% if @todos.empty? -%>
+      No todos!
+    <% else -%>
+      <% @todos.each do |todo| -%>
+        <%= link_to todo.name, todo %>
+        <%= deadline_label(current_user, todo) %>
+      <% end -%>
+    <% end -%>
+  </div>
+
+  <% if @minion_status -%>
+    <div class="col-lg-6">
+
+    </div>
+  <% end -%>
+</div>

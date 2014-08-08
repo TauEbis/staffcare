@@ -46,6 +46,7 @@ Rails.application.routes.draw do
   end
 
   get 'dashboard/index'
+  get 'dashboard/status'
 
   require 'sidekiq/web'
   require 'sidekiq-status/web'
