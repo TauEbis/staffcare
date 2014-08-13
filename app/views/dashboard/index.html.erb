@@ -1,23 +1,16 @@
 <%provide(:title, 'Dashboard')%>
 <h1>Dashboard</h1>
 
+<%= render 'header' %>
+
 <div class="row">
   <div class="col-lg-6">
-    <h2>My Todos</h2>
-
-    <% if @todos.empty? -%>
-      No todos!
-    <% else -%>
-      <% @todos.each do |todo| -%>
-        <%= link_to todo.name, todo %>
-        <%= deadline_label(current_user, todo) %>
-      <% end -%>
-    <% end -%>
+    <%= render 'my_todos' %>
   </div>
 
-  <% if @minion_status -%>
+  <% if @minions -%>
     <div class="col-lg-6">
-
+      <%= render 'others' %>
     </div>
   <% end -%>
 </div>

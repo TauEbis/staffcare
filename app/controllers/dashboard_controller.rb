@@ -3,7 +3,13 @@ class DashboardController < ApplicationController
   skip_after_filter :verify_policy_scoped
 
   def index
-    @todos = TodoPresenter.new(current_user).to_a
+    @schedules = Schedule.active.ordered
+
+    p = TodoPresenter.new(current_user)
+    @todos = p.location_plans
+    unless current_user.manager?
+      @minions = p.minions
+    end
   end
 
   def status
