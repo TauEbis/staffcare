@@ -71,6 +71,14 @@ RSpec.describe SchedulesController, :type => :controller do
     end
   end
 
+  describe "GET request_approvals" do
+    it "assigns the requested schedule as @schedule" do
+      schedule = Schedule.create! valid_attributes
+      get :request_approvals, {:id => schedule.to_param}, valid_session
+      expect(assigns(:schedule)).to eq(schedule)
+    end
+  end
+
   describe "POST create" do
     describe "with valid params" do
       it "creates a new Schedule" do

@@ -1,0 +1,15 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">My Todos</h3>
+  </div>
+  <div class="panel-body">
+    <% if @todos.empty? -%>
+      No todos!
+    <% else -%>
+      <% @todos.each do |todo| -%>
+        <%= link_to todo.name, todo %>
+        <span class="pull-right"><%= deadline_label(current_user, todo) %></span>
+      <% end -%>
+    <% end -%>
+  </div>
+</div>

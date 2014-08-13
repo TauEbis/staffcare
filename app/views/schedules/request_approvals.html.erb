@@ -1,0 +1,30 @@
+<h1>Shift Schedule for <%= schedule_date_span(@schedule) %> <small> <%= @schedule.state.to_s.humanize %></small></h1>
+
+<h3>Request Approvals</h3>
+
+<%= simple_form_for(@schedule, html: { class: 'form-vertical' }) do |f| %>
+  <%= f.error_notification %>
+  <%= display_base_errors @schedule %>
+
+  <div class="form-inputs">
+    <div class="row">
+      <div class="col-sm-4">
+        <%= f.hidden_field :state %>
+
+        <p class="help-block">Notifications will be sent to all Managers immediately to begin working on their schedules.</p>
+
+        <%= f.input :manager_deadline, datepicker_opts %>
+
+        <%= f.input :gm_deadline, datepicker_opts %>
+
+        <%= f.input :sync_deadline, datepicker_opts %>
+        <p class="help-block">This is the date by which you wish to have the entire schedule synced to When I Work</p>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

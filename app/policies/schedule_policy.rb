@@ -24,6 +24,10 @@ class SchedulePolicy < ApplicationPolicy
     user.admin? && record.published?
   end
 
+  def request_approvals?
+    record.draft?
+  end
+
 
   class Scope < Struct.new(:user, :scope)
     def resolve

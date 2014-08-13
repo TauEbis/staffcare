@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140804195243) do
+ActiveRecord::Schema.define(version: 20140808144929) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -148,6 +148,9 @@ ActiveRecord::Schema.define(version: 20140804195243) do
     t.integer  "optimizer_state",                            default: 0,     null: false
     t.string   "optimizer_job_id"
     t.decimal  "penalty_turbo",      precision: 8, scale: 4,                 null: false
+    t.date     "manager_deadline"
+    t.date     "gm_deadline"
+    t.date     "sync_deadline"
   end
 
   create_table "shifts", force: true do |t|

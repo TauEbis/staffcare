@@ -35,4 +35,30 @@ module ApplicationHelper
         time_or_str
     end
   end
+
+  def datepicker_opts(overrides = {})
+    {required: true, input_html: { data: {behaviour: "datepicker"}}, as: :string}.merge(overrides)
+  end
+
+  def deadline_label(user, location_plan)
+    deadline = case user.role
+                 when 'admin'
+                   location_plan.schedule.sync_deadline
+                 when 'gm'
+                   location_plan.schedule.gm_deadline
+                 when 'manager'
+                   location_plan.schedule.manager_deadline
+               end
+
+    dist = deadline - Date.today
+    label_class = if dist >= 3
+                    'primary'
+                  elsif dist > 0
+                    'warning'
+                  else
+                    'danger'
+                  end
+
+    %{<span class="label label-#{label_class}">Due: #{l deadline}</span>}.html_safe
+  end
 end

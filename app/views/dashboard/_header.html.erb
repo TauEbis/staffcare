@@ -1,0 +1,29 @@
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">Active Schedules</h3>
+  </div>
+  <div class="panel-body">
+    <% @schedules.each do |schedule| -%>
+      <div class="row">
+        <div class="col-sm-5">
+          <h3><%= schedule_date_span(schedule) %></h3>
+        </div>
+        <div class="col-sm-2">
+          <p class="text-muted">Managers due:</p>
+          <h5><%=l schedule.manager_deadline %></h5>
+        </div>
+        <div class="col-sm-2">
+          <p class="text-muted">GM due:</p>
+          <h5><%=l schedule.gm_deadline %></h5>
+        </div>
+        <div class="col-sm-2">
+          <p class="text-muted">When I Work:</p>
+          <h5><%=l schedule.sync_deadline %></h5>
+        </div>
+      </div>
+    <% end -%>
+  </div>
+</div>
+
+
+
