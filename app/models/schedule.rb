@@ -15,8 +15,9 @@ class Schedule < ActiveRecord::Base
 
   OPTIMIZER_FIELDS = [:penalty_30min, :penalty_60min, :penalty_90min, :penalty_eod_unseen, :penalty_turbo, :penalty_slack, :oren_shift]
 
-  OPTIMIZER_FIELDS.each do |field|
-    validates field, presence: true
+# Will remove Oren shift shortly
+  (OPTIMIZER_FIELDS-[:oren_shift]).each do |field|
+    validates field, presence: true, numericality: { greater_than_or_equal_to: 0, less_than: 5000 }
   end
 
   validates :starts_on, presence: true

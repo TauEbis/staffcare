@@ -90,7 +90,7 @@ class LocationPlansController < ApplicationController
     authorize @schedule, :show?
 
     # These are used for the nav header
-    @zones = user_zones.ordered
+    @zones = user_zones.assigned.ordered
     @location_plans = @schedule.
         location_plans.ordered.
         for_zone(@zone).                              # For this zone

@@ -118,7 +118,7 @@ function CoverageViewModel() {
   };
 
   self.addShift = function() {
-    self.shifts.push(new Shift(10,20));
+    self.shifts.push(new Shift({starts_hour:10, ends_hour: 20}));
   };
 
   self.removeShift = function(shift) { self.shifts.remove(shift) };

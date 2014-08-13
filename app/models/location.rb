@@ -9,6 +9,7 @@ class Location < ActiveRecord::Base
   has_many :speeds, dependent: :destroy, inverse_of: :location
   accepts_nested_attributes_for :speeds, reject_if: proc { |attributes| attributes['doctors'].blank? }
 
+  validates :name, presence: true
   validates :uid, presence: true
   validates :zone, presence: true
   validates :rooms, presence: true, numericality: { greater_than: 0, less_than: 100 }

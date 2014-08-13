@@ -3,7 +3,7 @@ class ZonesController < ApplicationController
 
   # GET /zones
   def index
-    @zones = policy_scope(Zone).all
+    @zones = policy_scope(Zone).ordered.page params[:page]
   end
 
   # GET /zones/1

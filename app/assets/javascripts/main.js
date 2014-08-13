@@ -7,6 +7,10 @@ $(document).ready(function() {
 
   $('[data-behaviour~=datepicker]').datepicker({"format": "yyyy-mm-dd", "weekStart": 0, "autoclose": true});
   $('[data-behaviour~=monthpicker]').datepicker({"format": "yyyy-mm-01", "viewMode": "months", "minViewMode": "months", "weekStart": 0, "autoclose": true});
+  $('[data-behaviour~=weekstartpicker]').datepicker({"format": "yyyy-mm-dd", "weekStart": 0, "autoclose": true, "calendarWeeks": true,
+    "daysOfWeekDisabled": [0,1,2,3,4,6] });
+  $('[data-behaviour~=weekstoppicker]').datepicker({"format": "yyyy-mm-dd", "weekStart": 0, "autoclose": true, "calendarWeeks": true,
+    "daysOfWeekDisabled": [0,1,2,3,5,6] });
 
   $(".form_autoselector").on('change', function(){
     $(this.form).submit();

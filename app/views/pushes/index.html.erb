@@ -31,10 +31,10 @@
         <div class="row">
           <div class="col-sm-2"><%= link_to push.location_plan.name, push %></div>
           <div class="col-sm-2"><%= push.state.humanize %></div>
-          <div class="col-sm-2"><%= push.creates.length %></div>
-          <div class="col-sm-2"><%= push.updates.length %></div>
-          <div class="col-sm-2"><%= push.deletes.length %></div>
-          <div class="col-sm-2"><%= push.no_changes.length %></div>
+          <div class="col-sm-2 text-right"><%= push.creates.length %></div>
+          <div class="col-sm-2 text-right"><%= push.updates.length %></div>
+          <div class="col-sm-2 text-right"><%= push.deletes.length %></div>
+          <div class="col-sm-2 text-right"><%= push.no_changes.length %></div>
         </div>
       <% end -%>
     </div>

@@ -28,6 +28,11 @@ $(document).ready(function() {
   ///////  END Grade-specific LocationPlan#Show stuff
 });
 
+function toCurrency(n, dec){
+  if(typeof(dec)==='undefined') dec = 0;
+  return '$' + n.toFixed(dec).replace(/\d(?=(\d{3})+(\.\d+)?$)/g, '$&,');
+}
+
 function timeOfDay(t){
   if(t == 24 || t == 0){
     return '12:00am';
@@ -50,13 +55,15 @@ function diffClass(num){
   }
 }
 
-function diffFormat(num){
+function diffFormat(num, currency){
+  if(typeof(currency)==='undefined') currency = true;
   if(num < 1 && num > -1){
-    return ""
+    return "--"
   }else if(num > 0){
-    return "+" + Math.round(num)
+    var v = (currency == true) ? toCurrency(num) : Math.round(num);
+    return "+" + v
   }else{
-    return Math.round(num)
+    return (currency == true) ? toCurrency(num) : Math.round(num);
   }
 }
 

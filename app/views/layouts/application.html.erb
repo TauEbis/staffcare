@@ -9,7 +9,7 @@
     <script src="/highcharts/highcharts.js"></script>
     <%= csrf_meta_tags %>
   </head>
-  <body>
+  <body id="<%= params[:controller].parameterize %>_controller">
     <header>
       <%= render 'layouts/navigation' %>
     </header>

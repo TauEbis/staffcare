@@ -5,7 +5,7 @@ class PatientVolumeForecastsController < ApplicationController
 
   # GET /patient_volume_forecasts
   def index
-    @patient_volume_forecasts = policy_scope(PatientVolumeForecast).ordered
+    @patient_volume_forecasts = policy_scope(PatientVolumeForecast).ordered.page params[:page]
     authorize @patient_volume_forecasts
     respond_to do |format|
       format.html
@@ -18,6 +18,8 @@ class PatientVolumeForecastsController < ApplicationController
   # GET /patient_volume_forecasts/new
   def new
     @patient_volume_forecast = PatientVolumeForecast.new
+    @patient_volume_forecast.start_date = PatientVolumeForecast.next_start_date
+    @patient_volume_forecast.end_date = PatientVolumeForecast.next_end_date
     authorize @patient_volume_forecast
   end
 

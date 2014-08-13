@@ -1,6 +1,6 @@
 <%provide(:title, 'All patient volume forecasts')%>
 
-<h1>Listing patient volume forecasts</h1>
+<h1>Patient volume forecasts</h1>
 
 <p>
   Download:
@@ -8,7 +8,11 @@
 </p>
 
 <% unless @patient_volume_forecasts.blank? %>
-<table class="table">
+
+<%= paginate @patient_volume_forecasts %>
+
+<div class="table-responsive">
+<table class="table table-striped table-hover table-bordered">
   <thead>
   <tr>
     	<th>Start Date</th>
@@ -16,7 +20,8 @@
     <% @locations.map(&:name).each do |l_name| %>
     	<th><%= l_name %></th>
     <% end %>
-    	<th colspan="2"></th>
+      <th></th>
+      <th></th>
   </tr>
   </thead>
 
@@ -26,18 +31,21 @@
 	      <td><%= forecast.start_date %></td>
 	      <td><%= forecast.end_date %></td>
 	    <% @locations.map(&:report_server_id).each do |rsid| %>
-     		<td><%= forecast.volume_by_location[rsid] %></td>
+     		<td><%= forecast.volume_by_location[rsid].round(0) %></td>
      	<% end %>
-      <td><%= link_to 'Edit', edit_patient_volume_forecast_path(forecast) %></td>
-      <td><%= link_to 'Delete', forecast, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Edit', edit_patient_volume_forecast_path(forecast) %></td>
+        <td><%= link_to 'Delete', forecast, method: :delete, data: { confirm: 'Are you sure?' } %></td>
     </tr>
   <% end %>
   </tbody>
 </table>
+</div>
 
+<%= paginate @patient_volume_forecasts %>
 <% end %>
 
-<br>
+
+<br><br>
 <%= link_to 'New Volume Forecast', new_patient_volume_forecast_path %>
 
 <h3>Import Patient Volume Forecast</h3>
