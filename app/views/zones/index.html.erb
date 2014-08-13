@@ -1,3 +1,5 @@
+<%provide(:title, 'All Zones')%>
+
 <h1>Listing zones</h1>
 
 <table class="table">
@@ -19,6 +21,8 @@
   </tbody>
 </table>
 
+<%= link_to 'New Zone', new_zone_path %>
+
 <br>
 
-<%= link_to 'New Zone', new_zone_path %>
+<%= paginate @zones %>

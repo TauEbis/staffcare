@@ -7,27 +7,21 @@
       </h3>
     </div>
     <div class="col-sm-8 col-sm-offset-1">
-      <div class="row">
-        <div class="col-sm-4">
-          <h4><span data-bind="text: day_hours()"></span> Physician hours</h4>
+      <div class="col-sm-4 text-center">
+        <h4><span data-bind="text: day_hours()"></span><small> hours</small></h4>
+      </div>
+      <div data-bind="with: day_points">
+        <div class="col-sm-2 text-center">
+          <h4>A<span class="letter-grade">-</span> <small>(<span data-bind="text: toCurrency(patient_sat())"></span>)</small></h4>
         </div>
-        <div data-bind="with: day_points">
-          <div class="col-sm-2 text-center">
-            <h4><span data-bind="text: '$' + Math.round(patient_sat())"></span> <span class=" bg-danger">(A)</span></h4>
-            Patient Sat
-          </div>
-          <div class="col-sm-2 text-center">
-            <h4><span data-bind="text: '$' + Math.round(md_sat())"></span> <span class=" bg-danger">(B+)</span></h4>
-            Physician Sat
-          </div>
-          <div class="col-sm-2 text-center">
-            <h4><span data-bind="text: '$' + Math.round(cost())"></span> <span class=" bg-danger">(B)</span></h4>
-            Cost Score
-          </div>
-          <div class="col-sm-2 text-center">
-            <h4><span data-bind="text: '$' + Math.round(total())"></span> <span class=" bg-danger">(B+)</span></h4>
-            Overall
-          </div>
+        <div class="col-sm-2 text-center">
+          <h4>B<span class="letter-grade">+</span> <small>(<span data-bind="text: toCurrency(md_sat())"></span>)</small></h4>
+        </div>
+        <div class="col-sm-2 text-center">
+          <h4>B<span class="letter-grade">-</span> <small>(<span data-bind="text: toCurrency(cost())"></span>)</small></h4>
+        </div>
+        <div class="col-sm-2 text-center">
+          <h4>B<span class="letter-grade"></span> <small>(<span data-bind="text: toCurrency(total())"></span>)</small></h4>
         </div>
       </div>
     </div>
@@ -39,7 +33,9 @@
         <div class="col-sm-4">
          <span data-bind="text: timeOfDay(starts())"></span> - <span data-bind="text: timeOfDay(ends())"></span>
         </div>
-        <div class="col-sm-2" data-bind="text: hours() + ' hours'"></div>
+        <div class="col-sm-3 text-center">
+          <span data-bind="text: hours()"></span><small> hours</small>
+        </div>
       </div>
     </div>
   </div>
@@ -55,7 +51,9 @@
           &mdash;
           <select class="form-control" data-bind="options: $root.available_times(), value: ends, optionsText: 'formatted', optionsValue: 'num'"></select>
         </div>
-        <div class="col-sm-2" data-bind="text: hours() + ' hours'"></div>
+        <div class="col-sm-3 text-center">
+          <span data-bind="text: hours()"></span><small> hours</small>
+        </div>
         <br>
       </div>
     </div>

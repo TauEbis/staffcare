@@ -6,7 +6,7 @@ module Wiw
     format :json
 
     def self.find_all_collection
-      get('/')['locations'].map{|l| [l['name'], l['id']] }
+      get('/')['locations'].map{|l| [l['name'], l['id']] }.sort_by{|el| el[0]}
     end
   end
 end

@@ -5,15 +5,22 @@
   <div class="form-inputs">
     <div class="row">
       <div class="col-sm-4">
-        <%= f.input :start_date, required: true, wrapper: :vertical_input_group do %>
-          <%= f.input_field :start_date, as: :string, class: 'form-control', data: {behaviour: "datepicker"} %>
-          <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+
+
+        <%= f.input :start_date do %>
+          <div class="input-group date" data-behaviour="weekstartpicker"} >
+            <%= f.input_field :start_date, required: true, as: :string, class: 'form-control' %>
+            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+          </div>
         <% end %>
 
-        <%= f.input :end_date, required: true, wrapper: :vertical_input_group do %>
-          <%= f.input_field :end_date, as: :string, class: 'form-control', data: {behaviour: "datepicker"} %>
-          <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+        <%= f.input :end_date do %>
+          <div class="input-group date" data-behaviour="weekstoppicker"} >
+            <%= f.input_field :end_date, required: true, as: :string, class: 'form-control' %>
+            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+          </div>
         <% end %>
+
 
 		    <% @locations.each do |l| %>
 				    <%= f.label("volume_by_location[#{l.report_server_id}]", l.name) %> <br />

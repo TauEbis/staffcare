@@ -13,6 +13,13 @@ class PatientVolumeForecast < ActiveRecord::Base
   scope :ordered, -> { order(start_date: :asc, id: :desc) }
   default_scope -> { order(start_date: :asc, id: :desc) }
 
+  def self.next_start_date
+    ordered.last ? ordered.last.start_date + 7 : ''
+  end
+
+  def self.next_end_date
+    ordered.last ? ordered.last.end_date + 7 : ''
+  end
 
   # checks if the forecast includes data for the given date
   def contains_day?(date)

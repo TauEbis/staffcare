@@ -1,0 +1,7 @@
+<%= f.input data_field, label: label, required: true do  %>
+	<div class="input-group">
+		<span class="input-group-addon">$</span>
+		<%= f.input_field data_field, step: 10, class: "form-control" %>
+		<span class="input-group-addon">.00</span>
+	</div>
+<% end %>

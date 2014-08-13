@@ -3,7 +3,7 @@ class LocationsController < ApplicationController
 
   # GET /locations
   def index
-    @locations = policy_scope(Location).ordered
+    @locations = policy_scope(Location).ordered.page params[:page]
   end
 
   # GET /locations/1
