@@ -31,7 +31,7 @@ gem 'friendly_id'
 gem 'kramdown'
 
 gem 'newrelic_rpm'
-gem 'rollbar'
+gem 'airbrake'
 gem 'roo'
 gem 'iconv'
 
