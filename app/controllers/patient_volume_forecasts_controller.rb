@@ -9,7 +9,7 @@ class PatientVolumeForecastsController < ApplicationController
     authorize @patient_volume_forecasts
     respond_to do |format|
       format.html
-      format.csv { send_data @patient_volume_forecasts.to_csv }
+      format.csv { send_data PatientVolumeForecast.to_csv }
       format.xls
       # { send_data @patient_volume_forecasts.to_csv(col_sep: "\t") }
     end
