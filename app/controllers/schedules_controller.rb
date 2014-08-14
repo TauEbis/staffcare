@@ -1,7 +1,7 @@
 class SchedulesController < ApplicationController
   before_action :set_schedule, only: [:show, :edit, :request_approvals, :update, :destroy]
 
-  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized, only: [:index]
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   # GET /schedules
   def index
@@ -30,6 +30,7 @@ class SchedulesController < ApplicationController
     @schedule.gm_deadline ||= @schedule.starts_on - 14
     @schedule.sync_deadline ||= @schedule.starts_on - 7
     @schedule.state = :active
+    flash[:dashboard] = true if params[:dashboard]
   end
 
   # POST /schedules
@@ -50,7 +51,11 @@ class SchedulesController < ApplicationController
   # PATCH/PUT /schedules/1
   def update
     if @schedule.update(schedule_params)
-      redirect_to @schedule, notice: 'Schedule was successfully updated.'
+      if flash[:dashboard]
+        redirect_to root_path, notice: 'Schedule was successfully updated.'
+      else
+        redirect_to @schedule, notice: 'Schedule was successfully updated.'
+      end
     else
       render :edit
     end
@@ -76,7 +81,11 @@ class SchedulesController < ApplicationController
 
     # Custom Pundit error message.
     def user_not_authorized
-      flash[:error] = "No active schedules"
+      if params[:action] == "index"
+        flash[:error] = "No active schedules"
+      else
+        flash[:error] = "Access Denied"
+      end
       redirect_to(request.referrer || root_path)
     end
 

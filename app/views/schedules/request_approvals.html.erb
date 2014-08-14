@@ -13,11 +13,12 @@
 
         <p class="help-block">Notifications will be sent to all Managers immediately to begin working on their schedules.</p>
 
-        <%= f.input :manager_deadline, datepicker_opts %>
+        <%= render 'shared/date_picker_field', f: f, date_field: :manager_deadline, picker_type: "datepicker" %>
 
-        <%= f.input :gm_deadline, datepicker_opts %>
+        <%= render 'shared/date_picker_field', f: f, date_field: :gm_deadline, picker_type: "datepicker" %>
 
-        <%= f.input :sync_deadline, datepicker_opts %>
+        <%= render 'shared/date_picker_field', f: f, date_field: :sync_deadline, picker_type: "datepicker" %>
+
         <p class="help-block">This is the date by which you wish to have the entire schedule synced to When I Work</p>
 
       </div>
