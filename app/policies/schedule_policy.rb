@@ -25,7 +25,7 @@ class SchedulePolicy < ApplicationPolicy
   end
 
   def request_approvals?
-    record.draft?
+    user.admin? && (record.draft? || record.active?)
   end
 
 

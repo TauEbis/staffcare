@@ -9,7 +9,7 @@ class TodoPresenter < Struct.new(:user)
   MINION_ROLES = {'gm' => User.roles[:manager], 'admin' => User.roles[:gm]}
 
   def active_schedule_ids
-    @_active_schedule_ids ||= Schedule.active.pluck(:id)
+    @_active_schedule_ids ||= Schedule.active.has_deadlines.pluck(:id)
   end
 
   # MY todo location_plans

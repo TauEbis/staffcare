@@ -1,0 +1,6 @@
+<%= f.input date_field do %>
+  <div class="input-group date" data-behaviour= <%= picker_type %> >
+    <%= f.input_field date_field, required: true, as: :string, class: 'form-control' %>
+    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+  </div>
+<% end %>

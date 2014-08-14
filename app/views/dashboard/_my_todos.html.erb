@@ -6,10 +6,13 @@
     <% if @todos.empty? -%>
       No todos!
     <% else -%>
-      <% @todos.each do |todo| -%>
-        <%= link_to todo.name, todo %>
-        <span class="pull-right"><%= deadline_label(current_user, todo) %></span>
-      <% end -%>
+      <ul class="list-group">
+        <% @todos.each do |todo| -%>
+          <li class="list-group-item"><%= link_to todo.name, todo %>
+          <span class="pull-right"><%= deadline_label(current_user, todo) %></span>
+          </li>
+        <% end -%>
+      </ul>
     <% end -%>
   </div>
 </div>

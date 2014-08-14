@@ -10,6 +10,7 @@ class Schedule < ActiveRecord::Base
 
   scope :not_draft, -> { where("state <> ?", Schedule.states[:draft]) }
   scope :ordered, -> { order(starts_on: :desc, id: :desc) }
+  scope :has_deadlines, -> { where("manager_deadline is not NULL AND gm_deadline is not NULL AND sync_deadline is not NULL") }
 
   default_scope -> { order(starts_on: :desc, id: :desc) }
 
