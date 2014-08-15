@@ -51,6 +51,11 @@ class SchedulesController < ApplicationController
   # PATCH/PUT /schedules/1
   def update
     if @schedule.update(schedule_params)
+      if params[:notify_managers]
+        TodoNotifier.notify!
+        @schedule.update_attribute(:active_notices_sent_at, Time.now.utc)
+      end
+
       if flash[:dashboard]
         redirect_to root_path, notice: 'Schedule was successfully updated.'
       else

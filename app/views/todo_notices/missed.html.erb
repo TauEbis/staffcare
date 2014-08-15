@@ -1,0 +1,18 @@
+<% content_for :heading do %>
+  <h1>StaffCare locations overdue</h1>
+<% end -%>
+
+<p>
+  You currently have some StaffCare locations overdue for scheduling.
+</p>
+<p>
+  Please look into these at your earliest convenience:
+</p>
+
+<ul>
+  <% @todos.each do |todo| -%>
+    <li class="list-group-item"><%= link_to todo.name, url_for(todo) %>
+      <small class="pull-right"><%= deadline_label(@user, todo) %></small>
+    </li>
+  <% end -%>
+</ul>

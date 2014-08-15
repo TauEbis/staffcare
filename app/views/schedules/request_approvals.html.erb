@@ -23,6 +23,19 @@
 
       </div>
     </div>
+
+    <div class="row">
+      <div class="col-sm-5">
+        <hr>
+        <%= check_box_tag :notify_managers, !@schedule.active_notices_sent_at %>
+        <label for="notify_managers">E-mail managers an alert to work on their schedules </label>
+
+        <% if @schedule.active_notices_sent_at -%>
+          <small>An email was already sent at: <%=l @schedule.active_notices_sent_at %>.  But you may choose to
+          send it again.</small>
+        <% end -%>
+      </div>
+    </div>
   </div>
 
   <div class="form-actions">

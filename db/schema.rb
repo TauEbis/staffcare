@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140808144929) do
+ActiveRecord::Schema.define(version: 20140812171146) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -136,21 +136,22 @@ ActiveRecord::Schema.define(version: 20140808144929) do
 
   create_table "schedules", force: true do |t|
     t.date     "starts_on"
-    t.integer  "state",                                      default: 0,     null: false
+    t.integer  "state",                                          default: 0,     null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.decimal  "penalty_30min",      precision: 8, scale: 4,                 null: false
-    t.decimal  "penalty_60min",      precision: 8, scale: 4,                 null: false
-    t.decimal  "penalty_90min",      precision: 8, scale: 4,                 null: false
-    t.decimal  "penalty_eod_unseen", precision: 8, scale: 4,                 null: false
-    t.decimal  "penalty_slack",      precision: 8, scale: 4,                 null: false
-    t.boolean  "oren_shift",                                 default: false, null: false
-    t.integer  "optimizer_state",                            default: 0,     null: false
+    t.decimal  "penalty_30min",          precision: 8, scale: 4,                 null: false
+    t.decimal  "penalty_60min",          precision: 8, scale: 4,                 null: false
+    t.decimal  "penalty_90min",          precision: 8, scale: 4,                 null: false
+    t.decimal  "penalty_eod_unseen",     precision: 8, scale: 4,                 null: false
+    t.decimal  "penalty_slack",          precision: 8, scale: 4,                 null: false
+    t.boolean  "oren_shift",                                     default: false, null: false
+    t.integer  "optimizer_state",                                default: 0,     null: false
     t.string   "optimizer_job_id"
-    t.decimal  "penalty_turbo",      precision: 8, scale: 4,                 null: false
+    t.decimal  "penalty_turbo",          precision: 8, scale: 4,                 null: false
     t.date     "manager_deadline"
     t.date     "gm_deadline"
     t.date     "sync_deadline"
+    t.datetime "active_notices_sent_at"
   end
 
   create_table "shifts", force: true do |t|
