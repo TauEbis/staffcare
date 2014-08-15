@@ -92,7 +92,9 @@ class WiwPusher
     @creates.each do |ws|
       response = ws.create
       log[ws.id] = {action: 'create', shift: ws, response: response}
-      ws.source_shift.update_attribute(:wiw_id, response['shift']['id'])
+      new_id = response['shift'] || {}
+      new_id = new_id['id']
+      ws.source_shift.update_attribute(:wiw_id, new_id)
       yield if block_given?
     end
 

@@ -31,7 +31,6 @@ gem 'friendly_id'
 gem 'kramdown'
 
 gem 'newrelic_rpm'
-gem 'airbrake'
 gem 'roo'
 gem 'iconv'
 
@@ -42,6 +41,8 @@ gem 'sinatra', '>= 1.3.0', :require => nil
 
 gem 'httparty'
 gem 'clockwork'
+
+gem 'airbrake'
 
 group :staging, :production do
   gem 'rails_12factor'
