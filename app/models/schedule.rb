@@ -4,7 +4,7 @@ class Schedule < ActiveRecord::Base
   has_many :visit_projections, dependent: :destroy
   has_many :location_plans, dependent: :destroy
 
-  enum state: [ :draft, :active, :published, :archived ]
+  enum state: [ :draft, :active, :locked, :archived ]
 
   enum optimizer_state: [ :not_run, :running, :complete, :error ]
 

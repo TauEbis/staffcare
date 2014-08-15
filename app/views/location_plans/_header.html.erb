@@ -16,7 +16,7 @@
       <% if policy(@schedule).update? -%>
         <%= link_to 'Return to Draft', schedule_path(@schedule, schedule: {state: 'draft'}), method: :patch, class: 'btn btn-default' %>
         <% if LocationPlan.collective_state(@schedule.location_plans) == 'gm_approved' -%>
-          <%= link_to 'Publish', schedule_path(@schedule, schedule: {state: 'published'}), method: :patch, class: 'btn btn-primary' %>
+          <%= link_to 'Lock', schedule_path(@schedule, schedule: {state: 'locked'}), method: :patch, class: 'btn btn-primary' %>
         <% end -%>
       <% end -%>
       <% if current_user.admin? -%>
@@ -24,8 +24,8 @@
       <% end -%>
     <% end -%>
 
-    <% if @schedule.published? -%>
-      <%= link_to 'Un-Publish', schedule_path(@schedule, schedule: {state: 'active'}), method: :patch, class: 'btn btn-default' %>
+    <% if @schedule.locked? -%>
+      <%= link_to 'Un-Lock', schedule_path(@schedule, schedule: {state: 'active'}), method: :patch, class: 'btn btn-default' %>
     <% end -%>
 
   <% end -%>

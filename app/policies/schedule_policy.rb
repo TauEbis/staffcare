@@ -20,8 +20,8 @@ class SchedulePolicy < ApplicationPolicy
     record.active?
   end
 
-  def state_published?
-    user.admin? && record.published?
+  def state_locked?
+    user.admin? && record.locked?
   end
 
   def request_approvals?
