@@ -22,10 +22,10 @@
       <td><%= (@grade.breakdowns[@date_s]['seen'][i] / @grade.coverages[@date_s][i]).round(2) %></td>
       <td><%= @location_plan.visits[@date_s][i].round(2) %></td>
       <td><%= @grade.breakdowns[@date_s]['seen'][i].round(2) %></td>
-      <td><%= people_td_tag @grade.breakdowns[@date_s]['queue'][i].round(2) %></td>
-      <td><%= people_td_tag @grade.breakdowns[@date_s]['turbo'][i].round(2) %></td>
-      <td><%= people_td_tag @grade.breakdowns[@date_s]['slack'][i].round(2) %></td>
-      <%= dollar_td_tag @grade.breakdowns[@date_s]['penalties'][i].round(2) %>
+      <td class='people'><%= @grade.breakdowns[@date_s]['queue'][i].round(2) %></td>
+      <td class='people'><%= @grade.breakdowns[@date_s]['turbo'][i].round(2) %></td>
+      <td class='people'><%= @grade.breakdowns[@date_s]['slack'][i].round(2) %></td>
+      <td class='dollar'><%= @grade.breakdowns[@date_s]['penalties'][i].round(2) %></td>
     </tr>
   <% end -%>
   </tbody>

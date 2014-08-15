@@ -33,14 +33,6 @@ function load_day_info(chosen_grade_id, date){
 
   load_grade_info(chosen_grade_id, {date: date});
 
-  $.ajax( "/grades/" + chosen_grade_id + "/hourly", {data: {date: date}} )
-      .done(function(data, status, xhr) {
-        inject_coverage_data('#coverage_hourly', data);
-      })
-      .fail(function(xhr, status, error) {
-        inject_coverage_fail('#coverage_hourly', xhr, status, error);
-      });
-
   $.ajax( "/grades/" + chosen_grade_id + "/highcharts", {data: {date: date}} )
       .done(function(data, status, xhr) {
         build_highcharts(data);
@@ -48,6 +40,16 @@ function load_day_info(chosen_grade_id, date){
       .fail(function(xhr, status, error) {
         inject_coverage_fail('#coverage_hourly', xhr, status, error);
       });
+
+  $.ajax( "/grades/" + chosen_grade_id + "/hourly", {data: {date: date}} )
+      .done(function(data, status, xhr) {
+        inject_coverage_data('#coverage_hourly', data);
+        colorBreakdown();
+      })
+      .fail(function(xhr, status, error) {
+        inject_coverage_fail('#coverage_hourly', xhr, status, error);
+      });
+
 }
 
 // A wrapper function that can include or NOT include the date if we want to load just the grade-overview data
@@ -73,6 +75,34 @@ function inject_coverage_fail(selector, xhr, status, error){
   $(selector).removeClass('hidden').text("ERROR: " + status + " - " + error);
   $(selector + "_load").addClass('hidden');
   console.log(xhr.responseText);
+}
+
+function colorBreakdown() {
+  $('td.dollar').each(function(index, value) {
+    var t = $(value);
+
+    if (t.html() > 80) {
+      t.addClass("bg-danger");
+    }
+    else if (t.html() > 40) {
+      t.addClass("bg-warning");
+    }
+
+    t.prepend("$");
+
+  });
+
+  $('td.people').each(function(index, value) {
+    var t = $(value);
+
+    if (t.html() > 2) {
+      t.addClass("bg-danger");
+    }
+    else if (t.html() > 1) {
+      t.addClass("bg-warning");
+    }
+
+  });
 }
 
 function build_highcharts(source){
