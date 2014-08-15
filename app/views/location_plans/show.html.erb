@@ -25,8 +25,8 @@
           <small>
             <% if policy(@schedule).state_draft? %>
               <span data-toggle="tooltip" title="You must first request approvals before editing">
-            <% elsif policy(@schedule).state_published? %>
-              <span data-toggle="tooltip" title="You must first un-publish the schedule before editing">
+            <% elsif policy(@schedule).state_locked? %>
+              <span data-toggle="tooltip" title="You must first un-lock the schedule before editing">
             <% else %>
               <span data-toggle="tooltip" title="The coverage is now GM approved and can no longer be edited">
             <% end %>
