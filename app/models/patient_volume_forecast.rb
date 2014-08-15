@@ -74,7 +74,8 @@ class PatientVolumeForecast < ActiveRecord::Base
     locations = Location.all
     location_names = locations.map(&:name)
     volume_by_location.keys.each do |csv_name|
-      if location_names.index(csv_name) == nil
+      # Whitelist 'id' to prevent problems with the seed data
+      if location_names.index(csv_name) == nil and csv_name != 'id'
          errors.add(:volume_by_location, "invalid location name in volume data: #{csv_name}")
       end
     end
