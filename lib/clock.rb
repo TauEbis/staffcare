@@ -6,11 +6,11 @@ class ReportServerJob
   include Sidekiq::Worker
 
   def perform(start_date, end_date)
+    # TODO: Make this configurable
 	  # Look back three months + 1 week
-	  # TODO: Make this configurable
-	  start_date = Date.parse('2014-05-01')
-	  # Always wait a week before pulling data so it can settle
-	  end_date = Date.parse('2014-06-01')
+    start_date = (Date.today << 3 ) - 7 
+    # Always wait a week before pulling data so it can settle
+    end_date = Date.today - 7
 	
 	  importer = VolumeHistoryImporter.new(start_date, end_date, 'ALL')
 	
@@ -23,7 +23,7 @@ class ReportServerJob
 	  ingest.end_date = end_date
 	  ingest.data = data
 	
-	  z0 = Zone.find_by(name: 'Unassigned')
+	  z0 = Zone.find_or_create_by(name: 'Unassigned')
 	  heatmaps = ingest.create_heatmaps!(30)
 	  heatmaps.each do |name, heatmap|
 	    begin
@@ -49,8 +49,7 @@ class ReportServerJob
 end
 
 module Clockwork
-  every 10.minute do
-  #every 1.day, :if => lambda { |t| t.day == 1) do
+  every 1.day, :if => lambda { |t| t.day == 19) do
     ReportServerJob.perform_async() 
   end
 end
