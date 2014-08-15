@@ -64,7 +64,6 @@ class PatientVolumeForecast < ActiveRecord::Base
     end
   end
 
-  #TODO validate hash is greater than 0 and real locations
   def legal_volume_by_location
     volume_by_location.each do |site, volume|
          if volume.to_f < 0
@@ -72,14 +71,13 @@ class PatientVolumeForecast < ActiveRecord::Base
          end
     end
 
-=begin
     locations = Location.all
     location_names = locations.map(&:name)
-    good_names = location_names & volume_by_location.keys
-    if good_names.length < volume_by_location.keys.length
-         errors.add(:volume_by_location, "invalid location name in volume data")
+    volume_by_location.keys.each do |csv_name|
+      if location_names.index(csv_name) == nil
+         errors.add(:volume_by_location, "invalid location name in volume data: #{csv_name}")
+      end
     end
-=end
   end
 
   # Exports only forecasts that start on a date after today
