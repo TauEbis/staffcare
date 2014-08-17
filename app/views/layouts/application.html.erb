@@ -3,7 +3,7 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= full_title yield(:title) %></title>
-    <meta name="description" content="<%= content_for?(:description) ? yield(:description) : "Black Box" %>">
+    <meta name="description" content="<%= content_for?(:description) ? yield(:description) : "StaffCare" %>">
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
     <script src="/highcharts/highcharts.js"></script>
@@ -19,5 +19,6 @@
         <%= yield %>
       </div>
     </main>
+    <%=  render 'layouts/time_out' if user_signed_in? %>
   </body>
 </html>

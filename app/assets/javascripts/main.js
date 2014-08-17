@@ -25,7 +25,41 @@ $(document).ready(function() {
     e.preventDefault();
     $(this).closest('fieldset').find(':checkbox').prop( "checked", false);
   });
+
+  setSessionTimeout();
+
 });
+
+
+// Automatic logout functionality
+
+var timer;
+
+function setSessionTimeout() {
+  if (typeof timer !== 'undefined') {
+    clearTimeout(timer);
+  }
+  var seconds = $('#timeout').attr('data-timeout-in');
+  if (typeof seconds !== 'undefined') {
+    timer = setTimeout( 'signOut()', seconds*1000 + 15);
+  }
+}
+
+function signOut() {
+  var sign_out_path = $('#timeout').attr('data-sign-out-path');
+  $.ajax({url:sign_out_path,type:"DELETE",async:true,success:function(){
+    clearHistory();
+  }})
+}
+
+function clearHistory()
+{
+     var backlen = history.length;
+     history.go(-backlen);
+     window.location.href = '/users/sign_in'
+}
+
+// Grade & Coverage display handling
 
 function load_day_info(chosen_grade_id, date){
   $('#coverage_view').addClass('hidden');
