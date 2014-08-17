@@ -112,31 +112,23 @@ function inject_coverage_fail(selector, xhr, status, error){
 }
 
 function colorBreakdown() {
-  $('td.dollar').each(function(index, value) {
-    var t = $(value);
+  $('td.dollar').filter(function(){
+    return $(this).html() > 80
+  }).addClass("bg-danger").prepend("$");
 
-    if (t.html() > 80) {
-      t.addClass("bg-danger");
-    }
-    else if (t.html() > 40) {
-      t.addClass("bg-warning");
-    }
+  $('td.dollar').filter(function(){
+    return $(this).html() > 40 && $(this).html() <= 80
+  }).addClass('bg-warning').prepend("$");
 
-    t.prepend("$");
+  $('td.people').filter(function(){
+    return $(this).html() > 2
+  }).addClass("bg-danger");
 
-  });
+  $('td.people').filter(function(){
+    return $(this).html() > 1 && $(this).html() <= 2
+  }).addClass('bg-warning');
 
-  $('td.people').each(function(index, value) {
-    var t = $(value);
-
-    if (t.html() > 2) {
-      t.addClass("bg-danger");
-    }
-    else if (t.html() > 1) {
-      t.addClass("bg-warning");
-    }
-
-  });
+  $('td.dollar').prepend("$");
 }
 
 function build_highcharts(source){
