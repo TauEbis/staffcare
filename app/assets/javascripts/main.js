@@ -79,6 +79,7 @@ function load_day_info(chosen_grade_id, date){
       .done(function(data, status, xhr) {
         inject_coverage_data('#coverage_hourly', data);
         colorBreakdown();
+        $('.table-fixed-header').fixedHeader();
       })
       .fail(function(xhr, status, error) {
         inject_coverage_fail('#coverage_hourly', xhr, status, error);
