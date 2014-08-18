@@ -1,15 +1,16 @@
 <fieldset>
 <div class="row form-group">
-    <div class="col-sm-1">
-      <%= f.input :doctors  %>
+    <div class="col-sm-2">
+      <%= f.input :doctors, required: true  %>
     </div>
-    <div class="col-sm-1">
-      <%= f.input :normal  %>
+    <div class="col-sm-2">
+      <%= f.input :normal, required: true  %>
     </div>
-    <div class="col-sm-1">
-      <%= f.input :max  %>
+    <div class="col-sm-2">
+      <%= f.input :max, required: true  %>
     </div>
-    <div class="col-sm-1">
+    <div class="col-sm-1 ">
+      <br>
       <%= link_to_delete_speed "remove", f.object %>
     </div>
 </div>

@@ -17,7 +17,7 @@ class TodoPresenter < Struct.new(:user)
     LocationPlanPolicy.new(user, LocationPlan.new).scope.
       where(schedule_id: active_schedule_ids).
       where(approval_state: TODO_STATES[user.role]).
-      includes(:schedule).
+      includes(:schedule, :location).
       ordered
   end
 

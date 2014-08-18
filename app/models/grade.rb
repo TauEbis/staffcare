@@ -54,7 +54,7 @@ class Grade < ActiveRecord::Base
     end
 
     start = location_plan.location.open_times[date.wday]
-    x_axis = range.map {|i| (start + (i / 2.0)).to_time_of_day }
+    x_axis = (0..size).map {|i| (start + (i / 2.0)).to_time_of_day }
 
     {
       visits_data: location_plan.visits[date_s].map{|i| i.round(2)},
@@ -142,6 +142,33 @@ class Grade < ActiveRecord::Base
     end
 
     self.save!
+  end
+
+  def totals(date)
+    @_totals ||= {}
+
+    @_totals[date] ||= begin
+      date_s = date.to_s
+      b = breakdowns[date_s]
+
+      {
+        coverage: coverages[date_s].sum,
+        visits: location_plan.visits[date_s].sum,
+        work_rate: location_plan.visits[date_s].sum/coverages[date_s].sum,
+        seen: b['seen'].sum,
+        queue: b['queue'].sum,
+        turbo: b['turbo'].sum,
+        slack: b['slack'].sum,
+        penalty: b['penalties'].sum,
+      }
+
+    end
+
+    @_totals[date]
+  end
+
+  def total_wait_time(date)
+    totals(date)[:queue] * 30 # in minutes
   end
 
 end

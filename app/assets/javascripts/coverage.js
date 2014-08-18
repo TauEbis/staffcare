@@ -11,6 +11,9 @@ $(document).ready(function() {
     var chosen_grade_id = d.chosenGradeId;
     load_grade_info(chosen_grade_id);
     colorCalendar();
+
+    var date = $('.daygrid a').first().data().date;
+    load_day_info(chosen_grade_id, date);
   }
 
   $('.daygrid a').on('click', function(event){

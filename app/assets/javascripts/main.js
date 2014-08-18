@@ -25,7 +25,41 @@ $(document).ready(function() {
     e.preventDefault();
     $(this).closest('fieldset').find(':checkbox').prop( "checked", false);
   });
+
+  setSessionTimeout();
+
 });
+
+
+// Automatic logout functionality
+
+var timer;
+
+function setSessionTimeout() {
+  if (typeof timer !== 'undefined') {
+    clearTimeout(timer);
+  }
+  var seconds = $('#timeout').attr('data-timeout-in');
+  if (typeof seconds !== 'undefined') {
+    timer = setTimeout( 'signOut()', seconds*1000 + 15);
+  }
+}
+
+function signOut() {
+  var sign_out_path = $('#timeout').attr('data-sign-out-path');
+  $.ajax({url:sign_out_path,type:"DELETE",async:true,success:function(){
+    clearHistory();
+  }})
+}
+
+function clearHistory()
+{
+     var backlen = history.length;
+     history.go(-backlen);
+     window.location.href = '/users/sign_in'
+}
+
+// Grade & Coverage display handling
 
 function load_day_info(chosen_grade_id, date){
   $('#coverage_view').addClass('hidden');
@@ -45,6 +79,7 @@ function load_day_info(chosen_grade_id, date){
       .done(function(data, status, xhr) {
         inject_coverage_data('#coverage_hourly', data);
         colorBreakdown();
+        $('.table-fixed-header').fixedHeader();
       })
       .fail(function(xhr, status, error) {
         inject_coverage_fail('#coverage_hourly', xhr, status, error);
@@ -78,31 +113,25 @@ function inject_coverage_fail(selector, xhr, status, error){
 }
 
 function colorBreakdown() {
-  $('td.dollar').each(function(index, value) {
-    var t = $(value);
+  $('td.dollar').filter(function(){
+    return $(this).html() > 80
+  }).addClass("bg-danger").prepend("$");
 
-    if (t.html() > 80) {
-      t.addClass("bg-danger");
-    }
-    else if (t.html() > 40) {
-      t.addClass("bg-warning");
-    }
+  $('td.dollar').filter(function(){
+    return $(this).html() > 40 && $(this).html() <= 80
+  }).addClass('bg-warning').prepend("$");
 
-    t.prepend("$");
+  $('td.dollar').filter(function(){
+    return $(this).html() <= 40
+  }).addClass('bg-warning').prepend("$");
 
-  });
+  $('td.people').filter(function(){
+    return $(this).html() > 2
+  }).addClass("bg-danger");
 
-  $('td.people').each(function(index, value) {
-    var t = $(value);
-
-    if (t.html() > 2) {
-      t.addClass("bg-danger");
-    }
-    else if (t.html() > 1) {
-      t.addClass("bg-warning");
-    }
-
-  });
+  $('td.people').filter(function(){
+    return $(this).html() > 1 && $(this).html() <= 2
+  }).addClass('bg-warning');
 }
 
 function build_highcharts(source){
@@ -238,7 +267,7 @@ function build_highcharts(source){
           color: 'rgba(227,165,84,1)',  //Orange
           type: 'area'
         }, {
-          name: "Seen",
+          name: "Comfortably Seen",
           data: source.seen_normal_data,
           color: 'rgba(159,194,120,1)', // Green
           type: 'area'
