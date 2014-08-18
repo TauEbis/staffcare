@@ -7,7 +7,7 @@ class SchedulesController < ApplicationController
   def index
     @schedules = policy_scope(Schedule).ordered.page params[:page]
     authorize @schedules
-    @zones = user_zones.assigned.ordered
+
   end
 
   # GET /schedules/1

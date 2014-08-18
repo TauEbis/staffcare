@@ -14,7 +14,7 @@
 <% @schedules.each do |schedule| %>
   <div class="panel panel-default">
     <div class="panel-heading">
-      <a href="<%= schedule_location_plans_path(schedule) %>">
+      <a href="<%= schedule_path(schedule) %>">
         <h3 class="panel-title">
           <%= schedule_date_span(schedule) %>
 
@@ -25,33 +25,107 @@
       </a>
     </div>
     <div class="panel-body">
-      <% @zones.each do |zone| %>
-        <div class="row">
-          <div class="col-sm-4">
-            <h5><%= link_to zone.name, schedule_location_plans_path(schedule, zone_id: zone.id) %></h5>
-            <% state = LocationPlan.collective_state(LocationPlan.for_zone(zone)) %>
-            <%= collective_state_label(state) %>
-          </div>
-          <% if schedule.complete? -%>
-            <div class="col-sm-2 text-center">
-              <h4><%= patient_sat_points(schedule, zone) %> <span class="bg-danger">(A)</span></h4>
-              Patient Sat
-            </div>
-            <div class="col-sm-2 text-center">
-              <h4><%= md_sat_points(schedule, zone) %> <span class="bg-danger">(B+)</span></h4>
-              Physician Sat
-            </div>
-            <div class="col-sm-2 text-center">
-              <h4><%= cost_points(schedule, zone) %> <span class="bg-danger">(B)</span></h4>
-              Cost Score
-            </div>
-            <div class="col-sm-2 text-center">
-              <h4><%= total_points(schedule, zone) %> <span class="bg-danger">(B+)</span></h4>
-              Overall
-            </div>
-          <% end -%>
+      <div class="row">
+
+        <div class="col-sm-1">
+          <h5>State: </h5>
         </div>
-      <% end %>
+        <div class="col-sm-8">
+          <ul class="chevronbar">
+            <li class="first">
+              <a class="" href="#">Draft</a>
+            </li>
+
+            <% unless schedule.draft? -%>
+              <li class="unapproved">
+                <a href="#">Unapproved: <%= schedule.location_plans.pending.count %></a>
+              </li>
+              <li class="manager_approved">
+                <a href="#">Manager Approved: <%= schedule.location_plans.manager_approved.count %></a>
+              </li>
+              <li class="gm_approved">
+                <a href="#">GM Approved: <%= schedule.location_plans.gm_approved.count %></a>
+              </li>
+              <li>
+                <a href="#">Locked</a>
+              </li>
+            <% end -%>
+          </ul>
+        </div>
+
+        <div class="col-sm-3">
+          <div class="pull-right">
+
+            <% if schedule.draft? -%>
+              <%= link_to request_approvals_schedule_path(schedule), class: 'btn btn-primary' do %>
+                Request approvals
+                <span class="glyphicon glyphicon-chevron-right"></span>
+              <% end %>
+            <% end -%>
+  
+            <% if schedule.active? -%>
+              <% if policy(schedule).update? -%>
+                <%= link_to schedule_path(schedule, schedule: {state: 'draft'}), method: :patch,
+                            class: 'btn btn-default' do %>
+                  <span class="glyphicon glyphicon-chevron-left"></span>
+                  Return to Draft
+                <% end %>
+                <% if LocationPlan.collective_state(schedule.location_plans) == 'gm_approved' -%>
+                  <%= link_to schedule_path(schedule, schedule: {state: 'locked'}), method: :patch,
+                              class: 'btn btn-primary' do %>
+                    Lock
+                    <span class="glyphicon glyphicon-chevron-right"></span>
+                  <% end %>
+                <% end -%>
+              <% end -%>
+              <% if current_user.admin? -%>
+                <%#= link_to "Admin Force Approve entire zone", change_state_location_plans_path(location_plan_ids:
+                @location_plans.map(&:to_param), state: 'gm_approved'), method: :post, class: 'btn btn-warning' %>
+              <% end -%>
+            <% end -%>
+  
+            <% if schedule.locked? -%>
+              <%= link_to schedule_path(schedule, schedule: {state: 'active'}), method: :patch,
+                          class: 'btn btn-default' do %>
+                <span class="glyphicon glyphicon-chevron-left"></span>
+                Un-lock
+              <% end %>
+            <% end -%>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearfix"><br></div>
+
+      <div class="row">
+        <div class="col-sm-1">
+          <h5>Sync: </h5>
+        </div>
+        <div class="col-sm-9">
+          <ul class="chevronbar">
+            <li class="first">
+              <a href="#">Not synced: <%= schedule.location_plans.unsynced.count %></a>
+            </li>
+            <li class="dirty">
+              <a href="#">Dirty: <%= schedule.location_plans.dirty.count %></a>
+            </li>
+            <li class="synced">
+              <a href="#">Synced: <%= schedule.location_plans.synced.count %></a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="col-sm-2">
+          <div class="pull-right">
+            <% if policy(schedule).push? -%>
+              <%= link_to pushes_path(schedule_id: schedule.to_param), class: 'btn btn-default' do %>
+                <span class="glyphicon glyphicon-cloud-upload"></span>
+                Sync with When I Work
+              <% end %>
+            <% end -%>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="panel-footer">
       <% unless schedule.complete? -%>

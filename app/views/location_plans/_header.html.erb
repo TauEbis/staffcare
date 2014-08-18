@@ -6,28 +6,6 @@
   <% if @location_plan -%>
     <%= action_links @location_plan %>
     <%= state_label @location_plan %>
-  <% else -%>
-
-    <% if @schedule.draft? -%>
-      <%= link_to 'Request approvals', request_approvals_schedule_path(@schedule), class: 'btn btn-success' %>
-    <% end -%>
-
-    <% if @schedule.active? -%>
-      <% if policy(@schedule).update? -%>
-        <%= link_to 'Return to Draft', schedule_path(@schedule, schedule: {state: 'draft'}), method: :patch, class: 'btn btn-default' %>
-        <% if LocationPlan.collective_state(@schedule.location_plans) == 'gm_approved' -%>
-          <%= link_to 'Lock', schedule_path(@schedule, schedule: {state: 'locked'}), method: :patch, class: 'btn btn-primary' %>
-        <% end -%>
-      <% end -%>
-      <% if current_user.admin? -%>
-        <%= link_to "Admin Force Approve entire zone", change_state_location_plans_path(location_plan_ids: @location_plans.map(&:to_param), state: 'gm_approved'), method: :post, class: 'btn btn-warning' %>
-      <% end -%>
-    <% end -%>
-
-    <% if @schedule.locked? -%>
-      <%= link_to 'Un-Lock', schedule_path(@schedule, schedule: {state: 'active'}), method: :patch, class: 'btn btn-default' %>
-    <% end -%>
-
   <% end -%>
 </div>
 

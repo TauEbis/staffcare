@@ -25,6 +25,8 @@ $(document).ready(function() {
     e.preventDefault();
     $(this).closest('fieldset').find(':checkbox').prop( "checked", false);
   });
+
+  //$('.chevronbar li').css('width', 99.0 / ($('.chevronbar li').length * 1.0) + "%");
 });
 
 function load_day_info(chosen_grade_id, date){
