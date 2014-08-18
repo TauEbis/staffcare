@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140812171146) do
+ActiveRecord::Schema.define(version: 20140818140405) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,6 +52,7 @@ ActiveRecord::Schema.define(version: 20140812171146) do
     t.integer "close_times",         default: [],              array: true
     t.string  "normal",              default: [], null: false, array: true
     t.string  "max",                 default: [], null: false, array: true
+    t.integer "wiw_sync",            default: 0,  null: false
   end
 
   create_table "locations", force: true do |t|
