@@ -267,7 +267,7 @@ function build_highcharts(source){
           color: 'rgba(227,165,84,1)',  //Orange
           type: 'area'
         }, {
-          name: "Seen",
+          name: "Comfortably Seen",
           data: source.seen_normal_data,
           color: 'rgba(159,194,120,1)', // Green
           type: 'area'
