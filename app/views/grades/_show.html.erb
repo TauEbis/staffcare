@@ -13,6 +13,7 @@
       <div data-bind="with: day_points">
         <div class="col-sm-2 text-center">
           <h4>A<span class="letter-grade">-</span> <small>(<span data-bind="text: toCurrency(patient_sat())"></span>)</small></h4>
+          <h5><span data-bind="text: $root.total_wait "></span><small> minutes of wait time</small></h5>
         </div>
         <div class="col-sm-2 text-center">
           <h4>B<span class="letter-grade">+</span> <small>(<span data-bind="text: toCurrency(md_sat())"></span>)</small></h4>

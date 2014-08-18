@@ -159,4 +159,8 @@ class Grade < ActiveRecord::Base
     }
   end
 
+  def total_wait_time(date)
+    totals(date)[:queue] * 30 # in minutes
+  end
+
 end
