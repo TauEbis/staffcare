@@ -4,7 +4,7 @@
     <th>Time</th>
     <th>MDs</th>
     <th>Work Rate</th>
-    <th>Visits</th>
+    <th>Visitors</th>
     <th>Seen</th>
     <th>Queue</th>
     <th>Turbo</th>
@@ -28,5 +28,16 @@
       <td class='dollar'><%= @grade.breakdowns[@date_s]['penalties'][i].round(2) %></td>
     </tr>
   <% end -%>
+    <tr class="lead">
+      <td>Total</td>
+      <td><%= @grade.totals(@date_s)[:coverage] %></td>
+      <td><%= @grade.totals(@date_s)[:work_rate].round(2) %></td>
+      <td><%= @grade.totals(@date_s)[:visits].round(2) %></td>
+      <td><%= @grade.totals(@date_s)[:seen].round(2) %></td>
+      <td><%= @grade.totals(@date_s)[:queue].round(2) %></td>
+      <td><%= @grade.totals(@date_s)[:turbo].round(2) %></td>
+      <td><%= @grade.totals(@date_s)[:slack].round(2) %></td>
+      <td>$<%= @grade.totals(@date_s)[:penalty].round(2) %></td>
+    </tr>
   </tbody>
 </table>

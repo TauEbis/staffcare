@@ -144,4 +144,19 @@ class Grade < ActiveRecord::Base
     self.save!
   end
 
+  def totals(date)
+    date_s = date.to_s
+    b = breakdowns[date_s]
+    {
+      coverage: coverages[date_s].sum,
+      visits: location_plan.visits[date_s].sum,
+      work_rate: location_plan.visits[date_s].sum/coverages[date_s].sum,
+      seen: b['seen'].sum,
+      queue: b['queue'].sum,
+      turbo: b['turbo'].sum,
+      slack: b['slack'].sum,
+      penalty: b['penalties'].sum,
+    }
+  end
+
 end
