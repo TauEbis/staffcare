@@ -171,4 +171,12 @@ class Grade < ActiveRecord::Base
     totals(date)[:queue] * 30 # in minutes
   end
 
+  def average_work_rate(date)
+    totals(date)[:work_rate] * 2 # patients per hour
+  end
+
+  def wages(date)
+    (totals(date)[:coverage] * location_plan.schedule.penalty_slack).to_i
+  end
+
 end

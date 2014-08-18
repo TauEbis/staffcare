@@ -56,6 +56,8 @@ function CoverageViewModel() {
   self.grade_points = ko.observable(null);
   self.grade_hours  = ko.observable(0);
   self.total_wait = ko.observable(0);
+  self.work_rate = ko.observable(0);
+  self.wages = ko.observable(0);
 
   // When an update for the SAME day is processed,
   // Then we'll store the diffs here
@@ -107,6 +109,8 @@ function CoverageViewModel() {
       colorNewDay(data.day_info.date, data.day_points.total);
 
       self.total_wait(data.total_wait.toFixed(0));
+      self.work_rate(data.work_rate.toFixed(2));
+      self.wages(toCurrency(data.wages));
 
       // We dont' want to set loaded until we've loaded a DAY, not just the grade-wide data
       self.loaded(true);
