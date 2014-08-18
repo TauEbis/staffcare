@@ -54,7 +54,7 @@ class Grade < ActiveRecord::Base
     end
 
     start = location_plan.location.open_times[date.wday]
-    x_axis = range.map {|i| (start + (i / 2.0)).to_time_of_day }
+    x_axis = (0..size).map {|i| (start + (i / 2.0)).to_time_of_day }
 
     {
       visits_data: location_plan.visits[date_s].map{|i| i.round(2)},
