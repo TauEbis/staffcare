@@ -121,6 +121,10 @@ function colorBreakdown() {
     return $(this).html() > 40 && $(this).html() <= 80
   }).addClass('bg-warning').prepend("$");
 
+  $('td.dollar').filter(function(){
+    return $(this).html() <= 40
+  }).addClass('bg-warning').prepend("$");
+
   $('td.people').filter(function(){
     return $(this).html() > 2
   }).addClass("bg-danger");
@@ -128,8 +132,6 @@ function colorBreakdown() {
   $('td.people').filter(function(){
     return $(this).html() > 1 && $(this).html() <= 2
   }).addClass('bg-warning');
-
-  $('td.dollar').prepend("$");
 }
 
 function build_highcharts(source){
