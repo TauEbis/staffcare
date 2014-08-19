@@ -9,6 +9,20 @@ class Grade < ActiveRecord::Base
 
   enum source: [:optimizer, :last_month, :manual]
 
+  LETTERS  = {  "D-" => 5.00, # no F+ so bigger step here
+                "D"  => 4.33,
+                "D+" => 4.00,
+                "C-" => 3.67,
+                "C"  => 3.33,
+                "C+" => 3.0,
+                "B-" => 2.67,
+                "B"  => 2.33,
+                "B+" => 2.00,
+                "A-" => 1.67,
+                "A"  => 1.33,
+                "A+" => 0.75
+              }
+
   scope :ordered, -> { order(source: :asc, created_at: :desc) }
 
   before_destroy :reset_chosen_grade
@@ -144,6 +158,67 @@ class Grade < ActiveRecord::Base
     self.save!
   end
 
+  def diff_to_optimum
+    opt_points = location_plan.grades.optimizer.last.points
+    diff = opt_points.deep_dup
+    diff.each do |k1, v1|
+      v1.each do |k2, v2|
+        diff[k1][k2] = points[k1][k2] - opt_points[k1][k2] # or v2 but could cause hard to catch errors
+      end
+    end
+    diff
+  end
+
+  def letters(date)
+    month_letters[date_s]
+  end
+
+  def month_letters
+    opt_points = location_plan.grades.optimizer.last.points
+    m_letters = opt_points.deep_dup
+    m_letters.each { |k1, v1| m_letters[k1] = v1.except("hours") }
+    m_letters.each do |k1, v1|
+      v1.each do |k2, v2|
+        if k2 == "total"
+          m_letters[k1][k2] = assign_letter (points[k1][k2] / v2)
+        else
+          m_letters[k1][k2] = assign_letter (points[k1][k2] /( ( opt_points[k1]["total"] / 3 + opt_points[k1][k2] ) /2 ) )
+        end
+      end
+    end
+    m_letters
+  end
+
+  def assign_letter(score)
+    if score > LETTERS["D-"]
+      "F"
+    elsif score >= LETTERS["D"]
+      "D-"
+    elsif score >= LETTERS["D+"]
+      "D"
+    elsif score >= LETTERS["C-"]
+      "D+"
+    elsif score >= LETTERS["C"]
+      "C-"
+    elsif score >= LETTERS["C+"]
+      "C"
+    elsif score >= LETTERS["B-"]
+      "C+"
+    elsif score >= LETTERS["B"]
+      "B-"
+    elsif score >= LETTERS["B+"]
+      "B"
+    elsif score >= LETTERS["A-"]
+      "B+"
+    elsif score >= LETTERS["A"]
+      "A-"
+    elsif score >= LETTERS["A+"]
+      "A"
+    elsif score < LETTERS["A+"]
+      "A+"
+    end
+  end
+
   def totals(date)
     @_totals ||= {}
 
@@ -169,6 +244,18 @@ class Grade < ActiveRecord::Base
 
   def total_wait_time(date)
     totals(date)[:queue] * 30 # in minutes
+  end
+
+  def time_wasted(date)
+    totals(date)[:slack] * 60 / location_plan.normal[1] # in minutes -- will need to change to normal[0] after refactor
+  end
+
+  def average_work_rate(date)
+    totals(date)[:work_rate] * 2 # patients per hour
+  end
+
+  def wages(date)
+    (totals(date)[:coverage] * location_plan.schedule.penalty_slack).to_f
   end
 
 end

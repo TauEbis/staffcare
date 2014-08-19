@@ -31,7 +31,11 @@
     <tr class="lead">
       <td>Total</td>
       <td><%= @grade.totals(@date_s)[:coverage] %></td>
-      <td><%= @grade.totals(@date_s)[:work_rate].round(2) %></td>
+      <td><%= @grade.totals(@date_s)[:work_rate].round(2) %>
+        <span data-toggle="tooltip" title="Half-hourly average physician workrate" class="shrink">
+          <span class="glyphicon glyphicon-question-sign"></span>
+        </span>
+      </td>
       <td><%= @grade.totals(@date_s)[:visits].round(2) %></td>
       <td><%= @grade.totals(@date_s)[:seen].round(2) %></td>
       <td><%= @grade.totals(@date_s)[:queue].round(2) %></td>

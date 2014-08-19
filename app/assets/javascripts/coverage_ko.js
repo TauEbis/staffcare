@@ -32,6 +32,14 @@ function DiffPoints(oldp, newp){
   });
 }
 
+function Letters(data) {
+  var self = this;
+  self.total       = ko.observable(data.total);
+  self.md_sat      = ko.observable(data.md_sat);
+  self.patient_sat = ko.observable(data.patient_sat);
+  self.cost        = ko.observable(data.cost);
+}
+
 function DayInfo(data) {
   var self = this;
 
@@ -53,9 +61,13 @@ function CoverageViewModel() {
   self.day_info = ko.observable(null);
 
   self.day_points = ko.observable(null);
+  self.day_letters = ko.observable(null);
   self.grade_points = ko.observable(null);
   self.grade_hours  = ko.observable(0);
+  self.wages = ko.observable(0);
   self.total_wait = ko.observable(0);
+  self.work_rate = ko.observable(0);
+  self.time_wasted = ko.observable(0);
 
   // When an update for the SAME day is processed,
   // Then we'll store the diffs here
@@ -86,6 +98,7 @@ function CoverageViewModel() {
 
       self.day_info(new DayInfo(data.day_info));
       self.day_points(new Points(data.day_points));
+      self.day_letters(new Letters(data.day_letters));
       self.prev_date = data.day_info.date;
     }
 
@@ -106,7 +119,10 @@ function CoverageViewModel() {
 
       colorNewDay(data.day_info.date, data.day_points.total);
 
+      self.wages(toCurrency(data.wages));
       self.total_wait(data.total_wait.toFixed(0));
+      self.work_rate(data.work_rate.toFixed(2));
+      self.time_wasted(data.time_wasted.toFixed(1));
 
       // We dont' want to set loaded until we've loaded a DAY, not just the grade-wide data
       self.loaded(true);

@@ -27,7 +27,7 @@
     <div class="row">
       <div class="col-sm-5">
         <hr>
-        <%= check_box_tag :notify_managers, !@schedule.active_notices_sent_at %>
+        <%= check_box_tag :notify_managers, "1", !@schedule.active_notices_sent_at %>
         <label for="notify_managers">E-mail managers an alert to work on their schedules </label>
 
         <% if @schedule.active_notices_sent_at -%>

@@ -2,7 +2,8 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-#location_plans_controller table .header-fixed {
+#location_plans_controller {
+  table .header-fixed {
   position: fixed;
   top: 40px;
   z-index: 1020; /* 10 less than .navbar-fixed to prevent any overlap */
@@ -14,4 +15,10 @@
      -moz-box-shadow: inset 0 1px 0 #fff, 0 1px 5px rgba(0,0,0,.1);
           box-shadow: inset 0 1px 0 #fff, 0 1px 5px rgba(0,0,0,.1);
   filter: progid:DXImageTransform.Microsoft.gradient(enabled=false); /* IE6-9 */
+  }
+
+  .shrink {
+    font-size: 14px;
+    vertical-align: text-top;
+  }
 }
