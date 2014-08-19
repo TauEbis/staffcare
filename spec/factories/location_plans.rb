@@ -3,6 +3,7 @@ FactoryGirl.define do
     location
     schedule
     visit_projection { create(:visit_projection, location: location) }
+    visits { visit_projection.visits }
     rooms 5
     max_mds 3
     min_openers 1

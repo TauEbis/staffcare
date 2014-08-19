@@ -42,7 +42,7 @@ describe GradesController, :type => :controller do
 
   describe "GET show" do
     it "assigns the requested grade as @grade" do
-      get :show, {:id => location_plan.chosen_grade.id, :date => Date.today.to_s }, valid_session
+      get :show, {:id => location_plan.chosen_grade.id, :date => location_plan.schedule.starts_on }, valid_session
       expect(assigns(:grade)).to eq(location_plan.chosen_grade)
     end
   end

@@ -79,7 +79,7 @@ class LocationPlansController < ApplicationController
 
   # For member actions
   def set_location_plan
-    @location_plan = LocationPlan.find(params[:id])
+    @location_plan = LocationPlan.includes(:chosen_grade, :location).find(params[:id])
     authorize @location_plan
 
     @zone     = @location_plan.location.zone
@@ -94,7 +94,8 @@ class LocationPlansController < ApplicationController
     @location_plans = @schedule.
         location_plans.ordered.
         for_zone(@zone).                              # For this zone
-        for_user(current_user)                        # And for this user
+        for_user(current_user).                        # And for this user
+        includes(:location, :chosen_grade, :visit_projection)
   end
 
   # Only allow a trusted parameter "white list" through.
