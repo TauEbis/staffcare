@@ -28,9 +28,11 @@ class GradesController < ApplicationController
       }
       data[:day_points] = @grade.points[@date_s]
       data[:shifts]     = @grade.shifts.for_day(@date).map(&:to_knockout)
+      data[:wages] = @grade.wages(@date)
       data[:total_wait] = @grade.total_wait_time(@date)
       data[:work_rate] = @grade.average_work_rate(@date)
-      data[:wages] = @grade.wages(@date)
+      data[:time_wasted] = @grade.time_wasted(@date)
+      data[:day_letters] = @grade.month_letters[@date_s]
     end
 
     render json: data
