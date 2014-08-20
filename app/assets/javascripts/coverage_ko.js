@@ -40,6 +40,15 @@ function Letters(data) {
   self.cost        = ko.observable(data.cost);
 }
 
+function OptDiffs(data) {
+  var self = this;
+  self.total       = ko.observable(data.total);
+  self.md_sat      = ko.observable(data.md_sat);
+  self.patient_sat = ko.observable(data.patient_sat);
+  self.cost        = ko.observable(data.cost);
+  self.hours       = ko.observable(data.hours);
+}
+
 function DayInfo(data) {
   var self = this;
 
@@ -62,12 +71,15 @@ function CoverageViewModel() {
 
   self.day_points = ko.observable(null);
   self.day_letters = ko.observable(null);
+  self.day_opt_diff = ko.observable(null);
+  self.grade_opt_diff = ko.observable(null);
   self.grade_points = ko.observable(null);
   self.grade_hours  = ko.observable(0);
   self.wages = ko.observable(0);
   self.total_wait = ko.observable(0);
   self.work_rate = ko.observable(0);
   self.time_wasted = ko.observable(0);
+  self.pat_waste = ko.observable(0);
 
   // When an update for the SAME day is processed,
   // Then we'll store the diffs here
@@ -99,7 +111,9 @@ function CoverageViewModel() {
       self.day_info(new DayInfo(data.day_info));
       self.day_points(new Points(data.day_points));
       self.day_letters(new Letters(data.day_letters));
+      self.day_opt_diff(new OptDiffs(data.opt_diff));
       self.prev_date = data.day_info.date;
+      self.grade_opt_diff(new OptDiffs(data.grade_opt_diff) );
     }
 
     self.chosen_grade_id = data.chosen_grade_id;
@@ -108,6 +122,7 @@ function CoverageViewModel() {
 
     self.grade_points(new Points(data.grade_points));
     self.grade_hours(data.grade_hours);
+
 
     if(data.day_info){
       self.generateAvailableTimes(data.day_info.open_time, data.day_info.close_time);
@@ -122,7 +137,8 @@ function CoverageViewModel() {
       self.wages(toCurrency(data.wages));
       self.total_wait(data.total_wait.toFixed(0));
       self.work_rate(data.work_rate.toFixed(2));
-      self.time_wasted(data.time_wasted.toFixed(1));
+      self.time_wasted(data.time_wasted.toFixed(0));
+      self.pat_waste( toCurrency(data.day_points.total / data.visits ) );
 
       // We dont' want to set loaded until we've loaded a DAY, not just the grade-wide data
       self.loaded(true);

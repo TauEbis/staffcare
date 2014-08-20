@@ -33,7 +33,7 @@ module LocationPlansHelper
   end
 
   def life_cycle_info(location_plan)
-    %{<p> Life Cycle #{location_plan.life_cycle} (#{location_plan.life_cycle_max_total_hours.round(0)} suggested hrs) </p>}.html_safe
+    %{<h5><span> #{location_plan.life_cycle_max_total_hours.round(0)}</span><small> suggested (Life Cycle-#{location_plan.life_cycle})</small> </h5>}.html_safe
   end
 
   private

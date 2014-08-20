@@ -1,33 +1,58 @@
 <%= render 'grades/header' %>
 
 <div class="row">
+
   <div class="col-sm-4 text-center">
     <h4><span data-bind="text: grade_hours()"></span><small> hours</small></h4>
-    <div data-bind="if: $root.diff_grade_hours">
-      <span data-bind="text: diffFormat($root.diff_grade_hours(), false), css: diffClass($root.diff_grade_hours())"></span>
+    <%- if !@grade.optimizer? -%>
+      <div data-bind="with: grade_opt_diff" class="row">
+        <div class="diff-header">Vs. Optimizer:</div>
+        <div class="diff-header">
+          <span data-bind="text: hours(), css: diffClass( hours())" ></span>
+        </div>
+      </div>
+    <%- end -%>
+    <div class="row">
+      <div data-bind="if: $root.diff_grade_hours" class="diff-header">Vs. Last:</div>
+      <div data-bind="if: $root.diff_grade_hours" class="diff-header">
+        <span data-bind="text: diffFormat($root.diff_grade_hours(), false), css: diffClass($root.diff_grade_hours())"></span>
+      </div>
     </div>
+    <%= life_cycle_info(@location_plan) %>
   </div>
   <div data-bind="with: grade_points">
     <div class="col-sm-2 text-center">
       <h4>A<span class="letter-grade">-</span> <small>(<span data-bind="text: toCurrency(patient_sat())"></span>)</small></h4>
+      <%- if !@grade.optimizer? -%>
+        <span data-bind="text: toCurrency($root.grade_opt_diff().patient_sat()), css: diffClass( $root.grade_opt_diff().patient_sat())" ></span>
+      <%- end -%>
       <div data-bind="if: $root.diff_grade_points">
         <span data-bind="text: diffFormat($root.diff_grade_points().patient_sat()), css: diffClass($root.diff_grade_points().patient_sat())"></span>
       </div>
     </div>
     <div class="col-sm-2 text-center">
       <h4>B<span class="letter-grade">+</span> <small>(<span data-bind="text: toCurrency(md_sat())"></span>)</small></h4>
+      <%- if !@grade.optimizer? -%>
+        <span data-bind="text: toCurrency($root.grade_opt_diff().md_sat()), css: diffClass( $root.grade_opt_diff().md_sat())" ></span>
+      <%- end -%>
       <div data-bind="if: $root.diff_grade_points">
         <span data-bind="text: diffFormat($root.diff_grade_points().md_sat()), css: diffClass($root.diff_grade_points().md_sat())"></span>
       </div>
     </div>
     <div class="col-sm-2 text-center">
       <h4>B<span class="letter-grade">-</span> <small>(<span data-bind="text: toCurrency(cost())"></span>)</small></h4>
+      <%- if !@grade.optimizer? -%>
+        <span data-bind="text: toCurrency($root.grade_opt_diff().cost()), css: diffClass( $root.grade_opt_diff().cost())" ></span>
+      <%- end -%>
       <div data-bind="if: $root.diff_grade_points">
         <span data-bind="text: diffFormat($root.diff_grade_points().cost()), css: diffClass($root.diff_grade_points().cost())"></span>
       </div>
     </div>
     <div class="col-sm-2 text-center">
       <h4>B<span class="letter-grade"></span> <small>(<span data-bind="text: toCurrency(total())"></span>)</small></h4>
+      <%- if !@grade.optimizer? -%>
+        <span data-bind="text: toCurrency($root.grade_opt_diff().total()), css: diffClass( $root.grade_opt_diff().total())" ></span>
+      <%- end -%>
       <div data-bind="if: $root.diff_grade_points">
         <span data-bind="text: diffFormat($root.diff_grade_points().total()), css: diffClass($root.diff_grade_points().total())">
         </span>

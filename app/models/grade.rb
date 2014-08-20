@@ -158,36 +158,69 @@ class Grade < ActiveRecord::Base
     self.save!
   end
 
-  def diff_to_optimum
-    opt_points = location_plan.grades.optimizer.last.points
-    diff = opt_points.deep_dup
+  def opt_diff
+    @opt_points ||= location_plan.grades.optimizer.last.points
+    diff = @opt_points.deep_dup
     diff.each do |k1, v1|
       v1.each do |k2, v2|
-        diff[k1][k2] = points[k1][k2] - opt_points[k1][k2] # or v2 but could cause hard to catch errors
+        diff[k1][k2] = points[k1][k2] - @opt_points[k1][k2] # or v2 but could cause hard to catch errors
       end
     end
     diff
   end
 
-  def letters(date)
-    month_letters[date_s]
+  def month_opt_diff
+    #@_month_opt_diff ||= begin
+    #  points
+      {
+        "hours" => opt_diff.values.map{ |v| v["hours"] }.sum.to_f,
+        "md_sat" => opt_diff.values.map{ |v| v["md_sat"] }.sum,
+        "patient_sat" => opt_diff.values.map{ |v| v["patient_sat"] }.sum,
+        "cost" => opt_diff.values.map{ |v| v["cost"] }.sum,
+        "total" => opt_diff.values.map{ |v| v["total"] }.sum
+      }
+    #end
   end
 
-  def month_letters
-    opt_points = location_plan.grades.optimizer.last.points
-    m_letters = opt_points.deep_dup
+  def letters(date)
+    day_letters[date_s]
+  end
+
+  def day_letters
+    @opt_points ||= location_plan.grades.optimizer.last.points
+    m_letters = @opt_points.deep_dup
     m_letters.each { |k1, v1| m_letters[k1] = v1.except("hours") }
     m_letters.each do |k1, v1|
       v1.each do |k2, v2|
         if k2 == "total"
           m_letters[k1][k2] = assign_letter (points[k1][k2] / v2)
         else
-          m_letters[k1][k2] = assign_letter (points[k1][k2] /( ( opt_points[k1]["total"] / 3 + opt_points[k1][k2] ) /2 ) )
+          m_letters[k1][k2] = assign_letter (points[k1][k2] /( ( @opt_points[k1]["total"] / 3 + @opt_points[k1][k2] ) /2 ) )
         end
       end
     end
     m_letters
   end
+
+
+  def month_letters
+    #not implemented yet
+    @opt_totals ||= location_plan.grades.optimizer.last.points
+    m_letters = @opt_points.deep_dup
+    m_letters.each { |k1, v1| m_letters[k1] = v1.except("hours") }
+    m_letters.each do |k1, v1|
+      v1.each do |k2, v2|
+        if k2 == "total"
+          m_letters[k1][k2] = assign_letter (points[k1][k2] / v2)
+        else
+          m_letters[k1][k2] = assign_letter (points[k1][k2] /( ( @opt_points[k1]["total"] / 3 + @opt_points[k1][k2] ) /2 ) )
+        end
+      end
+    end
+    m_letters
+  end
+
+
 
   def assign_letter(score)
     if score > LETTERS["D-"]
@@ -234,7 +267,7 @@ class Grade < ActiveRecord::Base
         queue: b['queue'].sum,
         turbo: b['turbo'].sum,
         slack: b['slack'].sum,
-        penalty: b['penalties'].sum,
+        penalty: b['penalties'].sum
       }
 
     end

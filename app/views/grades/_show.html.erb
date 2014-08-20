@@ -9,7 +9,15 @@
     <div class="col-sm-8 col-sm-offset-1">
       <div class="col-sm-4 text-center">
         <h4><span data-bind="text: day_hours()"></span><small> hours</small></h4>
-        <h5><span data-bind="text: $root.wages "></span><small> in wages</small></h5>
+        <%- if !@grade.optimizer? -%>
+          <div class="row">
+            <div class="diff-header">Vs. Optimizer:</div>
+            <div class="diff-header">
+              <span data-bind="text: $root.day_opt_diff().hours(), css: diffClass( $root.day_opt_diff().hours())" ></span>
+            </div>
+          </div>
+        <%- end -%>
+        <h5><span data-bind="text: $root.wages "></span><small> in MD wages</small></h5>
       </div>
       <div data-bind="with: day_points">
         <div class="col-sm-2 text-center">
@@ -17,6 +25,9 @@
             <span data-bind="text: $root.day_letters().patient_sat()"></span>
             <small> (<span data-bind="text: toCurrency(patient_sat())"></span>)</small>
           </h4>
+          <%- if !@grade.optimizer? -%>
+          <span data-bind="text: toCurrency($root.day_opt_diff().patient_sat()), css: diffClass( $root.day_opt_diff().patient_sat())" ></span>
+          <%- end -%>
           <h5><span data-bind="text: $root.total_wait "></span><small> wait mins</small></h5>
         </div>
         <div class="col-sm-2 text-center">
@@ -24,6 +35,9 @@
             <span data-bind="text: $root.day_letters().md_sat()"></span>
             <small> (<span data-bind="text: toCurrency(md_sat())"></span>)</small>
           </h4>
+          <%- if !@grade.optimizer? -%>
+          <span data-bind="text: toCurrency($root.day_opt_diff().md_sat()), css: diffClass( $root.day_opt_diff().md_sat())" ></span>
+          <%- end -%>
           <h5><span data-bind="text: $root.work_rate "></span><small> pats per hr</small></h5>
         </div>
         <div class="col-sm-2 text-center">
@@ -31,6 +45,9 @@
             <span data-bind="text: $root.day_letters().cost()"></span>
             <small> (<span data-bind="text: toCurrency(cost())"></span>)</small>
           </h4>
+          <%- if !@grade.optimizer? -%>
+          <span data-bind="text: toCurrency($root.day_opt_diff().cost()), css: diffClass( $root.day_opt_diff().cost())" ></span>
+          <%- end -%>
           <h5><span data-bind="text: $root.time_wasted"></span><small> wasted mins</small></h5>
         </div>
         <div class="col-sm-2 text-center">
@@ -38,6 +55,10 @@
             <span data-bind="text: $root.day_letters().total() "></span>
             <small> (<span data-bind="text: toCurrency(total())"></span>)</small>
           </h4>
+          <%- if !@grade.optimizer? -%>
+          <span data-bind="text: toCurrency($root.day_opt_diff().total()), css: diffClass( $root.day_opt_diff().total())" ></span>
+          <%- end -%>
+          <h5><span data-bind="text: $root.pat_waste"></span><small> waste per pat</small></h5>
         </div>
       </div>
     </div>
