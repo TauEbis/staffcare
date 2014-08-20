@@ -35,6 +35,7 @@ class GradesController < ApplicationController
       data[:day_letters] = @grade.day_letters[@date_s]
       data[:visits] = @grade.totals(@date)[:visits]
       data[:opt_diff] = @grade.opt_diff[@date_s]
+      data[:grade_opt_diff] = @grade.month_opt_diff
     end
 
     render json: data

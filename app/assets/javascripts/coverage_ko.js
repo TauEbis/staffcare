@@ -46,7 +46,7 @@ function OptDiffs(data) {
   self.md_sat      = ko.observable(data.md_sat);
   self.patient_sat = ko.observable(data.patient_sat);
   self.cost        = ko.observable(data.cost);
-  self.hours        = ko.observable(data.hours);
+  self.hours       = ko.observable(data.hours);
 }
 
 function DayInfo(data) {
@@ -72,6 +72,7 @@ function CoverageViewModel() {
   self.day_points = ko.observable(null);
   self.day_letters = ko.observable(null);
   self.day_opt_diff = ko.observable(null);
+  self.grade_opt_diff = ko.observable(null);
   self.grade_points = ko.observable(null);
   self.grade_hours  = ko.observable(0);
   self.wages = ko.observable(0);
@@ -112,6 +113,7 @@ function CoverageViewModel() {
       self.day_letters(new Letters(data.day_letters));
       self.day_opt_diff(new OptDiffs(data.opt_diff));
       self.prev_date = data.day_info.date;
+      self.grade_opt_diff(new OptDiffs(data.grade_opt_diff) );
     }
 
     self.chosen_grade_id = data.chosen_grade_id;
@@ -120,6 +122,7 @@ function CoverageViewModel() {
 
     self.grade_points(new Points(data.grade_points));
     self.grade_hours(data.grade_hours);
+
 
     if(data.day_info){
       self.generateAvailableTimes(data.day_info.open_time, data.day_info.close_time);

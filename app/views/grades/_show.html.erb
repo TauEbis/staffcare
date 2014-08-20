@@ -11,7 +11,7 @@
         <h4><span data-bind="text: day_hours()"></span><small> hours</small></h4>
         <%- if !@grade.optimizer? -%>
           <div class="row">
-            <div class="diff-header">Vs. Optimizer</div>
+            <div class="diff-header">Vs. Optimizer:</div>
             <div class="diff-header">
               <span data-bind="text: $root.day_opt_diff().hours(), css: diffClass( $root.day_opt_diff().hours())" ></span>
             </div>
