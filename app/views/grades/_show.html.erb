@@ -9,7 +9,7 @@
     <div class="col-sm-8 col-sm-offset-1">
       <div class="col-sm-4 text-center">
         <h4><span data-bind="text: day_hours()"></span><small> hours</small></h4>
-        <h5><span data-bind="text: $root.wages "></span><small> in wages</small></h5>
+        <h5><span data-bind="text: $root.wages "></span><small> in MD wages</small></h5>
       </div>
       <div data-bind="with: day_points">
         <div class="col-sm-2 text-center">
@@ -38,6 +38,7 @@
             <span data-bind="text: $root.day_letters().total() "></span>
             <small> (<span data-bind="text: toCurrency(total())"></span>)</small>
           </h4>
+          <h5><span data-bind="text: $root.pat_waste"></span><small> waste per pat</small></h5>
         </div>
       </div>
     </div>

@@ -68,6 +68,7 @@ function CoverageViewModel() {
   self.total_wait = ko.observable(0);
   self.work_rate = ko.observable(0);
   self.time_wasted = ko.observable(0);
+  self.pat_waste = ko.observable(0);
 
   // When an update for the SAME day is processed,
   // Then we'll store the diffs here
@@ -122,7 +123,8 @@ function CoverageViewModel() {
       self.wages(toCurrency(data.wages));
       self.total_wait(data.total_wait.toFixed(0));
       self.work_rate(data.work_rate.toFixed(2));
-      self.time_wasted(data.time_wasted.toFixed(1));
+      self.time_wasted(data.time_wasted.toFixed(0));
+      self.pat_waste( toCurrency(data.day_points.total / data.visits ) );
 
       // We dont' want to set loaded until we've loaded a DAY, not just the grade-wide data
       self.loaded(true);

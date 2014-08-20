@@ -33,6 +33,7 @@ class GradesController < ApplicationController
       data[:work_rate] = @grade.average_work_rate(@date)
       data[:time_wasted] = @grade.time_wasted(@date)
       data[:day_letters] = @grade.month_letters[@date_s]
+      data[:visits] = @grade.totals(@date)[:visits]
     end
 
     render json: data
