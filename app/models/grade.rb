@@ -136,7 +136,7 @@ class Grade < ActiveRecord::Base
     grades.each do |g|
       ['total', 'md_sat', 'patient_sat', 'cost', 'hours'].each do |field|
         p[field] ||= 0
-        p[field] += g.points.sum {|k,v| v[field] } / grades.size
+        p[field] += g.points.sum {|k,v| v[field] }
       end
     end
 
