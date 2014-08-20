@@ -49,10 +49,10 @@ RSpec.describe SchedulesController, :type => :controller do
   end
 
   describe "GET show" do
-    it "redirects to the location_plan view" do
+    it "renders the view" do
       schedule = Schedule.create! valid_attributes
       get :show, {:id => schedule.to_param}, valid_session
-      expect(response).to redirect_to(schedule_location_plans_url(schedule))
+      expect(response).to render_template('show')
     end
   end
 

@@ -1,0 +1,13 @@
+<%provide(:title, "Shift Schedule for #{schedule_date_span(@schedule)}")%>
+
+<h1>Shift Schedule for <%= schedule_date_span(@schedule) %> <small> <%= @schedule.state.to_s.humanize %></small></h1>
+
+<% unless @schedule.complete? -%>
+  <% jid = @schedule.optimizer_job_id -%>
+  <div class="alert alert-info" role="alert">
+    Status: <%= Sidekiq::Status::status(jid).to_s.humanize %> - <%= Sidekiq::Status::message jid %>
+    <%# Sidekiq::Status::at jid %>
+    <%= Sidekiq::Status::pct_complete(jid).to_f.round(1) %>%
+    <%# Sidekiq::Status::total %>
+  </div>
+<% end -%>
