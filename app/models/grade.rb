@@ -143,6 +143,22 @@ class Grade < ActiveRecord::Base
     p
   end
 
+  def month_letters
+    #not implemented yet
+    my_sums = Grade.unoptimized_sum(self).except("hours")
+    @_opt_sums ||= Grade.unoptimized_sum(location_plan.grades.optimizer.last).except("hours")
+    @m_letters ||= {}
+
+    my_sums.each do |k1, v1|
+      if k1 == "total"
+        @m_letters[k1] = assign_letter ( my_sums[k1] / @_opt_sums[k1])
+      else
+        @m_letters[k1] = assign_letter ( my_sums[k1] /( ( @_opt_sums["total"] / 3 + @_opt_sums[k1]) /2 ) )
+      end
+    end
+    @m_letters
+  end
+
   def reset_chosen_grade
     if location_plan.chosen_grade == self
       new_grade_id = location_plan.grades.where('id <> ?', id).order(id: :asc).first.try(:id)
@@ -188,39 +204,19 @@ class Grade < ActiveRecord::Base
 
   def day_letters
     @opt_points ||= location_plan.grades.optimizer.last.points
-    m_letters = @opt_points.deep_dup
-    m_letters.each { |k1, v1| m_letters[k1] = v1.except("hours") }
-    m_letters.each do |k1, v1|
+    d_letters = @opt_points.deep_dup
+    d_letters.each { |k1, v1| d_letters[k1] = v1.except("hours") }
+    d_letters.each do |k1, v1|
       v1.each do |k2, v2|
         if k2 == "total"
-          m_letters[k1][k2] = assign_letter (points[k1][k2] / v2)
+          d_letters[k1][k2] = assign_letter (points[k1][k2] / v2)
         else
-          m_letters[k1][k2] = assign_letter (points[k1][k2] /( ( @opt_points[k1]["total"] / 3 + @opt_points[k1][k2] ) /2 ) )
+          d_letters[k1][k2] = assign_letter (points[k1][k2] /( ( @opt_points[k1]["total"] / 3 + @opt_points[k1][k2] ) /2 ) )
         end
       end
     end
-    m_letters
+    d_letters
   end
-
-
-  def month_letters
-    #not implemented yet
-    @opt_totals ||= location_plan.grades.optimizer.last.points
-    m_letters = @opt_points.deep_dup
-    m_letters.each { |k1, v1| m_letters[k1] = v1.except("hours") }
-    m_letters.each do |k1, v1|
-      v1.each do |k2, v2|
-        if k2 == "total"
-          m_letters[k1][k2] = assign_letter (points[k1][k2] / v2)
-        else
-          m_letters[k1][k2] = assign_letter (points[k1][k2] /( ( @opt_points[k1]["total"] / 3 + @opt_points[k1][k2] ) /2 ) )
-        end
-      end
-    end
-    m_letters
-  end
-
-
 
   def assign_letter(score)
     if score > LETTERS["D-"]
