@@ -16,7 +16,8 @@ class GradesController < ApplicationController
              source: @grade.source,
              editable: policy(@grade).update?,
              grade_points: pts,
-             grade_hours:  pts['hours']
+             grade_hours:  pts['hours'],
+             grade_letters: @grade.month_letters
             }
 
     if @date
