@@ -24,6 +24,7 @@ class LocationPlan < ActiveRecord::Base
                   [201, 376] ]                  # [min_daily_patients_in_life_cycle, max_weekly_physician_hours_for_life_cycle]
 
   enum approval_state: [:pending, :manager_approved, :gm_approved]
+  enum wiw_sync: [:unsynced, :dirty, :synced]
 
   delegate :name, to: :location
 
@@ -37,7 +38,6 @@ class LocationPlan < ActiveRecord::Base
   scope :assigned, -> { where(location_id: Location.assigned.pluck(:id)) }
 
   scope :ordered, -> { joins(:location).order('locations.name ASC')}
-
 
   # For a given collection of location_plans, return their 'base' state
   # If any are pending, then the whole collective state is pending
@@ -115,6 +115,7 @@ class LocationPlan < ActiveRecord::Base
       g = self.grades.create!(chosen_grade.attributes.merge(id: nil, created_at: nil, source: 'manual', user: user))
       g.clone_shifts_from!(chosen_grade)
       self.update_attribute(:chosen_grade_id, g.id)
+      dirty!
 
       g
     end
@@ -127,6 +128,10 @@ class LocationPlan < ActiveRecord::Base
 
   def max
     read_attribute(:max).map(&:to_f)
+  end
+
+  def dirty!
+    update_attribute(:wiw_sync, :dirty) if synced?
   end
 
 end

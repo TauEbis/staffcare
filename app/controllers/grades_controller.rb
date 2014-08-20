@@ -49,10 +49,12 @@ class GradesController < ApplicationController
   # PATCH /coverages/:location_plan_id
   def update
     @grade.update_shift!(@date, params[:shifts])
+    @grade.location_plan.dirty!
     render text: "OK!"
   end
 
   def destroy
+    @grade.location_plan.dirty!
     @grade.destroy
     redirect_to @location_plan, notice: 'Coverage plan was successfully destroyed.'
   end

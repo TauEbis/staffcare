@@ -1,0 +1,113 @@
+@import 'bootstrap/variables';
+
+ul.chevronbar {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  margin: 0 0 0px;
+  height: 38px;
+//  border: 1px solid #222;
+//  border-radius: 5px;
+//  box-shadow: 0 1px 2px rgba(0,0,0,.08);
+}
+
+ul.chevronbar li {
+  float: left;
+  text-align: center;
+  vertical-align: top;
+  position: relative;
+  display: inline;
+  border: none;
+  margin-right: 27px;
+}
+
+ul.chevronbar li a {
+  line-height: 38px;
+  text-decoration: none;
+  padding: 5px;
+//  font-weight: bold;
+}
+
+ul.chevronbar li:before, ul.chevronbar li:after {
+  content: ' ';
+  height: 0;
+  position: absolute;
+  width: 0;
+  border: 19px solid transparent;
+  border-left-width: 8px;
+  border-right-width: 8px;
+  top: 0;
+}
+
+
+ul.chevronbar li:before {
+  right: 100%;
+}
+
+ul.chevronbar li:after {
+  left: 100%;
+}
+
+ul.chevronbar li.first {
+
+}
+
+ul.chevronbar li.first:before {
+  border: none !important;
+}
+
+ul.chevronbar li.last:after {
+  border: none !important;
+}
+
+@mixin color-chevron($c, $txt_c) {
+  background: $c;
+  color: $txt_c;
+
+  a {
+    color: $txt_c
+  }
+
+  a:hover {
+    background-color: darken($c, 10%);
+  }
+
+  &:before {
+    border-top-color: $c;
+    border-bottom-color: $c;
+    border-right-color: $c;
+  }
+
+  &:after {
+    border-left-color: $c;
+  }
+}
+
+ul.chevronbar li {
+  @include color-chevron(#9d9d9d, #fff);
+}
+
+ul.chevronbar li.active {
+  @include color-chevron(#0064cd, #fff);
+}
+
+ul.chevronbar li.unapproved {
+  @include color-chevron($btn-danger-bg, #fff);
+}
+
+ul.chevronbar li.manager_approved {
+  // $state-warning-bg #fcf8e3
+  @include color-chevron($btn-warning-bg, #fff);
+}
+
+ul.chevronbar li.gm_approved {
+  @include color-chevron($btn-success-bg, #fff);
+}
+
+ul.chevronbar li.dirty{
+  @include color-chevron($btn-danger-bg, #fff);
+}
+
+ul.chevronbar li.synced {
+  @include color-chevron($btn-success-bg, #fff);
+}

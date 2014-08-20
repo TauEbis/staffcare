@@ -12,62 +12,7 @@
 </h1>
 
 <% @schedules.each do |schedule| %>
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <a href="<%= schedule_location_plans_path(schedule) %>">
-        <h3 class="panel-title">
-          <%= schedule_date_span(schedule) %>
-
-          <div class="pull-right">
-            <span class="label label-default"><%= schedule.state.to_s.humanize %></span>
-          </div>
-        </h3>
-      </a>
-    </div>
-    <div class="panel-body">
-      <% @zones.each do |zone| %>
-        <div class="row">
-          <div class="col-sm-4">
-            <h5><%= link_to zone.name, schedule_location_plans_path(schedule, zone_id: zone.id) %></h5>
-            <% state = LocationPlan.collective_state(LocationPlan.for_zone(zone)) %>
-            <%= collective_state_label(state) %>
-          </div>
-          <% if schedule.complete? -%>
-            <div class="col-sm-2 text-center">
-              <h4><%= patient_sat_points(schedule, zone) %> <span class="bg-danger">(A)</span></h4>
-              Patient Sat
-            </div>
-            <div class="col-sm-2 text-center">
-              <h4><%= md_sat_points(schedule, zone) %> <span class="bg-danger">(B+)</span></h4>
-              Physician Sat
-            </div>
-            <div class="col-sm-2 text-center">
-              <h4><%= cost_points(schedule, zone) %> <span class="bg-danger">(B)</span></h4>
-              Cost Score
-            </div>
-            <div class="col-sm-2 text-center">
-              <h4><%= total_points(schedule, zone) %> <span class="bg-danger">(B+)</span></h4>
-              Overall
-            </div>
-          <% end -%>
-        </div>
-      <% end %>
-    </div>
-    <div class="panel-footer">
-      <% unless schedule.complete? -%>
-        <div>
-          <% jid = schedule.optimizer_job_id -%>
-          Optimization Status: <%= Sidekiq::Status::status(jid).to_s.humanize %> - <%= Sidekiq::Status::message jid %>
-        </div>
-      <% end -%>
-      <small>Generated <%= l schedule.created_at %></small>
-      <div class="pull-right">
-        <a href="<%= url_for edit_schedule_path(schedule) %>">
-          <span class="glyphicon glyphicon-cog"></span> edit
-        </a>
-      </div>
-    </div>
-  </div>
+  <%= render schedule, heading: true %>
 <% end %>
 
 <br>

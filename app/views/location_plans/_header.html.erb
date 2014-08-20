@@ -1,45 +1,13 @@
-<%provide(:title, "Shift Schedule for #{schedule_date_span(@schedule)}")%>
-
-<h1>Shift Schedule for <%= schedule_date_span(@schedule) %> <small> <%= @schedule.state.to_s.humanize %></small></h1>
+<%= render 'schedules/header' %>
 
 <div class="pull-right">
   <% if @location_plan -%>
     <%= action_links @location_plan %>
     <%= state_label @location_plan %>
-  <% else -%>
-
-    <% if @schedule.draft? -%>
-      <%= link_to 'Request approvals', request_approvals_schedule_path(@schedule), class: 'btn btn-success' %>
-    <% end -%>
-
-    <% if @schedule.active? -%>
-      <% if policy(@schedule).update? -%>
-        <%= link_to 'Return to Draft', schedule_path(@schedule, schedule: {state: 'draft'}), method: :patch, class: 'btn btn-default' %>
-        <% if LocationPlan.collective_state(@schedule.location_plans) == 'gm_approved' -%>
-          <%= link_to 'Lock', schedule_path(@schedule, schedule: {state: 'locked'}), method: :patch, class: 'btn btn-primary' %>
-        <% end -%>
-      <% end -%>
-      <% if current_user.admin? -%>
-        <%= link_to "Admin Force Approve entire zone", change_state_location_plans_path(location_plan_ids: @location_plans.map(&:to_param), state: 'gm_approved'), method: :post, class: 'btn btn-warning' %>
-      <% end -%>
-    <% end -%>
-
-    <% if @schedule.locked? -%>
-      <%= link_to 'Un-Lock', schedule_path(@schedule, schedule: {state: 'active'}), method: :patch, class: 'btn btn-default' %>
-    <% end -%>
-
   <% end -%>
 </div>
 
-<% unless @schedule.complete? -%>
-  <% jid = @schedule.optimizer_job_id -%>
-  <div class="alert alert-info" role="alert">
-    Status: <%= Sidekiq::Status::status(jid).to_s.humanize %> - <%= Sidekiq::Status::message jid %>
-    <%# Sidekiq::Status::at jid %>
-    <%= Sidekiq::Status::pct_complete(jid).to_f.round(1) %>%
-    <%# Sidekiq::Status::total %>
-  </div>
-<% end -%>
+
 
 <div class="row">
   <div class="col-sm-3">

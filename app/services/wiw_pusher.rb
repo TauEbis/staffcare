@@ -105,5 +105,6 @@ class WiwPusher
     end
 
     @push.update_attribute(:log, log)
+    @push.location_plan.update_attribute(:wiw_sync, :synced)
   end
 end

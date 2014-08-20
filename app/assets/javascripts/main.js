@@ -26,8 +26,9 @@ $(document).ready(function() {
     $(this).closest('fieldset').find(':checkbox').prop( "checked", false);
   });
 
-  setSessionTimeout();
+  //$('.chevronbar li').css('width', 99.0 / ($('.chevronbar li').length * 1.0) + "%");
 
+  setSessionTimeout();
 });
 
 
