@@ -2,8 +2,55 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+$gray-light:   lighten(#000, 80%);
+
 #patient_volume_forecasts_controller {
 	.table td {
    text-align: center;
+	}
+
+	.btn-file {
+    position: relative;
+    overflow: hidden;
+	}
+	.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+	}
+	input[readonly] {
+  background-color: white !important;
+  cursor: text !important;
+	}
+
+	.bottom-paginator ul.pagination  {
+		margin: 0px 0px;
+	}
+
+	.top-paginator ul.pagination  {
+		margin: 0px 0px;
+	}
+
+	.link-wrapper {
+		margin: 0px 0px 50px 0px;
+		a.add {
+			padding-top: 10px;
+		}
+	}
+
+	hr {
+  border-color: $gray-light;
+  border-style: solid none;
+  border-width: 2px 0;
 	}
 }
