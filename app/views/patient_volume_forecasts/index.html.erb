@@ -1,59 +1,91 @@
 <%provide(:title, 'All patient volume forecasts')%>
 
-<h1>Patient volume forecasts</h1>
+<h1>Patient Volume Forecasts</h1>
 
-<p>
-  Download:
-  <%= link_to "CSV", patient_volume_forecasts_path(format: "csv") %>
-</p>
-
-<% unless @patient_volume_forecasts.blank? %>
-
-<%= paginate @patient_volume_forecasts %>
-
-<div class="table-responsive">
-<table class="table table-striped table-hover table-bordered">
-  <thead>
-  <tr>
-    	<th>Start Date</th>
-    	<th>End Date</th>
-    <% @locations.map(&:name).each do |l_name| %>
-    	<th><%= l_name %></th>
-    <% end %>
-      <th></th>
-      <th></th>
-  </tr>
-  </thead>
-
-  <tbody>
-  <% @patient_volume_forecasts.each do |forecast| %>
-    <tr>
-	      <td><%= forecast.start_date %></td>
-	      <td><%= forecast.end_date %></td>
-	    <% @locations.map(&:report_server_id).each do |rsid| %>
-     		<td><%= forecast.volume_by_location[rsid].try(:round, 0) %></td>
-     	<% end %>
-        <td><%= link_to 'Edit', edit_patient_volume_forecast_path(forecast) %></td>
-        <td><%= link_to 'Delete', forecast, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-    </tr>
-  <% end %>
-  </tbody>
-</table>
+<div class="row">
+  <div class="col-sm-12">
+    <div class="link-wrapper">
+      <div class="pull-left top-paginator"> <%= paginate @patient_volume_forecasts %></div>
+      <%= link_to 'Add a Patient Volume Forecast', new_patient_volume_forecast_path, class: "pull-right add" %>
+    </div>
+  </div>
 </div>
 
-<%= paginate @patient_volume_forecasts %>
-<% end %>
+<%- unless @patient_volume_forecasts.blank? %>
+
+<div class="table-responsive">
+  <table class="table table-striped table-hover table-bordered">
+    <thead>
+    <tr>
+      	<th>Start Date</th>
+      	<th>End Date</th>
+      <% @locations.map(&:name).each do |l_name| %>
+      	<th><%= l_name %></th>
+      <% end %>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <% @patient_volume_forecasts.each do |forecast| %>
+      <tr>
+  	      <td><%= forecast.start_date %></td>
+  	      <td><%= forecast.end_date %></td>
+  	    <% @locations.map(&:report_server_id).each do |rsid| %>
+       		<td><%= forecast.volume_by_location[rsid].try(:round, 0) %></td>
+       	<% end %>
+          <td><%= link_to 'Edit', edit_patient_volume_forecast_path(forecast) %></td>
+          <td><%= link_to 'Delete', forecast, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+</div>
+
+<%- end %>
+
+<div class='row'>
+  <div class="col-sm-12">
+    <span class="pull-left bottom-paginator"> <%= paginate @patient_volume_forecasts %></span>
+    <span class="pull-right">Download:  <%= link_to "CSV", patient_volume_forecasts_path(format: "csv") %></span>
+  </div>
+</div>
 
 
-<br><br>
-<%= link_to 'New Volume Forecast', new_patient_volume_forecast_path %>
+<div class='row'>
+  <div class="col-sm-12">
+    <hr>
+  </div>
+</div>
 
-<h3>Import Patient Volume Forecast</h3>
+<h3>Import Patient Volume Forecasts</h3>
 
-<%= form_tag import_patient_volume_forecasts_path, multipart: true do %>
-  <%= file_field_tag :file, class: 'form-actions' %>
+<div class="row">
+  <div class="col-sm-6">
 
-  </br>
+    <%= form_tag import_patient_volume_forecasts_path, multipart: true do %>
 
-  <%= submit_tag "Import", class: 'form-actions' %>
-<% end %>
+      <span class="help-block">
+          You can bulk edit/add forecasts by downloading them in CSV format and re-importing them.
+      </span>
+
+      <div class="input-group">
+        <span class="input-group-btn">
+          <span class="btn btn-primary btn-file">
+            Browse&hellip; <%= file_field_tag :file, class: 'form-actions' %>
+          </span>
+        </span>
+        <input type="text" class="form-control" readonly>
+      </div>
+
+      <span class="help-block">
+          Choose a CSV or Excel file to import.
+      </span>
+
+      <%= submit_tag "Import", class: 'btn btn-primary form-actions' %>
+
+    <% end %>
+
+  </div>
+</div>
