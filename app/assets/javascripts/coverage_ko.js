@@ -40,6 +40,15 @@ function Letters(data) {
   self.cost        = ko.observable(data.cost);
 }
 
+function OptDiffs(data) {
+  var self = this;
+  self.total       = ko.observable(data.total);
+  self.md_sat      = ko.observable(data.md_sat);
+  self.patient_sat = ko.observable(data.patient_sat);
+  self.cost        = ko.observable(data.cost);
+  self.hours        = ko.observable(data.hours);
+}
+
 function DayInfo(data) {
   var self = this;
 
@@ -62,6 +71,7 @@ function CoverageViewModel() {
 
   self.day_points = ko.observable(null);
   self.day_letters = ko.observable(null);
+  self.day_opt_diff = ko.observable(null);
   self.grade_points = ko.observable(null);
   self.grade_hours  = ko.observable(0);
   self.wages = ko.observable(0);
@@ -100,6 +110,7 @@ function CoverageViewModel() {
       self.day_info(new DayInfo(data.day_info));
       self.day_points(new Points(data.day_points));
       self.day_letters(new Letters(data.day_letters));
+      self.day_opt_diff(new OptDiffs(data.opt_diff));
       self.prev_date = data.day_info.date;
     }
 

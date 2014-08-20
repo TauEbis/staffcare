@@ -158,7 +158,7 @@ class Grade < ActiveRecord::Base
     self.save!
   end
 
-  def diff_to_optimum
+  def opt_diff
     opt_points = location_plan.grades.optimizer.last.points
     diff = opt_points.deep_dup
     diff.each do |k1, v1|
@@ -170,10 +170,10 @@ class Grade < ActiveRecord::Base
   end
 
   def letters(date)
-    month_letters[date_s]
+    day_letters[date_s]
   end
 
-  def month_letters
+  def day_letters
     opt_points = location_plan.grades.optimizer.last.points
     m_letters = opt_points.deep_dup
     m_letters.each { |k1, v1| m_letters[k1] = v1.except("hours") }

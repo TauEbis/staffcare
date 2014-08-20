@@ -32,8 +32,9 @@ class GradesController < ApplicationController
       data[:total_wait] = @grade.total_wait_time(@date)
       data[:work_rate] = @grade.average_work_rate(@date)
       data[:time_wasted] = @grade.time_wasted(@date)
-      data[:day_letters] = @grade.month_letters[@date_s]
+      data[:day_letters] = @grade.day_letters[@date_s]
       data[:visits] = @grade.totals(@date)[:visits]
+      data[:opt_diff] = @grade.opt_diff[@date_s]
     end
 
     render json: data
