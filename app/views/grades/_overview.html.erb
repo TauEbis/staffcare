@@ -3,6 +3,7 @@
 <div class="row">
   <div class="col-sm-4 text-center">
     <h4><span data-bind="text: grade_hours()"></span><small> hours</small></h4>
+    <%= life_cycle_info(@location_plan) %>
     <div data-bind="if: $root.diff_grade_hours">
       <span data-bind="text: diffFormat($root.diff_grade_hours(), false), css: diffClass($root.diff_grade_hours())"></span>
     </div>
