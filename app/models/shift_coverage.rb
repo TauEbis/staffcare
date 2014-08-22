@@ -38,20 +38,58 @@ class ShiftCoverage
   end
 
   def coverage_to_shifts(coverage)
-  	@coverage = coverage
-    opens = shift_opens
-    closes = shift_closes
-
-    if ((diff = opens.size - closes.size) != 0)
-      opens, closes = normalize(opens, closes, diff)
-    end
+  	opens, closes = coverage_opens_closes(coverage)
 
     (opens.zip(closes)).map do |starts_at, ends_at|
       Shift.new(starts_at: @time + starts_at.hours, ends_at: @time + ends_at.hours )
     end
   end
 
+  def equiv_shifts_for(coverage)
+  	opens, closes = coverage_opens_closes(coverage)
+  	result = build_valid(opens, closes)
+  	result
+  end
+
+	def build_valid(opens, closes)
+		result = []
+		opens.permutation.each do |o|
+			result << o.zip(closes).sort
+		end
+		result=result.uniq
+
+		result = result.reject do |set|
+			reject = false
+			set.each do |shift|
+				reject = true if (shift[1]-shift[0] < (@closes_at - @opens_at)/2)
+			end
+			reject
+		end
+
+		found_splits = false
+		result.each do |set|
+			set.each do |shift|
+				found_splits = true if shift[1]-shift[0] == (@closes_at - @opens_at)
+			end
+		end
+
+		result = result + build_valid(opens+[@midday], closes+[@midday]) if found_splits
+		result
+	end
+
 	private
+
+		def coverage_opens_closes(coverage)
+			 @coverage = coverage
+	    opens = shift_opens
+	    closes = shift_closes
+
+	    if ((diff = opens.size - closes.size) != 0)
+	      opens, closes = normalize(opens, closes, diff)
+	    end
+
+	    return opens, closes
+		end
 
 	  def shift_opens
 	    morning = @coverage[0..(@coverage.size/2)]
