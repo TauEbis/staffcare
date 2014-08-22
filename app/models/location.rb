@@ -3,7 +3,7 @@
 class Location < ActiveRecord::Base
   belongs_to :zone
 
-  has_one :heatmap
+  has_one :heatmap, primary_key: :uid, foreign_key: :uid
   has_many :memberships
   has_many :users, through: :memberships
   has_many :speeds, dependent: :destroy, inverse_of: :location

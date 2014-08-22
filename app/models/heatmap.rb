@@ -4,7 +4,7 @@ class Heatmap < ActiveRecord::Base
 
   serialize :days, Hash
 
-  belongs_to :location
+  belongs_to :location, foreign_key: :uid
 
   def set(day, hour, percentage)
     if !self.days.has_key? day
