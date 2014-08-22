@@ -1,0 +1,9 @@
+<%provide(:title, 'Edit Schedule')%>
+
+<h1>Editing schedule</h1>
+
+<%= render 'form' %>
+
+<%= link_to 'Show', @schedule %> |
+<%= link_to 'Destroy', @schedule, method: :delete, data: { confirm: 'Are you sure?' } %> |
+<%= link_to 'Back', schedules_path %>
