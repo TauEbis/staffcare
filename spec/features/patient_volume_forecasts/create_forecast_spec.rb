@@ -56,7 +56,7 @@ feature "Creating a patient volume forecast " do
 
 			context "and submitted" do
 				background { click_button submit }
-				it { should have_error_message('blank') }
+				it { should have_content('enter at least one volume forecast') }
 				it { should have_title full_title('New patient volume forecast') }
 			end
 
