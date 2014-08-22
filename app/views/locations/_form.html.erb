@@ -13,9 +13,12 @@
 
         <%= f.input :max_mds, label: "Maximum physicians" %>
 
-        <%= f.input :report_server_id, label: "Report server ID" %>
+        <%= f.input :report_server_id, label: "Report server name" %>
+
+        <%= f.input :uid, label: "Report server UID" %>
 
         <%= f.input :wiw_id, label: "When I Work ID", collection: Wiw::Location.find_all_collection %>
+
       </div>
     </div>
 
@@ -46,7 +49,7 @@
       <%= f.simple_fields_for(:speeds) do |builder| %>
         <%= render 'speed_fields', f: builder %>
       <% end %>
-      <%= link_to_add_speed_fields "Add a new work rate row", f %>
+      <%= link_to_add_speed_fields "Add a new work rate", f %>
     </br></br>
 
   </div>

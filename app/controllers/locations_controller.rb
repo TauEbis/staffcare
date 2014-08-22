@@ -13,7 +13,7 @@ class LocationsController < ApplicationController
   # GET /locations/new
   def new
     @location = Location.new
-    @speed = @location.speeds.new
+    @location.speeds.build( (1..5).map{ |n| {doctors: n, normal: 4*n, max:6*n} } )
     authorize @location
   end
 
