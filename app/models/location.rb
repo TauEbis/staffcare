@@ -10,8 +10,9 @@ class Location < ActiveRecord::Base
   accepts_nested_attributes_for :speeds, reject_if: proc { |attributes| attributes['doctors'].blank? }
 
   validates :name, presence: true
-  validates :uid, presence: true
+  #validates :uid, presence: true # The prevents creating new locations
   validates :zone, presence: true
+  validates :report_server_id, uniqueness: true, presence: true
   validates :rooms, presence: true, numericality: { greater_than: 0, less_than: 100 }
   validates :max_mds, presence: true, numericality: { greater_than: 0, less_than: 100 }
   validates :min_openers, :min_closers, presence: true, numericality: { greater_than: 0, less_than_or_equal_to: :max_mds }, unless: "max_mds.nil?"

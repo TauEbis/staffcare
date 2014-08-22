@@ -1,6 +1,6 @@
 <%provide(:title, 'All Users')%>
 
-<h1>Listing users</h1>
+<%= render 'shared/index_header', name: 'user' %>
 
 <table class="table">
   <thead>
@@ -26,9 +26,5 @@
   <% end %>
   </tbody>
 </table>
-
-<%= link_to 'New User', new_user_path %>
-
-<br>
 
 <%= paginate @users %>

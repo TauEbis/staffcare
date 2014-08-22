@@ -27,9 +27,9 @@ class SchedulesController < ApplicationController
   end
 
   def request_approvals
-    @schedule.manager_deadline ||= @schedule.starts_on - 21
-    @schedule.gm_deadline ||= @schedule.starts_on - 14
-    @schedule.sync_deadline ||= @schedule.starts_on - 7
+    @schedule.manager_deadline ||= @schedule.starts_on - 31
+    @schedule.gm_deadline ||= @schedule.starts_on - 24
+    @schedule.sync_deadline ||= @schedule.starts_on - 17
     @schedule.state = :active
     flash[:dashboard] = true if params[:dashboard]
   end

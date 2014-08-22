@@ -6,10 +6,11 @@ class PatientVolumeForecastsController < ApplicationController
   # GET /patient_volume_forecasts
   def index
     @patient_volume_forecasts = policy_scope(PatientVolumeForecast).ordered.page params[:page]
+    @patient_volume_forecasts = policy_scope(PatientVolumeForecast).ordered.page(1).per(500) if params[:all]
     authorize @patient_volume_forecasts
     respond_to do |format|
       format.html
-      format.csv { send_data PatientVolumeForecast.to_csv }
+      format.csv { send_data PatientVolumeForecast.to_csv(all_time: params[:all_time]) }
       format.xls
       # { send_data @patient_volume_forecasts.to_csv(col_sep: "\t") }
     end
@@ -27,8 +28,11 @@ class PatientVolumeForecastsController < ApplicationController
   def create
     @patient_volume_forecast = PatientVolumeForecast.new(patient_volume_forecast_params)
     authorize @patient_volume_forecast
-    if @patient_volume_forecast.save
-      redirect_to patient_volume_forecasts_url, notice: 'Patient volume forecast was successfully created.'
+    if @patient_volume_forecast.volume_by_location.empty?
+      flash.now[:alert] = 'Please enter at least one volume forecast to create.'
+      render :new
+    elsif @patient_volume_forecast.save
+      redirect_to patient_volume_forecasts_url(all: true), notice: 'Patient volume forecast was successfully created.'
     else
       render :new
     end
@@ -41,7 +45,7 @@ class PatientVolumeForecastsController < ApplicationController
 # PATCH/PUT /patient_volume_forecasts/1
   def update
     if @patient_volume_forecast.update(patient_volume_forecast_params)
-      redirect_to patient_volume_forecasts_url, notice: 'Patient Volume Forecast was successfully updated.'
+      redirect_to patient_volume_forecasts_url(all: true), notice: 'Patient Volume Forecast was successfully updated.'
     else
       render 'edit'
     end
@@ -56,11 +60,15 @@ class PatientVolumeForecastsController < ApplicationController
   # POST
   def import
     authorize current_user, :create?
-    unless (params[:file])
+    if !params[:file]
          redirect_to patient_volume_forecasts_url, notice: 'Please select a file to import.'
     else
+      begin
          PatientVolumeForecast.import(params[:file])
-         redirect_to patient_volume_forecasts_url, notice: 'Patient Volume Forecasts successfully imported.'
+         redirect_to patient_volume_forecasts_url(all: true), notice: 'Patient Volume Forecasts successfully imported.'
+      rescue ActiveRecord::RecordInvalid => exception
+          redirect_to patient_volume_forecasts_url, alert: exception.message
+      end
     end
   end
 
@@ -84,7 +92,11 @@ class PatientVolumeForecastsController < ApplicationController
 
     def volume_by_location_to_f
       params[:patient_volume_forecast][:volume_by_location].each do |k, v|
-        params[:patient_volume_forecast][:volume_by_location][k] = v.to_f
+        if v.blank?
+          params[:patient_volume_forecast][:volume_by_location].except!(k)
+        else
+          params[:patient_volume_forecast][:volume_by_location][k] = v.to_f
+        end
       end
     end
 

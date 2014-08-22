@@ -114,10 +114,10 @@ function CoverageViewModel() {
       self.day_letters(new Letters(data.day_letters));
       self.day_opt_diff(new OptDiffs(data.opt_diff));
       self.prev_date = data.day_info.date;
-      self.grade_opt_diff(new OptDiffs(data.grade_opt_diff) );
-      self.grade_letters(new Letters(data.grade_letters));
     }
 
+    self.grade_opt_diff(new OptDiffs(data.grade_opt_diff) );
+    self.grade_letters(new Letters(data.grade_letters));
     self.chosen_grade_id = data.chosen_grade_id;
     self.source = data.source;
     self.editable = data.editable;

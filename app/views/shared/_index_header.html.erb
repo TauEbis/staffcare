@@ -1,0 +1,10 @@
+<h1>
+  <%= name.pluralize.titleize %>
+  <% if policy(name.remove(' ').classify.constantize).new? -%>
+    <div class="pull-right">
+    <%= link_to self.send("new_#{name.remove(' ').underscore}_path".to_sym), class: 'btn btn-default'  do %>
+      <span class="glyphicon glyphicon-plus"></span> <%= 'New ' + name.titleize %>
+    <% end %>
+    </div>
+  <% end -%>
+</h1>

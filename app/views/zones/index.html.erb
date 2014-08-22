@@ -1,6 +1,6 @@
 <%provide(:title, 'All Zones')%>
 
-<h1>Listing zones</h1>
+<%= render 'shared/index_header', name: 'zone' %>
 
 <table class="table">
   <thead>
@@ -20,9 +20,5 @@
     <% end %>
   </tbody>
 </table>
-
-<%= link_to 'New Zone', new_zone_path %>
-
-<br>
 
 <%= paginate @zones %>
