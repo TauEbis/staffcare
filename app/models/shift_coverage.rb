@@ -10,6 +10,12 @@ class ShiftCoverage
 		@midday = ( @opens_at + @closes_at )/2
 	end
 
+	SCORES 		= 			{ 12 =>	[0,0,0,0,0,0,5, 10, 20, 15, 30, 18, 25        ],
+		  								14 => [0,0,0,0,0,0,0, 10, 15, 14, 25, 20, 30,  1,  5] }
+#						hours in day =>	[0,1,2,3,4,5,6,  7,  8,  9, 10, 11, 12, 13, 14] scores for each shift length
+
+
+
   # shifts comes in as [{"starts"=>8, "ends"=>12, "hours"=>4}, {"starts"=>12, "ends"=>20, "hours"=>8}]
   # TODO This needs some testing!
   def shifts_to_coverage(shifts)
@@ -45,39 +51,67 @@ class ShiftCoverage
     end
   end
 
+	def show_me(coverage)
+		list = equiv_shifts_for(coverage)
+		list.each do |set|
+			puts "#{set.inspect} -- #{score(set)}"
+		end
+		puts "#{pick_best(list).inspect}"
+	end
+
+	def pick_best(list)
+		pick = list.first
+		best_score = score(pick)
+
+		list.each do |set|
+			if score(set) > best_score
+				pick = set
+				best_score = score(set)
+			end
+		end
+
+		pick
+	end
+
   def equiv_shifts_for(coverage)
   	opens, closes = coverage_opens_closes(coverage)
   	result = build_valid(opens, closes)
   	result
   end
 
-	def build_valid(opens, closes)
-		result = []
-		opens.permutation.each do |o|
-			result << o.zip(closes).sort
-		end
-		result=result.uniq
-
-		result = result.reject do |set|
-			reject = false
-			set.each do |shift|
-				reject = true if (shift[1]-shift[0] < (@closes_at - @opens_at)/2)
-			end
-			reject
-		end
-
-		found_splits = false
-		result.each do |set|
-			set.each do |shift|
-				found_splits = true if shift[1]-shift[0] == (@closes_at - @opens_at)
-			end
-		end
-
-		result = result + build_valid(opens+[@midday], closes+[@midday]) if found_splits
-		result
-	end
-
 	private
+
+		def score(set)
+			lengths = set.map{ |shift| shift[1] - shift[0] }
+			result = lengths.map{ |l| SCORES[(@closes_at - @opens_at)][l] }.sum
+			result
+		end
+
+		def build_valid(opens, closes)
+			result = []
+			opens.permutation.each do |o|
+				result << o.zip(closes).sort
+			end
+			result=result.uniq
+
+			result = result.reject do |set|
+				reject = false
+				set.each do |shift|
+					reject = true if (shift[1]-shift[0] < (@closes_at - @opens_at)/2)
+				end
+				reject
+			end
+
+			found_splits = false
+			result.each do |set|
+				set.each do |shift|
+					found_splits = true if shift[1]-shift[0] == (@closes_at - @opens_at)
+				end
+			end
+
+			result = result + build_valid(opens+[@midday], closes+[@midday]) if found_splits
+			result
+		end
 
 		def coverage_opens_closes(coverage)
 			 @coverage = coverage
