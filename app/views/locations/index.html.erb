@@ -1,6 +1,6 @@
 <%provide(:title, 'All Locations')%>
 
-<h1>Listing locations</h1>
+<%= render 'shared/index_header', name: 'location' %>
 
 <table class="table">
   <thead>
@@ -22,9 +22,5 @@
     <% end %>
   </tbody>
 </table>
-
-<%= link_to 'New Location', new_location_path %>
-
-<br>
 
 <%= paginate @locations %>
