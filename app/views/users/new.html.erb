@@ -1,7 +1,6 @@
 <%provide(:title, 'New User')%>
 
 <h1>New user</h1>
-
 <%= simple_form_for(@user, html: { class: 'form form-horizontal' }) do |f| %>
   <%= f.error_notification %>
 
@@ -11,19 +10,24 @@
 
   <%= f.input :role, collection: [['Manager', 'manager'],['GM', 'gm'], ['Admin', 'admin']], include_blank: false, class: 'form-control' %>
 
+	<br/>
 	<% Zone.ordered.assigned.each do |zone| -%>
 	  <fieldset>
 	    <label><%= zone.name %></label>
-	    <%= f.association :locations, label: false, collection: zone.locations.ordered, as: :check_boxes, wrapper: :vertical_radio_and_checkboxes %>
-	    <div class="pull-right">
-	      <a href="#" class="select-all">All</a> | <a href="#" class="select-none">None</a>
-	    </div>
-	  </fieldset>
 
+	    <span>
+	      <a href="#" class="select-all">(All</a> | <a href="#" class="select-none">None)</a>
+	    </span>
+
+	    <%= f.association :locations, label: false, collection: zone.locations.ordered, as: :check_boxes, wrapper: :vertical_radio_and_checkboxes %>
+
+	  </fieldset>
+	  <br/>
 	<% end -%>
 
   <%= f.button :submit %>
-<% end %>
 
-
-<%= link_to 'Back', users_path %>
+  <br/>
+  <br/>
+  <%= link_to 'Back', users_path %>
+<% end -%>
