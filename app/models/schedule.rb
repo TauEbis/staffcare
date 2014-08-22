@@ -25,12 +25,12 @@ class Schedule < ActiveRecord::Base
 
   def self.default_attributes
     {
-      penalty_30min: 20,
-      penalty_60min: 80,
-      penalty_90min: 320,
+      penalty_30min: 10,
+      penalty_60min: 100,
+      penalty_90min: 300,
       penalty_eod_unseen: 40,
-      penalty_turbo: 40,
-      penalty_slack: 160,
+      penalty_turbo: 60,
+      penalty_slack: 180,
       oren_shift: true
     }
   end

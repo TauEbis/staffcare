@@ -1,0 +1,25 @@
+<%provide(:title, 'All Heatmaps')%>
+
+<h1>Heatmaps</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th colspan="2">uid</th>
+      <th colspan="2">Last updated</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @heatmaps.each do |heatmap| %>
+      <tr>
+        <td><%= link_to heatmap.location.name, heatmap %></td>
+        <td><%= heatmap.uid %></td>
+        <td><%= heatmap.updated_at %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= paginate @heatmaps %>

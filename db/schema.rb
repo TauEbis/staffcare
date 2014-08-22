@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140818140405) do
+ActiveRecord::Schema.define(version: 20140822170847) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,9 +30,11 @@ ActiveRecord::Schema.define(version: 20140818140405) do
   add_index "grades", ["user_id"], name: "index_grades_on_user_id", using: :btree
 
   create_table "heatmaps", force: true do |t|
-    t.string "name"
-    t.text   "days"
-    t.string "uid"
+    t.string   "name"
+    t.text     "days"
+    t.string   "uid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "heatmaps", ["uid"], name: "index_heatmaps_on_uid", using: :btree
