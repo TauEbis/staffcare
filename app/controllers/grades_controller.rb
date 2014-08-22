@@ -17,7 +17,8 @@ class GradesController < ApplicationController
              editable: policy(@grade).update?,
              grade_points: pts,
              grade_hours:  pts['hours'],
-             grade_letters: @grade.month_letters
+             grade_letters: @grade.month_letters,
+             grade_opt_diff: @grade.month_opt_diff
             }
 
     if @date
@@ -35,8 +36,7 @@ class GradesController < ApplicationController
       data[:time_wasted] = @grade.time_wasted(@date)
       data[:day_letters] = @grade.day_letters[@date_s]
       data[:visits] = @grade.totals(@date)[:visits]
-      data[:opt_diff] = @grade.opt_diff[@date_s]
-      data[:grade_opt_diff] = @grade.month_opt_diff
+      data[:opt_diff] = @grade.day_opt_diff[@date_s]
     end
 
     render json: data

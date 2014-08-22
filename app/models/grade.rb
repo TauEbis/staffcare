@@ -9,18 +9,19 @@ class Grade < ActiveRecord::Base
 
   enum source: [:optimizer, :last_month, :manual]
 
-  LETTERS  = {  "D-" => 5.00, # no F+ so bigger step here
-                "D"  => 4.33,
-                "D+" => 4.00,
-                "C-" => 3.67,
-                "C"  => 3.33,
-                "C+" => 3.0,
-                "B-" => 2.67,
-                "B"  => 2.33,
-                "B+" => 2.00,
-                "A-" => 1.67,
-                "A"  => 1.33,
-                "A+" => 0.75
+  LETTERS  = {  "F"  => 5.00,
+                "D-" => 4.33, # no F+ so bigger step here
+                "D"  => 4.00,
+                "D+" => 3.67,
+                "C-" => 3.33,
+                "C"  => 3.00,
+                "C+" => 2.67,
+                "B-" => 2.33,
+                "B"  => 2.00,
+                "B+" => 1.67,
+                "A-" => 1.33,
+                "A"  => 0.75,
+                "A+" => 0.0
               }
 
   scope :ordered, -> { order(source: :asc, created_at: :desc) }
@@ -28,6 +29,28 @@ class Grade < ActiveRecord::Base
   before_destroy :reset_chosen_grade
 
   accepts_nested_attributes_for :shifts
+
+  def self.assign_letter(score)
+    LETTERS.each do |letter, num|
+      return letter if score >= num
+    end
+
+    return "A+"
+  end
+
+  def self.unoptimized_sum(grades)
+    grades = Array(grades)
+    p = {}
+
+    grades.each do |g|
+      ['total', 'md_sat', 'patient_sat', 'cost', 'hours'].each do |field|
+        p[field] ||= 0
+        p[field] += g.points.sum {|k,v| v[field] }
+      end
+    end
+
+    p
+  end
 
   def label
     case source
@@ -42,47 +65,6 @@ class Grade < ActiveRecord::Base
     end
   end
 
-
-  def for_highcharts(date)
-    date_s = date.to_s
-    b = breakdowns[date_s]
-    size = location_plan.visits[date_s].size
-    range = (0...size)
-
-    normal_data = range.map do |i|
-      num_mds = coverages[date_s][i]
-      (location_plan.normal[num_mds - 1] / 2.0).round(2)  # Div 2.0 for half hours instad of hours
-    end
-
-    max_data = range.map do |i|
-      num_mds = coverages[date_s][i]
-      (location_plan.max[num_mds - 1] / 2.0).round(2)  # Div 2.0 for half hours instad of hours
-    end
-
-    seen_normal_data = range.map do |i|
-      (b['seen'][i] - b['turbo'][i]).round(2)
-    end
-
-    waiting_data = range.map do |i|
-      location_plan.visits[date_s][i].round(2) + b['queue'][i].round(2)
-    end
-
-    start = location_plan.location.open_times[date.wday]
-    x_axis = (0..size).map {|i| (start + (i / 2.0)).to_time_of_day }
-
-    {
-      visits_data: location_plan.visits[date_s].map{|i| i.round(2)},
-      seen_normal_data: seen_normal_data,
-      queue_data: b['queue'].map{|i| i.round(2)},
-      turbo_data: b['turbo'].map{|i| i.round(2)},
-      slack_data: b['slack'].map{|i| i.round(2)},
-      waiting_data: waiting_data,
-      # penalty_data: b['penalties'].map{|i| i.round(2)},
-      normal_data: normal_data,
-      max_data: max_data,
-      x_axis: x_axis
-    }
-  end
 
   # shifts comes in as [{"id"=>612, "starts"=>8, "ends"=>12, "hours"=>4}, {"id"=>613, "starts"=>12, "ends"=>20, "hours"=>8}]
   def update_shift!(date, raw_shifts)
@@ -129,36 +111,6 @@ class Grade < ActiveRecord::Base
     self.points[date_s] = grader.points
   end
 
-  def self.unoptimized_sum(grades)
-    grades = Array(grades)
-    p = {}
-
-    grades.each do |g|
-      ['total', 'md_sat', 'patient_sat', 'cost', 'hours'].each do |field|
-        p[field] ||= 0
-        p[field] += g.points.sum {|k,v| v[field] }
-      end
-    end
-
-    p
-  end
-
-  def month_letters
-    #not implemented yet
-    my_sums = Grade.unoptimized_sum(self).except("hours")
-    @_opt_sums ||= Grade.unoptimized_sum(location_plan.grades.optimizer.last).except("hours")
-    @m_letters ||= {}
-
-    my_sums.each do |k1, v1|
-      if k1 == "total"
-        @m_letters[k1] = assign_letter ( my_sums[k1] / @_opt_sums[k1])
-      else
-        @m_letters[k1] = assign_letter ( my_sums[k1] /( ( @_opt_sums["total"] / 3 + @_opt_sums[k1]) /2 ) )
-      end
-    end
-    @m_letters
-  end
-
   def reset_chosen_grade
     if location_plan.chosen_grade == self
       new_grade_id = location_plan.grades.where('id <> ?', id).order(id: :asc).first.try(:id)
@@ -174,78 +126,127 @@ class Grade < ActiveRecord::Base
     self.save!
   end
 
-  def opt_diff
-    @opt_points ||= location_plan.grades.optimizer.last.points
-    diff = @opt_points.deep_dup
-    diff.each do |k1, v1|
-      v1.each do |k2, v2|
-        diff[k1][k2] = points[k1][k2] - @opt_points[k1][k2] # or v2 but could cause hard to catch errors
-      end
+  def for_highcharts(date)
+    date_s = date.to_s
+    b = breakdowns[date_s]
+    size = location_plan.visits[date_s].size
+    range = (0...size)
+
+    normal_data = range.map do |i|
+      num_mds = coverages[date_s][i]
+      (location_plan.normal[num_mds - 1] / 2.0).round(2)  # Div 2.0 for half hours instad of hours
     end
-    diff
+
+    max_data = range.map do |i|
+      num_mds = coverages[date_s][i]
+      (location_plan.max[num_mds - 1] / 2.0).round(2)  # Div 2.0 for half hours instad of hours
+    end
+
+    seen_normal_data = range.map do |i|
+      (b['seen'][i] - b['turbo'][i]).round(2)
+    end
+
+    waiting_data = range.map do |i|
+      location_plan.visits[date_s][i].round(2) + b['queue'][i].round(2)
+    end
+
+    start = location_plan.location.open_times[date.wday]
+    x_axis = (0..size).map {|i| (start + (i / 2.0)).to_time_of_day }
+
+    {
+      visits_data: location_plan.visits[date_s].map{|i| i.round(2)},
+      seen_normal_data: seen_normal_data,
+      queue_data: b['queue'].map{|i| i.round(2)},
+      turbo_data: b['turbo'].map{|i| i.round(2)},
+      slack_data: b['slack'].map{|i| i.round(2)},
+      waiting_data: waiting_data,
+      # penalty_data: b['penalties'].map{|i| i.round(2)},
+      normal_data: normal_data,
+      max_data: max_data,
+      x_axis: x_axis
+    }
+  end
+
+
+## Methods for passing to the knockout viewmodel -- Refactor in the future
+
+  def plans_optimized_grade
+    @_plans_optimized_grade ||= location_plan.grades.optimizer.last
+  end
+
+  def day_opt_diff
+    @_d_opt_diff ||= begin
+      opt_points = plans_optimized_grade.points
+
+      @_d_opt_diff = opt_points.deep_dup
+      @_d_opt_diff.each do |k1, v1|
+        v1.each do |k2, v2|
+          @_d_opt_diff[k1][k2] = points[k1][k2] - opt_points[k1][k2] # or v2 but could cause hard to catch errors
+        end
+      end
+
+      @_d_opt_diff
+    end
+
+    @_d_opt_diff
   end
 
   def month_opt_diff
-    #@_month_opt_diff ||= begin
-    #  points
+    @_m_opt_diff ||= begin
       {
-        "hours" => opt_diff.values.map{ |v| v["hours"] }.sum.to_f,
-        "md_sat" => opt_diff.values.map{ |v| v["md_sat"] }.sum,
-        "patient_sat" => opt_diff.values.map{ |v| v["patient_sat"] }.sum,
-        "cost" => opt_diff.values.map{ |v| v["cost"] }.sum,
-        "total" => opt_diff.values.map{ |v| v["total"] }.sum
+        "hours" => day_opt_diff.values.map{ |v| v["hours"] }.sum.to_f,
+        "md_sat" => day_opt_diff.values.map{ |v| v["md_sat"] }.sum,
+        "patient_sat" => day_opt_diff.values.map{ |v| v["patient_sat"] }.sum,
+        "cost" => day_opt_diff.values.map{ |v| v["cost"] }.sum,
+        "total" => day_opt_diff.values.map{ |v| v["total"] }.sum
       }
-    #end
-  end
+    end
 
-  def letters(date)
-    day_letters[date_s]
+    @_m_opt_diff
   end
 
   def day_letters
-    @opt_points ||= location_plan.grades.optimizer.last.points
-    d_letters = @opt_points.deep_dup
-    d_letters.each { |k1, v1| d_letters[k1] = v1.except("hours") }
-    d_letters.each do |k1, v1|
-      v1.each do |k2, v2|
-        if k2 == "total"
-          d_letters[k1][k2] = assign_letter (points[k1][k2] / v2)
-        else
-          d_letters[k1][k2] = assign_letter (points[k1][k2] /( ( @opt_points[k1]["total"] / 3 + @opt_points[k1][k2] ) /2 ) )
+    @d_letters ||= begin
+
+      opt_points = plans_optimized_grade.points
+      @d_letters = opt_points.deep_dup
+      @d_letters.each { |k1, v1| @d_letters[k1] = v1.except("hours") }
+      @d_letters.each do |k1, v1|
+        v1.each do |k2, v2|
+          if k2 == "total"
+            @d_letters[k1][k2] = Grade.assign_letter (points[k1][k2] / v2)
+          else
+            @d_letters[k1][k2] = Grade.assign_letter (points[k1][k2] /( ( opt_points[k1]["total"] / 3 + opt_points[k1][k2] ) /2 ) )
+          end
         end
       end
+      @d_letters
+
     end
-    d_letters
+
+    @d_letters
   end
 
-  def assign_letter(score)
-    if score > LETTERS["D-"]
-      "F"
-    elsif score >= LETTERS["D"]
-      "D-"
-    elsif score >= LETTERS["D+"]
-      "D"
-    elsif score >= LETTERS["C-"]
-      "D+"
-    elsif score >= LETTERS["C"]
-      "C-"
-    elsif score >= LETTERS["C+"]
-      "C"
-    elsif score >= LETTERS["B-"]
-      "C+"
-    elsif score >= LETTERS["B"]
-      "B-"
-    elsif score >= LETTERS["B+"]
-      "B"
-    elsif score >= LETTERS["A-"]
-      "B+"
-    elsif score >= LETTERS["A"]
-      "A-"
-    elsif score >= LETTERS["A+"]
-      "A"
-    elsif score < LETTERS["A+"]
-      "A+"
+  def month_letters
+    @m_letters ||= begin
+
+      @m_letters = {}
+
+      my_sums = Grade.unoptimized_sum(self).except("hours")
+      opt_sums = Grade.unoptimized_sum(self.plans_optimized_grade).except("hours")
+
+      my_sums.each do |k1, v1|
+        if k1 == "total"
+          @m_letters[k1] = Grade.assign_letter ( my_sums[k1] / opt_sums[k1])
+        else
+          @m_letters[k1] = Grade.assign_letter ( my_sums[k1] /( ( opt_sums["total"] / 3 + opt_sums[k1]) /2 ) )
+        end
+      end
+      @m_letters
+
     end
+
+    @m_letters
   end
 
   def totals(date)
