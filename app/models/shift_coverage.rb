@@ -44,9 +44,9 @@ class ShiftCoverage
   end
 
   def coverage_to_shifts(coverage)
-  	opens, closes = coverage_opens_closes(coverage)
+  	shifts = pick_best(equiv_shifts_for(coverage))
 
-    (opens.zip(closes)).map do |starts_at, ends_at|
+    shifts.map do |starts_at, ends_at|
       Shift.new(starts_at: @time + starts_at.hours, ends_at: @time + ends_at.hours )
     end
   end
@@ -61,13 +61,17 @@ class ShiftCoverage
 
 	def pick_best(list)
 		pick = list.first
-		best_score = score(pick)
 
-		list.each do |set|
-			if score(set) > best_score
-				pick = set
-				best_score = score(set)
+		if SCORES[(@closes_at - @opens_at)]
+			best_score = score(pick)
+
+			list.each do |set|
+				if score(set) > best_score
+					pick = set
+					best_score = score(set)
+				end
 			end
+
 		end
 
 		pick
