@@ -51,7 +51,7 @@ class ShiftCoverage
     end
   end
 
-	def show_me(coverage)
+	def show_me(coverage)  # helper method for testing
 		list = equiv_shifts_for(coverage)
 		list.each do |set|
 			puts "#{set.inspect} -- #{score(set)}"
