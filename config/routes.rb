@@ -35,6 +35,8 @@ Rails.application.routes.draw do
 
   resources :zones
 
+  resources :heatmaps, only: [:index, :show]
+
   resources :speeds, only: [:destroy]
 
   devise_for :users, skip: [:registrations]
