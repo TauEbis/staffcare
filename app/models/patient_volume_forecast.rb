@@ -13,6 +13,8 @@ class PatientVolumeForecast < ActiveRecord::Base
   scope :ordered, -> { order(start_date: :asc, id: :desc) }
   default_scope -> { order(start_date: :asc, id: :desc) }
 
+  paginates_per 50
+
   def self.next_start_date
     ordered.last ? ordered.last.start_date + 7 : ''
   end
@@ -58,7 +60,7 @@ class PatientVolumeForecast < ActiveRecord::Base
     end
 
     unless end_date == start_date + 6
-      errors.add(:end_date, "End data and start date must be one week apart")
+      errors.add(:end_date, "End date and start date must be one week apart")
     end
   end
 
@@ -82,7 +84,8 @@ class PatientVolumeForecast < ActiveRecord::Base
 
   # Exports only forecasts that start on a date after today
   def self.to_csv(options = {})
-  	CSV.generate(options) do |csv|
+    only_future = !options[:all_time]
+  	CSV.generate(options.except(:all_time)) do |csv|
   		locations = Location.ordered.all
   		attribute_columns = [ 'start_date', 'end_date' ]
   		location_columns = locations.map(&:report_server_id)
@@ -91,7 +94,7 @@ class PatientVolumeForecast < ActiveRecord::Base
   		csv << columns
 
   		ordered.all.each do |projection|
-        unless projection.start_date > Date.today
+        if only_future && projection.start_date < Date.today
           next
         end
   			attribute_rows = projection.attributes.values_at(*attribute_columns)
@@ -100,6 +103,11 @@ class PatientVolumeForecast < ActiveRecord::Base
 
 				csv << row
 			end
+
+      (0..20).each do |n|
+        row = [nil, next_start_date + 7*n, next_end_date + 7*n]
+        csv << row
+      end
 
 		end
   end
@@ -110,27 +118,26 @@ class PatientVolumeForecast < ActiveRecord::Base
     (2..spreadsheet.last_row).each do |i|
       row = Hash[[header, spreadsheet.row(i)].transpose]
 
-      forecast = nil
-      begin
-        forecast = PatientVolumeForecast.find(row["id"])
-      rescue ActiveRecord::RecordNotFound
+      if forecast = PatientVolumeForecast.find_by(id: row["id"])
+      else
         forecast = PatientVolumeForecast.new
       end
 
-      result = {}
-      result['volume_by_location'] = {}
+      result = {'volume_by_location' => {}}
       row.keys.each do |key|
         if key == 'start_date' || key == 'end_date'
              result[key] = format_date(row[key])
         elsif key == 'id' && !forecast.new_record?
              result[key] = row[key]
-        else
+        elsif !row[key].blank? && row[key].to_f != 0
              result['volume_by_location'][key] = row[key].to_f
         end
       end
 
-      forecast.update(result)
-      forecast.save!
+      if !result['volume_by_location'].empty?
+        forecast.update(result)
+        forecast.save!
+      end
     end
   end
 
