@@ -10,7 +10,7 @@ class OptimizerWorker
     schedule = Schedule.find(schedule_id)
     schedule.running!
 
-    source = Rails.env.development? ? :sample_run : "database"
+    source = "database" # Set to :sample_run for sample data. On a dev machine, rake rs_load adds heatmaps to the database.
     provider = DataProvider.new(source)
 
     at 0, "Loading location plans"
