@@ -1,7 +1,7 @@
 class SchedulePolicy < ApplicationPolicy
 
   def index?
-    user.admin? || (!user.locations.empty? && !record.empty?)
+    user.admin?
   end
 
   def show?

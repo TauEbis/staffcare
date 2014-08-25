@@ -1,7 +1,16 @@
 <div class="col-sm-2">
   <ul class="nav nav-pills nav-stacked">
     <% @location_plans.each do |location_plan| -%>
-      <li><a href="#<%= dom_id location_plan %>" data-toggle="tab"><%= location_plan.name %></a></li>
+      <% push = @pushers[location_plan.id].push %>
+         <li>
+           <a href="#<%= dom_id location_plan %>" class="btn btn-default" data-toggle="tab">
+             <%= location_plan.name %><br>
+             <span class="label label-success"><%= push.creates.length %></span> /
+             <span class="label label-warning"><%= push.updates.length %></span> /
+             <span class="label label-danger"><%= push.deletes.length %></span>  /
+             <span class="label label-info"><%= push.no_changes.length %></span>
+           </a>
+         </li>
     <% end -%>
   </ul>
 </div>
