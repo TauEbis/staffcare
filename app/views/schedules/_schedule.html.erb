@@ -22,21 +22,21 @@
       <div class="col-sm-8">
         <ul class="chevronbar">
           <li class="first">
-            <a class="" href="#">Draft</a>
+            <span>Draft</span>
           </li>
 
           <% unless schedule.draft? -%>
             <li class="unapproved">
-              <a href="#">Unapproved: <%= schedule.location_plans.pending.count %></a>
+              <span>Unapproved: <%= schedule.location_plans.pending.count %></span>
             </li>
             <li class="manager_approved">
-              <a href="#">Manager Approved: <%= schedule.location_plans.manager_approved.count %></a>
+              <span>Manager Approved: <%= schedule.location_plans.manager_approved.count %></span>
             </li>
             <li class="gm_approved">
-              <a href="#">GM Approved: <%= schedule.location_plans.gm_approved.count %></a>
+              <span>GM Approved: <%= schedule.location_plans.gm_approved.count %></span>
             </li>
             <li>
-              <a href="#">Locked</a>
+              <span>Locked</span>
             </li>
           <% end -%>
         </ul>
@@ -93,13 +93,13 @@
       <div class="col-sm-9">
         <ul class="chevronbar">
           <li class="first">
-            <a href="#">Not synced: <%= schedule.location_plans.unsynced.count %></a>
+            <span>Not synced: <%= schedule.location_plans.unsynced.count %></span>
           </li>
           <li class="dirty">
-            <a href="#">Dirty: <%= schedule.location_plans.dirty.count %></a>
+            <span>Dirty: <%= schedule.location_plans.dirty.count %></span>
           </li>
           <li class="synced">
-            <a href="#">Synced: <%= schedule.location_plans.synced.count %></a>
+            <span>Synced: <%= schedule.location_plans.synced.count %></span>
           </li>
         </ul>
       </div>

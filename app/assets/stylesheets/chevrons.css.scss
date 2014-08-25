@@ -28,6 +28,11 @@ ul.chevronbar li a {
 //  font-weight: bold;
 }
 
+ul.chevronbar li span {
+  line-height: 28px;
+  text-decoration: none;
+  padding: 5px;
+}
 ul.chevronbar li:before, ul.chevronbar li:after {
   content: ' ';
   height: 0;
@@ -64,12 +69,9 @@ ul.chevronbar li.last:after {
   background: $c;
   color: $txt_c;
 
-  a {
-    color: $txt_c
-  }
-
-  a:hover {
-    background-color: darken($c, 10%);
+  a, span {
+    color: $txt_c;
+    display: block;
   }
 
   &:before {
