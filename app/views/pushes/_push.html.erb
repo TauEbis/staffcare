@@ -1,32 +1,27 @@
-<ul class="nav nav-tabs" role="tablist">
-  <li><a href="#anchor_creates" data-toggle="tab">
-    Creates
-    <span class="label label-success"><%= push.creates.length %></span>
-  </a></li>
-  <li><a href="#anchor_updates" data-toggle="tab">
-    Updates
-    <span class="label label-warning"><%= push.updates.length %></span>
-  </a></li>
-  <li><a href="#anchor_deletes" data-toggle="tab">
-    Deletes
-    <span class="label label-danger"><%= push.deletes.length %></span>
-  </a></li>
-  <li><a href="#anchor_no_changes" data-toggle="tab">
-    No Changes
-    <span class="label label-info"><%= push.no_changes.length %></span>
-  </a></li>
+<ul class="nav nav-tabs">
+  <% ['creates', 'updates', 'deletes', 'no_changes'].each do |action| -%>
+    <li><a href="#anchor_<%= action %>">
+      <%= action.humanize %>
+      <span class="label label-<%= push_action_class(action) %>"><%= push.send(action).length %></span>
+    </a></li>
+  <% end %>
 </ul>
 
-<div class="tab-content">
-  <% ['creates', 'updates', 'deletes', 'no_changes'].each do |action| -%>
-    <div class="tab-pane" id="anchor_<%= action %>">
+<br><br>
 
+<% ['creates', 'updates', 'deletes', 'no_changes'].each do |action| -%>
+  <div id="anchor_<%= action %>" class="panel panel-<%= push_action_class(action) %>">
+    <div class="panel-heading">
       <h3><%= action.humanize %></h3>
+    </div>
 
+    <div class="panel-body">
       <% push.send(action).group_by{|e| cast_time(e['start_time']).to_date }.each do |date, entries| -%>
-        <div class="panel panel-default">
-          <div class="panel-heading"><%= l date %></div>
-          <div class="panel-body">
+        <div class="row">
+          <div class="col-sm-2">
+            <h5><%= l date %></h5>
+          </div>
+          <div class="col-sm-6">
             <ul>
               <% entries.each do |entry| -%>
                 <li>
@@ -47,9 +42,9 @@
               <% end -%>
             </ul>
           </div>
-        </div> <!-- end panel -->
+        </div> <!-- end row -->
       <% end -%>
 
-    </div> <!-- end tab-pane -->
-  <% end -%>
-</div> <!-- end tab-content -->
+    </div><!-- end body -->
+  </div> <!-- end panel -->
+<% end -%>
