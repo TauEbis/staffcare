@@ -11,7 +11,6 @@ feature 'Signed-in navigation bar: ', :devise do
 
     describe 'then they will see the signed-in non-admin nav bar' do
       it { should have_link( 'Home', href: root_path ) }
-      it { should have_link( 'Schedules', href: schedules_path ) }
       it { should have_link( user.email, href: profile_user_path(user) ) }
       it { should have_link('Sign out', href: destroy_user_session_path ) }
 
