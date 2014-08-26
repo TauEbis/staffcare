@@ -1,6 +1,6 @@
 module SchedulesHelper
   def schedule_date_span(s)
-    "#{l s.starts_on} - #{l s.ends_on}"
+    "#{(l s.starts_on).slice(0..-7)} - #{l s.ends_on}"
   end
 
   def schedule_daygrid(s)

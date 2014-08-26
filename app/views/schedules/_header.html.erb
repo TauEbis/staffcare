@@ -1,10 +1,17 @@
-<%provide(:title, "Shift Schedule for #{schedule_date_span(@schedule)}")%>
+<% if @location_plan -%>
+  <% title = "Schedule for #{schedule_date_span(@schedule)}:  #{@location_plan.name}" -%>
+<% elsif @zone -%>
+  <% title = "Schedule for #{schedule_date_span(@schedule)}:  #{@zone.name}" -%>
+<% else -%>
+  <% title = "Schedule for #{schedule_date_span(@schedule)}" -%>
+<% end -%>
+<%provide(:title, title)%>
 
 <h1>
   <%= link_to current_page?(@schedule) ? '/' : @schedule do %>
     <span class="glyphicon glyphicon-share-alt icon-flipped"></span>
   <% end -%>
-  Shift Schedule for <%= schedule_date_span(@schedule) %>
+  <%= title %>
   <small> <%= @schedule.state.to_s.humanize %></small>
 </h1>
 
