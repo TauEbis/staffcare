@@ -11,12 +11,12 @@ class OptimizerWorker
     rerun = schedule.complete? # for updates
     schedule.running!
 
-    source = "database" # Set to :sample_run for sample data. On a dev machine, rake rs_load adds heatmaps to the database.
-    provider = DataProvider.new(source)
-
-    at 0, "Loading location plans"
-
     unless rerun # for updates
+      source = "database" # Set to :sample_run for sample data. On a dev machine, rake rs_load adds heatmaps to the database.
+      provider = DataProvider.new(source)
+
+      at 0, "Loading location plans"
+
       # Factory creates LocationPlans and VisitProjection
       # Exclude Locations in the 'Unassigned' zone
       factory = LocationPlansFactory.new({
