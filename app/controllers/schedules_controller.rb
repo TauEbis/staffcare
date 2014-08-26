@@ -7,7 +7,6 @@ class SchedulesController < ApplicationController
   def index
     @schedules = policy_scope(Schedule).ordered.includes(:location_plans).page params[:page]
     authorize @schedules
-
   end
 
   # GET /schedules/1
@@ -24,6 +23,7 @@ class SchedulesController < ApplicationController
 
   # GET /schedules/1/edit
   def edit
+    @editing = true
   end
 
   def request_approvals
@@ -52,16 +52,25 @@ class SchedulesController < ApplicationController
   # PATCH/PUT /schedules/1
   def update
     if @schedule.update(schedule_params)
-      if params[:notify_managers]
-        TodoNotifier.notify!
-        @schedule.update_attribute(:active_notices_sent_at, Time.now.utc)
+
+      if params[:editing]
+        @schedule.location_plans.each do |lp|
+          lp.grades.clear
+        end
+        job_id = OptimizerWorker.perform_async(@schedule.id)
+        @schedule.update_attribute( :optimizer_job_id, job_id )
+        redirect_to schedules_url, notice: 'Schedule was successfully updated. Optimization is now running.'
+
+      else
+
+        if params[:notify_managers]
+          TodoNotifier.notify!
+          @schedule.update_attribute(:active_notices_sent_at, Time.now.utc)
+        end
+        redirect_to (flash[:dashboard] ? root_path: @schedule), notice: 'Schedule dealines were successfully set.'
+
       end
 
-      if flash[:dashboard]
-        redirect_to root_path, notice: 'Schedule was successfully updated.'
-      else
-        redirect_to @schedule, notice: 'Schedule was successfully updated.'
-      end
     else
       render :edit
     end

@@ -6,7 +6,12 @@
     <div class="row">
       <div class="col-sm-4">
 
+        <% if @editing -%>
+          <%= f.input :starts_on, readonly: true, as: :string %>
+          <%= hidden_field_tag 'editing', @editing %>
+        <% else -%>
           <%= render 'shared/date_picker_field', f: f, date_field: :starts_on, picker_type: "monthpicker" %>
+        <% end -%>
 
           <%= render 'field', f: f, data_field: :penalty_30min, label: "Cost of a patient waiting 30 minutes" %>
           <%= render 'field', f: f, data_field: :penalty_60min, label: "Cost of a patient waiting 60 minutes" %>
@@ -15,6 +20,7 @@
           <%= render 'field', f: f, data_field: :penalty_turbo, label: "Cost of overworking physician by 1 patient" %>
           <%= render 'field', f: f, data_field: :penalty_slack, label: "Physician Hourly" %>
           <%= f.hidden_field :oren_shift, required: true %>
+
 
       </div>
     </div>

@@ -8,6 +8,7 @@ class OptimizerWorker
     at 0, "Beginning"
 
     schedule = Schedule.find(schedule_id)
+    rerun = schedule.complete? # for updates
     schedule.running!
 
     source = "database" # Set to :sample_run for sample data. On a dev machine, rake rs_load adds heatmaps to the database.
@@ -15,14 +16,16 @@ class OptimizerWorker
 
     at 0, "Loading location plans"
 
-    # Factory creates LocationPlans and VisitProjection
-    # Exclude Locations in the 'Unassigned' zone
-    factory = LocationPlansFactory.new({
-                                           schedule: schedule,
-                                           locations: Location.assigned,
-                                           data_provider: provider})
+    unless rerun # for updates
+      # Factory creates LocationPlans and VisitProjection
+      # Exclude Locations in the 'Unassigned' zone
+      factory = LocationPlansFactory.new({
+                                             schedule: schedule,
+                                             locations: Location.assigned,
+                                             data_provider: provider})
 
-    factory.create
+      factory.create
+    end
 
     at 0, "Optimizing"
 
