@@ -24,7 +24,7 @@ RSpec.describe SchedulesController, :type => :controller do
   # Schedule. As you add validations to Schedule, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    { 'starts_on' => Date.tomorrow.to_s }.merge(Schedule.default_attributes)
+    { 'starts_on' => 1.month.from_now.to_date.beginning_of_month.to_s }.merge(Schedule.default_attributes)
   }
 
   let(:invalid_attributes) {

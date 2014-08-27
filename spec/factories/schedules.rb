@@ -2,7 +2,7 @@
 
 FactoryGirl.define do
   factory :schedule do
-    starts_on { 1.weeks.from_now.to_date }
+    starts_on { 1.month.from_now.to_date.beginning_of_month }
     state 'active'
 
 

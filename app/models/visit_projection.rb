@@ -1,5 +1,5 @@
 class VisitProjection < ActiveRecord::Base
-  belongs_to :schedule
+  belongs_to :schedule # is this used at all?
   belongs_to :location
 
   has_one :location_plan
@@ -14,7 +14,7 @@ class VisitProjection < ActiveRecord::Base
   validate :valid_volumes
 
   def valid_volumes
-    unless !volumes.empty?
+    unless volumes && !volumes.empty?
       errors.add(:base, "Please add valid patient volume forecasts for this schedule.")
       return
     end
