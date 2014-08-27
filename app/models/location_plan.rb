@@ -152,6 +152,7 @@ class LocationPlan < ActiveRecord::Base
     open_times.each do |t|
       unless 8 <=t && t <= 22
         errors.add(:base, "Site must open after 8AM and before 10PM")
+        return
       end
     end
   end
@@ -160,6 +161,7 @@ class LocationPlan < ActiveRecord::Base
     close_times.each do |t|
       unless 8 <=t && t <= 22
         errors.add(:base, "Site must close after 8AM and before 10PM")
+        return
       end
     end
   end
@@ -169,6 +171,7 @@ class LocationPlan < ActiveRecord::Base
       dow = Date.parse(day).wday
       unless day_visits.size == 2 * (close_times[dow] - open_times[dow])
         errors.add(:base, "The visit projection must match the opening hours")
+        return
       end
     end
   end

@@ -1,7 +1,7 @@
 # A generated and scored schedule
 class Schedule < ActiveRecord::Base
 
-  has_many :visit_projections, dependent: :destroy
+  has_many :visit_projections, dependent: :destroy # is this used anywhere?
   has_many :location_plans, dependent: :destroy
 
   enum state: [ :draft, :active, :locked, :archived ]
@@ -23,6 +23,7 @@ class Schedule < ActiveRecord::Base
 
   validates :starts_on, presence: true
   validate :valid_starts_on
+  validates_associated :location_plans
 
 
   def valid_starts_on
