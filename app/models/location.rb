@@ -15,6 +15,10 @@ class Location < ActiveRecord::Base
   validates :report_server_id, uniqueness: true, presence: true
   validates :rooms, presence: true, numericality: { greater_than: 0, less_than: 100 }
   validates :max_mds, presence: true, numericality: { greater_than: 0, less_than: 100 }
+
+  # could likely be removed since min_openers/min_closers
+  # seem not be used but rather calculated on the location_plan
+  # and just set to 1 by default by the database
   validates :min_openers, :min_closers, presence: true, numericality: { greater_than: 0, less_than_or_equal_to: :max_mds }, unless: "max_mds.nil?"
   validate :validate_nested_speeds_sequence
 
@@ -33,7 +37,7 @@ class Location < ActiveRecord::Base
   end
 
   DAY_PARAMS.each do |day_param|
-    validates day_param, presence: true, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 1440 }
+    validates day_param, presence: true, numericality: { greater_than_or_equal_to: 480, less_than_or_equal_to: 1320 }
   end
 
   DAYS.each do |day|
