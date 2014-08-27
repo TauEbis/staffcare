@@ -22,6 +22,20 @@ class Schedule < ActiveRecord::Base
   end
 
   validates :starts_on, presence: true
+  validate :valid_starts_on
+
+
+  def valid_starts_on
+    unless starts_on.is_a? Date
+      errors.add(:starts_on, "Please select a starting date.")
+      return
+    end
+
+    unless starts_on.mday == 1
+      errors.add(:starts_on, "Schedule must start on first day of the month.")
+    end
+  end
+
 
   def self.default_attributes
     {
