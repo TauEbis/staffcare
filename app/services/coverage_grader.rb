@@ -86,6 +86,8 @@ class CoverageGrader
 		end
 
 		# Calculate Penalty
+		# Note: Penalties are additive.
+		# A 90 minute penalty will first have been penalized at the 30 minute rate and then at the 60 minute rate
 		@time_slots_range.each do |x|
 			@penalties[x] = @penalty_slack_vector[x] * @slack[x] +
 											@penalty_turbo * @turbo[x] +
