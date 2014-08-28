@@ -73,6 +73,8 @@ class SchedulesController < ApplicationController
       end
 
     else
+      @editing = true
+      @updates = @schedule.check_for_updates
       render :edit
     end
   end

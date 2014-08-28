@@ -28,7 +28,7 @@ RSpec.describe SchedulesController, :type => :controller do
   }
 
   let(:invalid_attributes) {
-    { 'starts_on' => nil }.merge(Schedule.default_attributes)
+    { 'penalty_turbo' => nil }.merge(Schedule.default_attributes)
   }
 
   # This should return the minimal set of values that should be in the session

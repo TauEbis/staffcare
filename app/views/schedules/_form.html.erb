@@ -21,6 +21,22 @@
           <%= render 'field', f: f, data_field: :penalty_slack, label: "Physician Hourly" %>
           <%= f.hidden_field :oren_shift, required: true %>
 
+        <% if @editing && @schedule.any_updates? -%>
+
+          <% if @updates[:heatmaps] || @updates[:forecasts] %>
+            <%= check_box_tag 'visits' %>
+            <%= label_tag "Use latest heatmaps and visit projections" %>
+          <br>
+          <% end -%>
+          <% if @updates[:location] %>
+            <%= check_box_tag 'locations' %>
+            <%= label_tag "Use latest locations data" %>
+          <% end -%>
+          <div class="alert alert-danger"> If you check this, it will delete all manual changes to this schedule
+           and generate a new optimized schedule using the latest data. </div>
+
+        <% end -%>
+
 
       </div>
     </div>
