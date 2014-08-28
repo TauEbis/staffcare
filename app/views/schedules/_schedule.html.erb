@@ -83,7 +83,7 @@
           <% end -%>
 
           <% if can.edit? -%>
-            <a href="<%= url_for edit_schedule_path(schedule) %>" class="btn btn-default">
+            <a href="<%= url_for edit_schedule_path(schedule) %>" class="btn btn-default <%= "btn-warning" if schedule.any_updates? %>">
               <span class="glyphicon glyphicon-cog"></span> Edit
             </a>
           <% end -%>

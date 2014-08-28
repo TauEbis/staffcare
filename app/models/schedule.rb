@@ -116,4 +116,22 @@ class Schedule < ActiveRecord::Base
       Grade.unoptimized_sum(lp.map(&:chosen_grade))
     end
   end
+
+  def any_updates?
+    check_for_updates.values.include? true
+  end
+
+  def check_for_updates
+    new_heatmaps, new_forecasts, new_locations = false, false, false
+
+    forecasts = PatientVolumeForecast.where(start_date: ((starts_on-6)..ends_on) )
+    forecasts_updates = forecasts.map(&:updated_at).max
+    location_plans.each do |lp|
+      new_locations = true if lp.updated_at < lp.location.updated_at
+      new_heatmaps = true if lp.visit_projection.updated_at < Heatmap.find_by!(uid: lp.location.uid).updated_at
+      new_forecasts = true if lp.visit_projection.updated_at < forecasts_updates
+    end
+
+    {heatmaps: new_heatmaps, forecasts: new_forecasts, location: new_locations}
+  end
 end

@@ -2,6 +2,19 @@
 
 <h1>Editing schedule</h1>
 
+<% if @schedule.any_updates? -%>
+<div class="alert alert-danger">
+	<ul>
+		<% @updates.each do |k,v| -%>
+			<% if @updates[k] -%>
+				<li> <%= k.capitalize %> data has been updated since this schedule was generated</li>
+			<% end -%>
+		<% end -%>
+	</ul>
+</div>
+<% end -%>
+
+
 <%= render 'form' %>
 
 <br>

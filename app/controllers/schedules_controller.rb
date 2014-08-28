@@ -24,6 +24,7 @@ class SchedulesController < ApplicationController
   # GET /schedules/1/edit
   def edit
     @editing = true
+    @updates = @schedule.check_for_updates
   end
 
   def request_approvals
