@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140828004421) do
+ActiveRecord::Schema.define(version: 20140828004859) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -110,9 +110,11 @@ ActiveRecord::Schema.define(version: 20140828004421) do
   add_index "pages", ["slug"], name: "index_pages_on_slug", unique: true, using: :btree
 
   create_table "patient_volume_forecasts", force: true do |t|
-    t.date "start_date"
-    t.date "end_date"
-    t.json "volume_by_location", default: {}, null: false
+    t.date     "start_date"
+    t.date     "end_date"
+    t.json     "volume_by_location", default: {},                    null: false
+    t.datetime "created_at",         default: '2014-08-28 00:51:21', null: false
+    t.datetime "updated_at",         default: '2014-08-28 00:51:21', null: false
   end
 
   create_table "pushes", force: true do |t|
