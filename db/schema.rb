@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140822170847) do
+ActiveRecord::Schema.define(version: 20140828004421) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,21 +40,23 @@ ActiveRecord::Schema.define(version: 20140822170847) do
   add_index "heatmaps", ["uid"], name: "index_heatmaps_on_uid", using: :btree
 
   create_table "location_plans", force: true do |t|
-    t.integer "location_id",                      null: false
-    t.integer "schedule_id",                      null: false
-    t.integer "visit_projection_id",              null: false
-    t.json    "visits"
-    t.integer "approval_state",      default: 0,  null: false
-    t.integer "chosen_grade_id"
-    t.integer "max_mds"
-    t.integer "rooms"
-    t.integer "min_openers"
-    t.integer "min_closers"
-    t.integer "open_times",          default: [],              array: true
-    t.integer "close_times",         default: [],              array: true
-    t.string  "normal",              default: [], null: false, array: true
-    t.string  "max",                 default: [], null: false, array: true
-    t.integer "wiw_sync",            default: 0,  null: false
+    t.integer  "location_id",                                         null: false
+    t.integer  "schedule_id",                                         null: false
+    t.integer  "visit_projection_id",                                 null: false
+    t.json     "visits"
+    t.integer  "approval_state",      default: 0,                     null: false
+    t.integer  "chosen_grade_id"
+    t.integer  "max_mds"
+    t.integer  "rooms"
+    t.integer  "min_openers"
+    t.integer  "min_closers"
+    t.integer  "open_times",          default: [],                                 array: true
+    t.integer  "close_times",         default: [],                                 array: true
+    t.string   "normal",              default: [],                    null: false, array: true
+    t.string   "max",                 default: [],                    null: false, array: true
+    t.integer  "wiw_sync",            default: 0,                     null: false
+    t.datetime "created_at",          default: '2014-08-28 00:45:59', null: false
+    t.datetime "updated_at",          default: '2014-08-28 00:45:59', null: false
   end
 
   create_table "locations", force: true do |t|
