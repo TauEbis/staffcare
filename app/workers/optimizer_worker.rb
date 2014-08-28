@@ -4,16 +4,19 @@ class OptimizerWorker
 
   sidekiq_options retry: false
 
-  def perform(schedule_id)
+  def perform(schedule_id, opts={})
     at 0, "Beginning"
 
     schedule = Schedule.find(schedule_id)
     rerun = schedule.complete? # for updates
     schedule.running!
 
+    load_visits = !opts[:skip_visits]
+    load_locations = !opts[:skip_locations]
+
     begin
 
-      unless rerun # for updates
+      if load_visits || load_locations
         source = "database" # Set to :sample_run for sample data. On a dev machine, rake rs_load adds heatmaps to the database.
         provider = DataProvider.new(source)
 
@@ -26,7 +29,8 @@ class OptimizerWorker
                                                locations: Location.assigned,
                                                data_provider: provider})
 
-        factory.create
+        rerun ? factory.update(opts) : factory.create
+
       end
 
       at 0, "Optimizing"

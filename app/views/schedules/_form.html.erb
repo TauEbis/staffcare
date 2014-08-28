@@ -24,12 +24,12 @@
         <% if @editing && @schedule.any_updates? -%>
 
           <% if @updates[:heatmaps] || @updates[:forecasts] %>
-            <%= check_box_tag 'visits' %>
+            <%= check_box_tag 'load_visits' %>
             <%= label_tag "Use latest heatmaps and visit projections" %>
           <br>
           <% end -%>
           <% if @updates[:location] %>
-            <%= check_box_tag 'locations' %>
+            <%= check_box_tag 'load_locations' %>
             <%= label_tag "Use latest locations data" %>
           <% end -%>
           <div class="alert alert-danger"> If you check this, it will delete all manual changes to this schedule

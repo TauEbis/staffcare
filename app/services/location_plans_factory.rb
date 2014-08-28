@@ -21,8 +21,8 @@ class LocationPlansFactory
     @locations.each do |location|
 
       attr = {}
-      attr.merge!(loc_attr(location)) unless opts[:only_visits]
-      attr.merge!(visit_attr(location)) unless opts[:only_locations]
+      attr.merge!(loc_attr(location)) unless opts[:skip_visits]
+      attr.merge!(visit_attr(location)) unless opts[:skip_locations]
       lp = @schedule.location_plans.find_by(location_id: location.id)
       lp.update! attr
     end
