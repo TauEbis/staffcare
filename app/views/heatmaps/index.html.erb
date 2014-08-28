@@ -6,7 +6,7 @@
   <thead>
     <tr>
       <th>Name</th>
-      <th colspan="2">uid</th>
+      <th colspan="2">Report Server uid</th>
       <th colspan="2">Last updated</th>
     </tr>
   </thead>
@@ -16,7 +16,7 @@
       <tr>
         <td><%= link_to heatmap.location.name, heatmap %></td>
         <td><%= heatmap.uid %></td>
-        <td><%= heatmap.updated_at %></td>
+        <td colspan="2"><%= heatmap.updated_at.to_formatted_s(:short) %></td>
       </tr>
     <% end %>
   </tbody>

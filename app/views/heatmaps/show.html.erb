@@ -2,7 +2,7 @@
 
 <h1>Heatmap for <%= @heatmap.location.name %>
   <%- if @heatmap.updated_at %>
-    <small class="pull-right"> last updated at: <%= @heatmap.updated_at %> </small>
+    <small class="pull-right"> last updated at: <%= @heatmap.updated_at.to_formatted_s(:short) %> </small>
   <%- end %>
 </h1>
 
