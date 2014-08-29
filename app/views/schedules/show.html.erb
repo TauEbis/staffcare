@@ -18,7 +18,7 @@
     <div class="row">
        <% if @schedule.complete? -%>
         <div class="col-sm-4 text-center">
-          <h4>100 <small> hours</small></h4>
+          <h4><%= hour_points(@schedule) %> <small> hours</small></h4>
         </div>
         <div class="col-sm-2 text-center">
           <h4>A<span class="letter-grade">-</span> <small>(<%= patient_sat_points(@schedule) %> )</small></h4>
@@ -31,7 +31,7 @@
           <h4>B<span class="letter-grade">-</span> <small>(<%= cost_points(@schedule) %> )</small></h4>
         </div>
         <div class="col-sm-2 text-center">
-          <h4>B<span class="letter-grade"></span> <small>(<%= total_points(@schedule) %> )</small></h4>
+          <h4>B meep<span class="letter-grade"></span> <small>(<%= total_points(@schedule) %> )</small></h4>
         </div>
       <% end -%>
     </div>
@@ -52,14 +52,14 @@
       <div class="row">
         <% if @schedule.complete? -%>
           <div class="col-sm-4 text-center">
-            <h4>100 <small> hours</small></h4>
+            <h4><%= hour_points(@schedule, zone) %> <small> hours</small></h4>
           </div>
           <div class="col-sm-2 text-center">
             <h4>A<span class="letter-grade">-</span> <small>(<%= patient_sat_points(@schedule, zone) %> )</small></h4>
             <h5><span data-bind="text: $root.total_wait "></span><small> minutes of wait time</small></h5>
           </div>
           <div class="col-sm-2 text-center">
-            <h4>B<span class="letter-grade">+</span> <small>(<%= md_sat_points(@schedule, zone) %> )</small></h4>
+            <h4>B meep<span class="letter-grade">+</span> <small>(<%= md_sat_points(@schedule, zone) %> )</small></h4>
           </div>
           <div class="col-sm-2 text-center">
             <h4>B<span class="letter-grade">-</span> <small>(<%= cost_points(@schedule, zone) %> )</small></h4>

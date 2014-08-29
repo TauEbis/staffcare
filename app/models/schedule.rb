@@ -134,4 +134,12 @@ class Schedule < ActiveRecord::Base
 
     {heatmaps: new_heatmaps, forecasts: new_forecasts, location: new_locations}
   end
+
+  def locations
+    location_plans.map(&:location).uniq
+  end
+
+  def zones
+    locations.map(&:zone).uniq
+  end
 end

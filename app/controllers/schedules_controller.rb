@@ -12,7 +12,7 @@ class SchedulesController < ApplicationController
   # GET /schedules/1
   def show
     #redirect_to schedule_location_plans_url(params[:id])
-    @zones = user_zones.assigned.ordered
+    @zones = user_zones.assigned.ordered.for_schedule(@schedule)
   end
 
   # GET /schedules/new
