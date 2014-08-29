@@ -50,8 +50,12 @@ class PushesController < ApplicationController
   end
 
   def set_location_plans
-    @location_plans = policy_scope(LocationPlan).where(id: Array(params[:location_plan_ids]))
-    @location_plans.each {|lp| authorize lp, 'push?'}
+    if params[:location_plan_ids]
+      @location_plans = policy_scope(LocationPlan).where(id: Array(params[:location_plan_ids]))
+      @location_plans.each {|lp| authorize lp, 'push?'}
+    else
+      redirect_to new_push_url(schedule_id: params[:schedule_id]), alert: "You must select at least one location."
+    end
   end
 
   def set_push

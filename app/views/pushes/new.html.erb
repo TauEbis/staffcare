@@ -1,3 +1,5 @@
+<%provide(:title, "New Push from Schedule (#{schedule_date_span(@schedule)})")%>
+
 <h1>Select locations to push to When I Work</h1>
 
 <%= form_tag confirm_pushes_path, method: :get, html: {class: 'form-horizontal'} do %>
@@ -17,6 +19,8 @@
       </ul>
     </fieldset>
   <% end -%>
+
+  <%= hidden_field_tag :schedule_id, @schedule.id %>
 
   <div class="form-actions">
     <%= submit_tag 'Review push', class: 'btn btn-success' %>
