@@ -5,7 +5,7 @@ class SchedulesController < ApplicationController
 
   # GET /schedules
   def index
-    @schedules = policy_scope(Schedule).ordered.includes(:location_plans).page params[:page]
+    @schedules = policy_scope(Schedule).ordered.includes(location_plans: [:visit_projection, :location]).page params[:page]
     authorize @schedules
   end
 
