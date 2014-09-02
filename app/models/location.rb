@@ -24,6 +24,7 @@ class Location < ActiveRecord::Base
 
   scope :ordered, -> { order(name: :asc) }
   scope :assigned, -> { where( zone_id: Zone.assigned.pluck(:id) ) }
+  scope :for_schedule, -> (schedule) { where(id: schedule.locations) }
 
   # Removed because it interferes with distinct
   #default_scope -> { order(name: :asc) }

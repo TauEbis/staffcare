@@ -131,7 +131,7 @@
           Optimization Status: <%= Sidekiq::Status::status(jid).to_s.humanize %> - <%= Sidekiq::Status::message jid %>
         </div>
       <% end -%>
-      <small>Generated <%= l schedule.created_at %></small>
+      <small>Last updated <%= l schedule.updated_at %></small>
     </div>
   <% end -%>
 </div>

@@ -9,10 +9,10 @@ class Schedule < ActiveRecord::Base
   enum optimizer_state: [ :not_run, :running, :complete, :error ]
 
   scope :not_draft, -> { where("state <> ?", Schedule.states[:draft]) }
-  scope :ordered, -> { order(starts_on: :desc, id: :desc) }
+  scope :ordered, -> { order(starts_on: :desc, updated_at: :desc) }
   scope :has_deadlines, -> { where("manager_deadline is not NULL AND gm_deadline is not NULL AND sync_deadline is not NULL") }
 
-  default_scope -> { order(starts_on: :desc, id: :desc) }
+  default_scope -> { order(starts_on: :desc, updated_at: :desc) }
 
   OPTIMIZER_FIELDS = [:penalty_30min, :penalty_60min, :penalty_90min, :penalty_eod_unseen, :penalty_turbo, :penalty_slack, :oren_shift]
 

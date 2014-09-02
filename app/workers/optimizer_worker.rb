@@ -11,12 +11,9 @@ class OptimizerWorker
     rerun = schedule.complete? # for updates
     schedule.running!
 
-    load_visits = !opts[:skip_visits]
-    load_locations = !opts[:skip_locations]
-
     begin
 
-      if load_visits || load_locations
+      unless opts[:skip_locations] && opts[:skip_visits]
         source = "database" # Set to :sample_run for sample data. On a dev machine, rake rs_load adds heatmaps to the database.
         provider = DataProvider.new(source)
 
@@ -26,7 +23,7 @@ class OptimizerWorker
         # Exclude Locations in the 'Unassigned' zone
         factory = LocationPlansFactory.new({
                                                schedule: schedule,
-                                               locations: Location.assigned,
+                                               locations: rerun ? Location.for_schedule(schedule) : Location.assigned ,
                                                data_provider: provider})
 
         rerun ? factory.update(opts) : factory.create

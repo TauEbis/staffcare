@@ -58,9 +58,7 @@ class SchedulesController < ApplicationController
         @schedule.location_plans.each do |lp|
           lp.grades.clear
         end
-        opts={skip_locations: true, skip_visits: true}
-        opts[:skip_locations] = false if params[:load_locations]
-        opts[:skip_visits] = false if params[:load_visits]
+        opts = { skip_locations: !params[:load_locations], skip_visits: !params[:load_visits] }
         job_id = OptimizerWorker.perform_async(@schedule.id, opts)
         @schedule.update_attribute( :optimizer_job_id, job_id )
         redirect_to schedules_url, notice: 'Schedule was successfully updated. Optimization is now running.'
