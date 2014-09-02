@@ -91,7 +91,7 @@ class SchedulesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_schedule
-      @schedule = Schedule.find(params[:id])
+      @schedule = Schedule.includes(location_plans: [:visit_projection, location: [:zone]]).find(params[:id])
       authorize @schedule
     end
 
