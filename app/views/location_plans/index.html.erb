@@ -34,19 +34,19 @@
               <h4><%= hour_points(location_plan) %> Physician hours</h4>
             </div>
             <div class="col-sm-2 text-center">
-              <h4><%= patient_sat_points(location_plan) %> <span class=" bg-danger">(A)</span></h4>
+              <h4><%= patient_sat_points(location_plan) %> <span><%= location_plan.month_letters['patient_sat'] %> </span></h4>
               Patient Sat
             </div>
             <div class="col-sm-2 text-center">
-              <h4><%= md_sat_points(location_plan) %> <span class=" bg-danger">(B+ meep)</span></h4>
+              <h4><%= md_sat_points(location_plan) %> <span><%= location_plan.month_letters['md_sat'] %></span></h4>
               Physician Sat
             </div>
             <div class="col-sm-2 text-center">
-              <h4><%= cost_points(location_plan) %> <span class=" bg-danger">(B)</span></h4>
+              <h4><%= cost_points(location_plan) %> <span><%= location_plan.month_letters['cost'] %></span></h4>
               Cost Score
             </div>
             <div class="col-sm-2 text-center">
-              <h4><%= total_points(location_plan) %> <span class=" bg-danger">(B+)</span></h4>
+              <h4><%= total_points(location_plan) %> <%= location_plan.month_letters['total'] %></h4>
               Overall
             </div>
           </div>

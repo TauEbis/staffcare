@@ -176,4 +176,8 @@ class LocationPlan < ActiveRecord::Base
     end
   end
 
+  def month_letters
+    @_m_letters ||= chosen_grade.month_letters
+  end
+
 end
