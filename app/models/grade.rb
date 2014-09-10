@@ -228,25 +228,26 @@ class Grade < ActiveRecord::Base
   end
 
   def month_letters
-    @m_letters ||= begin
+    @m_letters ||= Grade.month_letters(self)
+  end
 
-      @m_letters = {}
+  def self.month_letters(grades)
+    grades = Array(grades)
 
-      my_sums = Grade.unoptimized_sum(self).except("hours")
-      opt_sums = Grade.unoptimized_sum(self.plans_optimized_grade).except("hours")
+    m_letters = {}
 
-      my_sums.each do |k1, v1|
-        if k1 == "total"
-          @m_letters[k1] = Grade.assign_letter ( my_sums[k1] / opt_sums[k1])
-        else
-          @m_letters[k1] = Grade.assign_letter ( my_sums[k1] /( ( opt_sums["total"] / 3 + opt_sums[k1]) /2 ) )
-        end
+    my_sums = Grade.unoptimized_sum(grades).except("hours")
+    opt_sums = Grade.unoptimized_sum(grades.map(&:plans_optimized_grade)).except("hours")
+
+    my_sums.each do |k1, v1|
+      if k1 == "total"
+        m_letters[k1] = Grade.assign_letter ( my_sums[k1] / opt_sums[k1])
+      else
+        m_letters[k1] = Grade.assign_letter ( my_sums[k1] /( ( opt_sums["total"] / 3 + opt_sums[k1]) /2 ) )
       end
-      @m_letters
-
     end
 
-    @m_letters
+    m_letters
   end
 
   def totals(date)

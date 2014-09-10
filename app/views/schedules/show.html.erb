@@ -9,7 +9,7 @@
     <%= render 'grades/header' %>
   </div>
 </div>
-
+<hr>
 <div class="row">
   <div class="col-sm-3">
     <h3>Entire Schedule</h3>
@@ -21,17 +21,18 @@
           <h4><%= hour_points(@schedule) %> <small> hours</small></h4>
         </div>
         <div class="col-sm-2 text-center">
-          <h4>A<span class="letter-grade">-</span> <small>(<%= patient_sat_points(@schedule) %> )</small></h4>
-          <h5><span data-bind="text: $root.total_wait "></span><small> minutes of wait time</small></h5>
+          <h4><%= @schedule.letters["patient_sat"] %> <small>(<%= patient_sat_points(@schedule) %> )</small></h4>
+          <h5><%#= schedule %><small> minutes of wait time</small></h5>
         </div>
         <div class="col-sm-2 text-center">
-          <h4>B<span class="letter-grade">+</span> <small>(<%= md_sat_points(@schedule) %> )</small></h4>
+          <h4><%= @schedule.letters["md_sat"] %> <small>(<%= md_sat_points(@schedule) %> )</small></h4>
+          <h5><span data-bind="text: $root.work_rate "></span><small> pats per hr</small></h5>
         </div>
         <div class="col-sm-2 text-center">
-          <h4>B<span class="letter-grade">-</span> <small>(<%= cost_points(@schedule) %> )</small></h4>
+          <h4><%= @schedule.letters["cost"] %> <small>(<%= cost_points(@schedule) %> )</small></h4>
         </div>
         <div class="col-sm-2 text-center">
-          <h4>B meep<span class="letter-grade"></span> <small>(<%= total_points(@schedule) %> )</small></h4>
+          <h4><%= @schedule.letters["total"] %> <small>(<%= total_points(@schedule) %> )</small></h4>
         </div>
       <% end -%>
     </div>
@@ -55,17 +56,17 @@
             <h4><%= hour_points(@schedule, zone) %> <small> hours</small></h4>
           </div>
           <div class="col-sm-2 text-center">
-            <h4>A<span class="letter-grade">-</span> <small>(<%= patient_sat_points(@schedule, zone) %> )</small></h4>
+            <h4><%= @schedule.letters(zone)["patient_sat"] %> <small>(<%= patient_sat_points(@schedule, zone) %> )</small></h4>
             <h5><span data-bind="text: $root.total_wait "></span><small> minutes of wait time</small></h5>
           </div>
           <div class="col-sm-2 text-center">
-            <h4>B meep<span class="letter-grade">+</span> <small>(<%= md_sat_points(@schedule, zone) %> )</small></h4>
+            <h4><%= @schedule.letters(zone)["md_sat"] %> <small>(<%= md_sat_points(@schedule, zone) %> )</small></h4>
           </div>
           <div class="col-sm-2 text-center">
-            <h4>B<span class="letter-grade">-</span> <small>(<%= cost_points(@schedule, zone) %> )</small></h4>
+            <h4><%= @schedule.letters(zone)["cost"] %> <small>(<%= cost_points(@schedule, zone) %> )</small></h4>
           </div>
           <div class="col-sm-2 text-center">
-            <h4>B<span class="letter-grade"></span> <small>(<%= total_points(@schedule, zone) %> )</small></h4>
+            <h4><%= @schedule.letters(zone)["total"] %> <small>(<%= total_points(@schedule, zone) %> )</small></h4>
           </div>
         <% end -%>
       </div>

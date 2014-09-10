@@ -112,8 +112,15 @@ class Schedule < ActiveRecord::Base
     @_points ||= {}
     @_points[zone] ||= begin
       lp = zone ? location_plans.for_zone(zone).includes(:chosen_grade) : location_plans.includes(:chosen_grade)
-      # TODO lp = lp.includes(:chosen_grade)
       Grade.unoptimized_sum(lp.map(&:chosen_grade))
+    end
+  end
+
+  def letters(zone = nil)
+    @_letters ||= {}
+    @_letters[zone] ||= begin
+      lp = zone ? location_plans.for_zone(zone).includes(:chosen_grade) : location_plans.includes(:chosen_grade)
+      Grade.month_letters(lp.map(&:chosen_grade))
     end
   end
 
