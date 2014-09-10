@@ -19,8 +19,8 @@ module LocationPlansHelper
     %{<span class="label label-#{APPROVAL_STATE_MAP[state][:css]}">#{APPROVAL_STATE_MAP[state][:label]}</span>}.html_safe
   end
 
-  def state_label(location_plan)
-    %{<a class="btn btn-#{APPROVAL_STATE_MAP[location_plan.approval_state][:css]} disabled">#{APPROVAL_STATE_MAP[location_plan.approval_state][:label]}</a>}.html_safe
+  def state_label(location_plan, size=nil)
+    %{<a class="btn #{size == :small ? 'btn-xs': ''} btn-#{APPROVAL_STATE_MAP[location_plan.approval_state][:css]} disabled">#{APPROVAL_STATE_MAP[location_plan.approval_state][:label]}</a>}.html_safe
   end
 
   def action_links(location_plan)
@@ -34,6 +34,18 @@ module LocationPlansHelper
 
   def life_cycle_info(location_plan)
     %{<h5><span> #{location_plan.life_cycle_max_total_hours.round(0)}</span><small> suggested (Life Cycle-#{location_plan.life_cycle})</small> </h5>}.html_safe
+  end
+
+  def life_cycle_tool_tip(location_plan)
+    "#{location_plan.life_cycle_max_total_hours.round(0)} hours suggested (Life Cycle-#{location_plan.life_cycle})"
+  end
+
+  def life_cycle_diff(location_plan)
+    diff = location_plan.life_cycle_max_total_hours - location_plan.unoptimized_summed_points['hours']
+    sign = ''
+    sign = '+' if diff < 0
+    sign = '-' if diff > 0
+    sign + number_with_delimiter(diff.round(0)).to_s
   end
 
   private
