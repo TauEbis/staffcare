@@ -180,4 +180,8 @@ class LocationPlan < ActiveRecord::Base
     @_m_letters ||= chosen_grade.month_letters
   end
 
+  def month_stats
+    @_m_stats ||= chosen_grade.month_stats
+  end
+
 end

@@ -1,28 +1,35 @@
 <%= render 'grades/header' %>
-
+<div data-bind="if: loaded">
 <div class="row">
 
   <div class="col-sm-4 text-center">
-    <h4><span data-bind="text: grade_hours()"></span><small> hours</small></h4>
+      <h6 class="pull-right"><%= life_cycle_diff(@location_plan) %>
+        <span data-toggle="tooltip" title="<%= life_cycle_tool_tip(@location_plan) %>">
+          <span class="glyphicon glyphicon-question-sign"></span>
+        </span>
+      </h6>
+      <h5><span data-bind="text: grade_hours()"></span><small> (<span data-bind="text: month_stats().wages"></span>)</small></h5>
+
+    <div><h5><small class="pull-left">Efficiency grades:</small></h5></div>
+  </br>
+
     <%- if !@grade.optimizer? -%>
-      <div data-bind="with: grade_opt_diff" class="row">
-        <div class="diff-header">Vs. Optimizer:</div>
-        <div class="diff-header">
-          <span data-bind="text: hours(), css: diffClass( hours())" ></span>
-        </div>
-      </div>
+    <h5 data-bind="with: grade_opt_diff" class="pull-right">
+      <span data-bind="text: hours(), css: diffClass( hours())" ></span>
+    </h5>
+    <h5><small class="pull-left">Vs. Optimized:</small></h5>
     <%- end -%>
-    <div class="row">
-      <div data-bind="if: $root.diff_grade_hours" class="diff-header">Vs. Last:</div>
+    <div>
       <div data-bind="if: $root.diff_grade_hours" class="diff-header">
         <span data-bind="text: diffFormat($root.diff_grade_hours(), false), css: diffClass($root.diff_grade_hours())"></span>
       </div>
+      <h5 data-bind="if: $root.diff_grade_hours"><small class="pull-right">Vs. Last:</small></h5>
     </div>
-    <%= life_cycle_info(@location_plan) %>
   </div>
   <div data-bind="with: grade_points">
     <div class="col-sm-2 text-center">
-      <h4><span data-bind="text: $root.grade_letters().patient_sat()"></span> <small>(<span data-bind="text: toCurrency(patient_sat())"></span>)</small></h4>
+      <h5><span data-bind="text: $root.month_stats().wait_time"></span> <small>wait mins</small></h5>
+      <h5><span data-bind="text: $root.grade_letters().patient_sat()"></span> <small>(<span data-bind="text: toCurrency(patient_sat())"></span>)</small></h5>
       <%- if !@grade.optimizer? -%>
         <span data-bind="text: toCurrency($root.grade_opt_diff().patient_sat()), css: diffClass( $root.grade_opt_diff().patient_sat())" ></span>
       <%- end -%>
@@ -31,7 +38,8 @@
       </div>
     </div>
     <div class="col-sm-2 text-center">
-      <h4><span data-bind="text: $root.grade_letters().md_sat()"></span> <small>(<span data-bind="text: toCurrency(md_sat())"></span>)</small></h4>
+      <h5><span data-bind="text: $root.month_stats().work_rate"></span> <small> pats per hr</small></h5>
+      <h5><span data-bind="text: $root.grade_letters().md_sat()"></span> <small>(<span data-bind="text: toCurrency(md_sat())"></span>)</small></h5>
       <%- if !@grade.optimizer? -%>
         <span data-bind="text: toCurrency($root.grade_opt_diff().md_sat()), css: diffClass( $root.grade_opt_diff().md_sat())" ></span>
       <%- end -%>
@@ -40,7 +48,8 @@
       </div>
     </div>
     <div class="col-sm-2 text-center">
-      <h4><span data-bind="text: $root.grade_letters().cost()"></span> <small>(<span data-bind="text: toCurrency(cost())"></span>)</small></h4>
+      <h5><span data-bind="text: $root.month_stats().wasted_time()"></span> <small> wasted mins</small></h5>
+      <h5><span data-bind="text: $root.grade_letters().cost()"></span> <small>(<span data-bind="text: toCurrency(cost())"></span>)</small></h5>
       <%- if !@grade.optimizer? -%>
         <span data-bind="text: toCurrency($root.grade_opt_diff().cost()), css: diffClass( $root.grade_opt_diff().cost())" ></span>
       <%- end -%>
@@ -49,7 +58,8 @@
       </div>
     </div>
     <div class="col-sm-2 text-center">
-      <h4><span data-bind="text: $root.grade_letters().total()"></span> <small>(<span data-bind="text: toCurrency(total())"></span>)</small></h4>
+      <h5><span data-bind="text: $root.month_stats().pen_per_pat"></span> <small> waste per pat</small></h5>
+      <h5><span data-bind="text: $root.grade_letters().total()"></span> <small>(<span data-bind="text: toCurrency(total())"></span>)</small></h5>
       <%- if !@grade.optimizer? -%>
         <span data-bind="text: toCurrency($root.grade_opt_diff().total()), css: diffClass( $root.grade_opt_diff().total())" ></span>
       <%- end -%>
@@ -59,4 +69,5 @@
       </div>
     </div>
   </div>
+</div>
 </div>

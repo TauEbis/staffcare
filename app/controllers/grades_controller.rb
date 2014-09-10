@@ -8,7 +8,7 @@ class GradesController < ApplicationController
     redirect_to @location_plan, notice: 'You may now edit the coverage for this location.'
   end
 
-  # GET /coverages/1
+  # GET /grades/1
   def show
     pts     = Grade.unoptimized_sum(@grade)
 
@@ -18,7 +18,8 @@ class GradesController < ApplicationController
              grade_points: pts,
              grade_hours:  pts['hours'],
              grade_letters: @grade.month_letters,
-             grade_opt_diff: @grade.month_opt_diff
+             grade_opt_diff: @grade.month_opt_diff,
+             month_stats: @grade.month_stats
             }
 
     if @date
@@ -50,7 +51,7 @@ class GradesController < ApplicationController
     render layout: false
   end
 
-  # PATCH /coverages/:location_plan_id
+  # PATCH /grades/:location_plan_id
   def update
     @grade.update_shift!(@date, params[:shifts])
     @grade.location_plan.dirty!

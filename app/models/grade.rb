@@ -272,6 +272,45 @@ class Grade < ActiveRecord::Base
     @_totals[date]
   end
 
+  def month_totals
+    @_m_totals ||= begin
+
+      @_m_totals = {
+        coverage: 0,
+        visits: 0,
+        work_rate: 0,
+        seen: 0,
+        queue: 0,
+        turbo: 0,
+        slack: 0,
+        penalty: 0
+      }
+
+      days = location_plan.schedule.days
+      days.each do |day|
+        totals(day).each do |k, v|
+          @_m_totals[k] += totals(day)[k]
+        end
+      end
+
+      @_m_totals[:work_rate] = @_m_totals[:visits] / @_m_totals[:coverage]
+      @_m_totals
+
+    end
+
+    @_m_totals
+  end
+
+  def month_stats
+    @_month_stats ||= {
+      wait_time: month_totals[:queue] * 30,                             # in minutes
+      work_rate: month_totals[:work_rate] * 2,                          # patients per hour
+      wasted_time: month_totals[:slack] * 60 / location_plan.normal[1], # in minutes -- will need to change to normal[0] after refactor
+      pen_per_pat: month_totals[:penalty]/month_totals[:visits],
+      wages: (month_totals[:coverage] * location_plan.schedule.penalty_slack).to_f
+    }
+  end
+
   def total_wait_time(date)
     totals(date)[:queue] * 30 # in minutes
   end
