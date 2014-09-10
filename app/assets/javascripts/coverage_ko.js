@@ -54,7 +54,7 @@ function MonthStats(data) {
   self.wait_time       = ko.observable(data.wait_time.toFixed(0));
   self.work_rate       = ko.observable(data.work_rate.toFixed(2));
   self.wasted_time     = ko.observable(data.wasted_time.toFixed(0));
-  self.pen_per_pat     = ko.observable(toCurrency(data.pen_per_pat));
+  self.pen_per_pat     = ko.observable(toCurrency(data.pen_per_pat, 1));
   self.wages           = ko.observable(toCurrency(data.wages));
 }
 
@@ -152,7 +152,7 @@ function CoverageViewModel() {
       self.total_wait(data.total_wait.toFixed(0));
       self.work_rate(data.work_rate.toFixed(2));
       self.time_wasted(data.time_wasted.toFixed(0));
-      self.pat_waste( toCurrency(data.day_points.total / data.visits ) );
+      self.pat_waste( toCurrency(data.day_points.total / data.visits , 1) );
 
       // We dont' want to set loaded until we've loaded a DAY, not just the grade-wide data
       self.loaded(true);

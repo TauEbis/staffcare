@@ -45,7 +45,7 @@ module LocationPlansHelper
     sign = ''
     sign = '+' if diff < 0
     sign = '-' if diff > 0
-    sign + number_with_delimiter(diff.round(0)).to_s
+    sign + number_with_delimiter(diff.round(0).abs).to_s
   end
 
   private

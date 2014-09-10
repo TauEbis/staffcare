@@ -7,20 +7,22 @@
       </h3>
     </div>
     <div class="col-sm-8 col-sm-offset-1">
-      <div class="col-sm-4 text-center">
-        <h5><span data-bind="text: day_hours()"></span><small> (<span data-bind="text: $root.wages "></span>)</small></h5>
-        <div class="row">
-        <div class="diff-header">Efficiency Grades:</div>
-        </div>
+      <div class="col-sm-4">
+
+        <h5 class="text-center"><span data-bind="text: day_hours()"></span><small> (<span data-bind="text: $root.wages "></span>)</small></h5>
+
+        <h5 class="text-left"><small>Efficiency grades:</small></h5>
+
         <%- if !@grade.optimizer? -%>
-          <div class="row">
-            <div class="diff-header">Vs. Optimized:</div>
-            <div class="diff-header">
-              <span data-bind="text: $root.day_opt_diff().hours(), css: diffClass( $root.day_opt_diff().hours())" ></span>
-            </div>
-          </div>
+          <row class="clearfix">
+            <h5 class="pull-left compressed"><small>Vs. Optimized:</small></h5>
+            <h5 data-bind="with: day_opt_diff" class="text-right compressed">
+              <span data-bind="text: diffFormat(hours(), false), css: diffClass(hours())" ></span>
+            </h5>
+          </row>
         <%- end -%>
       </div>
+
       <div data-bind="with: day_points">
         <div class="col-sm-2 text-center">
           <h5><span data-bind="text: $root.total_wait "></span><small> wait mins</small></h5>
@@ -29,7 +31,7 @@
             <small> (<span data-bind="text: toCurrency(patient_sat())"></span>)</small>
           </h5>
           <%- if !@grade.optimizer? -%>
-          <span data-bind="text: toCurrency($root.day_opt_diff().patient_sat()), css: diffClass( $root.day_opt_diff().patient_sat())" ></span>
+          <h5><span data-bind="text: diffFormat($root.day_opt_diff().patient_sat()), css: diffClass( $root.day_opt_diff().patient_sat())" ></span></h5>
           <%- end -%>
         </div>
         <div class="col-sm-2 text-center">
@@ -39,7 +41,7 @@
             <small> (<span data-bind="text: toCurrency(md_sat())"></span>)</small>
           </h5>
           <%- if !@grade.optimizer? -%>
-          <span data-bind="text: toCurrency($root.day_opt_diff().md_sat()), css: diffClass( $root.day_opt_diff().md_sat())" ></span>
+          <h5><span data-bind="text: diffFormat($root.day_opt_diff().md_sat()), css: diffClass( $root.day_opt_diff().md_sat())" ></span></h5>
           <%- end -%>
         </div>
         <div class="col-sm-2 text-center">
@@ -49,7 +51,7 @@
             <small> (<span data-bind="text: toCurrency(cost())"></span>)</small>
           </h5>
           <%- if !@grade.optimizer? -%>
-          <span data-bind="text: toCurrency($root.day_opt_diff().cost()), css: diffClass( $root.day_opt_diff().cost())" ></span>
+          <h5><span data-bind="text: diffFormat($root.day_opt_diff().cost()), css: diffClass( $root.day_opt_diff().cost())" ></span></h5>
           <%- end -%>
         </div>
         <div class="col-sm-2 text-center">
@@ -59,7 +61,7 @@
             <small> (<span data-bind="text: toCurrency(total())"></span>)</small>
           </h5>
           <%- if !@grade.optimizer? -%>
-          <span data-bind="text: toCurrency($root.day_opt_diff().total()), css: diffClass( $root.day_opt_diff().total())" ></span>
+          <h5><span data-bind="text: diffFormat($root.day_opt_diff().total()), css: diffClass( $root.day_opt_diff().total())" ></span></h5>
           <%- end -%>
         </div>
       </div>
@@ -73,7 +75,7 @@
          <span data-bind="text: timeOfDay(starts())"></span> - <span data-bind="text: timeOfDay(ends())"></span>
         </div>
         <div class="col-sm-3 text-center">
-          <span data-bind="text: hours()"></span><small> hours</small>
+          <h5><span data-bind="text: hours()"></span><small> hrs</small></h5>
         </div>
       </div>
     </div>
@@ -91,7 +93,7 @@
           <select class="form-control" data-bind="options: $root.available_times(), value: ends, optionsText: 'formatted', optionsValue: 'num'"></select>
         </div>
         <div class="col-sm-3 text-center">
-          <span data-bind="text: hours()"></span><small> hours</small>
+          <h5><span data-bind="text: hours()"></span><small> hrs</small></h5>
         </div>
         <br>
       </div>
