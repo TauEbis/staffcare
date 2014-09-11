@@ -28,10 +28,15 @@ class DataProvider
 		  end
     else
       heat_maps = {}
-      all_maps = Heatmap.all
-      all_maps.each do |map|
-        location = Location.find_by(uid: map.uid)
-        heat_maps[location.report_server_id] = map
+      locations.each do |location|
+
+        begin
+          map = Heatmap.find_by!(uid: location.uid)
+          heat_maps[location.report_server_id] = map
+        rescue ActiveRecord::RecordNotFound => e
+          raise StandardError, "No heatmap exists on report server for #{location.name}"
+        end
+
       end
     end
 
@@ -55,7 +60,7 @@ class DataProvider
                      end
                 end
                 if !found_it
-                  throw "No volume data exists for #{location.name} on #{day}"
+                  raise StandardError, "No volume data exists for #{location.name} on #{day}"
                 end
            end
       end
@@ -121,7 +126,6 @@ class DataProvider
 		end
 
 		def scrub_heat_map(heat_map, location)
-      #puts heat_map.inspect
       for n in 0..6
         opening_time = location.open_times[n]
         closing_time = location.close_times[n]

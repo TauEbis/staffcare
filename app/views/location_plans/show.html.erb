@@ -38,7 +38,7 @@
       <% if policy(new_grade).create? -%>
         <%= simple_form_for new_grade do |f| %>
           <%= hidden_field_tag :location_plan_id, @location_plan.id %>
-          <%= f.submit 'Copy & edit', class: 'btn btn-default' %>
+          <%= f.submit 'Copy & edit', class: 'btn btn-primary' %>
         <% end -%>
       <% end -%>
     </div>
@@ -93,7 +93,7 @@
     <div class="col-sm-12 hidden" id="coverage_view_load">
       <img src="<%= image_path('load.gif') %>" alt="Loading">
     </div>
-    <div class="col-sm-12" id="coverage_view">
+    <div id="coverage_view">
       <%= render 'grades/show' %>
     </div>
   </div>

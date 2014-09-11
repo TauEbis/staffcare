@@ -7,55 +7,43 @@ class LocationPlansFactory
     @data_provider = opts[:data_provider]
   end
 
-  def create(opts={})
-    @visit_projections = VisitProjection.import!(@data_provider, @schedule, @locations)
-
-    @schedule.location_plans.destroy_all
-
+  def create
     @locations.each do |location|
-      attr = location.attributes.clone.slice(*LocationPlan::OPTIMIZER_FIELDS.map(&:to_s))
-      attr.merge!({location: location,
-                   visit_projection: @visit_projections[location.report_server_id],
-                   visits: @visit_projections[location.report_server_id].visits,
-                   open_times: location.open_times,
-                   close_times: location.close_times,
-                   normal: location.speeds.map(&:normal),
-                   max: location.speeds.map(&:max)
-                 })
 
+      attr = loc_attr(location).merge!(visit_attr(location))
       lp = LocationPlan.new attr
       @schedule.location_plans << lp
       lp.save!
     end
   end
 
-  #def update(opts={})
-  #  @location_plans ||= Schedule.location_plans.all
-  #
-  #  @grader = CoverageGrader.new(grader_weights)
-  #  reload_visits_projection if opts[:reload] # this will likely change to an ajax call
-  #
-  #  @location_plan.reoptimize(@grader, @visits_projection)
-  #  @location_plan
-  #end
+  def update(opts = {})
+    @locations.each do |location|
 
-  private
-  #
-  #def reoptimize(grader, visits_projection)
-  #  @grader = grader
-  #  @grader_weights = @grader.weights
-  #  @visits_projection = visits_projection
-  #
-  #  @optimized_graded_coverage_plan = GradedResults.new(self)
-  #  optimize
-  #end
-  #
-  #def reload_visits_projection(opts={})
-  #  @data_source = opts[:data_source] || get_data_source
-  #  @data_provider = DataProvider.new(@data_source)
-  #  @locations = opts[:locations] || dummy_locations
-  #  @time_period = opts[:time_period] || dummy_time_period
-  #  @visits_projection = opts[:visits_projection] || build_visits_projection
-  #end
+      attr = {}
+      attr.merge!(loc_attr(location)) unless opts[:skip_visits]
+      attr.merge!(visit_attr(location)) unless opts[:skip_locations]
+      lp = @schedule.location_plans.find_by(location_id: location.id)
+      lp.update! attr
+    end
+  end
+
+  def loc_attr(location)
+    attr = location.attributes.clone.slice(*LocationPlan::OPTIMIZER_FIELDS.map(&:to_s))
+    attr.merge!({location: location,
+                 open_times: location.open_times,
+                 close_times: location.close_times,
+                 normal: location.speeds.map(&:normal),
+                 max: location.speeds.map(&:max)
+               })
+    attr
+  end
+
+  def visit_attr(location)
+    @visit_projections ||= VisitProjection.import!(@data_provider, @schedule, @locations)
+
+    {visit_projection: @visit_projections[location.report_server_id],
+    visits: @visit_projections[location.report_server_id].visits}
+  end
 
 end

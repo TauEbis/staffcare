@@ -18,7 +18,7 @@ class TodoNotices < ActionMailer::Base
   #
   #   en.todo_notices.waiting.subject
   #
-  def waiting(user)
+  def waiting(user, todos)
     @user = user
     @todos = todos
 

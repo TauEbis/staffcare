@@ -66,7 +66,8 @@ function diffFormat(num, currency){
     var v = (currency == true) ? toCurrency(num) : Math.round(num);
     return "+" + v
   }else{
-    return (currency == true) ? toCurrency(num) : Math.round(num);
+    var v = (currency == true) ? toCurrency(-1*num) : Math.round(-1*num);
+    return "-" + v
   }
 }
 

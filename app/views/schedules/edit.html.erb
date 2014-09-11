@@ -2,12 +2,22 @@
 
 <h1>Editing schedule</h1>
 
+<% if @schedule.any_updates? -%>
 <div class="alert alert-danger">
-  Editing the weights of an existing schedule WILL result in undefined behavior!<br><br>
-  Until this is addressed, you are better off deleting this whole schedule and generating a new one!
+	<ul>
+		<% @updates.each do |k,v| -%>
+			<% if @updates[k] -%>
+				<li> <%= k.capitalize %> data has been updated since this schedule was generated</li>
+			<% end -%>
+		<% end -%>
+	</ul>
 </div>
+<% end -%>
+
 
 <%= render 'form' %>
+
+<br>
 
 <%= link_to 'Show', @schedule %> |
 <%= link_to 'Destroy', @schedule, method: :delete, data: { confirm: 'Are you sure?' } %> |

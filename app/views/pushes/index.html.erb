@@ -1,3 +1,5 @@
+<%provide(:title, "Pushes from Schedule (#{schedule_date_span(@schedule)})")%>
+
 <br>
 <div class="pull-right">
   <%= link_to new_push_path(schedule_id: @schedule.to_param), class: 'btn btn-success' do %>

@@ -1,7 +1,7 @@
 # A generated and scored schedule
 class Schedule < ActiveRecord::Base
 
-  has_many :visit_projections, dependent: :destroy
+  has_many :visit_projections, dependent: :destroy # is this used anywhere?
   has_many :location_plans, dependent: :destroy
 
   enum state: [ :draft, :active, :locked, :archived ]
@@ -9,10 +9,10 @@ class Schedule < ActiveRecord::Base
   enum optimizer_state: [ :not_run, :running, :complete, :error ]
 
   scope :not_draft, -> { where("state <> ?", Schedule.states[:draft]) }
-  scope :ordered, -> { order(starts_on: :desc, id: :desc) }
+  scope :ordered, -> { order(starts_on: :desc, updated_at: :desc) }
   scope :has_deadlines, -> { where("manager_deadline is not NULL AND gm_deadline is not NULL AND sync_deadline is not NULL") }
 
-  default_scope -> { order(starts_on: :desc, id: :desc) }
+  default_scope -> { order(starts_on: :desc, updated_at: :desc) }
 
   OPTIMIZER_FIELDS = [:penalty_30min, :penalty_60min, :penalty_90min, :penalty_eod_unseen, :penalty_turbo, :penalty_slack, :oren_shift]
 
@@ -22,6 +22,21 @@ class Schedule < ActiveRecord::Base
   end
 
   validates :starts_on, presence: true
+  validate :valid_starts_on
+  validates_associated :location_plans
+
+
+  def valid_starts_on
+    unless starts_on.is_a? Date
+      errors.add(:starts_on, "Please select a starting date.")
+      return
+    end
+
+    unless starts_on.mday == 1
+      errors.add(:starts_on, "Schedule must start on first day of the month.")
+    end
+  end
+
 
   def self.default_attributes
     {
@@ -97,8 +112,49 @@ class Schedule < ActiveRecord::Base
     @_points ||= {}
     @_points[zone] ||= begin
       lp = zone ? location_plans.for_zone(zone).includes(:chosen_grade) : location_plans.includes(:chosen_grade)
-      # TODO lp = lp.includes(:chosen_grade)
       Grade.unoptimized_sum(lp.map(&:chosen_grade))
     end
+  end
+
+  def letters(zone = nil)
+    @_letters ||= {}
+    @_letters[zone] ||= begin
+      lp = zone ? location_plans.for_zone(zone).includes(:chosen_grade) : location_plans.includes(:chosen_grade)
+      Grade.month_letters(lp.map(&:chosen_grade))
+    end
+  end
+
+  def stats(zone = nil)
+    @_stats ||= {}
+    @_stats[zone] ||= begin
+      lp = zone ? location_plans.for_zone(zone).includes(:chosen_grade) : location_plans.includes(:chosen_grade)
+      Grade.unoptimized_stats(lp.map(&:chosen_grade))
+    end
+  end
+
+  def any_updates?
+    check_for_updates.values.include? true
+  end
+
+  def check_for_updates
+    new_heatmaps, new_forecasts, new_locations = false, false, false
+
+    forecasts = PatientVolumeForecast.where(start_date: ((starts_on-6)..ends_on) )
+    forecasts_updates = forecasts.map(&:updated_at).max
+    location_plans.each do |lp|
+      new_locations = true if lp.updated_at < lp.location.updated_at
+      new_heatmaps = true if lp.visit_projection.updated_at < Heatmap.find_by!(uid: lp.location.uid).updated_at
+      new_forecasts = true if lp.visit_projection.updated_at < forecasts_updates
+    end
+
+    {heatmaps: new_heatmaps, forecasts: new_forecasts, location: new_locations}
+  end
+
+  def locations
+    location_plans.map(&:location).uniq
+  end
+
+  def zones
+    locations.map(&:zone).uniq
   end
 end

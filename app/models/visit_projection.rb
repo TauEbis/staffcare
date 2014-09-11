@@ -1,5 +1,5 @@
 class VisitProjection < ActiveRecord::Base
-  belongs_to :schedule
+  belongs_to :schedule # is this used at all?
   belongs_to :location
 
   has_one :location_plan
@@ -10,6 +10,22 @@ class VisitProjection < ActiveRecord::Base
 										#(currently only available per week, but client wants per day)
 
   # Fills in the "visits" field based on data in volumes & heat_maps
+  validates :visits, presence: true
+  validate :valid_volumes
+
+  def valid_volumes
+    unless volumes && !volumes.empty?
+      errors.add(:base, "Please add valid patient volume forecasts for this schedule.")
+      return
+    end
+    volumes.each do |k, v|
+      unless !v.nil? && v >= 0
+        errors.add(:base, "Please add valid patient volume forecasts for this schedule.")
+        return
+      end
+    end
+  end
+
 
   def day_max(day)
     visits[day.to_s].max

@@ -11,7 +11,7 @@
 
 <ul>
   <% @todos.each do |todo| -%>
-    <li class="list-group-item"><%= link_to todo.name, url_for(todo) %>
+    <li class="list-group-item"><%= link_to todo.name, polymorphic_url(todo) %>
       <small class="pull-right"><%= deadline_label(@user, todo) %></small>
     </li>
   <% end -%>

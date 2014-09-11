@@ -6,15 +6,45 @@
     <div class="row">
       <div class="col-sm-4">
 
+        <% if @editing -%>
+          <%= f.input :starts_on, readonly: true, as: :string %>
+          <%= hidden_field_tag 'editing', @editing %>
+        <% else -%>
           <%= render 'shared/date_picker_field', f: f, date_field: :starts_on, picker_type: "monthpicker" %>
+        <% end -%>
 
-          <%= render 'field', f: f, data_field: :penalty_30min, label: "Cost of a patient waiting 30 minutes" %>
-          <%= render 'field', f: f, data_field: :penalty_60min, label: "Cost of a patient waiting 60 minutes" %>
-          <%= render 'field', f: f, data_field: :penalty_90min, label: "Cost of a patient waiting 90 minutes or more" %>
-          <%= render 'field', f: f, data_field: :penalty_eod_unseen, label: "Cost of a patient not getting seen by closing" %>
-          <%= render 'field', f: f, data_field: :penalty_turbo, label: "Cost of overworking physician by 1 patient" %>
           <%= render 'field', f: f, data_field: :penalty_slack, label: "Physician Hourly" %>
+          <br>
+          <div class="bg-success">
+            Each item below is a penalized by the optimizer as wasteful inefficiency.
+            Please assign a cost to each inneficiency.
+            This allows the optimizer to make trade-offs.
+          </div>
+          <br>
+          <%= render 'field', f: f, data_field: :penalty_30min, label: "First 30 minutes of wait time to first see MD" %>
+          <%= render 'field', f: f, data_field: :penalty_60min, label: "Next 30 minutes of wait time (30-59) to first see MD" %>
+          <%= render 'field', f: f, data_field: :penalty_90min, label: "Next 30 minutes of wait time (60-89) to first see MD" %>
+          <%= render 'field', f: f, data_field: :penalty_turbo, label: "Overworking physician by a patient in a given hour" %>
+          <%= render 'field', f: f, data_field: :penalty_eod_unseen, label: "Making physican see a patient after closing" %>
+
           <%= f.hidden_field :oren_shift, required: true %>
+
+        <% if @editing && @schedule.any_updates? -%>
+
+          <% if @updates[:heatmaps] || @updates[:forecasts] %>
+            <%= check_box_tag 'load_visits' %>
+            <%= label_tag "Use latest heatmaps and visit projections" %>
+          <br>
+          <% end -%>
+          <% if @updates[:location] %>
+            <%= check_box_tag 'load_locations' %>
+            <%= label_tag "Use latest locations data" %>
+          <% end -%>
+          <div class="alert alert-danger"> If you check this, it will delete all manual changes to this schedule
+           and generate a new optimized schedule using the latest data. </div>
+
+        <% end -%>
+
 
       </div>
     </div>

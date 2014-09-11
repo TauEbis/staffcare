@@ -28,8 +28,22 @@ class LocationPlan < ActiveRecord::Base
 
   delegate :name, to: :location
 
-  validates :location, presence: true
   validates :schedule, presence: true
+
+  validates :visit_projection, presence: true
+  validates :visits, presence: true
+
+  validates :location, presence: true
+  validates :rooms, presence: true, numericality: { greater_than: 0, less_than: 100 }
+  validates :max_mds, presence: true, numericality: { greater_than: 0, less_than: 100 }
+  validates :open_times, presence: true
+  validates :close_times, presence: true
+  validates :normal, presence: true
+  validates :max, presence: true
+
+  validate :valid_opens
+  validate :valid_closes
+  validate :valid_visits
 
   scope :for_zone, -> (zone) { where(location_id: zone.location_ids) }
 
@@ -121,7 +135,7 @@ class LocationPlan < ActiveRecord::Base
     end
   end
 
-# Arrays of decimals are stored as as strings in Postgres
+# FIXME: Arrays of decimals are stored as as strings in Postgres
   def normal
     read_attribute(:normal).map(&:to_f)
   end
@@ -132,6 +146,42 @@ class LocationPlan < ActiveRecord::Base
 
   def dirty!
     update_attribute(:wiw_sync, :dirty) if synced?
+  end
+
+  def valid_opens
+    open_times.each do |t|
+      unless 8 <=t && t <= 22
+        errors.add(:base, "Site must open after 8AM and before 10PM")
+        return
+      end
+    end
+  end
+
+  def valid_closes
+    close_times.each do |t|
+      unless 8 <=t && t <= 22
+        errors.add(:base, "Site must close after 8AM and before 10PM")
+        return
+      end
+    end
+  end
+
+  def valid_visits
+    visits.each do |day, day_visits|
+      dow = Date.parse(day).wday
+      unless day_visits.size == 2 * (close_times[dow] - open_times[dow])
+        errors.add(:base, "The visit projection must match the opening hours")
+        return
+      end
+    end
+  end
+
+  def month_letters
+    @_m_letters ||= chosen_grade.month_letters
+  end
+
+  def month_stats
+    @_m_stats ||= chosen_grade.month_stats
   end
 
 end

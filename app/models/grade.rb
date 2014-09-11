@@ -228,25 +228,26 @@ class Grade < ActiveRecord::Base
   end
 
   def month_letters
-    @m_letters ||= begin
+    @m_letters ||= Grade.month_letters(self)
+  end
 
-      @m_letters = {}
+  def self.month_letters(grades)
+    grades = Array(grades)
 
-      my_sums = Grade.unoptimized_sum(self).except("hours")
-      opt_sums = Grade.unoptimized_sum(self.plans_optimized_grade).except("hours")
+    m_letters = {}
 
-      my_sums.each do |k1, v1|
-        if k1 == "total"
-          @m_letters[k1] = Grade.assign_letter ( my_sums[k1] / opt_sums[k1])
-        else
-          @m_letters[k1] = Grade.assign_letter ( my_sums[k1] /( ( opt_sums["total"] / 3 + opt_sums[k1]) /2 ) )
-        end
+    my_sums = Grade.unoptimized_sum(grades).except("hours")
+    opt_sums = Grade.unoptimized_sum(grades.map(&:plans_optimized_grade)).except("hours")
+
+    my_sums.each do |k1, v1|
+      if k1 == "total"
+        m_letters[k1] = Grade.assign_letter ( my_sums[k1] / opt_sums[k1])
+      else
+        m_letters[k1] = Grade.assign_letter ( my_sums[k1] /( ( opt_sums["total"] / 3 + opt_sums[k1]) /2 ) )
       end
-      @m_letters
-
     end
 
-    @m_letters
+    m_letters
   end
 
   def totals(date)
@@ -270,6 +271,69 @@ class Grade < ActiveRecord::Base
     end
 
     @_totals[date]
+  end
+
+  def month_totals
+    @_m_totals ||= begin
+
+      @_m_totals = {
+        coverage: 0,
+        visits: 0,
+        work_rate: 0,
+        seen: 0,
+        queue: 0,
+        turbo: 0,
+        slack: 0,
+        penalty: 0
+      }
+
+      days = location_plan.schedule.days
+      days.each do |day|
+        totals(day).each do |k, v|
+          @_m_totals[k] += totals(day)[k]
+        end
+      end
+
+      @_m_totals[:work_rate] = @_m_totals[:visits] / @_m_totals[:coverage]
+      @_m_totals
+
+    end
+
+    @_m_totals
+  end
+
+  def month_stats
+    @_month_stats ||= {
+      wait_time: month_totals[:queue] * 30,                             # in minutes
+      work_rate: month_totals[:work_rate] * 2,                          # patients per hour
+      wasted_time: month_totals[:slack] * 60 / location_plan.normal[1], # in minutes -- will need to change to normal[0] after refactor
+      pen_per_pat: month_totals[:penalty]/month_totals[:visits],
+      wages: (month_totals[:coverage] * location_plan.schedule.penalty_slack).to_f
+    }
+  end
+
+  def self.unoptimized_stats(grades)
+    grades = Array(grades)
+    stats = {}
+
+    grades.each do |g|
+      [:wait_time, :wasted_time, :wages].each do |field|
+        stats[field] ||= 0
+        stats[field] += g.month_stats[field]
+      end
+    end
+
+    tots={}
+    grades.each do |g|
+      [:visits, :coverage, :penalty].each do |field|
+        tots[field] ||= 0
+        tots[field] += g.month_totals[field]
+      end
+    end
+
+    stats[:work_rate] = tots[:visits] / tots[:coverage] * 2
+    stats[:pen_per_pat] = tots[:penalty]/tots[:visits]
+    stats
   end
 
   def total_wait_time(date)

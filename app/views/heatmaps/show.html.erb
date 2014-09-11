@@ -1,16 +1,18 @@
+<%provide(:title, "Heatmap for #{@heatmap.location.name}")%>
+
 <h1>Heatmap for <%= @heatmap.location.name %>
   <%- if @heatmap.updated_at %>
-    <small class="pull-right"> last updated at: <%= @heatmap.updated_at %> </small>
+    <small class="pull-right"> last updated at: <%= @heatmap.updated_at.to_formatted_s(:short) %> </small>
   <%- end %>
 </h1>
 
 <div class="table-responsive">
-  <table class="table table-striped table-hover table-bordered">
+  <table class="table table-striped table-hover table-bordered text-right">
     <thead>
     <tr>
-      	<th>Time</th>
+      	<th class="text-right">Time</th>
       <% @days.each do |day_name| %>
-      	<th><%= day_name %></th>
+      	<th class="text-right"><%= day_name %></th>
       <% end %>
     </tr>
     </thead>
@@ -18,12 +20,14 @@
     <tbody>
     <% @times.each do |time| %>
       <tr>
-        <td> <%= time %> </td>
+        <td class="col-sm-1"> <%= time[0..-4] %> </td>
         <% @days.each do |day| %>
-  	      <td nowrap><%= @heatmap.get_days[day][time].round(4) %></td>
+  	      <td nowrap class="col-sm-1"><%= "#{(@heatmap.get_days[day][time]*100).round(4)}%" %></td>
         <% end %>
       </tr>
     <% end %>
     </tbody>
   </table>
 </div>
+
+<%= link_to 'Back', heatmaps_path %>

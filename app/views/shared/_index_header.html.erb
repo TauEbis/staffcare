@@ -1,5 +1,6 @@
 <h1>
-  <%= name.pluralize.titleize %>
+	<% title ||= name %>
+  <%= title.pluralize.titleize %>
   <% if policy(name.remove(' ').classify.constantize).new? -%>
     <div class="pull-right">
     <%= link_to self.send("new_#{name.remove(' ').underscore}_path".to_sym), class: 'btn btn-default'  do %>

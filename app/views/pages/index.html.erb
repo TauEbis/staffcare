@@ -1,29 +1,24 @@
 <%provide(:title, 'All Pages')%>
 
-<h1>Listing pages</h1>
+<%= render 'shared/index_header', name: 'Page', title: 'All Help Topics' %>
 
 <table class="table">
   <thead>
     <tr>
-      <th>Name</th>
-      <th>Slug</th>
-      <th colspan="3"></th>
+      <th>Help Topic</th>
+      <th>Permalink</th>
+      <th colspan="2"></th>
     </tr>
   </thead>
 
   <tbody>
     <% @pages.each do |page| %>
       <tr>
-        <td><%= page.name %></td>
-        <td><code>/pages/<%= page.slug %></code></td>
-        <td><%= link_to 'Show', page %></td>
+        <td><%= link_to page.name, page %></td>
+        <td><%= page_url(page) %></td>
         <td><%= link_to 'Edit', edit_page_path(page) %></td>
         <td><%= link_to 'Destroy', page, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
-
-<br>
-
-<%= link_to 'New Page', new_page_path %>

@@ -4,43 +4,55 @@ class OptimizerWorker
 
   sidekiq_options retry: false
 
-  def perform(schedule_id)
+  def perform(schedule_id, opts={})
     at 0, "Beginning"
 
     schedule = Schedule.find(schedule_id)
+    rerun = schedule.complete? # for updates
     schedule.running!
 
-    source = Rails.env.development? ? :sample_run : "database"
-    provider = DataProvider.new(source)
+    begin
 
-    at 0, "Loading location plans"
+      unless opts[:skip_locations] && opts[:skip_visits]
+        source = "database" # Set to :sample_run for sample data. On a dev machine, rake rs_load adds heatmaps to the database.
+        provider = DataProvider.new(source)
 
-    # Factory creates LocationPlans and VisitProjection
-    # Exclude Locations in the 'Unassigned' zone
-    factory = LocationPlansFactory.new({
-                                           schedule: schedule,
-                                           locations: Location.assigned,
-                                           data_provider: provider})
+        at 0, "Loading location plans"
 
-    factory.create
+        # Factory creates LocationPlans and VisitProjection
+        # Exclude Locations in the 'Unassigned' zone
+        factory = LocationPlansFactory.new({
+                                               schedule: schedule,
+                                               locations: rerun ? Location.for_schedule(schedule) : Location.assigned ,
+                                               data_provider: provider})
 
-    at 0, "Optimizing"
+        rerun ? factory.update(opts) : factory.create
 
-    num = 0
-    total schedule.total_length_to_optimize
+      end
 
-    schedule.optimize! {
-      num += 1
-      at num, "Optimizing"
-    }
+      at 0, "Optimizing"
 
-    # TODO: After optimization we should generate shift coverages!
+      num = 0
+      total schedule.total_length_to_optimize
 
-    # TODO: Bubble up Points to higher levels for cached viewing
+      schedule.optimize! {
+        num += 1
+        at num, "Optimizing"
+      }
 
-    # TODO: Copy coverage from previous month and grade!
+      # TODO: After optimization we should generate shift coverages!
 
-    at num, "Optimizer finished"
-    schedule.complete!
+      # TODO: Bubble up Points to higher levels for cached viewing
+
+      # TODO: Copy coverage from previous month and grade!
+
+      at num, "Optimizer finished"
+      schedule.complete!
+
+    rescue ActiveRecord::RecordInvalid => exception
+      at 0, exception.message
+    rescue StandardError => exception
+      at 0, exception.message
+    end
   end
 end

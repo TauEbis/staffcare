@@ -49,6 +49,15 @@ function OptDiffs(data) {
   self.hours       = ko.observable(data.hours);
 }
 
+function MonthStats(data) {
+  var self = this;
+  self.wait_time       = ko.observable(data.wait_time.toFixed(0));
+  self.work_rate       = ko.observable(data.work_rate.toFixed(2));
+  self.wasted_time     = ko.observable(data.wasted_time.toFixed(0));
+  self.pen_per_pat     = ko.observable(toCurrency(data.pen_per_pat, 1));
+  self.wages           = ko.observable(toCurrency(data.wages));
+}
+
 function DayInfo(data) {
   var self = this;
 
@@ -81,6 +90,7 @@ function CoverageViewModel() {
   self.work_rate = ko.observable(0);
   self.time_wasted = ko.observable(0);
   self.pat_waste = ko.observable(0);
+  self.month_stats = ko.observable(null);
 
   // When an update for the SAME day is processed,
   // Then we'll store the diffs here
@@ -122,8 +132,10 @@ function CoverageViewModel() {
     self.source = data.source;
     self.editable = data.editable;
 
+    self.month_stats(new MonthStats(data.month_stats));
     self.grade_points(new Points(data.grade_points));
     self.grade_hours(data.grade_hours);
+
 
 
     if(data.day_info){
@@ -140,7 +152,7 @@ function CoverageViewModel() {
       self.total_wait(data.total_wait.toFixed(0));
       self.work_rate(data.work_rate.toFixed(2));
       self.time_wasted(data.time_wasted.toFixed(0));
-      self.pat_waste( toCurrency(data.day_points.total / data.visits ) );
+      self.pat_waste( toCurrency(data.day_points.total / data.visits , 1) );
 
       // We dont' want to set loaded until we've loaded a DAY, not just the grade-wide data
       self.loaded(true);

@@ -1,6 +1,9 @@
+<%provide(:title, "Push on #{l @push.created_at} from #{schedule_date_span(@push.location_plan.schedule)} at #{@push.location_plan.name} ")%>
+
+
 <h1>
   Push initiated <%= l @push.created_at %>
-  <small><%= @push.location_plan.name %></small>
+  <small><%= @push.location_plan.name.to_s + " (#{schedule_date_span(@push.location_plan.schedule)})" %></small>
 </h1>
 
 <% if @push.complete? -%>
