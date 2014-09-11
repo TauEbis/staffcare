@@ -15,18 +15,33 @@
     <h3>Entire Schedule</h3>
   </div>
   <div class="col-sm-9">
-    <div class="row">
-       <% if @schedule.complete? -%>
+    <% if @schedule.complete? -%>
+      <div class="row">
         <div class="col-sm-4 text-center">
-          <h4><%= hour_points(@schedule) %> <small> hours</small></h4>
+          <h4><%= hour_points(@schedule) %> <small>(<%= number_to_currency @schedule.stats[:wages], precision: 0 %>)</small></h4>
+        </div>
+        <div class="col-sm-2 text-center">
+          <h4><%= number_with_delimiter @schedule.stats[:wait_time].round(0) %> <small> wait mins</small></h4>
+        </div>
+        <div class="col-sm-2 text-center">
+          <h4><%= number_with_delimiter @schedule.stats[:work_rate].round(2) %><small> pats per hr</small></h4>
+        </div>
+        <div class="col-sm-2 text-center">
+          <h4><%= number_with_delimiter @schedule.stats[:wasted_time].round(0) %><small> wasted mins</small></h4>
+        </div>
+        <div class="col-sm-2 text-center">
+          <h4><%= number_to_currency @schedule.stats[:pen_per_pat], precision: 1 %><small> waste per pat</small></h4>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4 text-right">
+          <h4><small>Efficiency Grades</small></h4>
         </div>
         <div class="col-sm-2 text-center">
           <h4><%= @schedule.letters["patient_sat"] %> <small>(<%= patient_sat_points(@schedule) %> )</small></h4>
-          <h5><%#= schedule %><small> minutes of wait time</small></h5>
         </div>
         <div class="col-sm-2 text-center">
           <h4><%= @schedule.letters["md_sat"] %> <small>(<%= md_sat_points(@schedule) %> )</small></h4>
-          <h5><span data-bind="text: $root.work_rate "></span><small> pats per hr</small></h5>
         </div>
         <div class="col-sm-2 text-center">
           <h4><%= @schedule.letters["cost"] %> <small>(<%= cost_points(@schedule) %> )</small></h4>
@@ -34,8 +49,8 @@
         <div class="col-sm-2 text-center">
           <h4><%= @schedule.letters["total"] %> <small>(<%= total_points(@schedule) %> )</small></h4>
         </div>
+      </div>
       <% end -%>
-    </div>
   </div>
 </div>
 
@@ -50,26 +65,42 @@
       <%= collective_state_label(state) %>
     </div>
     <div class="col-sm-9">
+    <% if @schedule.complete? -%>
       <div class="row">
-        <% if @schedule.complete? -%>
-          <div class="col-sm-4 text-center">
-            <h4><%= hour_points(@schedule, zone) %> <small> hours</small></h4>
-          </div>
-          <div class="col-sm-2 text-center">
-            <h4><%= @schedule.letters(zone)["patient_sat"] %> <small>(<%= patient_sat_points(@schedule, zone) %> )</small></h4>
-            <h5><span data-bind="text: $root.total_wait "></span><small> minutes of wait time</small></h5>
-          </div>
-          <div class="col-sm-2 text-center">
-            <h4><%= @schedule.letters(zone)["md_sat"] %> <small>(<%= md_sat_points(@schedule, zone) %> )</small></h4>
-          </div>
-          <div class="col-sm-2 text-center">
-            <h4><%= @schedule.letters(zone)["cost"] %> <small>(<%= cost_points(@schedule, zone) %> )</small></h4>
-          </div>
-          <div class="col-sm-2 text-center">
-            <h4><%= @schedule.letters(zone)["total"] %> <small>(<%= total_points(@schedule, zone) %> )</small></h4>
-          </div>
-        <% end -%>
+        <div class="col-sm-4 text-center">
+          <h4><%= hour_points(@schedule, zone) %> <small>(<%= number_to_currency @schedule.stats(zone)[:wages], precision: 0 %>)</small></h4>
+        </div>
+        <div class="col-sm-2 text-center">
+          <h4><%= number_with_delimiter @schedule.stats(zone)[:wait_time].round(0) %> <small> wait mins</small></h4>
+        </div>
+        <div class="col-sm-2 text-center">
+          <h4><%= number_with_delimiter @schedule.stats(zone)[:work_rate].round(2) %><small> pats per hr</small></h4>
+        </div>
+        <div class="col-sm-2 text-center">
+          <h4><%= number_with_delimiter @schedule.stats(zone)[:wasted_time].round(0) %><small> wasted mins</small></h4>
+        </div>
+        <div class="col-sm-2 text-center">
+          <h4><%= number_to_currency @schedule.stats(zone)[:pen_per_pat], precision: 1 %><small> waste per pat</small></h4>
+        </div>
       </div>
+      <div class="row">
+        <div class="col-sm-4 text-right">
+          <h4><small>Efficiency Grades</small></h4>
+        </div>
+        <div class="col-sm-2 text-center">
+          <h4><%= @schedule.letters(zone)["patient_sat"] %> <small>(<%= patient_sat_points(@schedule, zone) %> )</small></h4>
+        </div>
+        <div class="col-sm-2 text-center">
+          <h4><%= @schedule.letters(zone)["md_sat"] %> <small>(<%= md_sat_points(@schedule, zone) %> )</small></h4>
+        </div>
+        <div class="col-sm-2 text-center">
+          <h4><%= @schedule.letters(zone)["cost"] %> <small>(<%= cost_points(@schedule, zone) %> )</small></h4>
+        </div>
+        <div class="col-sm-2 text-center">
+          <h4><%= @schedule.letters(zone)["total"] %> <small>(<%= total_points(@schedule, zone) %> )</small></h4>
+        </div>
+      </div>
+      <% end -%>
     </div>
   </div>
 <% end %>

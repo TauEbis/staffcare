@@ -124,6 +124,14 @@ class Schedule < ActiveRecord::Base
     end
   end
 
+  def stats(zone = nil)
+    @_stats ||= {}
+    @_stats[zone] ||= begin
+      lp = zone ? location_plans.for_zone(zone).includes(:chosen_grade) : location_plans.includes(:chosen_grade)
+      Grade.unoptimized_stats(lp.map(&:chosen_grade))
+    end
+  end
+
   def any_updates?
     check_for_updates.values.include? true
   end
