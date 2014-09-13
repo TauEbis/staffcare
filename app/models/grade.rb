@@ -258,9 +258,9 @@ class Grade < ActiveRecord::Base
       b = breakdowns[date_s]
 
       {
-        coverage: coverages[date_s].sum,
+        coverage: coverages[date_s].sum/2,
         visits: location_plan.visits[date_s].sum,
-        work_rate: location_plan.visits[date_s].sum/coverages[date_s].sum,
+        work_rate: location_plan.visits[date_s].sum/coverages[date_s].sum*2,
         seen: b['seen'].sum,
         queue: b['queue'].sum,
         turbo: b['turbo'].sum,
@@ -305,8 +305,8 @@ class Grade < ActiveRecord::Base
   def month_stats
     @_month_stats ||= {
       wait_time: month_totals[:queue] * 30,                             # in minutes
-      work_rate: month_totals[:work_rate] * 2,                          # patients per hour
-      wasted_time: month_totals[:slack] * 60 / location_plan.normal[1], # in minutes -- will need to change to normal[0] after refactor
+      work_rate: month_totals[:work_rate],                          # patients per hour
+      wasted_time: month_totals[:slack] * 60 / location_plan.normal[0], # in minutes -- will need to change to normal[1] after refactor
       pen_per_pat: month_totals[:penalty]/month_totals[:visits],
       wages: (month_totals[:coverage] * location_plan.schedule.penalty_slack).to_f
     }
@@ -331,7 +331,7 @@ class Grade < ActiveRecord::Base
       end
     end
 
-    stats[:work_rate] = tots[:visits] / tots[:coverage] * 2
+    stats[:work_rate] = tots[:visits] / tots[:coverage]
     stats[:pen_per_pat] = tots[:penalty]/tots[:visits]
     stats
   end
@@ -341,11 +341,11 @@ class Grade < ActiveRecord::Base
   end
 
   def time_wasted(date)
-    totals(date)[:slack] * 60 / location_plan.normal[1] # in minutes -- will need to change to normal[0] after refactor
+    totals(date)[:slack] * 60 / location_plan.normal[0] # in minutes -- will need to change to normal[1] after refactor
   end
 
   def average_work_rate(date)
-    totals(date)[:work_rate] * 2 # patients per hour
+    totals(date)[:work_rate] # patients per hour
   end
 
   def wages(date)
