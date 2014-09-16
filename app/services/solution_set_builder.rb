@@ -12,7 +12,7 @@ class SolutionSetBuilder
 
     @hours_open = @close - @open # half hours in the day
 
-    @min_shift = @hours_open / 2 # shortest allowable shift
+    @min_shift = (@hours_open * 0.5).round # shortest allowable shift
     @fixed_openers = Array.new(@min_openers, @open) # Fixed openers
     @fixed_closers = Array.new(@min_closers, @close) # Fixed closers
     @first_possible_close = @open + @min_shift # first time to end a shift
