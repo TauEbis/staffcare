@@ -12,6 +12,7 @@ git remote add prod git@heroku.com:staff-care-prod.git
 bundle install
 rake db:create db:migrate
 rake db:seed
+rake rs_load
 ```
 
 **Username**: admin@admin.com

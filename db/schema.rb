@@ -33,8 +33,8 @@ ActiveRecord::Schema.define(version: 20140925190507) do
     t.string   "name"
     t.text     "days"
     t.string   "uid"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", default: '2014-10-01 00:00:00', null: false
+    t.datetime "updated_at", default: '2014-10-01 00:00:00', null: false
   end
 
   add_index "heatmaps", ["uid"], name: "index_heatmaps_on_uid", using: :btree
@@ -55,8 +55,8 @@ ActiveRecord::Schema.define(version: 20140925190507) do
     t.string   "normal",              default: [],                    null: false, array: true
     t.string   "max",                 default: [],                    null: false, array: true
     t.integer  "wiw_sync",            default: 0,                     null: false
-    t.datetime "created_at",          default: '2014-09-25 17:10:34', null: false
-    t.datetime "updated_at",          default: '2014-09-25 17:10:34', null: false
+    t.datetime "created_at",          default: '2014-10-01 00:00:00', null: false
+    t.datetime "updated_at",          default: '2014-10-01 00:00:00', null: false
     t.integer  "optimizer_state",     default: 0,                     null: false
     t.string   "optimizer_job_id"
   end
@@ -115,8 +115,8 @@ ActiveRecord::Schema.define(version: 20140925190507) do
     t.date     "start_date"
     t.date     "end_date"
     t.json     "volume_by_location", default: {},                    null: false
-    t.datetime "created_at",         default: '2014-09-25 17:10:34', null: false
-    t.datetime "updated_at",         default: '2014-09-25 17:10:34', null: false
+    t.datetime "created_at",         default: '2014-10-01 00:00:00', null: false
+    t.datetime "updated_at",         default: '2014-10-01 00:00:00', null: false
   end
 
   create_table "pushes", force: true do |t|
