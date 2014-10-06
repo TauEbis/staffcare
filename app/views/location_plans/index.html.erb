@@ -8,10 +8,11 @@
   </div>
 </div>
 
-<% if @schedule.complete? -%>
-  <% @location_plans.each do |location_plan| %>
-    <div class="panel panel-default">
-      <% location = location_plan.location %>
+<% @location_plans.each do |location_plan| %>
+
+  <div class="panel panel-default">
+    <% location = location_plan.location %>
+    <% if location_plan.complete? -%>
 
       <div class="panel-body">
         <div class="table">
@@ -56,8 +57,14 @@
           </div>
         </div>
       </div>
-    </div>
-  <% end %>
-<% end -%>
+
+    <% else -%>
+      <div class="panel-body">
+        <h4><%= location.name %></h4>
+        <%= render 'shared/optimizer_status', object: location_plan %>
+      </div>
+    <% end -%>
+  </div>
+<% end %>
 
 <%= link_to 'Back', schedule_path(@schedule) %>
