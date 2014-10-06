@@ -1,4 +1,4 @@
-class OptimizerWorker
+class ScheduleOptimizerWorker
   include Sidekiq::Worker
   include Sidekiq::Status::Worker
 
@@ -30,15 +30,17 @@ class OptimizerWorker
 
       end
 
-      at 0, "Optimizing"
+      at 0, "Enqueuing LocationPlanOptimizers"
 
       num = 0
-      total schedule.total_length_to_optimize
+      total schedule.location_plans.length
 
-      schedule.optimize! {
+      schedule.location_plans.each do |location_plan|
         num += 1
-        at num, "Optimizing"
-      }
+        at num, "Enqueueing LocationPlanOptimizers"
+        job_id = LocationPlanOptimizerWorker.perform_async(location_plan.id)
+        location_plan.update_attribute(:optimizer_job_id, job_id)
+      end
 
       # TODO: After optimization we should generate shift coverages!
 
@@ -46,7 +48,7 @@ class OptimizerWorker
 
       # TODO: Copy coverage from previous month and grade!
 
-      at num, "Optimizer finished"
+      at num, "ScheduleOptimizer finished"
       schedule.complete!
 
     rescue ActiveRecord::RecordInvalid => exception

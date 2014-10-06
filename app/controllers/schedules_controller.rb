@@ -41,7 +41,7 @@ class SchedulesController < ApplicationController
     authorize @schedule
 
     if @schedule.save
-      job_id = OptimizerWorker.perform_async(@schedule.id)
+      job_id = ScheduleOptimizerWorker.perform_async(@schedule.id)
       @schedule.update_attribute( :optimizer_job_id, job_id )
 
       redirect_to schedules_url, notice: 'Schedule was successfully created.'
@@ -59,7 +59,7 @@ class SchedulesController < ApplicationController
           lp.grades.clear
         end
         opts = { skip_locations: !params[:load_locations], skip_visits: !params[:load_visits] }
-        job_id = OptimizerWorker.perform_async(@schedule.id, opts)
+        job_id = ScheduleOptimizerWorker.perform_async(@schedule.id, opts)
         @schedule.update_attribute( :optimizer_job_id, job_id )
         redirect_to schedules_url, notice: 'Schedule was successfully updated. Optimization is now running.'
 

@@ -25,6 +25,7 @@ class LocationPlan < ActiveRecord::Base
 
   enum approval_state: [:pending, :manager_approved, :gm_approved]
   enum wiw_sync: [:unsynced, :dirty, :synced]
+  enum optimizer_state: [ :not_run, :running, :complete, :error ]
 
   delegate :name, to: :location
 
