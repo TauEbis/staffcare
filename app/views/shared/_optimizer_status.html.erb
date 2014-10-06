@@ -1,0 +1,9 @@
+<% unless object.complete? -%>
+  <% jid = object.optimizer_job_id -%>
+  <div class="alert alert-info" role="alert">
+    Status: <%= Sidekiq::Status::status(jid).to_s.humanize %> - <%= Sidekiq::Status::message jid %>
+    <%# Sidekiq::Status::at jid %>
+    <%= Sidekiq::Status::pct_complete(jid).to_f.round(1) %>%
+    <%# Sidekiq::Status::total %>
+  </div>
+<% end -%>

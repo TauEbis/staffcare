@@ -15,12 +15,12 @@
   <small> <%= @schedule.state.to_s.humanize %></small>
 </h1>
 
-<% unless @schedule.complete? -%>
-  <% jid = @schedule.optimizer_job_id -%>
+<% if @schedule.location_plans.complete.count < @schedule.location_plans.count -%>
   <div class="alert alert-info" role="alert">
-    Status: <%= Sidekiq::Status::status(jid).to_s.humanize %> - <%= Sidekiq::Status::message jid %>
-    <%# Sidekiq::Status::at jid %>
-    <%= Sidekiq::Status::pct_complete(jid).to_f.round(1) %>%
-    <%# Sidekiq::Status::total %>
+    Location plan optimization status:
+    <%= @schedule.location_plans.complete.count %> of
+    <%= @schedule.location_plans.count %> complete
   </div>
 <% end -%>
+
+<% render '/shared/optimizer_status', object: @schedule %>
