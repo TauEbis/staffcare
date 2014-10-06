@@ -17,7 +17,7 @@ development:
   host:     localhost
   encoding: unicode
   database: staff_care_development
-  pool:     5
+  pool:     10
   username: root
   password: 
   template: template0
@@ -45,7 +45,7 @@ test:
   host:     localhost
   encoding: unicode
   database: staff_care_test
-  pool:     5
+  pool:     10
   username: root
   password: 
   template: template0
@@ -55,7 +55,7 @@ production:
   host:     localhost
   encoding: unicode
   database: staff_care_production
-  pool:     5
+  pool:     10
   username: root
   password: 
   template: template0
