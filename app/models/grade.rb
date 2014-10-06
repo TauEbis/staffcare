@@ -39,7 +39,7 @@ class Grade < ActiveRecord::Base
   end
 
   def self.unoptimized_sum(grades)
-    grades = Array(grades)
+    grades = Array(grades).compact
     p = {}
 
     grades.each do |g|
@@ -232,7 +232,7 @@ class Grade < ActiveRecord::Base
   end
 
   def self.month_letters(grades)
-    grades = Array(grades)
+    grades = Array(grades).compact
 
     m_letters = {}
 
@@ -313,26 +313,24 @@ class Grade < ActiveRecord::Base
   end
 
   def self.unoptimized_stats(grades)
-    grades = Array(grades)
-    stats = {}
+    grades = Array(grades).compact
+    stats = {wait_time: 0, wasted_time: 0, wages: 0}
 
     grades.each do |g|
       [:wait_time, :wasted_time, :wages].each do |field|
-        stats[field] ||= 0
         stats[field] += g.month_stats[field]
       end
     end
 
-    tots={}
+    tots={visits: 0, coverage: 0, penalty: 0}
     grades.each do |g|
       [:visits, :coverage, :penalty].each do |field|
-        tots[field] ||= 0
         tots[field] += g.month_totals[field]
       end
     end
 
-    stats[:work_rate] = tots[:visits] / tots[:coverage]
-    stats[:pen_per_pat] = tots[:penalty]/tots[:visits]
+    stats[:work_rate] = tots[:visits] / tots[:coverage] rescue 0
+    stats[:pen_per_pat] = tots[:penalty] / tots[:visits] rescue 0
     stats
   end
 
