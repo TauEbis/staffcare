@@ -1,0 +1,19 @@
+<%= simple_form_for(@life_cycle, html: { class: 'form-vertical' }) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.input :name %>
+    <%= f.input :min_daily_volume %>
+    <%= f.input :max_daily_volume %>
+    <%= f.input :scribe_policy, collection: LifeCycle::OPTION_NAMES %>
+    <%= f.input :pcr_policy, collection: LifeCycle::OPTION_NAMES %>
+    <%= f.input :ma_policy, collection: LifeCycle::OPTION_NAMES %>
+    <%= f.input :xray_policy, collection: LifeCycle::OPTION_NAMES %>
+    <%= f.input :am_policy, collection: LifeCycle::OPTION_NAMES, label: "Asst Manager policy" %>
+    <%= f.input :default %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

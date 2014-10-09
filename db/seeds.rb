@@ -6,6 +6,34 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
+
+# All ENVs
+if LifeCycle.count == 0
+
+  [ # Name          min   max   scribe      pcr       ma          xray      am
+    ['Life Cycle 1', 0,   30,  :ratio_1_5, :ratio_2, :limit_1,   :limit_1, :limit_1],
+    ['Life Cycle 2', 31,  50,  :ratio_2,   :ratio_2, :limit_1_5, :limit_1, :limit_1],
+    ['Life Cycle 3', 51,  75,  :ratio_2,   :ratio_2, :limit_1_5, :limit_1, :limit_1],
+    ['Life Cycle 4', 76,  100, :ratio_2,   :ratio_2, :limit_1_5, :limit_1, :limit_1],
+    ['Life Cycle 5', 101, 130, :ratio_2,   :limit_2, :limit_2,   :limit_1, :limit_1],
+    ['Life Cycle 6', 131, 165, :ratio_2,   :limit_2, :limit_2,   :limit_1, :limit_1],
+    ['Life Cycle 7', 166, 200, :ratio_2,   :limit_2, :limit_2,   :limit_1, :limit_1],
+    ['Life Cycle 8', 201, 999, :ratio_2,   :limit_2, :limit_2,   :limit_1, :limit_1],
+  ].each do |l|
+
+    LifeCycle.create({ default: true,
+                       name: l[0],
+                       min_daily_volume: l[1],
+                       max_daily_volume: l[2],
+                       scribe_policy:    LifeCycle::OPTION_VALUES[l[3]],
+                       pcr_policy:       LifeCycle::OPTION_VALUES[l[4]],
+                       ma_policy:        LifeCycle::OPTION_VALUES[l[5]],
+                       xray_policy:      LifeCycle::OPTION_VALUES[l[6]],
+                       am_policy:        LifeCycle::OPTION_VALUES[l[7]]
+    })
+  end
+end
+
 if Rails.env.development?
   if Heatmap.all.empty?
     Rake::Task["rs_load"].invoke
@@ -81,3 +109,4 @@ if Rails.env.development?
   end
 
 end
+

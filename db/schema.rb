@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140925190507) do
+ActiveRecord::Schema.define(version: 20141008175735) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -39,6 +39,20 @@ ActiveRecord::Schema.define(version: 20140925190507) do
 
   add_index "heatmaps", ["uid"], name: "index_heatmaps_on_uid", using: :btree
 
+  create_table "life_cycles", force: true do |t|
+    t.string   "name"
+    t.integer  "min_daily_volume"
+    t.integer  "max_daily_volume"
+    t.integer  "scribe_policy"
+    t.integer  "pcr_policy"
+    t.integer  "ma_policy"
+    t.integer  "xray_policy"
+    t.integer  "am_policy"
+    t.boolean  "default"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "location_plans", force: true do |t|
     t.integer  "location_id",                                         null: false
     t.integer  "schedule_id",                                         null: false
@@ -59,7 +73,15 @@ ActiveRecord::Schema.define(version: 20140925190507) do
     t.datetime "updated_at",          default: '2014-10-01 00:00:00', null: false
     t.integer  "optimizer_state",     default: 0,                     null: false
     t.string   "optimizer_job_id"
+    t.integer  "life_cycle_id"
+    t.integer  "scribe_policy"
+    t.integer  "pcr_policy"
+    t.integer  "ma_policy"
+    t.integer  "xray_policy"
+    t.integer  "am_policy"
   end
+
+  add_index "location_plans", ["life_cycle_id"], name: "index_location_plans_on_life_cycle_id", using: :btree
 
   create_table "locations", force: true do |t|
     t.string   "name"

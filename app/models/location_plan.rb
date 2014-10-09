@@ -4,6 +4,7 @@ class LocationPlan < ActiveRecord::Base
   belongs_to :location
   belongs_to :schedule
   belongs_to :visit_projection
+  belongs_to :life_cycle
 
   # grades records the grading/score for the schedule for the given scheduling options-
   # e.g., use last months schedule, use manual coverage, etc.

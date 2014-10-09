@@ -1,0 +1,40 @@
+<h1>Listing Life Cycles</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Min daily volume</th>
+      <th>Max daily volume</th>
+      <th>Scribe policy</th>
+      <th>PCR policy</th>
+      <th>MA policy</th>
+      <th>X-ray policy</th>
+      <th>Asst Man. policy</th>
+      <th>Default</th>
+      <th colspan="2"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @life_cycles.each do |life_cycle| %>
+      <tr>
+        <td><%= life_cycle.name %></td>
+        <td><%= life_cycle.min_daily_volume %></td>
+        <td><%= life_cycle.max_daily_volume %></td>
+        <td><%= life_cycle.policy_name(:scribe_policy) %></td>
+        <td><%= life_cycle.policy_name(:pcr_policy) %></td>
+        <td><%= life_cycle.policy_name(:ma_policy) %></td>
+        <td><%= life_cycle.policy_name(:xray_policy) %></td>
+        <td><%= life_cycle.policy_name(:am_policy) %></td>
+        <td><%= life_cycle.default %></td>
+        <td><%= link_to 'Edit', edit_life_cycle_path(life_cycle) %></td>
+        <td><%= link_to 'Destroy', life_cycle, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Life cycle', new_life_cycle_path %>
