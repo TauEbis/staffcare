@@ -8,6 +8,17 @@ class Shift < ActiveRecord::Base
 
   scope :for_day, ->(day) { where(starts_at: day.in_time_zone.beginning_of_day..day.in_time_zone.end_of_day) }
 
+  enum position: [:md, :scribe, :pcr, :ma, :xray, :manager, :am]
+
+  LINE_WORKERS = {
+    scribe: 'Scribe',
+    pcr: 'PCR',
+    ma: 'MA',
+    xray: 'X-Ray',
+    manager: 'Manager',
+    am: 'Asst Manager'
+  }.freeze
+
   def starts_hour
     @_starts_hour ||= starts_at.in_time_zone(TZ).hour
   end

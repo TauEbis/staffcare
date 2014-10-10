@@ -17,6 +17,8 @@ Rails.application.routes.draw do
   end
 
   resources :location_plans, only: [] do
+    resources :line_workers, only: [:index]
+
     collection do
       post :change_state
     end
