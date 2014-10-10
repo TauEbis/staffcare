@@ -21,6 +21,8 @@ class Schedule < ActiveRecord::Base
     validates field, presence: true, numericality: { greater_than_or_equal_to: 0, less_than: 5000 }
   end
 
+  INTERVAL_GRANULARITY = 5
+
   validates :starts_on, presence: true
   validate :valid_starts_on
   validates_associated :location_plans

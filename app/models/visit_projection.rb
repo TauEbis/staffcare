@@ -61,14 +61,28 @@ class VisitProjection < ActiveRecord::Base
     self.visits = {}
 
     schedule.days.each do |day|
-      daily_vol = self.volumes[day.to_s]
+      weekly_volume = self.volumes[day.to_s]
       if source == :sample_run || source == :dummy_run
-        self.visits[day.to_s] = heat_maps[day.wday].map{ |percent| percent * daily_vol }
+        self.visits[day.to_s] = heat_maps[day.wday].map{ |percent| percent * weekly_volume }
       else
-        self.visits[day.to_s] = heat_maps.build_day_volume(daily_vol, day, location)
+        self.visits[day.to_s] = build_granular_volume_for_day(heat_maps, weekly_volume, day)
       end
     end
+  end
 
+  def build_granular_volume_for_day(heat_maps, weekly_volume, day)
+    percents = heat_maps.days[Date::DAYNAMES[day.wday]].values
+
+    start_time = location.open_times[day.wday]
+    end_time   = location.close_times[day.wday]
+
+    # Assuming percents is always 56 (every 15 minutes) starting at 8am
+    start_index = (start_time - 8) * 4
+    end_index   = (end_time - 8) * 4
+
+    multiplier = (15 / Schedule::INTERVAL_GRANULARITY).to_i
+
+    percents[start_index...end_index].flat_map{ |percent| [(percent * weekly_volume) / multiplier] * multiplier }
   end
 
 	def self.import!(data_provider, schedule, locations)

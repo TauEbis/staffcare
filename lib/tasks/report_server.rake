@@ -19,7 +19,7 @@ task :rs_ingest => :environment do
   ingest.data = data
 
   z0 = Zone.find_or_create_by(name: 'Unassigned')
-  heatmaps = ingest.create_heatmaps!(30)
+  heatmaps = ingest.create_heatmaps!(15)
   heatmaps.each do |name, heatmap|
     begin
       location = Location.find_by!(uid: heatmap.uid)
@@ -54,7 +54,7 @@ task :rs_load => :environment do
   ingest.data = data
 
   z0 = Zone.find_or_create_by(name: 'Unassigned')
-  heatmaps = ingest.create_heatmaps!(30)
+  heatmaps = ingest.create_heatmaps!(15)
   heatmaps.each do |name, heatmap|
     begin
       location = Location.find_by!(uid: heatmap.uid)
