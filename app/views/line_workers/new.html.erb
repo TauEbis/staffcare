@@ -1,0 +1,24 @@
+<h1>Select a Life Cycle Policy</h1>
+
+<%= simple_form_for(@location_plan, url: location_plan_line_workers_path(@location_plan), method: :post) do |f| -%>
+
+  <div class="">
+    Average of <%= @location_plan.visit_projection.daily_avg.to_i %> patients per day
+  </div>
+
+  <%= f.association :life_cycle, collection: LifeCycle.all, label_method: :label %>
+
+  <div class="alert alert-todo">
+    Normally selecting a life cycle would pre-fill the values below.  But for now, please set them manually
+  </div>
+
+  <%= f.input :scribe_policy, collection: LifeCycle::OPTION_NAMES %>
+  <%= f.input :pcr_policy, collection: LifeCycle::OPTION_NAMES %>
+  <%= f.input :ma_policy, collection: LifeCycle::OPTION_NAMES %>
+  <%= f.input :xray_policy, collection: LifeCycle::OPTION_NAMES %>
+  <%= f.input :am_policy, collection: LifeCycle::OPTION_NAMES, label: "Asst Manager policy" %>
+
+  <div class="form-actions">
+    <%= f.button :submit, "Generate" %>
+  </div>
+<% end -%>

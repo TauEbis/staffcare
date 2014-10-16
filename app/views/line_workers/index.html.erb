@@ -11,21 +11,16 @@
 <div class="tab-content">
   <% Shift::LINE_WORKERS.each do |k, v| -%>
     <% next if k == :manager %>
-    <% rule = LifeCycle.first.policy("#{k}_policy") %>
+    <% rule = @location_plan.send("#{k}_policy") %>
 
     <div class="tab-pane" id="<%= k %>">
       <table class="table">
         <tr>
           <th>Doctor shift - Rule: <%= rule.to_s.humanize %></th>
         </tr>
-        <% @location_plan.chosen_grade.shifts.for_day(@day).each do |shift| -%>
+        <% @location_plan.chosen_grade.shifts.send(k).each do |shift| -%>
           <tr>
             <td><%= time_span shift.starts_at, shift.ends_at %></td>
-            <td>
-              <% LifeCycle.generate_shifts(rule, shift.starts_at, shift.ends_at).each do |lw| -%>
-                <%= time_span lw.starts_at, lw.ends_at %><br>
-              <% end -%>
-            </td>
           </tr>
         <% end -%>
       </table>

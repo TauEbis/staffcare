@@ -1,8 +1,6 @@
 class LifeCycle < ActiveRecord::Base
   has_many :location_plans
 
-  MAX_LENGTH = 10 * 60 * 60 # 10 hours in seconds
-
   OPTION_VALUES = {
     limit_1: 0,
     limit_1_5: 1,
@@ -41,36 +39,8 @@ class LifeCycle < ActiveRecord::Base
     OPTION_NAMES[send(key)][0]
   end
 
-  def self.generate_shifts(policy, starts, ends)
-    case policy
-      when :limit_1, :ratio_1
-        generate_1(starts, ends)
-      when :limit_2, :ratio_2
-        generate_2(starts, ends)
-      when :limit_1_5, :ratio_1_5
-        generate_1_5(starts, ends)
-    end
-  end
-
-  def self.generate_1(starts, ends)
-    if ends - starts > MAX_LENGTH
-      mid = (starts + (ends - starts) / 2).round(30.minutes)
-      [Shift.new(starts_at: starts, ends_at:  mid), Shift.new(starts_at: mid, ends_at: ends)]
-    else
-      [Shift.new(starts_at: starts, ends_at: ends)]
-    end
-  end
-
-  def self.generate_2(starts, ends)
-    generate_1(starts, ends) * 2
-  end
-
-  def self.generate_1_5(starts, ends)
-    twenty_five_percent = (ends - starts) / 4
-    [
-      Shift.new(starts_at: starts, ends_at: (ends - twenty_five_percent).round(30.minutes)),
-      Shift.new(starts_at: (starts + twenty_five_percent).round(30.minutes), ends_at: ends)
-    ]
+  def label
+    "#{name} (#{min_daily_volume}-#{max_daily_volume})#{'*' if default?}"
   end
 
 end

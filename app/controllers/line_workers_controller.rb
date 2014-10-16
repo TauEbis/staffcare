@@ -5,7 +5,7 @@ class LineWorkersController < ApplicationController
   skip_after_filter :verify_authorized
   skip_after_filter :verify_policy_scoped
 
-  # GET /life_cycles
+  # GET location_plans/:location_plan_id/line_workers
   def index
     # @life_cycles = policy_scope(LifeCycle).all
     @day = @location_plan.schedule.starts_on
@@ -13,10 +13,11 @@ class LineWorkersController < ApplicationController
 
   end
 
-  # GET /life_cycles/new
+  # GET location_plans/:location_plan_id/line_workers/new
   def new
-    @life_cycle = LifeCycle.new
-    authorize @life_cycle
+    #@life_cycle = LifeCycle.new
+    #authorize @life_cycle
+
   end
 
   # GET /life_cycles/1/edit
@@ -25,10 +26,12 @@ class LineWorkersController < ApplicationController
 
   # POST /life_cycles
   def create
-    @life_cycle = LifeCycle.new(life_cycle_params)
+    @location_plan.update(new_line_worker_params)
 
-    if @life_cycle.save
-      redirect_to @life_cycle, notice: 'Life cycle was successfully created.'
+    gen = LineWorkerShiftGenerator.new(@location_plan)
+
+    if gen.create!
+      redirect_to location_plan_line_workers_url(@location_plan), notice: 'Line worker schedules generated successfully'
     else
       render :new
     end
@@ -57,7 +60,8 @@ class LineWorkersController < ApplicationController
   end
 
   # Only allow a trusted parameter "white list" through.
-  def life_cycle_params
-    params.require(:life_cycle).permit(:name, :min_daily_volume, :max_daily_volume, :scribe_policy, :pcr_policy, :ma_policy, :xray_policy, :am_policy, :default)
+  def new_line_worker_params
+    params.require(:location_plan).permit(:life_cycle_id, :scribe_policy, :pcr_policy, :ma_policy, :xray_policy,
+      :am_policy)
   end
 end

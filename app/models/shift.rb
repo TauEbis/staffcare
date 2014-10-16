@@ -10,6 +10,8 @@ class Shift < ActiveRecord::Base
 
   enum position: [:md, :scribe, :pcr, :ma, :xray, :manager, :am]
 
+  scope :not_md, -> { where.not(position: Shift.positions[:md])}
+
   LINE_WORKERS = {
     scribe: 'Scribe',
     pcr: 'PCR',
