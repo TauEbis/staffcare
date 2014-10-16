@@ -37,13 +37,21 @@ class Shift < ActiveRecord::Base
     {id: id, starts_hour: starts_hour, ends_hour: ends_hour, date: date}
   end
 
-  def from_knockout(date, params)
-    @_date        = date.in_time_zone(TZ)
-    @_starts_hour = params['starts']
-    @_ends_hour   = params['ends']
-    self.starts_at = @_date.advance(hours: @_starts_hour)
-    self.ends_at   = @_date.advance(hours: @_ends_hour)
+  # Takes a date object for the day
+  # and a start & end integer number of hours to offset from midnight that day
+  def from_start_end_times(date, starts, ends)
+    _date = date.in_time_zone(TZ)
+    self.starts_at = _date.change(hours: starts)
+    self.ends_at   = _date.change(hours: ends)
     self
+  end
+
+  def from_knockout(date, params)
+    from_start_end_times(
+      date,
+      params['starts'],
+      params['ends']
+    )
   end
 
   def wiw_shift
