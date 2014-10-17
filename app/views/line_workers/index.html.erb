@@ -2,29 +2,51 @@
 
 <h3><%= @location_plan.name %></h3>
 
-<ul class="nav nav-tabs" role="tablist">
-  <% Shift::LINE_WORKERS.each do |k, v| -%>
-    <li><a href="#<%= k %>" role="tab" data-toggle="tab"><%= v %></a></li>
-  <% end -%>
-</ul>
+<div class="row">
+  <div class="col-md-3">
+    <%= render 'location_plans/daygrid' %>
+  </div>
+</div>
 
-<div class="tab-content">
-  <% Shift::LINE_WORKERS.each do |k, v| -%>
-    <% next if k == :manager %>
-    <% rule = @location_plan.send("#{k}_policy") %>
-
-    <div class="tab-pane" id="<%= k %>">
-      <table class="table">
-        <tr>
-          <th>Doctor shift - Rule: <%= rule.to_s.humanize %></th>
-        </tr>
-        <% @location_plan.chosen_grade.shifts.send(k).each do |shift| -%>
-          <tr>
-            <td><%= time_span shift.starts_at, shift.ends_at %></td>
-          </tr>
-        <% end -%>
-      </table>
+<div class="row">
+  <div data-bind="if: loaded">
+    <div data-bind="foreach: shifts">
+      <div class="row form-inline form-group">
+        <div class="col-sm-3">
+          <a href="#" data-bind="click: $root.removeShift">
+            <span class="glyphicon glyphicon-remove"></span>
+          </a>
+          <select class="form-control input-sm" data-bind="options: $root.available_times(), value: starts,
+          optionsText: 'formatted', optionsValue: 'num'"></select>
+          &mdash;
+          <select class="form-control input-sm" data-bind="options: $root.available_times(), value: ends,
+          optionsText: 'formatted', optionsValue: 'num'"></select>
+        </div>
+        <div class="col-sm-2">
+          <h5>
+            <span class="text-left" data-bind="text: position_name()"></span>
+            <span class="text-right" data-bind="text: hours()"></span><small> hrs</small>
+          </h5>
+        </div>
+        <div class="col-sm-6">
+          <div class="shift-bar" data-bind="style: {width: shift_bar_width(), marginLeft: shift_bar_offset()}"></div>
+        </div>
+        <br>
+      </div>
     </div>
-    <% end -%>
+
+    <div class="row">
+      <div class="col-sm-4 form-group">
+        <a href="#" data-bind="click: addShift">
+          <span class="glyphicon glyphicon-plus"></span> Add Shift
+        </a>
+      </div>
+      <div class="pull-right">
+        <!--<button data-bind="click: save" class="btn btn-default">-->
+          <!--<span class="glyphicon glyphicon-refresh"></span> Save and Recalculate-->
+        <!--</button>-->
+      </div>
+    </div>
+  </div>
 </div>
 

@@ -1,6 +1,6 @@
 class GradesController < ApplicationController
   before_action :set_location_plan, only: [:create]
-  before_action :set_grade, only: [:show, :highcharts, :hourly, :update, :destroy]
+  before_action :set_grade, only: [:show, :shifts, :highcharts, :hourly, :update, :destroy]
 
   def create
     authorize Grade.new(location_plan: @location_plan), :create?  # Fake grade, the real one to be created later
@@ -38,6 +38,26 @@ class GradesController < ApplicationController
       data[:day_letters] = @grade.day_letters[@date_s]
       data[:visits] = @grade.totals(@date)[:visits]
       data[:opt_diff] = @grade.day_opt_diff[@date_s]
+    end
+
+    render json: data
+  end
+
+  def shifts
+    data = { chosen_grade_id: @grade.id,
+             source: @grade.source,
+             editable: policy(@grade).update?
+    }
+
+
+    if @date
+      data[:shifts] = @grade.shifts.for_day(@date).map(&:to_knockout)
+      data[:day_info] = {
+        date: @date.to_s,
+        formatted_date: I18n.localize(@date, format: :with_dow),
+        open_time: @location_plan.open_times[@date.wday],
+        close_time: @location_plan.close_times[@date.wday],
+      }
     end
 
     render json: data

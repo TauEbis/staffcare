@@ -56,28 +56,31 @@ class LineWorkerShiftGenerator
 
     @lines.each do |line|
       policy = policy_for_line(line)
-      new_shifts = nil
 
       if [:limit_1, :limit_1_5, :limit_2].include?(policy)
         # Day-based, so let's use the open/close time
         @location_plan.schedule.days.each do |day|
           starts = day.in_time_zone(Shift::TZ).change(hour: @location_plan.open_times[day.wday])
           ends   = day.in_time_zone(Shift::TZ).change(hour: @location_plan.close_times[day.wday])
-
           new_shifts = self.class.generate_shifts(policy, starts, ends)
+          save_shifts(new_shifts, line)
         end
       else
         # Per-doctor shift
         @grade.shifts.md.each do |shift|
           new_shifts = self.class.generate_shifts(policy, shift.starts_at, shift.ends_at)
+          save_shifts(new_shifts, line)
         end
       end
 
-      new_shifts.each do |s|
-        s.grade = @grade
-        s.position = line
-        s.save!
-      end
+    end
+  end
+
+  def save_shifts(new_shifts, line)
+    new_shifts.each do |s|
+      s.grade = @grade
+      s.position = line
+      s.save!
     end
   end
 end

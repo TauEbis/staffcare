@@ -56,6 +56,7 @@ class LineWorkersController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_location_plan
     @location_plan = LocationPlan.find(params[:location_plan_id])
+    @schedule = @location_plan.schedule
     authorize @location_plan
   end
 

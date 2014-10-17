@@ -34,7 +34,7 @@ class Shift < ActiveRecord::Base
   end
 
   def to_knockout
-    {id: id, starts_hour: starts_hour, ends_hour: ends_hour, date: date}
+    {id: id, starts_hour: starts_hour, ends_hour: ends_hour, date: date, position: position}
   end
 
   # Takes a date object for the day
