@@ -17,9 +17,9 @@ development:
   host:     localhost
   encoding: unicode
   database: staff_care_development
-  pool:     10
+  pool:     15
   username: root
-  password: 
+  password:
   template: template0
 
   # Connect on a TCP socket. Omitted by default since the client uses a
@@ -47,7 +47,7 @@ test:
   database: staff_care_test
   pool:     10
   username: root
-  password: 
+  password:
   template: template0
 
 production:
@@ -57,5 +57,5 @@ production:
   database: staff_care_production
   pool:     10
   username: root
-  password: 
+  password:
   template: template0
