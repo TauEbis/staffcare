@@ -8,6 +8,19 @@ class Shift < ActiveRecord::Base
 
   scope :for_day, ->(day) { where(starts_at: day.in_time_zone.beginning_of_day..day.in_time_zone.end_of_day) }
 
+  enum position: [:md, :scribe, :pcr, :ma, :xray, :manager, :am]
+
+  scope :not_md, -> { where.not(position: Shift.positions[:md])}
+
+  LINE_WORKERS = {
+    scribe: 'Scribe',
+    pcr: 'PCR',
+    ma: 'MA',
+    xray: 'X-Ray',
+    manager: 'Manager',
+    am: 'Asst Manager'
+  }.freeze
+
   def starts_hour
     @_starts_hour ||= starts_at.in_time_zone(TZ).hour
   end
@@ -21,16 +34,24 @@ class Shift < ActiveRecord::Base
   end
 
   def to_knockout
-    {id: id, starts_hour: starts_hour, ends_hour: ends_hour, date: date}
+    {id: id, starts_hour: starts_hour, ends_hour: ends_hour, date: date, position: position}
+  end
+
+  # Takes a date object for the day
+  # and a start & end integer number of hours to offset from midnight that day
+  def from_start_end_times(date, starts, ends)
+    _date = date.in_time_zone(TZ)
+    self.starts_at = _date.change(hours: starts)
+    self.ends_at   = _date.change(hours: ends)
+    self
   end
 
   def from_knockout(date, params)
-    @_date        = date.in_time_zone(TZ)
-    @_starts_hour = params['starts']
-    @_ends_hour   = params['ends']
-    self.starts_at = @_date.advance(hours: @_starts_hour)
-    self.ends_at   = @_date.advance(hours: @_ends_hour)
-    self
+    from_start_end_times(
+      date,
+      params['starts'],
+      params['ends']
+    )
   end
 
   def wiw_shift

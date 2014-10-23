@@ -12,6 +12,10 @@ class GradePolicy < ApplicationPolicy
     show?
   end
 
+  def shifts?
+    show?
+  end
+
   def update?
     case record.source
       when 'manual'

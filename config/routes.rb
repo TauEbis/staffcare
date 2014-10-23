@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :life_cycles, except: [:show]
+
   resources :pages
 
   resources :pushes, only: [:index, :new, :create, :show] do
@@ -15,6 +17,8 @@ Rails.application.routes.draw do
   end
 
   resources :location_plans, only: [] do
+    resources :line_workers, only: [:index, :new, :create]
+
     collection do
       post :change_state
     end
@@ -22,6 +26,7 @@ Rails.application.routes.draw do
 
   resources :grades, only: [:create, :show, :update, :destroy] do
     member do
+      get :shifts
       get :hourly
       get :highcharts
     end

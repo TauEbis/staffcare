@@ -7,11 +7,25 @@ function Shift(shift_info) {
   self.date   = ko.observable(shift_info.date);
   self.starts = ko.observable(shift_info.starts_hour);
   self.ends = ko.observable(shift_info.ends_hour);
+  self.position = ko.observable(shift_info.position);
+
   self.hours = ko.computed(function(){
     return self.ends() - self.starts();
   });
   self.formatted = ko.computed(function(){
     return timeOfDay(self.ends()) + " - " + timeOfDay(self.starts());
+  });
+
+  self.position_name = ko.computed(function(){
+    return self.position();
+  });
+
+  self.shift_bar_width = ko.computed(function(){
+    return (self.hours() * 30) + "px";
+  });
+
+  self.shift_bar_offset = ko.computed(function(){
+    return (self.starts() - 8) * 30 + "px";
   });
 }
 
@@ -184,7 +198,7 @@ function CoverageViewModel() {
       data: ko.toJSON({ date: self.day_info().date(), shifts: self.shifts() }),
       type: "patch", contentType: "application/json",
       success: function(result) {
-        load_day_info(self.chosen_grade_id, self.day_info().date());
+        load_coverage_day_info(self.chosen_grade_id, self.day_info().date());
       }
     });
   };

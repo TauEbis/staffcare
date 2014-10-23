@@ -2,6 +2,10 @@
 
 <%= render 'header' %>
 
+<div class="pull-right">
+  <%= link_to 'Generate New Line Workers', new_location_plan_line_worker_path(@location_plan), class: 'btn btn-default' %>
+  <%= link_to 'Line Workers', location_plan_line_workers_path(@location_plan), class: 'btn btn-default' %>
+</div>
 <div class="location_plan_container">
 
   <div class="row">
@@ -19,13 +23,14 @@
       <% else -%>
         <h4><%= @location_plan.chosen_grade.label %>
           <small>
-            <% if policy(@schedule).state_draft? %>
-              <span data-toggle="tooltip" title="You must first request approvals before editing">
-            <% elsif policy(@schedule).state_locked? %>
-              <span data-toggle="tooltip" title="You must first un-lock the schedule before editing">
-            <% else %>
-              <span data-toggle="tooltip" title="The coverage is now GM approved and can no longer be edited">
-            <% end %>
+            <%- if policy(@schedule).state_draft?
+              msg = "You must first request approvals before editing"
+            elsif policy(@schedule).state_locked?
+              msg = "You must first un-lock the schedule before editing"
+            else
+              msg = "The coverage is now GM approved and can no longer be edited"
+            end -%>
+              <span data-toggle="tooltip" title="<%= msg %>">
                 (un-editable)
                 <span class="glyphicon glyphicon-question-sign"></span>
               </span>
@@ -55,33 +60,7 @@
 
   <div class="row">
     <div class="col-md-3">
-      <table class="daygrid" data-chosen-grade-id="<%= @location_plan.chosen_grade.id %>">
-        <thead>
-          <tr>
-            <th colspan="7" class="text-center"><%= @schedule.starts_on.strftime("%B %Y") %></th>
-          </tr>
-          <tr>
-            <td>Su</td>
-            <td>Mo</td>
-            <td>Tu</td>
-            <td>We</td>
-            <td>Th</td>
-            <td>Fr</td>
-            <td>Sa</td>
-          </tr>
-        </thead>
-        <tbody class="text-center">
-          <% schedule_daygrid(@schedule).each do |week| -%>
-            <tr>
-              <% week.each do |date| -%>
-                <td data-date="<%= date.to_s %>" data-grade-score="<%= date ? @location_plan.chosen_grade.points[date.to_s]['total'] : '' %>">
-                  <%= link_to(date.day, '#', data: {date: date.to_s}) if date %>
-                </td>
-              <% end -%>
-            </tr>
-          <% end -%>
-        </tbody>
-      </table>
+      <%= render 'daygrid' %>
     </div>
 
     <div class="col-sm-8 col-sm-offset-1">
