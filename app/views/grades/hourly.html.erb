@@ -3,7 +3,11 @@
   <tr>
     <th>Time</th>
     <th>MDs</th>
-    <th>Work Rate</th>
+    <th>Work Rate
+      <span data-toggle="tooltip" title="Half-hourly average physician workrate" class="shrink">
+        <span class="glyphicon glyphicon-question-sign"></span>
+      </span>
+    </th>
     <th>Visitors</th>
     <th>Seen</th>
     <th>Queue</th>
@@ -32,7 +36,7 @@
       <td>Total</td>
       <td><%= @grade.totals(@date_s)[:coverage] %></td>
       <td><%= @grade.totals(@date_s)[:work_rate].round(2) %>
-        <span data-toggle="tooltip" title="Half-hourly average physician workrate" class="shrink">
+        <span data-toggle="tooltip" title="Hourly average physician workrate" class="shrink">
           <span class="glyphicon glyphicon-question-sign"></span>
         </span>
       </td>
