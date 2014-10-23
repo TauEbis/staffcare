@@ -7,77 +7,77 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 if Rails.env.development?
+  if Heatmap.all.empty?
+    Rake::Task["rs_load"].invoke
+    renamed_l = Location.find_by(name: "PC Park Slope")
+    renamed_l.name = "CityMD Park Slope"
+    renamed_l.save
+    puts "Created Heatmaps & added Locations as needed"   # Open and closing times currently need to be adjusted manually
+  end
+
+  if Zone.all.size < 2
+    zones_to_locations = {
+      "Manhattan" => ["CityMD 14th St", "CityMD 23rd St", "CityMD 37th St", "CityMD 57th St", "CityMD 67th St", "CityMD 86th St", "CityMD 88th St"],
+      "Long Island" => ["CityMD Lake Grove", "CityMD Long Beach", "CityMD Massapequa", "PC Bellmore", "PC Commack", "PC East Meadow", "PC Great Neck", "PC Lindenhurst", "PC Lynbrook", "PC Mineola", "PC Syosset", "PC Carle Place", "PC Levittown", "CityMD Merrick"],
+      "MetroNorth" => ["CityMD Yonkers", "Palisades"],
+      "Brooklyn Queens" => ["CityMD Boerum Hill", "CityMD Bayridge", "PC Maspeth", "CityMD Astoria", "CityMD Park Slope", "CityMD Forest Hills"]
+    }
+
+    zones_to_locations.each do |z_name, l_names|
+      z = Zone.find_or_create_by(name: z_name)
+      l_names.each do |l_name|
+        l = Location.find_or_create_by(name: l_name)
+        l.zone = z
+        l.save
+      end
+    end
+    puts "Created Zones"
+  end
+
   user = User.find_or_create_by!(email: 'admin@admin.com') do |user|
     user.password = user.password_confirmation = 'password'
     user.admin!
+    Location.all.each do |location|
+      user.locations << location unless user.locations.include?(location)
+    end
+    puts "Created Ops Admin User: #{user.email} / password"
   end
-
-  puts "Created Admin User: #{user.email} / password"
 
   user = User.find_or_create_by!(email: 'manager@manager.com') do |user|
     user.password = user.password_confirmation = 'password'
-    user.role = :manager
+    user.manager!
+    l= Location.find_by name: "CityMD 14th St"
+    user.locations << l unless user.locations.include?(l)
+    puts "Created Manager User for CityMD 14th St: #{user.email} / password"
   end
-
-  puts "Created Manager User: #{user.email} / password"
 
   user = User.find_or_create_by!(email: 'gm@gm.com') do |user|
     user.password = user.password_confirmation = 'password'
-    user.role = :gm
-  end
-
-  puts "Created GM User: #{user.email} / password"
-
-  z0 = Zone.find_or_create_by(name: 'Unassigned')
-  z1 = Zone.find_or_create_by(name: 'NYC1')
-
-  if z1.locations.empty?
-    z1.locations.build(name: "CityMD_14th_St", report_server_id: "CityMD_14th_St", max_mds: 3, rooms: 12, open_times: [9,8,8,8,8,8,9], close_times: [21,22,22,22,22,22,21], uid: "3ecc8854-f77b-4834-b42f-6b0e4d498b43")
-    z1.locations.build(name: "CityMD_23rd_St", report_server_id: "CityMD_23rd_St", max_mds: 3, rooms: 12, open_times: [9,8,8,8,8,8,9], close_times: [21,22,22,22,22,22,21], uid: "d64f5748-ce3e-4961-89a3-c70ac9c2338a")
-    z1.locations.build(name: "CityMD_57th_St", report_server_id: "CityMD_57th_St", max_mds: 3, rooms: 12, open_times: [9,8,8,8,8,8,9], close_times: [21,22,22,22,22,22,21], uid: "414f0bd3-0460-405d-9136-0f16db212ba9")
-
-    z1.locations.each do |location|
-      location.speeds.build(doctors: 1, normal: 4, max: 6)
-      location.speeds.build(doctors: 2, normal: 8, max: 12)
-      location.speeds.build(doctors: 3, normal: 12, max: 18)
-      location.speeds.build(doctors: 4, normal: 16, max: 24)
-      location.speeds.build(doctors: 5, normal: 20, max: 30)
-      location.save!
+    user.gm!
+    Zone.find_by(name: "Manhattan").locations.each do |location|
+      user.locations << location unless user.locations.include?(location)
     end
+    puts "Created GM User for Manhattan: #{user.email} / password"
   end
-
-  z2 = Zone.find_or_create_by(name: 'NYC2')
-
-  if z2.locations.empty?
-    z2.locations.build(name: "CityMD_67th_St", report_server_id: "CityMD_67th_St", max_mds: 3, rooms: 12, open_times: [9,8,8,8,8,8,9], close_times: [21,22,22,22,22,22,21], uid: "37871c17-1e7d-4a18-a2c4-d6cf09421b0f")
-    z2.locations.build(name: "CityMD_86th_St", report_server_id: "CityMD_86th_St", max_mds: 3, rooms: 12, open_times: [9,8,8,8,8,8,9], close_times: [21,22,22,22,22,22,21], uid: "44734173-f277-4643-8d3b-dfaeee3c04b5")
-    z2.locations.build(name: "CityMD_88th_St", report_server_id: "CityMD_88th_St", max_mds: 3, rooms: 12, open_times: [9,8,8,8,8,8,9], close_times: [21,22,22,22,22,22,21], uid: "cd8d8bad-cec1-4f07-a826-bf52ca990222")
-
-    z2.locations.each do |location|
-      location.speeds.build(doctors: 1, normal: 4, max: 6)
-      location.speeds.build(doctors: 2, normal: 8, max: 12)
-      location.speeds.build(doctors: 3, normal: 12, max: 18)
-      location.speeds.build(doctors: 4, normal: 16, max: 24)
-      location.speeds.build(doctors: 5, normal: 20, max: 30)
-      location.save!
-    end
-  end
-
-  gm = User.find_by email: 'gm@gm.com'
-  z1.locations.each do |location|
-    gm.locations << location unless gm.locations.include?(location)
-  end
-
-  manager = User.find_by email: 'manager@manager.com'
-  l= Location.find_by name: "CityMD_14th_St"
-  manager.locations << l unless manager.locations.include?(l)
 
   if PatientVolumeForecast.all.empty?
-    f = File.open("mock_data/volume_data_1.csv", "r")
+    f = File.open("mock_data/patient_volume_forecasts.csv", "r")
     f.define_singleton_method(:original_filename) do
-      "volume_data_1.csv"
+      "patient_volume_forecasts.csv"
     end
     PatientVolumeForecast.import(f)
     f.close
+    puts "Created PatientVolumeForecasts"
   end
+
+  fast_optimizer = true
+  if fast_optimizer
+    z=Zone.find_by(name: "Unassigned")
+    locs = Zone.where.not(name: "Manhattan").map(&:locations).flatten
+    z.locations << locs
+    z.save
+    puts "All non-manhattan sites set to \"Unassigned\" for faster optimizer runs"
+    puts "Set \"fast_optimizer\" variable to false if you want all sites to be assigned"
+  end
+
 end
