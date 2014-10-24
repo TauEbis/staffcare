@@ -20,7 +20,7 @@ Sidekiq.configure_server do |config|
   if defined?(ActiveRecord::Base)
     c = ActiveRecord::Base.configurations[Rails.env] ||
                 Rails.application.config.database_configuration[Rails.env]
-    c['pool']              = ENV['DB_POOL'] || 11
+    c['pool']              = ENV['DB_POOL'] || 15
     c['reaping_frequency'] = ENV['DB_REAP_FREQ'] || 10 # seconds
     ActiveRecord::Base.establish_connection(c)
   end
