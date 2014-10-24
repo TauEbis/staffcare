@@ -160,13 +160,13 @@ function CoverageViewModel() {
         self.shifts.push( new Shift(data.shifts[i]) );
       }
 
-      colorNewDay(data.day_info.date, data.day_points.total);
-
       self.wages(toCurrency(data.wages));
       self.total_wait(data.total_wait.toFixed(0));
       self.work_rate(data.work_rate.toFixed(2));
       self.time_wasted(data.time_wasted.toFixed(0));
       self.pat_waste( toCurrency(data.day_points.total / data.visits , 0) );
+
+      colorNewDay(data.day_info.date, data.day_points.total / data.visits ); // coloring based on waste per patient
 
       // We dont' want to set loaded until we've loaded a DAY, not just the grade-wide data
       self.loaded(true);

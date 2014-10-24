@@ -265,7 +265,7 @@ class Grade < ActiveRecord::Base
         queue: b['queue'].sum,
         turbo: b['turbo'].sum,
         slack: b['slack'].sum,
-        penalty: b['penalties'].sum
+        penalty: b['penalties'].sum # would points[date.to_s]['total'] be faster?
       }
 
     end
@@ -348,6 +348,10 @@ class Grade < ActiveRecord::Base
 
   def wages(date)
     (totals(date)[:coverage] * location_plan.schedule.penalty_slack).to_f
+  end
+
+  def pen_per_pat(date)
+    points[date.to_s]['total']/totals(date)[:visits] # would totals(date)[:penalty]/totals(date)[:visits] be clearer?
   end
 
 end
