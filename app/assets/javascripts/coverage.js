@@ -129,10 +129,11 @@ function diffFormat(num, currency){
   }
 }
 
+// This is scoring the waste/pat so $4 is a great numebr (green) and more than $14 is pretty awful (red)
 function scoreToColor(score){
   if(score && score > 0){
-    var v = 80 - Math.min(((score/15 - 30) / 100 * 100), 100);
-    return "hsl(" + v + ",90%,90%)"
+    var v = 120 - Math.min( (score-4)*14, 140);
+    return "hsl(" + v + ",100%,70%)"
   } else {
     return 'hsl(0,0%,100%)'
   }
