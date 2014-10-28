@@ -7,6 +7,8 @@ class Grade < ActiveRecord::Base
   belongs_to :user
   has_many :shifts, dependent: :destroy
 
+  attr_reader :source_grade_id
+
   enum source: [:optimizer, :last_month, :manual]
 
   LETTERS  = {  "F"  => 5.00,

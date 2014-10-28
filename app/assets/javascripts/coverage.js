@@ -24,11 +24,6 @@ $(document).ready(function() {
 
       load_coverage_day_info(chosen_grade_id, date);
     });
-
-    $('#location_plan_chosen_grade_id').on('change', function(){
-      $(".location_plan_container").hide();
-      $(this.form).submit();
-    });
   }
   ///////  END Grade-specific LocationPlan#Show stuff
 });

@@ -1,11 +1,14 @@
 class GradesController < ApplicationController
-  before_action :set_location_plan, only: [:create]
   before_action :set_grade, only: [:show, :shifts, :highcharts, :hourly, :update, :destroy]
 
   def create
-    authorize Grade.new(location_plan: @location_plan), :create?  # Fake grade, the real one to be created later
-    @grade = @location_plan.copy_grade!(current_user)
-    redirect_to @location_plan, notice: 'You may now edit the coverage for this location.'
+    source_grade = policy_scope(Grade).find(params[:grade][:source_grade_id])
+    location_plan = source_grade.location_plan
+    authorize Grade.new(location_plan: location_plan), :create?  # Fake grade, the real one to be created later
+    authorize source_grade, :show?
+
+    @grade = location_plan.copy_grade!(source_grade, current_user)
+    redirect_to location_plan, notice: 'Copied successfully.  You may now edit the coverage.'
   end
 
   # GET /grades/1
@@ -98,7 +101,4 @@ class GradesController < ApplicationController
     @location_plan = @grade.location_plan
   end
 
-  def set_location_plan
-    @location_plan = policy_scope(LocationPlan).find(params[:location_plan_id])
-  end
 end
