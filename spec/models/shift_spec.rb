@@ -26,7 +26,7 @@ RSpec.describe Shift, :type => :model do
 
 # Scopes
   describe "position scopes" do
-    before(:all) { Position.create_key_positions }
+    before { Position.create_key_positions }
     let!(:s_am)       { create(:shift, position: Position.find_by(key: :am)) }
     let!(:s_ma)       { create(:shift, position: Position.find_by(key: :ma)) }
     let!(:s_manager)  { create(:shift, position: Position.find_by(key: :manager)) }

@@ -13,11 +13,11 @@ class Position < ActiveRecord::Base
   default_scope -> { order(name: :asc) }
 
   Key_Positions = {
-    am: 				{ name: 'Assistant Manager', 						hourly_rate: 15 },
-    ma: 				{ name: 'Medical Assistant', 						hourly_rate: 15 },
-    manager: 		{ name: 'Manager', 											hourly_rate: 15 },
-    md: 				{ name: 'Physician', 										hourly_rate: 180 },
-    pcr: 				{ name: "Patient Care Representative", 	hourly_rate: 15 },
+    am: 				{ name: 'Assistant Manager', 							hourly_rate: 15 },
+    ma: 				{ name: 'Medical Assistant', 							hourly_rate: 15 },
+    manager: 		{ name: 'Manager', 												hourly_rate: 15 },
+    md: 				{ name: 'Physician', 											hourly_rate: 180 },
+    pcr: 				{ name: "Patient Care Representative", 		hourly_rate: 15 },
   	scribe: 		{ name: 'Scribe', 												hourly_rate: 15 },
     xray: 			{ name: "X-Ray Technician", 							hourly_rate: 15 }
   }.freeze

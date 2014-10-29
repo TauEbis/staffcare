@@ -1,0 +1,57 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.wheniwork.com/2/positions/
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      W-Token:
+      - d1a42f5a3f2106497f98b4a0d5e2b313be7e18f7
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.6.2
+      Date:
+      - Wed, 29 Oct 2014 21:04:24 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, PUT, PATCH, DELETE, OPTIONS
+      Access-Control-Allow-Headers:
+      - Origin, X-Requested-With, Content-Type, Accept
+      Cache-Control:
+      - no-cache
+      W-Limit-Remaining:
+      - '99'
+    body:
+      encoding: UTF-8
+      string: '{"positions":[{"id":680362,"account_id":100312,"name":"Physician","color":"","sort":0,"created_at":"Tue,
+        08 Jul 2014 16:51:25 -0400","updated_at":"Tue, 28 Oct 2014 13:35:28 -0400","is_deleted":false},{"id":867145,"account_id":100312,"name":"Scribe","color":"","sort":0,"created_at":"Tue,
+        28 Oct 2014 13:34:40 -0400","updated_at":"Tue, 28 Oct 2014 13:34:40 -0400","is_deleted":false},{"id":867148,"account_id":100312,"name":"Medical
+        Assistant","color":"","sort":0,"created_at":"Tue, 28 Oct 2014 13:35:36 -0400","updated_at":"Tue,
+        28 Oct 2014 13:35:36 -0400","is_deleted":false},{"id":867211,"account_id":100312,"name":"Manager","color":"","sort":0,"created_at":"Tue,
+        28 Oct 2014 13:56:49 -0400","updated_at":"Tue, 28 Oct 2014 13:56:49 -0400","is_deleted":false},{"id":867214,"account_id":100312,"name":"Assistant
+        Manager","color":"","sort":0,"created_at":"Tue, 28 Oct 2014 13:56:58 -0400","updated_at":"Tue,
+        28 Oct 2014 13:56:58 -0400","is_deleted":false},{"id":867217,"account_id":100312,"name":"X-Ray
+        Technician","color":"","sort":0,"created_at":"Tue, 28 Oct 2014 13:57:49 -0400","updated_at":"Tue,
+        28 Oct 2014 20:43:54 -0400","is_deleted":false},{"id":867220,"account_id":100312,"name":"Patient
+        Care Representative","color":"","sort":0,"created_at":"Tue, 28 Oct 2014 13:58:28
+        -0400","updated_at":"Tue, 28 Oct 2014 13:58:28 -0400","is_deleted":false}]}'
+    http_version: 
+  recorded_at: Wed, 29 Oct 2014 21:04:24 GMT
+recorded_with: VCR 2.9.2
