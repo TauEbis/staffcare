@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141010133745) do
+ActiveRecord::Schema.define(version: 20141029000858) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -139,6 +139,12 @@ ActiveRecord::Schema.define(version: 20141010133745) do
     t.json     "volume_by_location", default: {},                    null: false
     t.datetime "created_at",         default: '2014-10-01 00:00:00', null: false
     t.datetime "updated_at",         default: '2014-10-01 00:00:00', null: false
+  end
+
+  create_table "positions", force: true do |t|
+    t.string  "name"
+    t.integer "wiw_id"
+    t.integer "hourly_rate"
   end
 
   create_table "pushes", force: true do |t|

@@ -5,6 +5,7 @@ class Shift < ActiveRecord::Base
   TZ = ActiveSupport::TimeZone['Eastern Time (US & Canada)']
 
   belongs_to :grade
+  belongs_to :position
 
   scope :for_day, ->(day) { where(starts_at: day.in_time_zone.beginning_of_day..day.in_time_zone.end_of_day) }
 
