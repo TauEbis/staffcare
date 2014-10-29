@@ -109,5 +109,9 @@ if Rails.env.development?
     end
   end
 
+  if Position.all.empty
+    Position.create_key_positions
+  end
+
 end
 

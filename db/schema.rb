@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141029174038) do
+ActiveRecord::Schema.define(version: 20141029181944) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -145,7 +145,10 @@ ActiveRecord::Schema.define(version: 20141029174038) do
     t.string  "name"
     t.integer "wiw_id"
     t.integer "hourly_rate"
+    t.string  "key"
   end
+
+  add_index "positions", ["key"], name: "index_positions_on_key", using: :btree
 
   create_table "pushes", force: true do |t|
     t.integer  "location_plan_id"

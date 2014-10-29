@@ -8,11 +8,7 @@ describe Position do
   	it { should respond_to(:name) }
     it { should respond_to(:wiw_id) }
     it { should respond_to(:hourly_rate) }
-
-# Associations
-#    describe "zone association" do
-#      its(:zone) {should eq zone}
-#    end
+    it { should respond_to(:key) }
 
 # Validations
   	it { should be_valid }
@@ -49,6 +45,12 @@ describe Position do
       it {should_not be_valid}
     end
 
+    context "when key is not unique" do
+      let!(:position_2) { FactoryGirl.create(:position, key: 'Manager') }
+      before { position.key = 'Manager' }
+      it {should_not be_valid}
+    end
+
 # Scope
   describe "scope" do
     let!(:a_name) { FactoryGirl.create(:position, name: "Alfred") }
@@ -64,6 +66,22 @@ describe Position do
       it "should be alphabetically ordered by name" do
         expect(Position.all.to_a).to eq [a_name, z_name]
       end
+    end
+  end
+
+# Class Methods
+  describe "Position::create_key_positions" do
+    before { Position.create_key_positions }
+
+    it "should have the key positions" do
+      expect(Position.where(key: :am, name:'Assistant Manager', hourly_rate: 15).count).to eq(1)
+      expect(Position.where(key: :ma, name: 'Medical Assistant', hourly_rate: 15 ).count).to eq(1)
+      expect(Position.where(key: :manager, name: 'Manager', hourly_rate: 15).count).to eq(1)
+      expect(Position.where(key: :md, name: 'Physician', hourly_rate: 180).count).to eq(1)
+      expect(Position.where(key: :pcr, name: "Patient Care Representative", hourly_rate: 15).count).to eq(1)
+      expect(Position.where(key: :scribe, name: 'Scribe', hourly_rate: 15).count).to eq(1)
+      expect(Position.where(key: :xray, name: "X-Ray Technician", hourly_rate: 15).count).to eq(1)
+      expect(Position.where(key: :mc).count).to eq(0)
     end
   end
 

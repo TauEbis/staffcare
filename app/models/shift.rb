@@ -9,18 +9,16 @@ class Shift < ActiveRecord::Base
 
   scope :for_day, ->(day) { where(starts_at: day.in_time_zone.beginning_of_day..day.in_time_zone.end_of_day) }
 
-  #enum position: [:md, :scribe, :pcr, :ma, :xray, :manager, :am]
+  scope :md, -> { where( position: Position.where(key: :md) ) }
+  scope :not_md, -> { where.not( position: Position.where(key: :md) ) } # nil position keys include
+  scope :line_workers, -> { where.not( position: Position.where(key: [:md, nil] ) ) } # nil positions keys not included
 
-  scope :not_md, -> { where.not(position: Shift.positions[:md])}
-
-  LINE_WORKERS = {
-    scribe: 'Scribe',
-    pcr: 'PCR',
-    ma: 'MA',
-    xray: 'X-Ray',
-    manager: 'Manager',
-    am: 'Asst Manager'
-  }.freeze
+  scope :am, -> { where( position: Position.where(key: :am) ) }
+  scope :ma, -> { where( position: Position.where(key: :ma) ) }
+  scope :manager, -> { where( position: Position.where(key: :manager) ) }
+  scope :pcr, -> { where( position: Position.where(key: :pcr) ) }
+  scope :scribe, -> { where( position: Position.where(key: :scribe) ) }
+  scope :xray, -> { where( position: Position.where(key: :xray) ) }
 
   def starts_hour
     @_starts_hour ||= starts_at.in_time_zone(TZ).hour
