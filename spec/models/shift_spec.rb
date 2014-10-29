@@ -13,4 +13,14 @@ RSpec.describe Shift, :type => :model do
       Shift.for_day(Time.zone.now).count.should == 24
     end
   end
+
+# Associations
+  describe "position association" do
+    let(:position) { FactoryGirl.create(:position) }
+    let(:shift) { FactoryGirl.create(:shift, position: position) }
+
+    it "should associate to the correct shift" do
+      expect(shift.position).to eq(position)
+    end
+  end
 end

@@ -9,7 +9,7 @@ class Shift < ActiveRecord::Base
 
   scope :for_day, ->(day) { where(starts_at: day.in_time_zone.beginning_of_day..day.in_time_zone.end_of_day) }
 
-  enum position: [:md, :scribe, :pcr, :ma, :xray, :manager, :am]
+  #enum position: [:md, :scribe, :pcr, :ma, :xray, :manager, :am]
 
   scope :not_md, -> { where.not(position: Shift.positions[:md])}
 
@@ -35,7 +35,7 @@ class Shift < ActiveRecord::Base
   end
 
   def to_knockout
-    {id: id, starts_hour: starts_hour, ends_hour: ends_hour, date: date, position: position}
+    {id: id, starts_hour: starts_hour, ends_hour: ends_hour, date: date, position_name: position.name, position_id: position.wiw_id}
   end
 
   # Takes a date object for the day
