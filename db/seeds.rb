@@ -35,6 +35,11 @@ if LifeCycle.count == 0
   puts "Created LifeCycles"
 end
 
+if Position.all.empty?
+  Position.create_key_positions
+  puts "Created Positions"
+end
+
 if Rails.env.development?
   if Heatmap.all.empty? && Location.all.empty?
     Rake::Task["rs_load"].invoke
@@ -107,11 +112,6 @@ if Rails.env.development?
       user.locations << locs
       puts "Created GM User for Manhattan: #{user.email} / password"
     end
-  end
-
-  if Position.all.empty?
-    Position.create_key_positions
-    puts "Created Positions"
   end
 
 end
