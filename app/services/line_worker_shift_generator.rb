@@ -31,7 +31,7 @@ class LineWorkerShiftGenerator
 
   def self.generate_2(starts, ends)
     shifts = generate_1(starts, ends)
-    shifts.map{|s| [s, s.dup] }.flatten
+    shifts.flat_map{|s| [s, s.dup]}
   end
 
   def self.generate_1_5(starts, ends)

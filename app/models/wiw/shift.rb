@@ -20,7 +20,7 @@ module Wiw
       s = location_plan.schedule.starts_on.in_time_zone.iso8601
       e = (location_plan.schedule.ends_on + 1).in_time_zone.iso8601
 
-      response = get '/', query: {include_allopen: true, include_pending: true, start: s, end: e, location_id: location_plan.location.wiw_id, position_id: ActiveRecord::Base::Position.all.pluck(:wiw_id)}
+      response = get '/', query: {include_allopen: true, include_pending: true, start: s, end: e, location_id: location_plan.location.wiw_id, position_id: ::Position.all.pluck(:wiw_id)}
 
       results = response['shifts'].map do |record|
         new(record)
