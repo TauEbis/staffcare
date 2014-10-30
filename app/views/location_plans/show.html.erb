@@ -1,13 +1,15 @@
 <% location = @location_plan.location %>
 
 <%= render 'header' %>
-
+<div class="row">
 <div class="pull-right">
-  <%= link_to 'Generate New Line Workers', new_location_plan_line_worker_path(@location_plan), class: 'btn btn-default' %>
-  <%= link_to 'Line Workers', location_plan_line_workers_path(@location_plan), class: 'btn btn-default' %>
+  <%= link_to 'Generate Non-Physician Shifts', new_location_plan_line_worker_path(@location_plan), class: 'btn btn-default' %>
+  <%= link_to 'View All Shifts', location_plan_line_workers_path(@location_plan), class: 'btn btn-default' %>
 </div>
-<div class="location_plan_container">
+</div>
+</br>
 
+<div class="location_plan_container">
   <div class="row">
     <div class="col-sm-8">
       <% if policy(@location_plan).update? -%>

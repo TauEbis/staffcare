@@ -5,8 +5,8 @@
 <table class="table">
   <thead>
     <tr>
-      <th>Name</th>
-      <th colspan="2">Rate</th>
+      <th>Position Name</th>
+      <th colspan="2">Hourly Rate</th>
       <th colspan="2">WIW ID</th>
     </tr>
   </thead>
@@ -15,7 +15,7 @@
     <% @positions.each do |position| %>
       <tr>
         <td><%= link_to position.name, edit_position_path(position) %></td>
-        <td><%= position.hourly_rate %></td>
+        <td><%= '$' + position.hourly_rate.to_s %></td>
         <td colspan="2"><%= position.wiw_id %></td>
       </tr>
     <% end %>
