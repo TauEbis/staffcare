@@ -59,6 +59,7 @@ RSpec.describe Wiw::Shift, :type => :model do
 
       @local_shift  = create(:shift, starts_at: starts, ends_at: ends)
       @remote_shift = Wiw::Shift.new(location_id: @local_shift.grade.location_plan.location.wiw_id, position_id: @local_shift.position.wiw_id,
+                                    position_name: @local_shift.position.name,
                                     start_time: starts.change(usec: 0).rfc822,   # No microseconds come back from WIW
                                     end_time: ends.change(usec: 0).rfc822,
                                     published: true
