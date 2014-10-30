@@ -19,7 +19,7 @@ describe Position do
   	end
 
     context "when name is not unique" do
-      let!(:position_2) { FactoryGirl.create(:position, name: 'test') }
+      let!(:position_2) { FactoryGirl.create(:position, key: :dup, name: 'test') }
       before { position.name = 'test' }
       it {should_not be_valid}
     end
@@ -30,7 +30,7 @@ describe Position do
     end
 
     context "when wiw_id is not unique" do
-      let!(:position_2) { FactoryGirl.create(:position, wiw_id: 123) }
+      let!(:position_2) { FactoryGirl.create(:position, key: :dup, wiw_id: 123) }
       before { position.wiw_id = 123 }
       it {should_not be_valid}
     end
@@ -53,8 +53,8 @@ describe Position do
 
 # Scope
   describe "scope" do
-    let!(:a_name) { FactoryGirl.create(:position, name: "Alfred") }
-    let!(:z_name) { FactoryGirl.create(:position, name: "Zenith") }
+    let!(:a_name) { FactoryGirl.create(:position, name: "Alfred", key: "a") }
+    let!(:z_name) { FactoryGirl.create(:position, name: "Zenith", key: "z") }
 
     describe "ordered" do
       it "should be alphabetically ordered by name" do

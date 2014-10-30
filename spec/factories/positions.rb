@@ -2,8 +2,9 @@
 
 FactoryGirl.define do
   factory :position do
-    sequence(:name) 				{ |n| "Position #{n}" }
-    hourly_rate 						150
     key 										:md
+    name 										{ "Position #{key}" }
+    hourly_rate 						150
+    initialize_with { Position.find_or_create_by(key: key) }
   end
 end

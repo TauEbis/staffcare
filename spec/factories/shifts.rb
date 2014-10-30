@@ -3,7 +3,7 @@
 FactoryGirl.define do
   factory :shift do
     grade
-    association :position, strategy: :build
+    position
     starts_at 1.hour.from_now.beginning_of_hour
     ends_at { starts_at + 8.hours }
   end
