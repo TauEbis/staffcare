@@ -38,6 +38,7 @@ module Wiw
       s = new(
         location_id: shift.grade.location_plan.location.wiw_id,
         position_id: shift.position.wiw_id,
+        position_name: shift.position.name,
         start_time: shift.starts_at.rfc822,
         end_time: shift.ends_at.rfc822,
         published: true
