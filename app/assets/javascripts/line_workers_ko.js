@@ -105,7 +105,7 @@ function LineWorkerViewModel() {
     return total;
   });
 
-  self.save = function() {
+//  self.save = function() {
 //    $.ajax("/grades/" + self.chosen_grade_id, {
 //      data: ko.toJSON({ date: self.day_info().date(), shifts: self.shifts() }),
 //      type: "patch", contentType: "application/json",
@@ -113,5 +113,5 @@ function LineWorkerViewModel() {
 //        load_coverage_day_info(self.chosen_grade_id, self.day_info().date());
 //      }
 //    });
-  };
+//  };
 }

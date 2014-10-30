@@ -39,15 +39,15 @@ RSpec.describe Wiw::Shift, :type => :model do
   end
 
   describe "Listing shifts in WIW" do
-    let(:schedule) { create(:schedule, starts_on: Date.parse("2014-07-01")) }
+    let(:schedule) { create(:schedule, starts_on: Date.parse("2014-12-01")) }
     let(:location_plan) { create(:location_plan, schedule: schedule) }
 
     it "returns all the shifts" do
       VCR.use_cassette('shift_list_location_plan') do
         results = Wiw::Shift.find_all_for_location_plan(location_plan)
 
-        expect(results.length).to eql(2)
-        expect(results[0].id).to eql(40210383)
+        expect(results.length).to eql(7)
+        expect(results[0].id).to eql(71688592)
       end
     end
   end
@@ -58,7 +58,8 @@ RSpec.describe Wiw::Shift, :type => :model do
       ends   = starts + 1.hour
 
       @local_shift  = create(:shift, starts_at: starts, ends_at: ends)
-      @remote_shift = Wiw::Shift.new(location_id: @local_shift.grade.location_plan.location.wiw_id, position_id: Wiw::Shift.position_id,
+      @remote_shift = Wiw::Shift.new(location_id: @local_shift.grade.location_plan.location.wiw_id, position_id: @local_shift.position.wiw_id,
+                                    position_name: @local_shift.position.name,
                                     start_time: starts.change(usec: 0).rfc822,   # No microseconds come back from WIW
                                     end_time: ends.change(usec: 0).rfc822,
                                     published: true

@@ -25,6 +25,7 @@
             <ul>
               <% entries.each do |entry| -%>
                 <li>
+                  <strong><%= "#{entry['position_name']}:" if entry['position_name'] %></strong>
                   <%= l cast_time(entry['start_time']), format: :only_time %> -
                   <%= l cast_time(entry['end_time']), format: :only_time %>
                   <% if action == 'updates' -%>

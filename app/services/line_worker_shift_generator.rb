@@ -5,15 +5,7 @@ class LineWorkerShiftGenerator
     @location_plan = location_plan
     @grade = location_plan.chosen_grade
 
-    @lines = (Shift::LINE_WORKERS.keys - [:manager]).map(&:to_s)
-  end
-
-  def policy_for_line(line)
-    LifeCycle::OPTIONS[@location_plan.send("#{line}_policy")] # e.g. :limit_1
-  end
-
-  def clear_old_shifts!
-    @grade.shifts.not_md.delete_all
+    @lines = Position.where.not(key: ['manager', 'md', nil])
   end
 
 
@@ -38,7 +30,8 @@ class LineWorkerShiftGenerator
   end
 
   def self.generate_2(starts, ends)
-    generate_1(starts, ends) * 2
+    shifts = generate_1(starts, ends)
+    shifts.flat_map{|s| [s, s.dup]}
   end
 
   def self.generate_1_5(starts, ends)
@@ -54,8 +47,8 @@ class LineWorkerShiftGenerator
 
     # TODO: Assert that we have the values from the lifecycle or preferences
 
-    @lines.each do |line|
-      policy = policy_for_line(line)
+    @lines.each do |position|
+      policy = policy_for_line(position)
 
       if [:limit_1, :limit_1_5, :limit_2].include?(policy)
         # Day-based, so let's use the open/close time
@@ -63,24 +56,35 @@ class LineWorkerShiftGenerator
           starts = day.in_time_zone(Shift::TZ).change(hour: @location_plan.open_times[day.wday])
           ends   = day.in_time_zone(Shift::TZ).change(hour: @location_plan.close_times[day.wday])
           new_shifts = self.class.generate_shifts(policy, starts, ends)
-          save_shifts(new_shifts, line)
+          save_shifts(new_shifts, position)
         end
       else
         # Per-doctor shift
         @grade.shifts.md.each do |shift|
           new_shifts = self.class.generate_shifts(policy, shift.starts_at, shift.ends_at)
-          save_shifts(new_shifts, line)
+          save_shifts(new_shifts, position)
         end
       end
 
     end
   end
 
-  def save_shifts(new_shifts, line)
-    new_shifts.each do |s|
-      s.grade = @grade
-      s.position = line
-      s.save!
+  private
+
+    def clear_old_shifts!
+      @grade.shifts.not_md.delete_all
     end
-  end
+
+    def policy_for_line(position)
+      LifeCycle::OPTIONS[@location_plan.send("#{position.key}_policy")] # e.g. :limit_1
+    end
+
+    def save_shifts(new_shifts, position)
+      new_shifts.each do |s|
+      s.grade = @grade
+      s.position = position
+      s.save!
+      end
+    end
+
 end

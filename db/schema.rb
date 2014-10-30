@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141010133745) do
+ActiveRecord::Schema.define(version: 20141029181944) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -141,6 +141,15 @@ ActiveRecord::Schema.define(version: 20141010133745) do
     t.datetime "updated_at",         default: '2014-10-01 00:00:00', null: false
   end
 
+  create_table "positions", force: true do |t|
+    t.string  "name"
+    t.integer "wiw_id"
+    t.integer "hourly_rate"
+    t.string  "key"
+  end
+
+  add_index "positions", ["key"], name: "index_positions_on_key", using: :btree
+
   create_table "pushes", force: true do |t|
     t.integer  "location_plan_id"
     t.json     "theory",           default: {}, null: false
@@ -186,17 +195,18 @@ ActiveRecord::Schema.define(version: 20141010133745) do
   end
 
   create_table "shifts", force: true do |t|
-    t.integer  "grade_id",               null: false
-    t.datetime "starts_at",              null: false
-    t.datetime "ends_at",                null: false
+    t.integer  "grade_id",    null: false
+    t.datetime "starts_at",   null: false
+    t.datetime "ends_at",     null: false
     t.integer  "wiw_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "position",   default: 0, null: false
+    t.integer  "position_id"
   end
 
-  add_index "shifts", ["grade_id", "position", "starts_at"], name: "index_shifts_on_grade_id_and_position_and_starts_at", using: :btree
+  add_index "shifts", ["grade_id", "position_id", "starts_at"], name: "index_shifts_on_grade_id_and_position_id_and_starts_at", using: :btree
   add_index "shifts", ["grade_id", "starts_at"], name: "index_shifts_on_grade_id_and_starts_at", using: :btree
+  add_index "shifts", ["position_id"], name: "index_shifts_on_position_id", using: :btree
   add_index "shifts", ["wiw_id"], name: "index_shifts_on_wiw_id", using: :btree
 
   create_table "speeds", force: true do |t|

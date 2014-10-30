@@ -8,10 +8,6 @@ module Wiw
 
     attr_accessor :source_shift
 
-    def self.position_id
-      Rails.application.secrets.wiw_position_id
-    end
-
     # NASTY helper method that destroys all shifts
     def self.delete_all!
       response = get '/', query: {include_allopen: true, include_pending: true, start: Time.zone.now.beginning_of_year.iso8601, end: Time.zone.now.end_of_year.iso8601}
@@ -24,7 +20,7 @@ module Wiw
       s = location_plan.schedule.starts_on.in_time_zone.iso8601
       e = (location_plan.schedule.ends_on + 1).in_time_zone.iso8601
 
-      response = get '/', query: {include_allopen: true, include_pending: true, start: s, end: e, location_id: location_plan.location.wiw_id, position_id: position_id}
+      response = get '/', query: {include_allopen: true, include_pending: true, start: s, end: e, location_id: location_plan.location.wiw_id, position_id: ::Position.all.pluck(:wiw_id)}
 
       results = response['shifts'].map do |record|
         new(record)
@@ -41,7 +37,8 @@ module Wiw
     def self.build_from_shift(shift)
       s = new(
         location_id: shift.grade.location_plan.location.wiw_id,
-        position_id: position_id,
+        position_id: shift.position.wiw_id,
+        position_name: shift.position.name,
         start_time: shift.starts_at.rfc822,
         end_time: shift.ends_at.rfc822,
         published: true

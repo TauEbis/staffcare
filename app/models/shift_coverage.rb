@@ -43,7 +43,7 @@ class ShiftCoverage
     @coverage
   end
 
-  def coverage_to_shifts(coverage)
+  def coverage_to_shifts(coverage)  # This method is only used for physician shifts currently
   	shifts = pick_best(equiv_shifts_for(coverage))
 
     shifts.map do |starts_at, ends_at|

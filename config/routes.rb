@@ -42,6 +42,8 @@ Rails.application.routes.draw do
 
   resources :heatmaps, only: [:index, :show]
 
+  resources :positions, only: [:index, :edit, :update]
+
   resources :speeds, only: [:destroy]
 
   devise_for :users, skip: [:registrations]

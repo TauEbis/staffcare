@@ -22,6 +22,7 @@ class LocationPlanOptimizer
     breakdowns = {}
     points = {}
     shifts = []
+    position = Position.find_by(key: :md)
 
     @grader.set_speeds @location_plan.normal, @location_plan.max
 
@@ -35,6 +36,7 @@ class LocationPlanOptimizer
       breakdowns[day.to_s] = best_breakdown
       points[day.to_s] = best_points
       shifts += ShiftCoverage.new(@location_plan, day).coverage_to_shifts(best_coverage)
+      shifts.each {|shift| shift.position = position }
 
       yield if block_given?
     end
