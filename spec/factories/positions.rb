@@ -4,5 +4,6 @@ FactoryGirl.define do
   factory :position do
     sequence(:name) 				{ |n| "Position #{n}" }
     hourly_rate 						150
+    key 										:md
   end
 end

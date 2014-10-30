@@ -7,6 +7,8 @@ class Shift < ActiveRecord::Base
   belongs_to :grade
   belongs_to :position
 
+  validates :position, presence: true
+
   scope :for_day, ->(day) { where(starts_at: day.in_time_zone.beginning_of_day..day.in_time_zone.end_of_day) }
 
   scope :md, -> { where( position: Position.where(key: :md) ) }
@@ -33,15 +35,16 @@ class Shift < ActiveRecord::Base
   end
 
   def to_knockout
-    {id: id, starts_hour: starts_hour, ends_hour: ends_hour, date: date, position_name: position.name, position_id: position.wiw_id}
+    {id: id, starts_hour: starts_hour, ends_hour: ends_hour, date: date, position_key: position.key, position_name: position.name}
   end
 
   # Takes a date object for the day
   # and a start & end integer number of hours to offset from midnight that day
-  def from_start_end_times(date, starts, ends)
+  def from_start_end_times(date, starts, ends, position_key)
     _date = date.in_time_zone(TZ)
-    self.starts_at = _date.change(hours: starts)
-    self.ends_at   = _date.change(hours: ends)
+    self.starts_at = _date.change(hour: starts)
+    self.ends_at   = _date.change(hour: ends)
+    self.position = Position.find_by(key: position_key)
     self
   end
 
@@ -49,7 +52,8 @@ class Shift < ActiveRecord::Base
     from_start_end_times(
       date,
       params['starts'],
-      params['ends']
+      params['ends'],
+      params['position_key']
     )
   end
 

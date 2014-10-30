@@ -14,6 +14,15 @@ RSpec.describe Shift, :type => :model do
     end
   end
 
+# Validations
+  describe "when position is not present" do
+    let(:shift) { FactoryGirl.build(:shift, position: nil) }
+    subject { shift }
+
+    it {should_not be_valid}
+  end
+
+
 # Associations
   describe "position association" do
     let(:position) { FactoryGirl.create(:position) }
@@ -47,6 +56,32 @@ RSpec.describe Shift, :type => :model do
       expect(Shift.line_workers).not_to include(s_md)
       expect(Shift.not_md).to include(s_am, s_ma, s_manager, s_pcr, s_scribe, s_xray)
       expect(Shift.not_md).not_to include(s_md)
+    end
+
+  end
+
+# Methods
+
+  describe "knockout methods" do
+    let(:shift) { FactoryGirl.create(:shift) }
+    let(:ko_out) { {id: shift.id, starts_hour: shift.starts_hour, ends_hour: shift.ends_hour, date: shift.date, position_key: shift.position.key, position_name: shift.position.name}}
+    let(:ko_in) { {"id" => shift.id, "starts" => shift.starts_hour, "ends" => shift.ends_hour, "date" => shift.date, "position_key" => shift.position.key, "position_name" => shift.position.name}}
+
+    describe "#to_knockout" do
+      it "should return the correct hash for knockout" do
+        expect(shift.to_knockout).to eq(ko_out)
+      end
+    end
+
+    describe "#from_knockout" do
+      let(:date) { shift.date }
+      let(:s) { FactoryGirl.build(:shift).from_knockout(date, ko_in)}
+
+      it "should build a shift that matches the knockout" do
+        expect(s.starts_hour).to eq(shift.starts_hour)
+        expect(s.ends_hour).to eq(shift.ends_hour)
+        expect(s.position).to eq(shift.position)
+      end
     end
 
   end

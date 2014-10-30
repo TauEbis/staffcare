@@ -7,7 +7,8 @@ function Shift(shift_info) {
   self.date   = ko.observable(shift_info.date);
   self.starts = ko.observable(shift_info.starts_hour);
   self.ends = ko.observable(shift_info.ends_hour);
-  self.position = ko.observable(shift_info.position);
+  self.position = ko.observable(shift_info.position_name);
+  self.position_key = ko.observable(shift_info.position_key);
 
   self.hours = ko.computed(function(){
     return self.ends() - self.starts();
@@ -181,7 +182,7 @@ function CoverageViewModel() {
   };
 
   self.addShift = function() {
-    self.shifts.push(new Shift({starts_hour:10, ends_hour: 20}));
+    self.shifts.push(new Shift({starts_hour:10, ends_hour: 20, position_key: 'md', position_name: 'Physician'}));
   };
 
   self.removeShift = function(shift) { self.shifts.remove(shift) };
