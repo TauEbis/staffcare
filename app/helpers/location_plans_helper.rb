@@ -40,8 +40,9 @@ module LocationPlansHelper
     "#{location_plan.life_cycle_max_total_hours.round(0)} hours suggested (Life Cycle-#{location_plan.life_cycle})"
   end
 
-  def life_cycle_diff(location_plan)
-    diff = location_plan.life_cycle_max_total_hours - location_plan.unoptimized_summed_points['hours']
+  def life_cycle_diff(location_plan, grade = nil)
+    grade ||= location_plan.chosen_grade
+    diff = location_plan.life_cycle_max_total_hours - grade.unoptimized_summed_points['hours']
     sign = ''
     sign = '+' if diff < 0
     sign = '-' if diff > 0

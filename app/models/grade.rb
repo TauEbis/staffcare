@@ -54,6 +54,10 @@ class Grade < ActiveRecord::Base
     p
   end
 
+  def unoptimized_summed_points
+    @_unoptimized_summed_points ||= Grade.unoptimized_sum(self)
+  end
+
   def label
     case source
       when 'optimizer'

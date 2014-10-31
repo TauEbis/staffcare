@@ -2,12 +2,12 @@
 
 <div class="row">
   <div class="col-sm-4 text-center">
-    <h5 class="pull-right"><%= life_cycle_diff(location_plan) %>
+    <h5 class="pull-right"><%= life_cycle_diff(location_plan, grade) %>
       <span data-toggle="tooltip" title="<%= life_cycle_tool_tip(location_plan) %>" class="shrink">
                       <span class="glyphicon glyphicon-question-sign"></span>
                     </span>
     </h5>
-    <h5><%= hour_points(location_plan) %>
+    <h5><%= hour_points(grade) %>
       <small>(<%= number_to_currency grade.month_stats[:wages], precision: 0 %>)</small>
     </h5>
     <h5 class="pull-down">
@@ -19,28 +19,28 @@
       <small> wait mins</small>
     </h5>
     <h5 class="pull-down"><%= grade.month_letters['patient_sat'] %>
-      <small>(<%= patient_sat_points(location_plan) %>)</small>
+      <small>(<%= patient_sat_points(grade) %>)</small>
     </h5>
   </div>
   <div class="col-sm-2 text-center">
     <h5><%= number_with_delimiter grade.month_stats[:work_rate].round(2) %>
       <small> pats per hr</small></h5>
     <h5 class="pull-down"><%= grade.month_letters['md_sat'] %>
-      <small>(<%= md_sat_points(location_plan) %>)</small>
+      <small>(<%= md_sat_points(grade) %>)</small>
     </h5>
   </div>
   <div class="col-sm-2 text-center">
     <h5><%= number_with_delimiter grade.month_stats[:wasted_time].round(0) %>
       <small> wasted mins</small></h5>
     <h5 class="pull-down"><%= grade.month_letters['cost'] %>
-      <small>(<%= cost_points(location_plan) %>)</small>
+      <small>(<%= cost_points(grade) %>)</small>
     </h5>
   </div>
   <div class="col-sm-2 text-center">
     <h5><%= number_to_currency grade.month_stats[:pen_per_pat], precision: 1 %>
       <small> waste per pat</small></h5>
     <h5 class="pull-down"><%= grade.month_letters['total'] %>
-      <small>(<%= total_points(location_plan) %>)</small>
+      <small>(<%= total_points(grade) %>)</small>
     </h5>
   </div>
 </div>
