@@ -1,9 +1,9 @@
 var coverageContext;
 
 $(document).ready(function() {
-  ///////   Grade-specific LocationPlan#Show stuff
+  ///////   Grade#Show stuff
   // Initial load of daygrid
-  var grid = $('#location_plans_controller .daygrid');
+  var grid = $('#grades_controller .daygrid');
   var d = grid.data();
   if(d){
     coverageContext = new CoverageViewModel();
@@ -25,7 +25,7 @@ $(document).ready(function() {
       load_coverage_day_info(chosen_grade_id, date);
     });
   }
-  ///////  END Grade-specific LocationPlan#Show stuff
+  ///////  END Grade#Show stuff
 });
 
 
@@ -59,7 +59,7 @@ function load_coverage_day_info(chosen_grade_id, date){
 
 // A wrapper function that can include or NOT include the date if we want to load just the grade-overview data
 function load_grade_info(chosen_grade_id, data){
-  $.ajax( "/grades/" + chosen_grade_id, {data: data} )
+  $.ajax( "/grades/" + chosen_grade_id + ".json", {data: data} )
     .done(function(data, status, xhr) {
       coverageContext.load(data);
       $('#coverage_view').removeClass('hidden');

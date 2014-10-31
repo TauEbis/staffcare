@@ -1,5 +1,21 @@
 module ApplicationHelper
 
+  def zones_for_picker
+    if @schedule
+      policy_scope(Zone).assigned.ordered.for_schedule(@schedule)
+    else
+      policy_scope(Zone).assigned.ordered
+    end
+  end
+
+  def location_plans_for_picker
+    @location_plans = @schedule.
+      location_plans.ordered.
+      for_zone(@zone).                              # For this zone
+      for_user(current_user).                        # And for this user
+      includes(:location, :chosen_grade, :visit_projection)
+  end
+
   def full_title page_title
     base_title = 'StaffCare'
     if page_title.empty?

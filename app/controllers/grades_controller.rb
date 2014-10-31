@@ -13,37 +13,45 @@ class GradesController < ApplicationController
 
   # GET /grades/1
   def show
-    pts     = Grade.unoptimized_sum(@grade)
+    respond_to do |format|
+      format.html do
+        @schedule = @location_plan.schedule
+        @zone = @location_plan.location.zone
+      end
+      format.json do
+        pts     = Grade.unoptimized_sum(@grade)
 
-    data = { chosen_grade_id: @grade.id,
-             source: @grade.source,
-             editable: policy(@grade).update?,
-             grade_points: pts,
-             grade_hours:  pts['hours'],
-             grade_letters: @grade.month_letters,
-             grade_opt_diff: @grade.month_opt_diff,
-             month_stats: @grade.month_stats
-            }
+        data = { chosen_grade_id: @grade.id,
+                 source: @grade.source,
+                 editable: policy(@grade).update?,
+                 grade_points: pts,
+                 grade_hours:  pts['hours'],
+                 grade_letters: @grade.month_letters,
+                 grade_opt_diff: @grade.month_opt_diff,
+                 month_stats: @grade.month_stats
+        }
 
-    if @date
-      data[:day_info] = {
-        date: @date.to_s,
-        formatted_date: I18n.localize(@date, format: :with_dow),
-        open_time: @location_plan.open_times[@date.wday],
-        close_time: @location_plan.close_times[@date.wday],
-      }
-      data[:day_points] = @grade.points[@date_s]
-      data[:shifts]     = @grade.shifts.for_day(@date).map(&:to_knockout)
-      data[:wages] = @grade.wages(@date)
-      data[:total_wait] = @grade.total_wait_time(@date)
-      data[:work_rate] = @grade.average_work_rate(@date)
-      data[:time_wasted] = @grade.time_wasted(@date)
-      data[:day_letters] = @grade.day_letters[@date_s]
-      data[:visits] = @grade.totals(@date)[:visits]
-      data[:opt_diff] = @grade.day_opt_diff[@date_s]
+        if @date
+          data[:day_info] = {
+            date: @date.to_s,
+            formatted_date: I18n.localize(@date, format: :with_dow),
+            open_time: @location_plan.open_times[@date.wday],
+            close_time: @location_plan.close_times[@date.wday],
+          }
+          data[:day_points] = @grade.points[@date_s]
+          data[:shifts]     = @grade.shifts.for_day(@date).map(&:to_knockout)
+          data[:wages] = @grade.wages(@date)
+          data[:total_wait] = @grade.total_wait_time(@date)
+          data[:work_rate] = @grade.average_work_rate(@date)
+          data[:time_wasted] = @grade.time_wasted(@date)
+          data[:day_letters] = @grade.day_letters[@date_s]
+          data[:visits] = @grade.totals(@date)[:visits]
+          data[:opt_diff] = @grade.day_opt_diff[@date_s]
+        end
+
+        render json: data
+      end
     end
-
-    render json: data
   end
 
   def shifts
