@@ -1,13 +1,15 @@
 <div data-bind="if: loaded">
   <div class="row">
-    <div class="col-sm-3">
+    <div class="col-sm-8">
       <h3>
-        <span data-bind="text: day_info().formatted_date()"></span><br>
+        <span data-bind="text: day_info().formatted_date()"></span>
         <small> (Open <span data-bind="text: timeOfDay(day_info().open_time())"></span> - <span data-bind="text: timeOfDay(day_info().close_time())"></span>)</small>
       </h3>
     </div>
-    <div class="col-sm-8 col-sm-offset-1">
-      <div data-bind="template: {name: 'stats-template', data: day_info().stats()}"></div>
+  </div>
+  <div class="row">
+    <div class="col-sm-8 col-sm-offset-4">
+      <div data-bind="template: {name: 'stats-line', data: day_info().stats()}"></div>
     </div>
   </div>
 
@@ -48,7 +50,8 @@
       </div> <!-- foreach: shifts -->
 
       <a href="#" data-bind="click: addShift">
-        <span class="glyphicon glyphicon-plus"></span> Add Shift
+        <span class="glyphicon glyphicon-plus"></span>
+        Add <span data-bind="text: name"></span> Shift
       </a>
     </div> <!-- foreach: positions -->
 

@@ -81,7 +81,6 @@ function DayInfo(data){
   self.stats = ko.observable(new Stats(data.stats));
 }
 
-
 function Score(data) {
   var self = this;
   self.hours       = ko.observable(data.hours);
