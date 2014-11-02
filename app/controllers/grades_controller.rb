@@ -52,8 +52,8 @@ class GradesController < ApplicationController
 
           data[:day_info] = day
 
-          data[:shifts] = @grade.shifts.includes(:position).for_day(@date).map(&:to_knockout).group_by {|s| s[:position_key]}
-          # data[:visits] = @grade.totals(@date)[:visits]
+          all_shifts =  @grade.shifts.includes(:position).for_day(@date).group_by(&:position)
+          data[:positions] = all_shifts.map{|pos,shifts| {key: pos.key, name: pos.name, shifts: shifts.map(&:to_knockout)} }
         end
 
         render json: data

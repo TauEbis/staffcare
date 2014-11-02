@@ -25,12 +25,12 @@
   </div>
 
   <div data-bind="if: grade().editable">
-    <div data-bind="foreach: shifts">
-      <h5 data-bind="text: $root.position_name($index())"></h5>
-      <div data-bind="foreach: $data">
+    <div data-bind="foreach: positions">
+      <h5 data-bind="text: name"></h5>
+      <div data-bind="foreach: shifts">
         <div class="row form-inline form-group">
           <div class="col-sm-3">
-            <a href="#" data-bind="click: $root.removeShift">
+            <a href="#" data-bind="click: $parent.removeShift">
               <span class="glyphicon glyphicon-remove"></span>
             </a>
             <select class="form-control" data-bind="options: $root.available_times(), value: starts, optionsText: 'formatted', optionsValue: 'num'"></select>
@@ -45,14 +45,15 @@
           </div>
           <br>
         </div>
-      </div>
-    </div>
+      </div> <!-- foreach: shifts -->
+
+      <a href="#" data-bind="click: addShift">
+        <span class="glyphicon glyphicon-plus"></span> Add Shift
+      </a>
+    </div> <!-- foreach: positions -->
 
     <div class="row">
       <div class="col-sm-4 form-group">
-        <a href="#" data-bind="click: addShift">
-          <span class="glyphicon glyphicon-plus"></span> Add Shift
-        </a>
       </div>
       <div class="pull-right">
         <button data-bind="click: save" class="btn btn-default">

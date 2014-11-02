@@ -1,14 +1,14 @@
 // Knockout specific parts of Coverage management
 
 // Class to represent a row in the list of all shifts for a day
-function Shift(shift_info) {
+function Shift(data) {
   var self = this;
-  self.id = shift_info.id;
-  self.date   = ko.observable(shift_info.date);
-  self.starts = ko.observable(shift_info.starts_hour);
-  self.ends = ko.observable(shift_info.ends_hour);
-  self.position = ko.observable(shift_info.position_name);
-  self.position_key = ko.observable(shift_info.position_key);
+  self.id = ko.observable(data.id);
+  self.date   = ko.observable(data.date);
+  self.starts = ko.observable(data.starts_hour);
+  self.ends = ko.observable(data.ends_hour);
+  self.position = ko.observable(data.position_name);
+  self.position_key = ko.observable(data.position_key);
 
   self.hours = ko.computed(function(){
     return self.ends() - self.starts();
@@ -28,6 +28,22 @@ function Shift(shift_info) {
   self.shift_bar_offset = ko.computed(function(){
     return (self.starts() - 8) * 51 + "px";
   });
+
+}
+
+function Position(data) {
+  var self = this;
+  self.name = ko.observable(data.name);
+  self.key  = ko.observable(data.key);
+  self.shifts = ko.observableArray($.map(data.shifts, function(elem, i){
+    return new Shift(elem);
+  }));
+
+  self.addShift = function(position) {
+    self.shifts.push(new Shift({starts_hour: 10, ends_hour: 20, position_key: 'md', position_name: 'Physician'}));
+  };
+
+  self.removeShift = function(shift) { self.shifts.remove(shift) };
 }
 
 // Stats is all the summed info about a time period.  This could be a day, the whole month,
@@ -46,10 +62,10 @@ function Stats(data) {
 
 function Grade(data) {
   var self = this;
-  self.id = data.id;
-  self.source = data.source;
-  self.editable = data.editable;
-  self.optimizer = data.optimizer;
+  self.id = ko.observable(data.id);
+  self.source = ko.observable(data.source);
+  self.editable = ko.observable(data.editable);
+  self.optimizer = ko.observable(data.optimizer);
   self.stats = ko.observable(new Stats(data.stats));
 }
 
@@ -84,7 +100,7 @@ function CoverageViewModel() {
   // Editable data
   self.grade  = ko.observable(null);
   self.day_info = ko.observable(null);
-  self.shifts = ko.observableArray([]);
+  self.positions = ko.observableArray([]);
 
   self.available_times = ko.observableArray([]);
   self.loaded = ko.observable(false);
@@ -116,7 +132,7 @@ function CoverageViewModel() {
 
     if(data.day_info){
       self.generateAvailableTimes(data.day_info.open_time, data.day_info.close_time);
-      self.build_shifts(data.shifts);
+      self.positions = ko.observableArray($.map(data.positions, function(elem, i){ return new Position(elem); }));
 
       colorNewDay(data.day_info.date, data.day_info.stats.points.total / data.visits ); // coloring based on waste per patient
 
@@ -129,40 +145,12 @@ function CoverageViewModel() {
     return position_keys[index];
   };
 
-  self.build_shifts = function(new_shifts) {
-
-    self.shifts.removeAll();
-
-    position_keys.forEach(function (elem, i) {
-      var newArray = ko.observableArray([]);
-
-      // elem is like 'scribe'
-      if(new_shifts[elem]){
-        // Build a new array of the scribes
-        var s = new_shifts[elem];
-        for (var j = 0; j < s.length; j++){
-          newArray.push( new Shift(s[j]) );
-        }
-      }
-
-      // Replace the existing observable
-      self.shifts.push(newArray);
-    });
-
-  };
-
   self.generateAvailableTimes = function(open_time, close_time) {
     self.available_times.removeAll();
     for(var i = open_time; i <= close_time; i += 1){
       self.available_times.push({num: i, formatted: timeOfDay(i)});
     }
   };
-
-  self.addShift = function() {
-    self.shifts.push(new Shift({starts_hour:10, ends_hour: 20, position_key: 'md', position_name: 'Physician'}));
-  };
-
-  self.removeShift = function(shift) { self.shifts.remove(shift) };
 
   self.save = function() {
     $.ajax("/grades/" + self.chosen_grade_id, {
