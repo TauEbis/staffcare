@@ -15,7 +15,7 @@
         <% end -%>
       <% end -%>
     <% else -%>
-      <h4><%= @location_plan.chosen_grade.label %>
+      <h4><%= @grade.label %>
         <small>
           <%- if policy(@schedule).state_draft?
                 msg = "You must first request approvals before editing"

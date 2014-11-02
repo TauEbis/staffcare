@@ -21,32 +21,39 @@ class GradesController < ApplicationController
       format.json do
         pts     = Grade.unoptimized_sum(@grade)
 
-        data = { chosen_grade_id: @grade.id,
-                 source: @grade.source,
-                 editable: policy(@grade).update?,
-                 grade_points: pts,
-                 grade_hours:  pts['hours'],
-                 grade_letters: @grade.month_letters,
-                 grade_opt_diff: @grade.month_opt_diff,
-                 month_stats: @grade.month_stats
+        stats = @grade.month_stats.merge({
+          points: pts,
+          letters: @grade.month_letters
+        })
+
+        data = { grade: {
+          id: @grade.id,
+          source: @grade.source,
+          editable: policy(@grade).update?,
+          optimizer: @grade.optimizer?,
+          stats: stats
+          }
         }
 
         if @date
-          data[:day_info] = {
+          @date_s = @date.to_s
+          stats = @grade.day_stats(@date_s).merge({
+            points: @grade.points[@date_s],
+            letters: @grade.day_letters[@date_s]
+          })
+
+          day = {
             date: @date.to_s,
             formatted_date: I18n.localize(@date, format: :with_dow),
             open_time: @location_plan.open_times[@date.wday],
             close_time: @location_plan.close_times[@date.wday],
+            stats: stats
           }
-          data[:day_points] = @grade.points[@date_s]
+
+          data[:day_info] = day
+
           data[:shifts]     = @grade.shifts.for_day(@date).map(&:to_knockout)
-          data[:wages] = @grade.wages(@date)
-          data[:total_wait] = @grade.total_wait_time(@date)
-          data[:work_rate] = @grade.average_work_rate(@date)
-          data[:time_wasted] = @grade.time_wasted(@date)
-          data[:day_letters] = @grade.day_letters[@date_s]
-          data[:visits] = @grade.totals(@date)[:visits]
-          data[:opt_diff] = @grade.day_opt_diff[@date_s]
+          # data[:visits] = @grade.totals(@date)[:visits]
         end
 
         render json: data

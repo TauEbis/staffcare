@@ -42,11 +42,10 @@ class Grade < ActiveRecord::Base
 
   def self.unoptimized_sum(grades)
     grades = Array(grades).compact
-    p = {}
+    p = Hash.new(0)
 
     grades.each do |g|
       ['total', 'md_sat', 'patient_sat', 'cost', 'hours'].each do |field|
-        p[field] ||= 0
         p[field] += g.points.sum {|k,v| v[field] }
       end
     end
@@ -315,6 +314,16 @@ class Grade < ActiveRecord::Base
       wasted_time: month_totals[:slack] * 60 / location_plan.normal[0], # in minutes -- will need to change to normal[1] after refactor
       pen_per_pat: month_totals[:penalty]/month_totals[:visits],
       wages: (month_totals[:coverage] * location_plan.schedule.penalty_slack).to_f
+    }
+  end
+
+  def day_stats(date)
+    @_day_stats ||= {
+      wait_time: total_wait_time(date),
+      work_rate: average_work_rate(date),
+      wasted_time: time_wasted(date),
+      pen_per_pat: pen_per_pat(date),
+      wages: wages(date)
     }
   end
 

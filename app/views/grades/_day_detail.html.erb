@@ -7,68 +7,11 @@
       </h3>
     </div>
     <div class="col-sm-8 col-sm-offset-1">
-      <div class="col-sm-4">
-
-        <h5 class="text-center"><span data-bind="text: day_hours()"></span><small> (<span data-bind="text: $root.wages "></span>)</small></h5>
-
-        <h5 class="text-left"><small>Efficiency grades:</small></h5>
-
-        <%- if !@grade.optimizer? -%>
-          <row class="clearfix">
-            <h5 class="pull-left compressed"><small>Vs. Optimized:</small></h5>
-            <h5 data-bind="with: day_opt_diff" class="text-right compressed">
-              <span data-bind="text: diffFormat(hours(), false), css: diffClass(hours())" ></span>
-            </h5>
-          </row>
-        <%- end -%>
-      </div>
-
-      <div data-bind="with: day_points">
-        <div class="col-sm-2 text-center">
-          <h5><span data-bind="text: $root.total_wait "></span><small> wait mins</small></h5>
-          <h5>
-            <span data-bind="text: $root.day_letters().patient_sat()"></span>
-            <small> (<span data-bind="text: toCurrency(patient_sat())"></span>)</small>
-          </h5>
-          <%- if !@grade.optimizer? -%>
-          <h5><span data-bind="text: diffFormat($root.day_opt_diff().patient_sat()), css: diffClass( $root.day_opt_diff().patient_sat())" ></span></h5>
-          <%- end -%>
-        </div>
-        <div class="col-sm-2 text-center">
-          <h5><span data-bind="text: $root.work_rate "></span><small> pats per hr</small></h5>
-          <h5>
-            <span data-bind="text: $root.day_letters().md_sat()"></span>
-            <small> (<span data-bind="text: toCurrency(md_sat())"></span>)</small>
-          </h5>
-          <%- if !@grade.optimizer? -%>
-          <h5><span data-bind="text: diffFormat($root.day_opt_diff().md_sat()), css: diffClass( $root.day_opt_diff().md_sat())" ></span></h5>
-          <%- end -%>
-        </div>
-        <div class="col-sm-2 text-center">
-          <h5><span data-bind="text: $root.time_wasted"></span><small> wasted mins</small></h5>
-          <h5>
-            <span data-bind="text: $root.day_letters().cost()"></span>
-            <small> (<span data-bind="text: toCurrency(cost())"></span>)</small>
-          </h5>
-          <%- if !@grade.optimizer? -%>
-          <h5><span data-bind="text: diffFormat($root.day_opt_diff().cost()), css: diffClass( $root.day_opt_diff().cost())" ></span></h5>
-          <%- end -%>
-        </div>
-        <div class="col-sm-2 text-center">
-          <h5><span data-bind="text: $root.pat_waste"></span><small> waste per pat</small></h5>
-          <h5>
-            <span data-bind="text: $root.day_letters().total() "></span>
-            <small> (<span data-bind="text: toCurrency(total())"></span>)</small>
-          </h5>
-          <%- if !@grade.optimizer? -%>
-          <h5><span data-bind="text: diffFormat($root.day_opt_diff().total()), css: diffClass( $root.day_opt_diff().total())" ></span></h5>
-          <%- end -%>
-        </div>
-      </div>
+      <div data-bind="template: {name: 'stats-template', data: day_info().stats()}"></div>
     </div>
   </div>
 
-  <div data-bind="ifnot: editable">
+  <div data-bind="ifnot: grade().editable">
     <div data-bind="foreach: shifts">
       <div class="row form-inline  form-group">
         <div class="col-sm-4">
@@ -81,7 +24,7 @@
     </div>
   </div>
 
-  <div data-bind="if: editable">
+  <div data-bind="if: grade().editable">
     <div data-bind="foreach: shifts">
       <div class="row form-inline form-group">
         <div class="col-sm-4">
