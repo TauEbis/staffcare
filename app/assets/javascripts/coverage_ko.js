@@ -22,11 +22,11 @@ function Shift(shift_info) {
   });
 
   self.shift_bar_width = ko.computed(function(){
-    return (self.hours() * 30) + "px";
+    return (self.hours() * 51) + "px";
   });
 
   self.shift_bar_offset = ko.computed(function(){
-    return (self.starts() - 8) * 30 + "px";
+    return (self.starts() - 8) * 51 + "px";
   });
 }
 
@@ -74,34 +74,8 @@ function Score(data) {
   self.patient_sat = ko.observable(data.patient_sat);
   self.cost        = ko.observable(data.cost);
 }
-//
-//function OptDiffs(data) {
-//  var self = this;
-//  self.total       = ko.observable(data.total);
-//  self.md_sat      = ko.observable(data.md_sat);
-//  self.patient_sat = ko.observable(data.patient_sat);
-//  self.cost        = ko.observable(data.cost);
-//  self.hours       = ko.observable(data.hours);
-//}
 
-//function MonthStats(data) {
-//  var self = this;
-//  self.wait_time       = ko.observable(data.wait_time.toFixed(0));
-//  self.work_rate       = ko.observable(data.work_rate.toFixed(2));
-//  self.wasted_time     = ko.observable(data.wasted_time.toFixed(0));
-//  self.pen_per_pat     = ko.observable(toCurrency(data.pen_per_pat, 0));
-//  self.wages           = ko.observable(toCurrency(data.wages));
-//}
-//
-//function DayInfo(data) {
-//  var self = this;
-//
-//  self.open_time = ko.observable(data.open_time);
-//  self.close_time = ko.observable(data.close_time);
-//
-//  self.formatted_date = ko.observable(data.formatted_date);
-//  self.date = ko.observable(data.date);
-//}
+var position_keys = ['md', 'scribe', 'ma', 'xray', 'pcr', 'manager', 'am'];
 
 // Overall viewmodel for a day, along with initial state
 function CoverageViewModel() {
@@ -142,17 +116,39 @@ function CoverageViewModel() {
 
     if(data.day_info){
       self.generateAvailableTimes(data.day_info.open_time, data.day_info.close_time);
-
-      self.shifts.removeAll();
-      for (var i = 0; i < data.shifts.length; i++){
-        self.shifts.push( new Shift(data.shifts[i]) );
-      }
+      self.build_shifts(data.shifts);
 
       colorNewDay(data.day_info.date, data.day_info.stats.points.total / data.visits ); // coloring based on waste per patient
 
       // We dont' want to set loaded until we've loaded a DAY, not just the grade-wide data
       self.loaded(true);
     }
+  };
+
+  self.position_name = function(index) {
+    return position_keys[index];
+  };
+
+  self.build_shifts = function(new_shifts) {
+
+    self.shifts.removeAll();
+
+    position_keys.forEach(function (elem, i) {
+      var newArray = ko.observableArray([]);
+
+      // elem is like 'scribe'
+      if(new_shifts[elem]){
+        // Build a new array of the scribes
+        var s = new_shifts[elem];
+        for (var j = 0; j < s.length; j++){
+          newArray.push( new Shift(s[j]) );
+        }
+      }
+
+      // Replace the existing observable
+      self.shifts.push(newArray);
+    });
+
   };
 
   self.generateAvailableTimes = function(open_time, close_time) {
@@ -167,13 +163,6 @@ function CoverageViewModel() {
   };
 
   self.removeShift = function(shift) { self.shifts.remove(shift) };
-
-  self.day_hours = ko.computed(function() {
-    var total = 0;
-    for (var i = 0; i < self.shifts().length; i++)
-      total += self.shifts()[i].hours();
-    return total;
-  });
 
   self.save = function() {
     $.ajax("/grades/" + self.chosen_grade_id, {

@@ -52,7 +52,7 @@ class GradesController < ApplicationController
 
           data[:day_info] = day
 
-          data[:shifts]     = @grade.shifts.for_day(@date).map(&:to_knockout)
+          data[:shifts] = @grade.shifts.includes(:position).for_day(@date).map(&:to_knockout).group_by {|s| s[:position_key]}
           # data[:visits] = @grade.totals(@date)[:visits]
         end
 
