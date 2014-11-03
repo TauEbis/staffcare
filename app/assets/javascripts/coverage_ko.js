@@ -7,7 +7,6 @@ function Shift(data) {
   self.date   = ko.observable(data.date);
   self.starts = ko.observable(data.starts_hour);
   self.ends = ko.observable(data.ends_hour);
-  self.position = ko.observable(data.position_name);
   self.position_key = ko.observable(data.position_key);
 
   self.hours = ko.computed(function(){
@@ -15,10 +14,6 @@ function Shift(data) {
   });
   self.formatted = ko.computed(function(){
     return timeOfDay(self.ends()) + " - " + timeOfDay(self.starts());
-  });
-
-  self.position_name = ko.computed(function(){
-    return self.position();
   });
 
   self.shift_bar_width = ko.computed(function(){
@@ -40,7 +35,7 @@ function Position(data) {
   }));
 
   self.addShift = function(position) {
-    self.shifts.push(new Shift({starts_hour: 10, ends_hour: 20, position_key: 'md', position_name: 'Physician'}));
+    self.shifts.push(new Shift({starts_hour: 10, ends_hour: 20, position_key: position.key}));
   };
 
   self.removeShift = function(shift) { self.shifts.remove(shift) };
@@ -152,11 +147,17 @@ function CoverageViewModel() {
   };
 
   self.save = function() {
-    $.ajax("/grades/" + self.chosen_grade_id, {
-      data: ko.toJSON({ date: self.day_info().date(), shifts: self.shifts() }),
+    var shifts = jQuery.map(self.positions(), function(position, i){ // Actually a flatmap. Stupid jQuery
+      return position.shifts();
+    });
+
+    var gid = self.grade().id();
+
+    $.ajax("/grades/" + gid, {
+      data: ko.toJSON({ date: self.day_info().date(), shifts: shifts}),
       type: "patch", contentType: "application/json",
       success: function(result) {
-        load_coverage_day_info(self.chosen_grade_id, self.day_info().date());
+        load_coverage_day_info(gid, self.day_info().date());
       }
     });
   };
