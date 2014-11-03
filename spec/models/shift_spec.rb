@@ -64,8 +64,8 @@ RSpec.describe Shift, :type => :model do
 
   describe "knockout methods" do
     let(:shift) { FactoryGirl.create(:shift) }
-    let(:ko_out) { {id: shift.id, starts_hour: shift.starts_hour, ends_hour: shift.ends_hour, date: shift.date, position_key: shift.position.key, position_name: shift.position.name}}
-    let(:ko_in) { {"id" => shift.id, "starts" => shift.starts_hour, "ends" => shift.ends_hour, "date" => shift.date, "position_key" => shift.position.key, "position_name" => shift.position.name}}
+    let(:ko_out) { {id: shift.id, starts_hour: shift.starts_hour, ends_hour: shift.ends_hour, date: shift.date, position_key: shift.position.key}}
+    let(:ko_in) { {"id" => shift.id, "starts" => shift.starts_hour, "ends" => shift.ends_hour, "date" => shift.date, "position_key" => shift.position.key}}
 
     describe "#to_knockout" do
       it "should return the correct hash for knockout" do

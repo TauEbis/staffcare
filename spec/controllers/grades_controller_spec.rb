@@ -65,22 +65,24 @@ describe GradesController, :type => :controller do
   describe "POST create" do
 
     describe "with valid params" do
+      let(:create_params) { {:location_plan_id => location_plan.id, :grade => {:source_grade_id => location_plan.chosen_grade.id}}}
+
       it "creates a new Grade" do
         location_plan  # Pre-create the original grade
 
         expect {
-          post :create, {:location_plan_id => location_plan.id}, valid_session
+          post :create, create_params, valid_session
         }.to change(Grade, :count).by(1)
       end
 
       it "assigns a newly created grade as @grade" do
-        post :create, {:location_plan_id => location_plan.id}, valid_session
+        post :create, create_params, valid_session
         expect(assigns(:grade)).to be_a(Grade)
         expect(assigns(:grade)).to be_persisted
       end
 
       it "redirects to the location plan" do
-        post :create, {:location_plan_id => location_plan.id}, valid_session
+        post :create, create_params, valid_session
         expect(response).to redirect_to(location_plan)
       end
     end
