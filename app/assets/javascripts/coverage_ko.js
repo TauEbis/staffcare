@@ -126,7 +126,7 @@ function CoverageViewModel() {
 
     if(data.day_info){
       self.generateAvailableTimes(data.day_info.open_time, data.day_info.close_time);
-      self.positions = ko.observableArray($.map(data.positions, function(elem, i){ return new Position(elem); }));
+      self.positions($.map(data.positions, function(elem, i){ return new Position(elem); }));
 
       colorNewDay(data.day_info.date, data.day_info.stats.points.total / data.visits ); // coloring based on waste per patient
 
