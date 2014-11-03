@@ -1,48 +1,43 @@
 var coverageContext;
 
 $(document).ready(function() {
-  ///////   Grade-specific LocationPlan#Show stuff
+  ///////   Grade#Show stuff
   // Initial load of daygrid
-  var grid = $('#location_plans_controller .daygrid');
+  var grid = $('#grades_controller .daygrid');
   var d = grid.data();
   if(d){
     coverageContext = new CoverageViewModel();
     ko.applyBindings(coverageContext);
 
-    var chosen_grade_id = d.chosenGradeId;
-    load_grade_info(chosen_grade_id);
+    var grade_id = d.gradeId;
+    load_grade_info(grade_id);
     colorCalendar();
 
     var date = grid.find('a').first().data().date;
-    load_coverage_day_info(chosen_grade_id, date);
+    load_coverage_day_info(grade_id, date);
 
     grid.find('a').on('click', function(event){
       event.preventDefault();
-      var chosen_grade_id = d.chosenGradeId;
-      console.log(this);
+      var grade_id = d.gradeId;
+//      console.log(this);
       var date  = $(this).data().date;
 
-      load_coverage_day_info(chosen_grade_id, date);
-    });
-
-    $('#location_plan_chosen_grade_id').on('change', function(){
-      $(".location_plan_container").hide();
-      $(this.form).submit();
+      load_coverage_day_info(grade_id, date);
     });
   }
-  ///////  END Grade-specific LocationPlan#Show stuff
+  ///////  END Grade#Show stuff
 });
 
 
 // Grade & Coverage display handling
 
-function load_coverage_day_info(chosen_grade_id, date){
+function load_coverage_day_info(grade_id, date){
   $('#coverage_view').addClass('hidden');
   $('#coverage_view_load').removeClass('hidden');
 
-  load_grade_info(chosen_grade_id, {date: date});
+  load_grade_info(grade_id, {date: date});
 
-  $.ajax( "/grades/" + chosen_grade_id + "/highcharts", {data: {date: date}} )
+  $.ajax( "/grades/" + grade_id + "/highcharts", {data: {date: date}} )
     .done(function(data, status, xhr) {
       build_highcharts(data);
     })
@@ -50,7 +45,7 @@ function load_coverage_day_info(chosen_grade_id, date){
       inject_coverage_fail('#coverage_hourly', xhr, status, error);
     });
 
-  $.ajax( "/grades/" + chosen_grade_id + "/hourly", {data: {date: date}} )
+  $.ajax( "/grades/" + grade_id + "/hourly", {data: {date: date}} )
     .done(function(data, status, xhr) {
       inject_coverage_data('#coverage_hourly', data);
       colorBreakdown();
@@ -63,8 +58,8 @@ function load_coverage_day_info(chosen_grade_id, date){
 }
 
 // A wrapper function that can include or NOT include the date if we want to load just the grade-overview data
-function load_grade_info(chosen_grade_id, data){
-  $.ajax( "/grades/" + chosen_grade_id, {data: data} )
+function load_grade_info(grade_id, data){
+  $.ajax( "/grades/" + grade_id + ".json", {data: data} )
     .done(function(data, status, xhr) {
       coverageContext.load(data);
       $('#coverage_view').removeClass('hidden');

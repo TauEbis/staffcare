@@ -8,7 +8,7 @@
   </div>
 </div>
 
-<% @location_plans.each do |location_plan| %>
+<% location_plans_for_picker.each do |location_plan| %>
 
   <div class="panel panel-default">
     <% location = location_plan.location %>
@@ -24,36 +24,7 @@
             </div>
           </div>
           <div class="col-sm-9">
-            <div class="row">
-              <div class="col-sm-4 text-center">
-                  <h5 class="pull-right"><%= life_cycle_diff(location_plan) %>
-                    <span data-toggle="tooltip" title="<%= life_cycle_tool_tip(location_plan) %>" class="shrink">
-                      <span class="glyphicon glyphicon-question-sign"></span>
-                    </span>
-                  </h5>
-                <h5><%= hour_points(location_plan) %> <small>(<%= number_to_currency location_plan.month_stats[:wages], precision: 0 %>)</small>
-                </h5>
-                <h5 class="pull-down">
-                  <small class="pull-right">Efficiency grades:</small>
-                </h5>
-              </div>
-              <div class="col-sm-2 text-center">
-                <h5><%= number_with_delimiter location_plan.month_stats[:wait_time].round(0) %> <small> wait mins</small></h5>
-                <h5 class="pull-down"><%= location_plan.month_letters['patient_sat'] %> <small>(<%= patient_sat_points(location_plan) %>)</small></h5>
-              </div>
-              <div class="col-sm-2 text-center">
-                <h5><%= number_with_delimiter location_plan.month_stats[:work_rate].round(2) %><small> pats per hr</small></h5>
-                <h5 class="pull-down"><%= location_plan.month_letters['md_sat'] %> <small>(<%= md_sat_points(location_plan) %>)</small></h5>
-              </div>
-              <div class="col-sm-2 text-center">
-                <h5><%= number_with_delimiter location_plan.month_stats[:wasted_time].round(0) %><small> wasted mins</small></h5>
-                <h5 class="pull-down"><%= location_plan.month_letters['cost'] %> <small>(<%= cost_points(location_plan) %>)</small></h5>
-              </div>
-              <div class="col-sm-2 text-center">
-                <h5><%= number_to_currency location_plan.month_stats[:pen_per_pat], precision: 1 %><small> waste per pat</small></h5>
-                <h5 class="pull-down"><%= location_plan.month_letters['total'] %> <small>(<%= total_points(location_plan) %>)</small></h5>
-              </div>
-            </div>
+            <%= render 'show', grade: location_plan.chosen_grade %>
           </div>
         </div>
       </div>

@@ -1,0 +1,56 @@
+<script type="text/html" id="stats-line">
+  <div class="row">
+    <div class="col-sm-4">
+
+      <% if false # TODO This needs to be injected into the grade data returned to KO %>
+        <h5 class="pull-right"><%= life_cycle_diff(@location_plan) %>
+          <span data-toggle="tooltip" title="<%= life_cycle_tool_tip(@location_plan) %>">
+        <span class="glyphicon glyphicon-question-sign"></span>
+      </span>
+        </h5>
+      <% end %>
+
+      <h5 class="text-center"><span data-bind="text: points().hours()"></span><small> (<span data-bind="text: wages()"></span>)</small></h5>
+
+      <h5 class="text-left"><small>Efficiency grades:</small></h5>
+
+      <row>
+        <h5 class="pull-left text-left compressed" data-bind="if: $root.diff_grade_hours"><small>Vs. Last:</small></h5>
+        <h5 class="text-right compressed" data-bind="if: $root.diff_grade_hours">
+          <span data-bind="text: diffFormat($root.diff_grade_hours(), false), css: diffClass($root.diff_grade_hours())"></span>
+        </h5>
+      </row>
+    </div>
+
+    <div>
+      <div class="col-sm-2 text-center">
+        <h5><span data-bind="text: wait_time()"></span> <small>wait mins</small></h5>
+        <h5><span data-bind="text: letters().patient_sat()"></span> <small>(<span data-bind="text: toCurrency(points().patient_sat())"></span>)</small></h5>
+        <h5 data-bind="if: $root.diff_grade_points">
+          <span data-bind="text: diffFormat($root.diff_grade_points().patient_sat()), css: diffClass($root.diff_grade_points().patient_sat())"></span>
+        </h5>
+      </div>
+      <div class="col-sm-2 text-center">
+        <h5><span data-bind="text: work_rate()"></span> <small> pats per hr</small></h5>
+        <h5><span data-bind="text: letters().md_sat()"></span> <small>(<span data-bind="text: toCurrency(points().md_sat())"></span>)</small></h5>
+        <h5 data-bind="if: $root.diff_grade_points">
+          <span data-bind="text: diffFormat($root.diff_grade_points().md_sat()), css: diffClass($root.diff_grade_points().md_sat())"></span>
+        </h5>
+      </div>
+      <div class="col-sm-2 text-center">
+        <h5><span data-bind="text: wasted_time()"></span> <small> wasted mins</small></h5>
+        <h5><span data-bind="text: letters().cost()"></span> <small>(<span data-bind="text: toCurrency(points().cost())"></span>)</small></h5>
+        <h5 data-bind="if: $root.diff_grade_points">
+          <span data-bind="text: diffFormat($root.diff_grade_points().cost()), css: diffClass($root.diff_grade_points().cost())"></span>
+        </h5>
+      </div>
+      <div class="col-sm-2 text-center">
+        <h5><span data-bind="text: pen_per_pat"></span> <small> waste per pat</small></h5>
+        <h5><span data-bind="text: letters().total()"></span> <small>(<span data-bind="text: toCurrency(points().total())"></span>)</small></h5>
+        <h5 data-bind="if: $root.diff_grade_points">
+          <span data-bind="text: diffFormat($root.diff_grade_points().total()), css: diffClass($root.diff_grade_points().total())"></span>
+        </h5>
+      </div>
+    </div>
+  </div>
+</script>

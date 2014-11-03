@@ -1,4 +1,4 @@
-<table class="daygrid" data-chosen-grade-id="<%= @location_plan.chosen_grade.id %>">
+<table class="daygrid" data-grade-id="<%= @grade.id %>">
   <thead>
   <tr>
     <th colspan="7" class="text-center"><%= @schedule.starts_on.strftime("%B %Y") %></th>
@@ -17,7 +17,7 @@
   <% schedule_daygrid(@schedule).each do |week| -%>
     <tr>
       <% week.each do |date| -%>
-        <td data-date="<%= date.to_s %>" data-grade-score="<%= date ? @location_plan.chosen_grade.pen_per_pat(date) : '' %>">
+        <td data-date="<%= date.to_s %>" data-grade-score="<%= date ? @grade.pen_per_pat(date) : '' %>">
           <%= link_to(date.day, '#', data: {date: date.to_s}) if date %>
         </td>
       <% end -%>

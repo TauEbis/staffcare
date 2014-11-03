@@ -5,7 +5,7 @@ class LineWorkerShiftGenerator
     @location_plan = location_plan
     @grade = location_plan.chosen_grade
 
-    @lines = Position.where.not(key: ['manager', 'md', nil])
+    @lines = Position.where.not(key: ['manager', 'md', 'am', nil])
   end
 
 

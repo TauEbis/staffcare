@@ -7,13 +7,11 @@
   <% end -%>
 </div>
 
-
-
 <div class="row">
   <div class="col-sm-3">
     <form accept-charset="UTF-8" action="<%= schedule_location_plans_path(@schedule) %>" method="get">
       <select class="form_autoselector form-control input-lg" id="location_plan_zone_select" name="zone_id">
-        <%= options_from_collection_for_select @zones, :id, :name, @zone.id %>
+        <%= options_from_collection_for_select zones_for_picker, :id, :name, @zone.id %>
       </select>
     </form>
   </div>
@@ -23,7 +21,7 @@
       <form accept-charset="UTF-8" action="<%= schedule_location_plans_path(@schedule, zone_id: @zone.id) %>" method="get">
         <select class="form_autoselector form-control input-lg" id="location_plan_select" name="location_plan_id">
           <option value="">-- Overview</option>
-          <%= options_from_collection_for_select @location_plans, :id, :name, @location_plan.id %>
+          <%= options_from_collection_for_select location_plans_for_picker, :id, :name, @location_plan.id %>
         </select>
       </form>
     </div>

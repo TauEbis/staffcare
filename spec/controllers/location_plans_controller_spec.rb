@@ -35,10 +35,10 @@ describe LocationPlansController, :type => :controller do
   end
 
   describe "GET index" do
-    it "assigns all location_plans as @location_plans" do
+    it "render successfully" do
       location_plan = create(:location_plan)
       get :index, {schedule_id: location_plan.schedule_id}, valid_session
-      expect(assigns(:location_plans).all).to eq([location_plan])
+      expect(response).to be_success
     end
   end
 

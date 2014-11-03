@@ -88,14 +88,6 @@ class LocationPlansController < ApplicationController
 
   def set_basics
     authorize @schedule, :show?
-
-    # These are used for the nav header
-    @zones = user_zones.assigned.ordered
-    @location_plans = @schedule.
-        location_plans.ordered.
-        for_zone(@zone).                              # For this zone
-        for_user(current_user).                        # And for this user
-        includes(:location, :chosen_grade, :visit_projection)
   end
 
   # Only allow a trusted parameter "white list" through.

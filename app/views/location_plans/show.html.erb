@@ -1,85 +1,61 @@
 <% location = @location_plan.location %>
 
 <%= render 'header' %>
-<div class="row">
-<div class="pull-right">
-  <%= link_to 'Generate Non-Physician Shifts', new_location_plan_line_worker_path(@location_plan), class: 'btn btn-default' %>
-  <%= link_to 'View All Shifts', location_plan_line_workers_path(@location_plan), class: 'btn btn-default' %>
-</div>
-</div>
-</br>
 
-<div class="location_plan_container">
-  <div class="row">
-    <div class="col-sm-8">
-      <% if policy(@location_plan).update? -%>
-        <%= simple_form_for @location_plan, wrapper: :horizontal_form, html: {class: 'form-inline'} do |f| %>
-          <%= f.association :chosen_grade, collection: @location_plan.grades.ordered, label_method: :label, label: false, include_blank: false %>
-          <% unless policy(@location_plan.chosen_grade).update? -%>
-            <span data-toggle="tooltip" title="You can only edit your own coverage solution.  Use Copy & Edit to make your own copy">
-              (un-editable)
-              <span class="glyphicon glyphicon-question-sign"></span>
-            </span>
+<div class="row">
+  <div class="col-sm-3">
+  </div>
+  <div class="col-sm-9">
+    <%= render 'grades/header' %>
+  </div>
+</div>
+
+<div class="row">
+  <% @location_plan.grades.ordered.each do |grade| -%>
+    <div class="col-sm-3">
+      <%= grade.label %>
+
+      <div>
+        <% if grade == @location_plan.chosen_grade -%>
+          <%= link_to 'Chosen', '#', class: 'btn btn-default', disabled: 'disabled' %>
+        <% else -%>
+          <% if policy(@location_plan).update? -%>
+            <%= link_to 'Chose', location_plan_path(@location_plan, location_plan: {chosen_grade_id: grade.id}), method: :patch, class: 'btn btn-info' %>
+          <% else -%>
+            Locked
+
           <% end -%>
         <% end -%>
-      <% else -%>
-        <h4><%= @location_plan.chosen_grade.label %>
-          <small>
-            <%- if policy(@schedule).state_draft?
-              msg = "You must first request approvals before editing"
-            elsif policy(@schedule).state_locked?
-              msg = "You must first un-lock the schedule before editing"
-            else
-              msg = "The coverage is now GM approved and can no longer be edited"
-            end -%>
-              <span data-toggle="tooltip" title="<%= msg %>">
-                (un-editable)
-                <span class="glyphicon glyphicon-question-sign"></span>
-              </span>
-          </small>
-        </h4>
-      <% end -%>
-    </div>
-    <div class="pull-right">
-      <% new_grade = @location_plan.grades.build %>
-      <% if policy(new_grade).create? -%>
-        <%= simple_form_for new_grade do |f| %>
-          <%= hidden_field_tag :location_plan_id, @location_plan.id %>
-          <%= f.submit 'Copy & edit', class: 'btn btn-primary' %>
+        <%= link_to 'View', grade, class: 'btn btn-success' %>
+        <% if policy(grade).destroy? -%>
+          <%= link_to 'Delete', grade, method: :delete, class: 'btn btn-danger', confirm: 'Are you sure?' %>
         <% end -%>
-      <% end -%>
-    </div>
-    <div class="pull-right">
-      <% if policy(@location_plan.chosen_grade).destroy? -%>
-        <%= simple_form_for @location_plan.chosen_grade, method: :delete do |f| %>
-          <%= f.submit 'Delete', class: 'btn btn-default' %>
-        <% end -%>
-      <% end -%>
-    </div>
-  </div>
+      </div>
 
-  <br>
-
-  <div class="row">
-    <div class="col-md-3">
-      <%= render 'daygrid' %>
     </div>
 
-    <div class="col-sm-8 col-sm-offset-1">
-      <%= render 'grades/overview' %>
+    <div class="col-sm-9">
+      <%= render 'show', grade: grade %>
     </div>
-  </div>
 
-  <div class="row">
-    <div class="col-sm-12 hidden" id="coverage_view_load">
-      <img src="<%= image_path('load.gif') %>" alt="Loading">
-    </div>
-    <div id="coverage_view">
-      <%= render 'grades/show' %>
-    </div>
-  </div>
+  <% end -%>
+</div>
 
-  <div id="coverage_hourly">
+<div class="row">
+  <% new_grade = @location_plan.grades.build %>
+  <% if policy(new_grade).create? -%>
+    <%= simple_form_for new_grade, wrapper: :horizontal_form, html: {class: 'form-inline'} do |f| %>
+      <%= f.input :source_grade_id, collection: @location_plan.grades.ordered, label_method: :label, label: false, include_blank: false %>
 
-  </div>
+      <%= f.submit 'Copy', class: 'btn btn-primary' %>
+    <% end -%>
+  <% else -%>
+      <%- if policy(@schedule).state_draft?
+            msg = "You must first request approvals before editing"
+          elsif policy(@schedule).state_locked?
+            msg = "You must first un-lock the schedule before editing"
+          else
+            msg = "The coverage is now GM approved and can no longer be edited"
+          end -%>
+  <% end -%>
 </div>

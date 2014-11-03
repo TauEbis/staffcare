@@ -58,6 +58,8 @@ module SchedulesHelper
         end
       elsif record.is_a?(LocationPlan)
         record.unoptimized_summed_points[category].try(:round)
+      elsif record.is_a?(Grade)
+        Grade.unoptimized_sum(record)[category].try(:round)
       end
     end
 end
