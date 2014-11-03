@@ -46,5 +46,13 @@ class LocationPlanOptimizer
 
     grade.save!
     @location_plan.update_attribute(:chosen_grade_id, grade.id)
+
+    # Default non-physician staffing rules
+    @location_plan.update_attributes({ma_policy: 0, xray_policy: 0, scribe_policy: 5, pcr_policy: 2})
+    @location_plan.reload
+
+    gen = LineWorkerShiftGenerator.new(@location_plan)
+    gen.create!
+
   end
 end

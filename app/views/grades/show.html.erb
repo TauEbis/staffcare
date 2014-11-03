@@ -4,6 +4,7 @@
 
 <%= render 'location_plans/header' %>
 
+<% if false %>
 <div class="row">
   <div class="col-sm-8">
     <% if policy(@location_plan).update? -%>
@@ -38,6 +39,7 @@
     <%= link_to 'Generate Non-Physician Shifts', new_location_plan_line_worker_path(@location_plan), class: 'btn btn-default' %>
   </div>
 </div>
+<% end %>
 
 <br>
 
