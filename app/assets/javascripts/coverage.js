@@ -34,6 +34,8 @@ $(document).ready(function() {
 function load_coverage_day_info(grade_id, date){
   $('#coverage_view').addClass('hidden');
   $('#coverage_view_load').removeClass('hidden');
+  $('#coverage_hourly').addClass('hidden');
+  $('#coverage_hourly_load').removeClass('hidden');
 
   load_grade_info(grade_id, {date: date});
 

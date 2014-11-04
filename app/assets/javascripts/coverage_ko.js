@@ -128,7 +128,7 @@ function CoverageViewModel() {
       self.generateAvailableTimes(data.day_info.open_time, data.day_info.close_time);
       self.positions($.map(data.positions, function(elem, i){ return new Position(elem); }));
 
-      colorNewDay(data.day_info.date, data.day_info.stats.points.total / data.visits ); // coloring based on waste per patient
+      colorNewDay(data.day_info.date, data.day_info.stats.pen_per_pat ); // coloring based on waste per patient
 
       // We dont' want to set loaded until we've loaded a DAY, not just the grade-wide data
       self.loaded(true);
