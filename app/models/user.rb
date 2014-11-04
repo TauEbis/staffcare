@@ -28,7 +28,7 @@ class User < ActiveRecord::Base
   end
 
   def zone_ids
-    @_zone_ids ||= locations.select(:zone_id).distinct
+    @_zone_ids ||= locations.select(:zone_id).distinct.map(&:zone_id)
   end
 
   def zones
