@@ -6,6 +6,8 @@ class Grade < ActiveRecord::Base
   belongs_to :location_plan
   belongs_to :user
   has_many :shifts, dependent: :destroy
+  has_many :rules
+  #belongs_to :ma_rule, class_name: 'Rule' # Do we want this ability or is grade.rules.ma.first OK?
 
   attr_reader :source_grade_id
 

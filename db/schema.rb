@@ -189,6 +189,17 @@ ActiveRecord::Schema.define(version: 20141114141451) do
     t.datetime "updated_at"
   end
 
+  create_table "rules", force: true do |t|
+    t.integer "name",               default: 0,  null: false
+    t.integer "grade_id"
+    t.integer "position_id"
+    t.json    "shift_space_params", default: {}, null: false
+    t.json    "step_params",        default: {}, null: false
+  end
+
+  add_index "rules", ["grade_id"], name: "index_rules_on_grade_id", using: :btree
+  add_index "rules", ["position_id"], name: "index_rules_on_position_id", using: :btree
+
   create_table "schedules", force: true do |t|
     t.date     "starts_on"
     t.integer  "state",                                          default: 0,     null: false
