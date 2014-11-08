@@ -33,6 +33,12 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :rules, only: [:index, :edit, :update] do
+    collection do
+      get :default, to: :index, as: 'default'
+    end
+  end
+
   resources :patient_volume_forecasts, except: [:show] do
     collection { post :import }
   end
