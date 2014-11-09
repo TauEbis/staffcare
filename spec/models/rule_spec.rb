@@ -104,12 +104,9 @@ describe Rule, :type => :model do
     end
 
     it "should have the default rules template" do
-      expect( Rule.template.am.first.name ).to eq("salary")
-      expect( Rule.template.ma.first.name ).to eq("limit_1")
-      expect( Rule.template.manager.first.name ).to eq("salary")
-      expect( Rule.template.pcr.first.name ).to eq("ratio_1")
-      expect( Rule.template.scribe.first.name ).to eq("ratio_2")
-      expect( Rule.template.xray.first.name ).to eq("limit_1")
+      goal = { am: :salary, ma: :limit_1, manager: :salary, pcr: :ratio_1, scribe: :ratio_2, xray: :limit_1 }
+      template = Hash[ Rule.template.map{|r| [r.position.key.to_sym, r.name.to_sym ]} ]
+      expect(template).to eq(goal)
     end
   end
 
@@ -121,7 +118,7 @@ describe Rule, :type => :model do
     end
 
     let(:space)  { { "staff_min" => 1, "staff_max" => 2, "shift_min" => 6, "shift_max" => 12 } }
-    let(:step)  { { "steps" => [0, 0, 8, 12, -1] } }
+    let(:step)   { { "steps" => [0, 0, 8, 12, -1] } }
 
     it "should have the default params" do
       expect( rule.shift_space_params ).to eq(space)
@@ -139,8 +136,8 @@ describe Rule, :type => :model do
     end
 
     it "should have the template rules" do
-      template = Hash[ Rule.template.map{|r| [r.name, r.position.name]} ]
-      copy = Hash[ new_grade.rules.map{|r| [r.name, r.position.name]} ]
+      template = Hash[ Rule.template.map{   |r| [r.position.name, r.name]} ]
+      copy     = Hash[ new_grade.rules.map{ |r| [r.position.name, r.name]} ]
       expect(copy).to eq(template)
     end
   end

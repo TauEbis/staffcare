@@ -18,6 +18,8 @@ class GradesController < ApplicationController
       metadata: {from: source_grade, to: @grade}
     )
 
+    Rule.copy_template_to_grade(@grade)
+
     redirect_to location_plan, notice: 'Copied successfully.  You may now edit the coverage.'
   end
 

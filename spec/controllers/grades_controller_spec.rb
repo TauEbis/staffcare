@@ -81,6 +81,16 @@ describe GradesController, :type => :controller do
         expect(assigns(:grade)).to be_persisted
       end
 
+
+      it "copies the default rules to @grade" do
+        Position.create_key_positions
+        Rule.create_default_template
+
+        post :create, create_params, valid_session
+        expect(assigns(:grade).rules.map(&:name)).to eq(Rule.template.map(&:name))
+        expect(assigns(:grade).rules.map(&:position)).to eq(Rule.template.map(&:position))
+      end
+
       it "redirects to the location plan" do
         post :create, create_params, valid_session
         expect(response).to redirect_to(location_plan)
