@@ -56,7 +56,7 @@ class Grade < ActiveRecord::Base
     end
 
     coverages_will_change!
-    self.coverages[date_s] = ShiftCoverage.new(location_plan, date).shifts_to_coverage(self.shifts.md.for_day(date))
+    self.coverages[date_s] = ShiftCoverage.new().shifts_to_coverage(self.shifts.md.for_day(date))
 
     calculate_grade!(date_s)
     # TODO: unoptimized_sum is already recalculating, but if that is cached we'll need to recalc here

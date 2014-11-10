@@ -93,7 +93,7 @@ class LocationPlan < ActiveRecord::Base
     SolutionSetBuilder.new(self, day).build
   end
 
-#TODO should these am_min method be called on visits rather than VisitProjection?
+#TODO should the am_min method be called on visits rather than VisitProjection?
   def set_solution_set_inputs(day)
     max = self.visit_projection.day_max(day)
     self.max_mds = normal.length

@@ -11,10 +11,8 @@ class LocationPlanOptimizer
     @grader = CoverageGrader.new(@schedule.grader_weights)
     @picker = CoveragePicker.new(@grader)
     @loader = SpeedySolutionSetLoader.new
-  end
 
-  def days
-    @schedule.days
+    @sc = ShiftCoverage.new
   end
 
   def optimize!
@@ -26,8 +24,6 @@ class LocationPlanOptimizer
 
     @grader.set_speeds @location_plan.normal, @location_plan.max
 
-    @schedule.days.each do |day|
-      day_visits = @location_plan.visits[day.to_s]
       # Load the valid shift start/stop times for that site and day
       solution_set = @loader.load(@location_plan, day)
 
@@ -35,7 +31,7 @@ class LocationPlanOptimizer
       coverages[day.to_s] = best_coverage
       breakdowns[day.to_s] = best_breakdown
       points[day.to_s] = best_points
-      shifts += ShiftCoverage.new(@location_plan, day).coverage_to_shifts(best_coverage)
+      shifts += @sc.coverage_to_shifts(coverages[day.to_s], @location_plan, day)
       shifts.each {|shift| shift.position = position }
 
       yield if block_given?
