@@ -60,8 +60,8 @@ module ApplicationHelper
     deadline = case user.role
                  when 'admin'
                    location_plan.schedule.sync_deadline
-                 when 'gm'
-                   location_plan.schedule.gm_deadline
+                 when 'rm'
+                   location_plan.schedule.rm_deadline
                  when 'manager'
                    location_plan.schedule.manager_deadline
                end

@@ -27,7 +27,7 @@ class SchedulesController < ApplicationController
 
   def request_approvals
     @schedule.manager_deadline ||= @schedule.starts_on - 31
-    @schedule.gm_deadline ||= @schedule.starts_on - 24
+    @schedule.rm_deadline ||= @schedule.starts_on - 24
     @schedule.sync_deadline ||= @schedule.starts_on - 17
     @schedule.state = :active
     flash[:dashboard] = true if params[:dashboard]
@@ -93,7 +93,7 @@ class SchedulesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def schedule_params
-      params.require(:schedule).permit(:starts_on, :state, :manager_deadline, :gm_deadline, :sync_deadline, *Schedule::OPTIMIZER_FIELDS)
+      params.require(:schedule).permit(:starts_on, :state, :manager_deadline, :rm_deadline, :sync_deadline, *Schedule::OPTIMIZER_FIELDS)
     end
 
     # Custom Pundit error message.

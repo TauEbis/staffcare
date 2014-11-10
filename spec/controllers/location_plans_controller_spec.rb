@@ -63,8 +63,8 @@ describe LocationPlansController, :type => :controller do
     end
 
     it "unapproves a location_plan" do
-      location_plan = create(:location_plan, approval_state: 'gm_approved')
-      expect(location_plan.approval_state).to eq('gm_approved')
+      location_plan = create(:location_plan, approval_state: 'rm_approved')
+      expect(location_plan.approval_state).to eq('rm_approved')
 
       post :change_state, {:location_plan_ids => [location_plan.to_param], :state => 'pending'}, valid_session
       location_plan.reload

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141029181944) do
+ActiveRecord::Schema.define(version: 20141110172400) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -189,7 +189,7 @@ ActiveRecord::Schema.define(version: 20141029181944) do
     t.string   "optimizer_job_id"
     t.decimal  "penalty_turbo",          precision: 8, scale: 4,                 null: false
     t.date     "manager_deadline"
-    t.date     "gm_deadline"
+    t.date     "rm_deadline"
     t.date     "sync_deadline"
     t.datetime "active_notices_sent_at"
   end

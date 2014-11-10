@@ -24,7 +24,7 @@ class LocationPlan < ActiveRecord::Base
                   [166, 330],
                   [201, 376] ]                  # [min_daily_patients_in_life_cycle, max_weekly_physician_hours_for_life_cycle]
 
-  enum approval_state: [:pending, :manager_approved, :gm_approved]
+  enum approval_state: [:pending, :manager_approved, :rm_approved]
   enum wiw_sync: [:unsynced, :dirty, :synced]
   enum optimizer_state: [ :not_run, :running, :complete, :error ]
 

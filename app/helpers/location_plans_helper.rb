@@ -9,9 +9,9 @@ module LocationPlansHelper
       css: 'info',
       label: 'Manager approved'
     },
-    'gm_approved' => {
+    'rm_approved' => {
       css: 'success',
-      label: 'GM approved'
+      label: 'RM approved'
     }
   }
 
@@ -57,8 +57,8 @@ module LocationPlansHelper
       when 'manager_approved'
         text = current_user.manager? ? 'Cancel Approval' : "Cancel Manager's Approval"
         change_state_link(text, 'pending', 'btn-default', location_plan)
-      when 'gm_approved'
-        text = current_user.gm? ? 'Cancel Approval' : "Cancel GM's Approval"
+      when 'rm_approved'
+        text = current_user.rm? ? 'Cancel Approval' : "Cancel RM's Approval"
         change_state_link(text, 'manager_approved', 'btn-default', location_plan)
       else
         ''
@@ -73,9 +73,9 @@ module LocationPlansHelper
         btn_class = current_user.manager? ? 'btn-success' : 'btn-default'
         change_state_link(text, 'manager_approved', btn_class, location_plan)
       when 'manager_approved'
-        text = current_user.gm? ? 'Approve' : 'GM Approval - Forced'
-        btn_class = current_user.gm? ? 'btn-success' : 'btn-default'
-        change_state_link(text, 'gm_approved', btn_class, location_plan)
+        text = current_user.rm? ? 'Approve' : 'RM Approval - Forced'
+        btn_class = current_user.rm? ? 'btn-success' : 'btn-default'
+        change_state_link(text, 'rm_approved', btn_class, location_plan)
       else
         ''
     end

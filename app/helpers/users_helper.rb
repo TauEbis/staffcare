@@ -3,8 +3,8 @@ module UsersHelper
 		case role
 			when "manager"
 				"Manager"
-			when "gm"
-				"General Manager"
+			when "rm"
+				"Regional Manager"
 			when "admin"
 				"Ops Admin"
 			else

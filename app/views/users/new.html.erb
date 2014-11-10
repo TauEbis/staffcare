@@ -8,7 +8,7 @@
 
   <%= f.input :email %>
 
-  <%= f.input :role, collection: [['Manager', 'manager'],['GM', 'gm'], ['Admin', 'admin']], include_blank: false, class: 'form-control' %>
+  <%= f.input :role, collection: [['Manager', 'manager'],['RM', 'rm'], ['Admin', 'admin']], include_blank: false, class: 'form-control' %>
 
 	<br/>
 	<% Zone.ordered.assigned.each do |zone| -%>
