@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
          #:zxcvbnable,
          :lockable, :timeoutable, :invitable
 
-  enum role: [:nobody, :admin, :manager, :gm]
+  enum role: [:nobody, :admin, :manager, :rm]
   after_initialize :set_default_role, :if => :new_record?
 
   scope :ordered, -> { order(name: :asc) }

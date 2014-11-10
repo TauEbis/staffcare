@@ -2,11 +2,11 @@ class TodoPresenter < Struct.new(:user)
 
   TODO_STATES = {
     'manager' => LocationPlan.approval_states[:pending],
-    'gm'      => LocationPlan.approval_states[:manager_approved],
-    'admin'   => LocationPlan.approval_states[:gm_approved]
+    'rm'      => LocationPlan.approval_states[:manager_approved],
+    'admin'   => LocationPlan.approval_states[:rm_approved]
   }
 
-  MINION_ROLES = {'gm' => User.roles[:manager], 'admin' => User.roles[:gm]}
+  MINION_ROLES = {'rm' => User.roles[:manager], 'admin' => User.roles[:rm]}
 
   def active_schedule_ids
     @_active_schedule_ids ||= Schedule.active.has_deadlines.pluck(:id)

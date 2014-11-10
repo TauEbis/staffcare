@@ -3,7 +3,7 @@ class TodoNotifier
   # Sends notifications for all missed todos
   def self.missed!
     send_missed(:manager)
-    send_missed(:gm)
+    send_missed(:rm)
   end
 
   def self.notify!

@@ -102,7 +102,7 @@ ul.chevronbar li.manager_approved {
   @include color-chevron($btn-warning-bg, #fff);
 }
 
-ul.chevronbar li.gm_approved {
+ul.chevronbar li.rm_approved {
   @include color-chevron($btn-success-bg, #fff);
 }
 

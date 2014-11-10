@@ -105,12 +105,12 @@ if Rails.env.development?
       puts "Created Manager User for CityMD 14th St: #{user.email} / password"
     end
 
-    user = User.find_or_create_by!(email: 'gm@gm.com') do |user|
+    user = User.find_or_create_by!(email: 'rm@rm.com') do |user|
       user.password = user.password_confirmation = 'password'
-      user.gm!
+      user.rm!
       locs = Zone.find_by(name: "Manhattan").locations
       user.locations << locs
-      puts "Created GM User for Manhattan: #{user.email} / password"
+      puts "Created RM User for Manhattan: #{user.email} / password"
     end
   end
 

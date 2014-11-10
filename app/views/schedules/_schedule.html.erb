@@ -33,8 +33,8 @@
             <li class="manager_approved">
               <span>Manager Approved: <%= schedule.location_plans.manager_approved.count %></span>
             </li>
-            <li class="gm_approved">
-              <span>GM Approved: <%= schedule.location_plans.gm_approved.count %></span>
+            <li class="rm_approved">
+              <span>RM Approved: <%= schedule.location_plans.rm_approved.count %></span>
             </li>
             <li>
               <span>Locked</span>
@@ -60,7 +60,7 @@
                 <span class="glyphicon glyphicon-chevron-left"></span>
                 Return to Draft
               <% end %>
-              <% if LocationPlan.collective_state(schedule.location_plans) == 'gm_approved' -%>
+              <% if LocationPlan.collective_state(schedule.location_plans) == 'rm_approved' -%>
                 <%= link_to schedule_path(schedule, schedule: {state: 'locked'}), method: :patch,
                             class: 'btn btn-primary' do %>
                   Lock
@@ -70,7 +70,7 @@
             <% end -%>
             <% if current_user.admin? -%>
               <%#= link_to "Admin Force Approve entire zone", change_state_location_plans_path(location_plan_ids:
-                @location_plans.map(&:to_param), state: 'gm_approved'), method: :post, class: 'btn btn-warning' %>
+                @location_plans.map(&:to_param), state: 'rm_approved'), method: :post, class: 'btn btn-warning' %>
             <% end -%>
           <% end -%>
 

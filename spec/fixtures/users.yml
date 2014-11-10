@@ -8,8 +8,8 @@ manager:
   # password: schedulerpassword
   encrypted_password: "$2a$10$F3TLI.9vQjTAccEfUhSMYufxDP8XiosAMmJwzoNME43gsdpjxdISi"
   role: 2
-gm:
-  email: gm@gm.com
+rm:
+  email: rm@rm.com
   # password: schedulerpassword
   encrypted_password: "$2a$10$F3TLI.9vQjTAccEfUhSMYufxDP8XiosAMmJwzoNME43gsdpjxdISi"
   role: 3
