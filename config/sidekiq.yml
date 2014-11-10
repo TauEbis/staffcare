@@ -5,4 +5,4 @@ development:
 staging:
   :concurrency: 8
 production:
-  :concurrency: 8
+  :concurrency: 1
