@@ -67,6 +67,7 @@ class WiwPusher
     @_local_shifts ||= @location_plan.chosen_grade.shifts.includes(:grade).all
   end
 
+  # If we do this for thirty location_plans in quick succession will we get a refused connection or speed issues?
   def remote_shifts
     @_remote_shifts ||= Wiw::Shift.find_all_for_location_plan(@location_plan).index_by(&:id)
   end
