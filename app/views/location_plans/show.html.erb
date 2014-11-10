@@ -20,7 +20,7 @@
           <%= link_to 'Chosen', '#', class: 'btn btn-default', disabled: 'disabled' %>
         <% else -%>
           <% if policy(@location_plan).update? -%>
-            <%= link_to 'Chose', location_plan_path(@location_plan, location_plan: {chosen_grade_id: grade.id}), method: :patch, class: 'btn btn-info' %>
+            <%= link_to 'Choose', location_plan_path(@location_plan, location_plan: {chosen_grade_id: grade.id}), method: :patch, class: 'btn btn-info' %>
           <% else -%>
             Locked
 
