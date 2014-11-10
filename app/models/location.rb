@@ -15,6 +15,8 @@ class Location < ActiveRecord::Base
   validates :report_server_id, uniqueness: true, presence: true
   validates :rooms, presence: true, numericality: { greater_than: 0, less_than: 100 }
   validates :max_mds, presence: true, numericality: { greater_than: 0, less_than: 100 }
+  validates :managers, presence: true, numericality: { greater_than: 0, less_than_or_equal_to: 1 }
+  validates :assistant_managers, presence: true, numericality: { greater_than: 0, less_than_or_equal_to: 2 }
 
   # could likely be removed since min_openers/min_closers
   # seem not be used but rather calculated on the location_plan

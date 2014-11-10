@@ -56,7 +56,7 @@ class LocationsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def location_params
-      params.require(:location).permit(:name, :zone_id, :uid, :rooms, :max_mds, :report_server_id, :wiw_id,
+      params.require(:location).permit(:name, :zone_id, :uid, :rooms, :max_mds, :managers, :assistant_managers, :report_server_id, :wiw_id,
        *Location::DAY_PARAMS, speeds_attributes: [:id, :doctors, :normal, :max] )
     end
 

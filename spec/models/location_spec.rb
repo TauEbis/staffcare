@@ -14,6 +14,9 @@ describe Location do
     it { should respond_to(:min_openers) }
     it { should respond_to(:min_closers) }
     it { should respond_to(:report_server_id) }
+    it { should respond_to(:managers) }
+    it { should respond_to(:assistant_managers) }
+
     describe "day_params attributes" do
       day_params.each do |day_param|
         it { should respond_to(day_param) }
@@ -116,6 +119,46 @@ describe Location do
         location.min_closers = 2
         location.max_mds = 1
       end
+      it { should_not be_valid }
+    end
+
+    context "when managers is not present" do
+      before { location.managers = nil }
+      it { should_not be_valid }
+    end
+
+    context "when managers is not numeric" do
+      before { location.managers = "a" }
+      it { should_not be_valid }
+    end
+
+    context "when managers is too small" do
+      before { location.managers = 0 }
+      it { should_not be_valid }
+    end
+
+    context "when managers is too large" do
+      before { location.managers = 2 }
+      it { should_not be_valid }
+    end
+
+    context "when assistant managers is not present" do
+      before { location.assistant_managers = nil }
+      it { should_not be_valid }
+    end
+
+    context "when assistant managers is not numeric" do
+      before { location.assistant_managers = "a" }
+      it { should_not be_valid }
+    end
+
+    context "when assistant managers is too small" do
+      before { location.assistant_managers = 0 }
+      it { should_not be_valid }
+    end
+
+    context "when assistant managers is too large" do
+      before { location.assistant_managers = 3 }
       it { should_not be_valid }
     end
 
