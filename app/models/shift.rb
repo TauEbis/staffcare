@@ -12,7 +12,7 @@ class Shift < ActiveRecord::Base
   scope :for_day, ->(day) { where(starts_at: day.in_time_zone.beginning_of_day..day.in_time_zone.end_of_day) }
 
   scope :md, -> { where( position: Position.where(key: :md) ) }
-  scope :not_md, -> { where.not( position: Position.where(key: :md) ) } # nil position keys include
+  scope :not_md, -> { where.not( position: Position.where(key: :md) ) } # nil position keys included
   scope :line_workers, -> { where.not( position: Position.where(key: [:md, nil] ) ) } # nil positions keys not included
 
   scope :am, -> { where( position: Position.where(key: :am) ) }
