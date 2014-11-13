@@ -39,15 +39,18 @@ class Analysis
 
   def points
     @_points ||= begin
-      p = Hash.new(0)
+      points = Hash.new(0)
 
       @grades.each do |g|
-        ['total', 'md_sat', 'patient_sat', 'cost', 'hours'].each do |field|
-          p[field] += g.points.sum {|k,v| v[field] }
+        @days.each do |day|
+          p = g.points[day.to_s]
+          ['total', 'md_sat', 'patient_sat', 'cost', 'hours'].each do |field|
+            points[field] += p[field]
+          end
         end
       end
 
-      p
+      points
     end
   end
 
@@ -72,13 +75,18 @@ class Analysis
   end
 
   def stats
-    @_stats ||= {
-      wages: (totals[:coverage] * @schedule.penalty_slack).to_f,
-      wait_time: totals[:queue] * 30,  # in minutes
-      work_rate: totals[:visits] / totals[:coverage] * 2,  # patients per hour
-      pen_per_pat: totals[:penalty] / totals[:visits],
-      wasted_time: totals[:wasted_time]
-    }
+    @_stats ||= begin
+      ppp = totals[:penalty] / totals[:visits] rescue 0
+      wr  = totals[:visits] / totals[:coverage] rescue 0  # patients per hour
+
+      {
+        wages: (totals[:coverage] * @schedule.penalty_slack).to_f,
+        wait_time: totals[:queue] * 30,  # in minutes
+        work_rate: wr,
+        pen_per_pat: ppp,
+        wasted_time: totals[:wasted_time]
+      }
+    end
   end
 
   def totals

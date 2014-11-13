@@ -139,8 +139,8 @@ class Grade < ActiveRecord::Base
     @_plans_optimized_grade ||= location_plan.grades.optimizer.last
   end
 
-  def analysis
-    @_analysis ||= Analysis.new(self)
+  def analysis(date = nil)
+    @_analysis ||= Analysis.new(self, date)
   end
 
   # This is the one function that is not abstracted by Analysis
