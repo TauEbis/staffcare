@@ -41,18 +41,31 @@ function Position(data) {
   self.removeShift = function(shift) { self.shifts.remove(shift) };
 }
 
-// Stats is all the summed info about a time period.  This could be a day, the whole month,
+// Analysis is all the summed info about a time period.  This could be a day, the whole month,
 // or even the whole month across multiple locations
+function Analysis(data) {
+  var self = this;
+  self.points  = ko.observable(new Score(data.points));
+  self.letters = ko.observable(new Score(data.letters));
+  self.stats   = ko.observable(new Stats(data.stats));
+}
+
 function Stats(data) {
   var self = this;
-  self.points          = ko.observable(new Score(data.points));
-  self.letters         = ko.observable(new Score(data.letters));
-
   self.wait_time       = ko.observable(data.wait_time.toFixed(0));
   self.work_rate       = ko.observable(data.work_rate.toFixed(2));
   self.wasted_time     = ko.observable(data.wasted_time.toFixed(0));
   self.pen_per_pat     = ko.observable(toCurrency(data.pen_per_pat, 0));
   self.wages           = ko.observable(toCurrency(data.wages));
+}
+
+function Score(data) {
+  var self = this;
+  self.hours       = ko.observable(data.hours);
+  self.total       = ko.observable(data.total);
+  self.md_sat      = ko.observable(data.md_sat);
+  self.patient_sat = ko.observable(data.patient_sat);
+  self.cost        = ko.observable(data.cost);
 }
 
 function Grade(data) {
@@ -61,7 +74,7 @@ function Grade(data) {
   self.source = ko.observable(data.source);
   self.editable = ko.observable(data.editable);
   self.optimizer = ko.observable(data.optimizer);
-  self.stats = ko.observable(new Stats(data.stats));
+  self.analysis = ko.observable(new Analysis(data.analysis));
 }
 
 // Extra metadata for just an individual day
@@ -73,16 +86,7 @@ function DayInfo(data){
   self.formatted_date = ko.observable(data.formatted_date);
   self.date = ko.observable(data.date);
 
-  self.stats = ko.observable(new Stats(data.stats));
-}
-
-function Score(data) {
-  var self = this;
-  self.hours       = ko.observable(data.hours);
-  self.total       = ko.observable(data.total);
-  self.md_sat      = ko.observable(data.md_sat);
-  self.patient_sat = ko.observable(data.patient_sat);
-  self.cost        = ko.observable(data.cost);
+  self.analysis = ko.observable(new Analysis(data.analysis));
 }
 
 var position_keys = ['md', 'scribe', 'ma', 'xray', 'pcr', 'manager', 'am'];
@@ -128,7 +132,7 @@ function CoverageViewModel() {
       self.generateAvailableTimes(data.day_info.open_time, data.day_info.close_time);
       self.positions($.map(data.positions, function(elem, i){ return new Position(elem); }));
 
-      colorNewDay(data.day_info.date, data.day_info.stats.pen_per_pat ); // coloring based on waste per patient
+      colorNewDay(data.day_info.date, data.day_info.analysis.stats.pen_per_pat ); // coloring based on waste per patient
 
       // We dont' want to set loaded until we've loaded a DAY, not just the grade-wide data
       self.loaded(true);

@@ -120,11 +120,6 @@ class LocationPlan < ActiveRecord::Base
     self.save!
   end
 
-
-  def unoptimized_summed_points
-    @_points ||= Grade.unoptimized_sum(chosen_grade)
-  end
-
   # Copies the chosen grade to a new grade
   def copy_grade!(grade, user)
     LocationPlan.transaction do
@@ -177,13 +172,4 @@ class LocationPlan < ActiveRecord::Base
       end
     end
   end
-
-  def month_letters
-    @_m_letters ||= chosen_grade.month_letters
-  end
-
-  def month_stats
-    @_m_stats ||= chosen_grade.month_stats
-  end
-
 end
