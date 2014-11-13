@@ -71,27 +71,12 @@ class Schedule < ActiveRecord::Base
     @_grader_weights ||= self.attributes.slice(*OPTIMIZER_FIELDS.map(&:to_s)).symbolize_keys
   end
 
-  def unoptimized_summed_points(zone = nil)
-    @_points ||= {}
-    @_points[zone] ||= begin
+  def analysis(zone = nil)
+    @_analysis ||= {}
+    @_analysis[zone] ||= begin
       lp = zone ? location_plans.for_zone(zone).includes(:chosen_grade) : location_plans.includes(:chosen_grade)
-      Grade.unoptimized_sum(lp.map(&:chosen_grade))
-    end
-  end
-
-  def letters(zone = nil)
-    @_letters ||= {}
-    @_letters[zone] ||= begin
-      lp = zone ? location_plans.for_zone(zone).includes(:chosen_grade) : location_plans.includes(:chosen_grade)
-      Grade.month_letters(lp.map(&:chosen_grade))
-    end
-  end
-
-  def stats(zone = nil)
-    @_stats ||= {}
-    @_stats[zone] ||= begin
-      lp = zone ? location_plans.for_zone(zone).includes(:chosen_grade) : location_plans.includes(:chosen_grade)
-      Grade.unoptimized_stats(lp.map(&:chosen_grade))
+      grades = lp.map(&:chosen_grade)
+      Analysis.new(grades)
     end
   end
 

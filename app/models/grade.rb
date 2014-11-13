@@ -11,51 +11,11 @@ class Grade < ActiveRecord::Base
 
   enum source: [:optimizer, :last_month, :manual]
 
-  LETTERS  = {  "F"  => 5.00,
-                "D-" => 4.33, # no F+ so bigger step here
-                "D"  => 4.00,
-                "D+" => 3.67,
-                "C-" => 3.33,
-                "C"  => 3.00,
-                "C+" => 2.67,
-                "B-" => 2.33,
-                "B"  => 2.00,
-                "B+" => 1.67,
-                "A-" => 1.33,
-                "A"  => 0.75,
-                "A+" => 0.0
-              }
-
   scope :ordered, -> { order(source: :asc, created_at: :desc) }
 
   before_destroy :reset_chosen_grade
 
   accepts_nested_attributes_for :shifts
-
-  def self.assign_letter(score)
-    LETTERS.each do |letter, num|
-      return letter if score >= num
-    end
-
-    return "A+"
-  end
-
-  def self.unoptimized_sum(grades)
-    grades = Array(grades).compact
-    p = Hash.new(0)
-
-    grades.each do |g|
-      ['total', 'md_sat', 'patient_sat', 'cost', 'hours'].each do |field|
-        p[field] += g.points.sum {|k,v| v[field] }
-      end
-    end
-
-    p
-  end
-
-  def unoptimized_summed_points
-    @_unoptimized_summed_points ||= Grade.unoptimized_sum(self)
-  end
 
   def label
     case source
@@ -173,200 +133,20 @@ class Grade < ActiveRecord::Base
   end
 
 
-## Methods for passing to the knockout viewmodel -- Refactor in the future
+###### Methods for supporting the Analysis introspection
 
   def plans_optimized_grade
     @_plans_optimized_grade ||= location_plan.grades.optimizer.last
   end
 
-  def day_opt_diff
-    @_d_opt_diff ||= begin
-      opt_points = plans_optimized_grade.points
-
-      @_d_opt_diff = opt_points.deep_dup
-      @_d_opt_diff.each do |k1, v1|
-        v1.each do |k2, v2|
-          @_d_opt_diff[k1][k2] = points[k1][k2] - opt_points[k1][k2] # or v2 but could cause hard to catch errors
-        end
-      end
-
-      @_d_opt_diff
-    end
-
-    @_d_opt_diff
+  def analysis(date = nil)
+    @_analysis ||= Analysis.new(self, date)
   end
 
-  def month_opt_diff
-    @_m_opt_diff ||= begin
-      {
-        "hours" => day_opt_diff.values.map{ |v| v["hours"] }.sum.to_f,
-        "md_sat" => day_opt_diff.values.map{ |v| v["md_sat"] }.sum,
-        "patient_sat" => day_opt_diff.values.map{ |v| v["patient_sat"] }.sum,
-        "cost" => day_opt_diff.values.map{ |v| v["cost"] }.sum,
-        "total" => day_opt_diff.values.map{ |v| v["total"] }.sum
-      }
-    end
-
-    @_m_opt_diff
-  end
-
-  def day_letters
-    @d_letters ||= begin
-
-      opt_points = plans_optimized_grade.points
-      @d_letters = opt_points.deep_dup
-      @d_letters.each { |k1, v1| @d_letters[k1] = v1.except("hours") }
-      @d_letters.each do |k1, v1|
-        v1.each do |k2, v2|
-          if k2 == "total"
-            @d_letters[k1][k2] = Grade.assign_letter (points[k1][k2] / v2)
-          else
-            @d_letters[k1][k2] = Grade.assign_letter (points[k1][k2] /( ( opt_points[k1]["total"] / 3 + opt_points[k1][k2] ) /2 ) )
-          end
-        end
-      end
-      @d_letters
-
-    end
-
-    @d_letters
-  end
-
-  def month_letters
-    @m_letters ||= Grade.month_letters(self)
-  end
-
-  def self.month_letters(grades)
-    grades = Array(grades).compact
-
-    m_letters = {}
-
-    my_sums = Grade.unoptimized_sum(grades).except("hours")
-    opt_sums = Grade.unoptimized_sum(grades.map(&:plans_optimized_grade)).except("hours")
-
-    my_sums.each do |k1, v1|
-      if k1 == "total"
-        m_letters[k1] = Grade.assign_letter ( my_sums[k1] / opt_sums[k1])
-      else
-        m_letters[k1] = Grade.assign_letter ( my_sums[k1] /( ( opt_sums["total"] / 3 + opt_sums[k1]) /2 ) )
-      end
-    end
-
-    m_letters
-  end
-
-  def totals(date)
-    @_totals ||= {}
-
-    @_totals[date] ||= begin
-      date_s = date.to_s
-      b = breakdowns[date_s]
-
-      {
-        coverage: coverages[date_s].sum/2,
-        visits: location_plan.visits[date_s].sum,
-        work_rate: location_plan.visits[date_s].sum/coverages[date_s].sum*2,
-        seen: b['seen'].sum,
-        queue: b['queue'].sum,
-        turbo: b['turbo'].sum,
-        slack: b['slack'].sum,
-        penalty: b['penalties'].sum # would points[date.to_s]['total'] be faster?
-      }
-
-    end
-
-    @_totals[date]
-  end
-
-  def month_totals
-    @_m_totals ||= begin
-
-      @_m_totals = {
-        coverage: 0,
-        visits: 0,
-        work_rate: 0,
-        seen: 0,
-        queue: 0,
-        turbo: 0,
-        slack: 0,
-        penalty: 0
-      }
-
-      days = location_plan.schedule.days
-      days.each do |day|
-        totals(day).each do |k, v|
-          @_m_totals[k] += totals(day)[k]
-        end
-      end
-
-      @_m_totals[:work_rate] = @_m_totals[:visits] / @_m_totals[:coverage]
-      @_m_totals
-
-    end
-
-    @_m_totals
-  end
-
-  def month_stats
-    @_month_stats ||= {
-      wait_time: month_totals[:queue] * 30,                             # in minutes
-      work_rate: month_totals[:work_rate],                          # patients per hour
-      wasted_time: month_totals[:slack] * 60 / location_plan.normal[0], # in minutes -- will need to change to normal[1] after refactor
-      pen_per_pat: month_totals[:penalty]/month_totals[:visits],
-      wages: (month_totals[:coverage] * location_plan.schedule.penalty_slack).to_f
-    }
-  end
-
-  def day_stats(date)
-    @_day_stats ||= {
-      wait_time: total_wait_time(date),
-      work_rate: average_work_rate(date),
-      wasted_time: time_wasted(date),
-      pen_per_pat: pen_per_pat(date),
-      wages: wages(date)
-    }
-  end
-
-  def self.unoptimized_stats(grades)
-    grades = Array(grades).compact
-    stats = {wait_time: 0, wasted_time: 0, wages: 0}
-
-    grades.each do |g|
-      [:wait_time, :wasted_time, :wages].each do |field|
-        stats[field] += g.month_stats[field]
-      end
-    end
-
-    tots={visits: 0, coverage: 0, penalty: 0}
-    grades.each do |g|
-      [:visits, :coverage, :penalty].each do |field|
-        tots[field] += g.month_totals[field]
-      end
-    end
-
-    stats[:work_rate] = tots[:visits] / tots[:coverage] rescue 0
-    stats[:pen_per_pat] = tots[:penalty] / tots[:visits] rescue 0
-    stats
-  end
-
-  def total_wait_time(date)
-    totals(date)[:queue] * 30 # in minutes
-  end
-
-  def time_wasted(date)
-    totals(date)[:slack] * 60 / location_plan.normal[0] # in minutes -- will need to change to normal[1] after refactor
-  end
-
-  def average_work_rate(date)
-    totals(date)[:work_rate] # patients per hour
-  end
-
-  def wages(date)
-    (totals(date)[:coverage] * location_plan.schedule.penalty_slack).to_f
-  end
-
-  def pen_per_pat(date)
-    points[date.to_s]['total']/totals(date)[:visits] # would totals(date)[:penalty]/totals(date)[:visits] be clearer?
+  # This is the one function that is not abstracted by Analysis
+  # Because we need it for every single day to draw the calendar
+  def pen_per_pat(date_s)
+    points[date_s]['total'] / location_plan.visits[date_s].sum # would totals(date)[:penalty]/totals(date)[:visits] be clearer?
   end
 
 end

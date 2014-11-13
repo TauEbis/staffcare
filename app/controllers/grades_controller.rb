@@ -19,35 +19,24 @@ class GradesController < ApplicationController
         @zone = @location_plan.location.zone
       end
       format.json do
-        pts     = Grade.unoptimized_sum(@grade)
-
-        stats = @grade.month_stats.merge({
-          points: pts,
-          letters: @grade.month_letters
-        })
 
         data = { grade: {
           id: @grade.id,
           source: @grade.source,
           editable: policy(@grade).update?,
           optimizer: @grade.optimizer?,
-          stats: stats
+          analysis: Analysis.new(@grade).to_knockout
           }
         }
 
         if @date
           @date_s = @date.to_s
-          stats = @grade.day_stats(@date_s).merge({
-            points: @grade.points[@date_s],
-            letters: @grade.day_letters[@date_s]
-          })
-
           day = {
             date: @date.to_s,
             formatted_date: I18n.localize(@date, format: :with_dow),
             open_time: @location_plan.open_times[@date.wday],
             close_time: @location_plan.close_times[@date.wday],
-            stats: stats
+            analysis: Analysis.new(@grade, @date).to_knockout
           }
 
           data[:day_info] = day

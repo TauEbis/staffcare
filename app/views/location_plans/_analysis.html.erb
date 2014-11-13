@@ -1,0 +1,41 @@
+<div class="row">
+  <div class="col-sm-4 text-center">
+    <% if false -%>
+    <h5 class="pull-right"><%= life_cycle_diff(location_plan, grade) %>
+      <span data-toggle="tooltip" title="<%= life_cycle_tool_tip(location_plan) %>" class="shrink">
+                      <span class="glyphicon glyphicon-question-sign"></span>
+                    </span>
+    </h5>
+    <% end -%>
+    <h4><%= number_with_delimiter(analysis.points['hours']) %> <small>(<%= number_to_currency analysis.stats[:wages], precision: 0 %>)</small></h4>
+  </div>
+  <div class="col-sm-2 text-center">
+    <h4><%= number_with_delimiter analysis.stats[:wait_time].round(0) %> <small> wait mins</small></h4>
+  </div>
+  <div class="col-sm-2 text-center">
+    <h4><%= number_with_delimiter analysis.stats[:work_rate].round(2) %><small> pats per hr</small></h4>
+  </div>
+  <div class="col-sm-2 text-center">
+    <h4><%= number_with_delimiter analysis.stats[:wasted_time].round(0) %><small> wasted mins</small></h4>
+  </div>
+  <div class="col-sm-2 text-center">
+    <h4><%= number_to_currency analysis.stats[:pen_per_pat], precision: 1 %><small> waste per pat</small></h4>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-4 text-right">
+    <h4><small>Efficiency Grades</small></h4>
+  </div>
+  <div class="col-sm-2 text-center">
+    <h4><%= analysis.letters["patient_sat"] %> <small>(<%= number_to_currency analysis.points['patient_sat'], precision: 0 %> )</small></h4>
+  </div>
+  <div class="col-sm-2 text-center">
+    <h4><%= analysis.letters["md_sat"] %> <small>(<%= number_to_currency analysis.points['md_sat'], precision: 0 %> )</small></h4>
+  </div>
+  <div class="col-sm-2 text-center">
+    <h4><%= analysis.letters["cost"] %> <small>(<%= number_to_currency analysis.points['cost'], precision: 0 %> )</small></h4>
+  </div>
+  <div class="col-sm-2 text-center">
+    <h4><%= analysis.letters["total"] %> <small>(<%= number_to_currency analysis.points['total'], precision: 0 %> )</small></h4>
+  </div>
+</div>
