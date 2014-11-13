@@ -1,8 +1,8 @@
 ---
-:concurrency: 25
+:concurrency: 4
 development:
-  :concurrency: 10
+  :concurrency: <%= ENV['SIDEKIQ_CONCCURENCY'] || 4 %>
 staging:
-  :concurrency: 8
+  :concurrency: <%= ENV['SIDEKIQ_CONCCURENCY'] || 2 %> # times 4 dynos = 8 threads
 production:
-  :concurrency: 1
+  :concurrency: <%= ENV['SIDEKIQ_CONCCURENCY'] || 2 %> # times 4 dynos = 8 threads
