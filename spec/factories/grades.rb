@@ -16,5 +16,18 @@ FactoryGirl.define do
     	end ]
     end
 
+    # grade_with_children creates all dependent associated models
+    factory :grade_with_children do
+
+      ignore do # replaced by "transient" attributes in edge FactoryGirl
+        shift_count 3
+      end
+
+      after(:create) do |grade, evaluator|
+        create_list(:shift, evaluator.shift_count, grade: grade)
+      end
+
+    end
+
   end
 end
