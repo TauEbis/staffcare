@@ -2,8 +2,8 @@
 
 FactoryGirl.define do
   factory :push do
-    location_plan nil
-    theory ""
-    log "MyText"
+    location_plan 		nil
+    theory 						{ {} }
+    log 							{ { log: "MyText" } }
   end
 end

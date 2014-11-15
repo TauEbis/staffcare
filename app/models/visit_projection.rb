@@ -1,5 +1,5 @@
 class VisitProjection < ActiveRecord::Base
-  belongs_to :schedule # is this used at all?
+  belongs_to :schedule
   belongs_to :location
 
   has_one :location_plan
