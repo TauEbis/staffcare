@@ -80,8 +80,11 @@ class SchedulesController < ApplicationController
 
   # DELETE /schedules/1
   def destroy
-    @schedule.destroy
-    redirect_to schedules_url, notice: 'Schedule was successfully destroyed.'
+    if ScheduleDestroyer.new(@schedule).destroy
+      redirect_to schedules_url, notice: 'Schedule was successfully destroyed.'
+    else
+      redirect_to schedules_url, alert: 'Something went wrong. Schedule was not destroyed.'
+    end
   end
 
   private
