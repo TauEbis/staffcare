@@ -21,11 +21,11 @@ class Rule < ActiveRecord::Base
   enum name: [:limit_1, :limit_1_5, :limit_2, :ratio_1, :ratio_1_5, :ratio_2, :step_md, :step_pat, :salary]
   #after_initialize :set_default_name, :if => :new_record? -- commented out since set by database to :limit_1
 
-  # Once this method is run the template will be editable vis the index action
+  # Once this method is run the template will be editable via the index action
   def self.create_default_template
 
     default_template = {
-      am:        { name: :salary  },
+      am:         { name: :salary  },
       ma:         { name: :limit_1  },
       manager:    { name: :salary   },
       pcr:        { name: :ratio_1  },

@@ -1,4 +1,8 @@
 class LocationPlanOptimizer
+
+  # Using attr_accessor instead of doing a dependency injection
+  attr_accessor :picker, :loader, :sc, :gen
+
   def initialize(location_plan)
     @location_plan = location_plan
 
@@ -7,7 +11,7 @@ class LocationPlanOptimizer
     # are now just variables here
     # If we were in a side-effect free functional language, these "coulda been constants"
 
-    grader = CoverageGrader.new(@location_plan.schedule.grader_weights)
+    grader = CoverageGrader.new(@location_plan.schedule.grader_weights) # Might be better as a dependency injection / instance vsariable
     grader.set_speeds @location_plan.normal, @location_plan.max
     @picker = CoveragePicker.new(grader)
 
@@ -38,12 +42,11 @@ class LocationPlanOptimizer
 
     @location_plan.update_attribute(:chosen_grade_id, grade.id)
 
-    create_non_md_shifts!
+    create_non_md_shifts!(grade)
   end
 
   #Non-Physician Shifts
-  def create_non_md_shifts!
-    grade = @location_plan.chosen_grade
+  def create_non_md_shifts!(grade)
     Rule.copy_template_to_grade(grade)
     @gen = LineWorkerShiftGenerator.new(grade)
     @gen.create!
