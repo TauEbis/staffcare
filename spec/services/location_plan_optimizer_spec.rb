@@ -5,10 +5,11 @@ describe LocationPlanOptimizer, :type => :service do
   let(:location_plan) { create(:location_plan) }
   let(:lp_optimizer)  { LocationPlanOptimizer.new(location_plan) }
 
-  let(:dummy_shift)		{ build(:shift) }
-  let(:dummy_grade)		{ dummy_shift.grade }
-
 	describe "#optimize!" do
+	  let(:dummy_shift)		{ build(:shift) }
+		let(:dummy_grade)		{ dummy_shift.grade }
+  	let(:grade) { location_plan.grades.first }
+
 		before do
 			Position.create_key_positions
 
@@ -19,8 +20,6 @@ describe LocationPlanOptimizer, :type => :service do
 
 			lp_optimizer.optimize!
 		end
-
-  	let(:grade) { location_plan.grades.first }
 
 		it "it will create a grade and make it choosen and more" do
 			expect(location_plan.grades.size).to eq(1)
