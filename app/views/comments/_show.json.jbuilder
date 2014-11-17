@@ -1,0 +1,10 @@
+json.extract!(comment,
+  :id,
+  :user_id,
+  :user_name,
+  :location_plan_id,
+  :grade_id,
+  :cause,
+  :body,
+  :created_at,
+  :timestamp)

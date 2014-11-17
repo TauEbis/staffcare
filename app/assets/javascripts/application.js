@@ -13,6 +13,7 @@
 //= require jquery
 //= require jquery.turbolinks
 //= require jquery_ujs
+//= require jquery.md5
 //= require bootstrap-sprockets
 //= require bootstrap
 //= require bootstrap-datepicker/core

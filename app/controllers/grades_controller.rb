@@ -8,6 +8,16 @@ class GradesController < ApplicationController
     authorize source_grade, :show?
 
     @grade = location_plan.copy_grade!(source_grade, current_user)
+
+    Comment.create!(
+      user: current_user,
+      location_plan: location_plan,
+      grade: @grade,
+      cause: :copied,
+      body: "Copied from #{source_grade.label} to #{@grade.label}",
+      metadata: {from: source_grade, to: @grade}
+    )
+
     redirect_to location_plan, notice: 'Copied successfully.  You may now edit the coverage.'
   end
 
@@ -82,12 +92,30 @@ class GradesController < ApplicationController
   def update
     @grade.update_shift!(@date, params[:shifts])
     @grade.location_plan.dirty!
+
+    Comment.create!(
+      user: current_user,
+      location_plan: @grade.location_plan,
+      grade: @grade,
+      cause: :edited,
+      body: "Edited #{@grade.label}"
+    )
+
     render text: "OK!"
   end
 
   def destroy
     @grade.location_plan.dirty!
     @grade.destroy
+
+    Comment.create!(
+      user: current_user,
+      location_plan: @grade.location_plan,
+      grade: @grade,
+      cause: :deleted,
+      body: "Deleted #{@grade.label}"
+    )
+
     redirect_to @location_plan, notice: 'Coverage plan was successfully destroyed.'
   end
 

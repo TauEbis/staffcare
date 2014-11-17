@@ -48,8 +48,22 @@ class LocationPlansController < ApplicationController
     @location_plans = policy_scope(LocationPlan).where(id: ids)
 
     state = LocationPlan.approval_states[params[:state]]
+
     if state
-      @location_plans.update_all(approval_state: state)
+      Comment.transaction do
+        @location_plans.each do |lp|
+          Comment.create!(
+            user: current_user,
+            location_plan: lp,
+            cause: :state_changed,
+            body: "Changed from #{lp.approval_state.humanize} to #{params[:state].humanize}",
+            metadata: {from: lp.approval_state, to: params[:state]}
+          )
+        end
+
+        @location_plans.update_all(approval_state: state)
+      end
+
     else
       flash[:alert] = "#{params[:state]} is not a valid state"
     end

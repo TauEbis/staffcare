@@ -13,6 +13,8 @@ class LocationPlan < ActiveRecord::Base
 
   has_many :pushes, dependent: :destroy
 
+  has_many :comments, dependent: :destroy
+
   OPTIMIZER_FIELDS = [:max_mds, :rooms, :min_openers, :min_closers, :open_times, :close_times]
 
   LIFE_CYCLE = [  [0, 0],

@@ -12,6 +12,7 @@ class ScheduleDestroyer
     grade_ids = Grade.where(location_plan_id: location_plan_ids).pluck(:id)
     shift_ids = Shift.where(grade_id: grade_ids).pluck(:id)
     push_ids = Push.where(location_plan_id: location_plan_ids).pluck(:id)
+    comment_ids = Comment.where(location_plan_id: location_plan_ids).pluck(:id)
 
     success = false
 
@@ -21,6 +22,7 @@ class ScheduleDestroyer
       Push.where(id: push_ids).delete_all
       LocationPlan.where(id: location_plan_ids).delete_all
       VisitProjection.where(id: visit_projection_ids).delete_all
+      Comment.where(id: comment_ids).delete_all
       @schedule.delete
       success =  true
     end
