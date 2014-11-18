@@ -47,6 +47,10 @@ class Location < ActiveRecord::Base
     validates "#{day}_close".to_sym, numericality: { greater_than_or_equal_to: "#{day}_open".to_sym, message: "Closing time must be greater than opening time"}, unless: "send(\"#{day}_open\").nil?"
   end
 
+  def ftes
+    managers + assistant_managers
+  end
+
   # For compatibility with shifty Location
   def open_times=(ary)
     @_open_times = ary

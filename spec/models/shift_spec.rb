@@ -60,6 +60,26 @@ RSpec.describe Shift, :type => :model do
 
   end
 
+
+  describe "scopes" do
+    let!(:shift_3) { FactoryGirl.create(:shift, starts_at: Time.now + 1.hours, ends_at: Time.now + 3.hours ) }
+    let!(:shift_1) { FactoryGirl.create(:shift, starts_at: Time.now, ends_at: Time.now + 8.hours ) }
+    let!(:shift_2) { FactoryGirl.create(:shift, starts_at: Time.now, ends_at: Time.now + 9.hours ) }
+
+    describe "ordered" do
+      it "should be ordered ascending by starts_at and ends_at" do
+        expect(Shift.ordered.to_a).to eq [shift_1, shift_2, shift_3]
+      end
+    end
+
+    describe "default" do
+      it "should be ordered" do
+        expect(Shift.all).to eq Shift.ordered
+      end
+    end
+
+  end
+
 # Methods
 
   describe "knockout methods" do

@@ -71,6 +71,7 @@ describe Rule, :type => :model do
     let!(:r_pcr)      { create(:rule, position: create(:position, key: :pcr)) }
     let!(:r_scribe)   { create(:rule, position: create(:position, key: :scribe), grade: nil) }
     let!(:r_xray)     { create(:rule, position: create(:position, key: :xray), grade: nil) }
+    let!(:r_dummy)    { create(:rule) }
 
     it "positions scopes should return rules with the correct keys" do
       expect(Rule.am).to eq [r_am]
@@ -79,6 +80,7 @@ describe Rule, :type => :model do
       expect(Rule.pcr).to eq [r_pcr]
       expect(Rule.scribe).to eq [r_scribe]
       expect(Rule.xray).to eq [r_xray]
+      expect(Rule.line_workers).to eq ([r_am, r_ma, r_manager, r_pcr, r_scribe, r_xray])
     end
 
     it "default scope should be the ordered scope" do
@@ -86,12 +88,10 @@ describe Rule, :type => :model do
     end
 
     it "ordered scope should be by position_id" do
-      expect(Rule.ordered).to eq([r_am, r_ma, r_manager, r_pcr, r_scribe, r_xray])
-      expect(Rule.template).to eq([r_scribe, r_xray])
+      expect(Rule.ordered).to eq([r_am, r_ma, r_manager, r_pcr, r_scribe, r_xray, r_dummy])
     end
 
     it "template scope should be all nil grade_ids" do
-      expect(Rule.ordered).to eq([r_am, r_ma, r_manager, r_pcr, r_scribe, r_xray])
       expect(Rule.template).to eq([r_scribe, r_xray])
     end
   end

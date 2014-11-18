@@ -10,7 +10,7 @@ class Position < ActiveRecord::Base
   validates :hourly_rate, numericality: true, presence: true
   validates :key, uniqueness: true, allow_nil: true
 
-  scope :not_md, -> { where.not(key: [:md, nil]) }
+  scope :line_workers, -> { where.not(key: [:md, nil]) }
   scope :ordered, -> { order(name: :asc) }
   default_scope -> { order(name: :asc) }
 

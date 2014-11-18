@@ -68,11 +68,11 @@ describe Position do
       end
     end
 
-    describe "not_md" do
+    describe "line_workers" do
       let!(:md) { FactoryGirl.create(:position, name: "MD", key: "a") }
       let!(:nil) { FactoryGirl.create(:position, name: "Nil", key: nil) }
       it "should be alphabetically ordered by name" do
-        expect(Position.not_md).to eq [a_name, z_name]
+        expect(Position.line_workers).to eq [a_name, z_name]
       end
     end
   end

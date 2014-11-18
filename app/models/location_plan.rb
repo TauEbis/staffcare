@@ -30,7 +30,8 @@ class LocationPlan < ActiveRecord::Base
   enum wiw_sync: [:unsynced, :dirty, :synced]
   enum optimizer_state: [ :not_run, :running, :complete, :error ]
 
-  delegate :name, to: :location
+  delegate :name, :ftes, to: :location
+  delegate :days, to: :schedule
 
   validates :schedule, presence: true
 

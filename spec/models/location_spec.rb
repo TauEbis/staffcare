@@ -240,4 +240,11 @@ describe Location do
     end
   end
 
+  describe "#ftes" do
+
+    it "should equal managers plus assistant managers" do
+      expect(location.ftes).to eq (location.managers + location.assistant_managers)
+    end
+  end
+
 end

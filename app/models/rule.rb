@@ -12,6 +12,7 @@ class Rule < ActiveRecord::Base
   scope :pcr, -> { where( position: Position.where(key: :pcr) ) }
   scope :scribe, -> { where( position: Position.where(key: :scribe) ) }
   scope :xray, -> { where( position: Position.where(key: :xray) ) }
+  scope :line_workers, -> { where( position: Position.line_workers ) } # nil positions keys not included
 
   default_scope -> { ordered }
 

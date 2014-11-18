@@ -5,9 +5,9 @@ describe LineWorkerShiftGenerator, :type => :service do
   let(:rule)          { FactoryGirl.create(:rule, position: create(:position, key: :ma), grade: grade) }
   let(:generator)     { LineWorkerShiftGenerator.new(grade) }
 
-  let(:days)          { grade.location_plan.schedule.days }
-  let(:open_times)    { grade.location_plan.open_times}
-  let(:close_times)   { grade.location_plan.close_times}
+  let(:days)          { grade.location_plan.days }
+  let(:open_times)    { grade.location_plan.open_times }
+  let(:close_times)   { grade.location_plan.close_times }
 
 
   describe "Creating shifts for different policies" do
@@ -28,8 +28,8 @@ describe LineWorkerShiftGenerator, :type => :service do
             expected_ends   << day.in_time_zone(Shift::TZ).change(hour: close_times[day.wday])
         end
 
-        expect(grade.shifts.ma.map(&:starts_at)).to eql(expected_starts)
-        expect(grade.shifts.ma.map(&:ends_at)).to eql(expected_ends)
+        expect(grade.shifts.ordered.ma.map(&:starts_at)).to eql(expected_starts)
+        expect(grade.shifts.ordered.ma.map(&:ends_at)).to eql(expected_ends)
       end
 
     end
@@ -52,8 +52,8 @@ describe LineWorkerShiftGenerator, :type => :service do
             expected_ends.push(close - twenty_five_percent, close)
         end
 
-        expect(grade.shifts.ma.map(&:starts_at)).to eql(expected_starts)
-        expect(grade.shifts.ma.map(&:ends_at)).to eql(expected_ends)
+        expect(grade.shifts.ordered.ma.map(&:starts_at)).to eql(expected_starts)
+        expect(grade.shifts.ordered.ma.map(&:ends_at)).to eql(expected_ends)
       end
 
     end
@@ -72,8 +72,8 @@ describe LineWorkerShiftGenerator, :type => :service do
                       expected_ends   << day.in_time_zone(Shift::TZ).change(hour: close_times[day.wday]) }
         end
 
-        expect(grade.shifts.ma.map(&:starts_at)).to eql(expected_starts)
-        expect(grade.shifts.ma.map(&:ends_at)).to eql(expected_ends)
+        expect(grade.shifts.ordered.ma.map(&:starts_at)).to eql(expected_starts)
+        expect(grade.shifts.ordered.ma.map(&:ends_at)).to eql(expected_ends)
       end
 
     end
@@ -133,6 +133,63 @@ describe LineWorkerShiftGenerator, :type => :service do
 
       end
     end
+
+    describe "Salary policy" do
+
+      let!(:rule_manager)  { FactoryGirl.create(:rule, name: :salary, position: create(:position, key: :manager), grade: grade) }
+      let!(:rule_am)       { FactoryGirl.create(:rule, name: :salary, position: create(:position, key: :am), grade: grade) }
+      let(:monday)        { Date.today.beginning_of_week } # Monday
+
+      describe "given 2 FTES" do
+        before do
+          allow(grade.location_plan).to receive(:ftes).and_return(2)
+          allow(grade.location_plan).to receive(:days).and_return([monday])
+          generator.create!
+        end
+
+        it "should generate the correct fixed manager shifts" do
+          expected_starts = [ monday.in_time_zone(Shift::TZ).change(hour: open_times[1]) ]
+          expected_ends =   [ monday.in_time_zone(Shift::TZ).change(hour: close_times[1]) ]
+
+          expect(grade.shifts.manager.map(&:starts_at)).to eql(expected_starts)
+          expect(grade.shifts.manager.map(&:ends_at)).to eql(expected_ends)
+        end
+
+        it "should generate the correct fixed assistant manager shifts" do
+          expected_starts = [  ]
+          expected_ends   = [  ]
+
+          expect(grade.shifts.am.map(&:starts_at)).to eql(expected_starts)
+          expect(grade.shifts.am.map(&:ends_at)).to eql(expected_ends)
+        end
+      end
+
+
+      describe "given 3 FTES" do
+        before do
+          allow(grade.location_plan).to receive(:ftes).and_return(3)
+          allow(grade.location_plan).to receive(:days).and_return([monday])
+          generator.create!
+        end
+
+        it "should generate the correct fixed manager shifts" do
+          expected_starts = [ monday.in_time_zone(Shift::TZ).change(hour: open_times[1]) ]
+          expected_ends =   [ monday.in_time_zone(Shift::TZ).change(hour: open_times[1] + 8) ]
+
+          expect(grade.shifts.manager.map(&:starts_at)).to eql(expected_starts)
+          expect(grade.shifts.manager.map(&:ends_at)).to eql(expected_ends)
+        end
+
+        it "should generate the correct fixed assistant manager shifts" do
+          expected_starts = [ monday.in_time_zone(Shift::TZ).change(hour: close_times[1] - 10) ]
+          expected_ends =   [ monday.in_time_zone(Shift::TZ).change(hour: close_times[1]) ]
+
+          expect(grade.shifts.am.map(&:starts_at)).to eql(expected_starts)
+          expect(grade.shifts.am.map(&:ends_at)).to eql(expected_ends)
+        end
+      end
+
+    end
   end
 
   describe "Splitting long shifts" do
@@ -152,8 +209,8 @@ describe LineWorkerShiftGenerator, :type => :service do
       expected_starts = [ long_shift.starts_at, long_shift.starts_at + mid ]
       expected_ends = [ long_shift.ends_at - mid, long_shift.ends_at ]
 
-      expect(grade.shifts.ma.map(&:starts_at)).to eql(expected_starts)
-      expect(grade.shifts.ma.map(&:ends_at)).to eql(expected_ends)
+      expect(grade.shifts.ordered.ma.map(&:starts_at)).to eql(expected_starts)
+      expect(grade.shifts.ordered.ma.map(&:ends_at)).to eql(expected_ends)
     end
 
   end

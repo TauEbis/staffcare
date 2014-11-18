@@ -22,6 +22,9 @@ class Shift < ActiveRecord::Base
   scope :scribe, -> { where( position: Position.where(key: :scribe) ) }
   scope :xray, -> { where( position: Position.where(key: :xray) ) }
 
+  scope :ordered, -> { order( starts_at: :asc, ends_at: :desc ) }
+  default_scope -> { ordered }
+
   def starts_hour
     @_starts_hour ||= starts_at.in_time_zone(TZ).hour
   end
