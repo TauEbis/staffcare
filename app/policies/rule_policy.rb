@@ -1,7 +1,11 @@
 class RulePolicy < ApplicationPolicy
 
   def index?
-    user.admin?
+    if record.first.grade.nil?
+      user.admin?
+    else
+      Pundit.policy!(user, record.first.grade).update?
+    end
   end
 
   def update?

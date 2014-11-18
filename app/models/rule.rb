@@ -73,6 +73,9 @@ class Rule < ActiveRecord::Base
     'Salary'
   ].zip(Rule::names.keys).freeze
 
+#TEMPORARY UNTIL STEP OPTIONS ARE IMPLEMENTED
+  REDUCED_NAME_OPTIONS = NAME_OPTIONS - [  ["Step-up by Physician", "step_md"], ["Step-up by Patient", "step_pat"]]
+
   def label
     NAME_OPTIONS[Rule::names[self.name]][0]
   end

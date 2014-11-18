@@ -91,9 +91,9 @@ describe GradesController, :type => :controller do
         expect(assigns(:grade).rules.map(&:position)).to eq(Rule.template.map(&:position))
       end
 
-      it "redirects to the location plan" do
+      it "redirects to the line worker rules" do
         post :create, create_params, valid_session
-        expect(response).to redirect_to(location_plan)
+        expect(response).to redirect_to(rules_grade_path(assigns(:grade)))
       end
     end
   end

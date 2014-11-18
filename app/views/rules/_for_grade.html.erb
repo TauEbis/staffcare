@@ -1,0 +1,12 @@
+<br>
+<h3 class="alert alert-info" role="alert">Would you like to edit the default non-physician staffing rules?</h3>
+
+<%= link_to "I'll use the defaults. Let's get started!", grade_path(@grade), class: 'btn btn-primary' %>
+
+<br><br>
+
+<%= link_to "I've edited the defaults. Rebuild schedule.", line_workers_grade_path(@grade), method: :post, class: 'btn btn-danger' %>
+
+<br><br><br>
+
+<hr>

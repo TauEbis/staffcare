@@ -16,6 +16,10 @@ class GradePolicy < ApplicationPolicy
     show?
   end
 
+  def line_workers?
+    update?
+  end
+
   def update?
     case record.source
       when 'manual'

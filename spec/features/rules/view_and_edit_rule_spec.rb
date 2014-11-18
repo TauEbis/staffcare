@@ -8,6 +8,8 @@ feature "Viewing and editing rules: " do
 		given(:user) { FactoryGirl.create(:user) }
 
 		background do
+			Position.create_key_positions
+			Rule.create_default_template
 			signin user
 			visit rules_path
 		end

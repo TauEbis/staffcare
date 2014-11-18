@@ -30,6 +30,8 @@ Rails.application.routes.draw do
       get :shifts
       get :hourly
       get :highcharts
+      get :rules, to: "rules#index", as: 'rules'
+      post :line_workers
     end
   end
 
