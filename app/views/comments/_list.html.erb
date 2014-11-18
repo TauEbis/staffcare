@@ -1,0 +1,16 @@
+<div id="comment_view" data-location-plan-id="<%= @location_plan.id %>">
+  <div class="row">
+    <div class="col-sm-offset-2 col-sm-7">
+      <textarea rows="4" class="form-control" data-bind="value: new_body, enterKey: add_comment"></textarea>
+    </div>
+    <div class="col-sm-2">
+      <button class="btn btn-default" data-bind="click: add_comment">Create</button>
+    </div>
+  </div>
+
+  <br>
+
+  <div data-bind="foreach: comments">
+    <%= render 'comments/comment' %>
+  </div>
+</div>

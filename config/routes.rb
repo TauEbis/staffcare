@@ -18,6 +18,7 @@ Rails.application.routes.draw do
 
   resources :location_plans, only: [] do
     resources :line_workers, only: [:index, :new, :create]
+    resources :comments
 
     collection do
       post :change_state
