@@ -15,7 +15,7 @@
     <h3>Entire Schedule</h3>
   </div>
   <div class="col-sm-9">
-    <% if @schedule.complete? -%>
+    <% if @schedule.lps_complete? -%>
       <%= render 'location_plans/analysis', analysis: @schedule.analysis %>
     <% end -%>
   </div>
@@ -32,7 +32,7 @@
       <%= collective_state_label(state) %>
     </div>
     <div class="col-sm-9">
-      <% if @schedule.complete? -%>
+      <% if @schedule.zone_complete?(zone) -%>
         <%= render 'location_plans/analysis', analysis: @schedule.analysis(zone) %>
       <% end -%>
     </div>

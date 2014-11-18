@@ -50,7 +50,7 @@ RSpec.describe SchedulesController, :type => :controller do
 
   describe "GET show" do
     it "renders the view" do
-      schedule = Schedule.create! valid_attributes
+      schedule = create(:schedule_with_children, valid_attributes)
       get :show, {:id => schedule.to_param}, valid_session
       expect(response).to render_template('show')
     end

@@ -12,6 +12,8 @@ FactoryGirl.define do
     penalty_slack           2
     penalty_turbo           3
 
+    optimizer_state         :complete
+
     # schedule_with_children creates all dependent associated models
     factory :schedule_with_children do
 
@@ -21,6 +23,7 @@ FactoryGirl.define do
 
       after(:create) do |schedule, evaluator|
         create_list(:location_plan_with_children, evaluator.location_plan_count, schedule: schedule)
+        create(:patient_volume_forecast, start_date: schedule.starts_on.beginning_of_week + 4.days)
       end
 
     end

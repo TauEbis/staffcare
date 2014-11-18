@@ -105,4 +105,19 @@ class Schedule < ActiveRecord::Base
   def zones
     locations.map(&:zone).uniq
   end
+
+  def lps_complete?
+    check_complete(location_plans)
+  end
+
+  def zone_complete?(zone)
+    check_complete(location_plans.for_zone(zone))
+  end
+
+  private
+
+    def check_complete(lps)
+      !lps.map(&:complete?).include?(false)
+    end
+
 end
