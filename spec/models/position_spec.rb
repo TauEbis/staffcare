@@ -67,6 +67,14 @@ describe Position do
         expect(Position.all.to_a).to eq [a_name, z_name]
       end
     end
+
+    describe "line_workers" do
+      let!(:md) { FactoryGirl.create(:position, name: "MD", key: "a") }
+      let!(:nil) { FactoryGirl.create(:position, name: "Nil", key: nil) }
+      it "should be alphabetically ordered by name" do
+        expect(Position.line_workers).to eq [a_name, z_name]
+      end
+    end
   end
 
 # Class Methods

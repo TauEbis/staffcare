@@ -3,12 +3,14 @@
 class Position < ActiveRecord::Base
 
   has_many :shifts
+  has_many :rules
 
   validates :name, uniqueness: true, presence: true
   validates :wiw_id, uniqueness: true, numericality: true, allow_nil: true
   validates :hourly_rate, numericality: true, presence: true
   validates :key, uniqueness: true, allow_nil: true
 
+  scope :line_workers, -> { where.not(key: [:md, nil]) }
   scope :ordered, -> { order(name: :asc) }
   default_scope -> { order(name: :asc) }
 

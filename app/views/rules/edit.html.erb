@@ -1,0 +1,7 @@
+<%provide(:title, "Edit Rule")%>
+
+<h1>Editing <%= "#{@rule.grade.nil? ? 'Default' : ''} #{@rule.position.name.titleize} " %> Rule</h1>
+
+<%= render 'form' %>
+<br>
+<%= link_to 'Back', @back_path %>

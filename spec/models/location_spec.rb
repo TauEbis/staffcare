@@ -14,6 +14,9 @@ describe Location do
     it { should respond_to(:min_openers) }
     it { should respond_to(:min_closers) }
     it { should respond_to(:report_server_id) }
+    it { should respond_to(:managers) }
+    it { should respond_to(:assistant_managers) }
+
     describe "day_params attributes" do
       day_params.each do |day_param|
         it { should respond_to(day_param) }
@@ -119,6 +122,46 @@ describe Location do
       it { should_not be_valid }
     end
 
+    context "when managers is not present" do
+      before { location.managers = nil }
+      it { should_not be_valid }
+    end
+
+    context "when managers is not numeric" do
+      before { location.managers = "a" }
+      it { should_not be_valid }
+    end
+
+    context "when managers is too small" do
+      before { location.managers = 0 }
+      it { should_not be_valid }
+    end
+
+    context "when managers is too large" do
+      before { location.managers = 2 }
+      it { should_not be_valid }
+    end
+
+    context "when assistant managers is not present" do
+      before { location.assistant_managers = nil }
+      it { should_not be_valid }
+    end
+
+    context "when assistant managers is not numeric" do
+      before { location.assistant_managers = "a" }
+      it { should_not be_valid }
+    end
+
+    context "when assistant managers is too small" do
+      before { location.assistant_managers = 0 }
+      it { should_not be_valid }
+    end
+
+    context "when assistant managers is too large" do
+      before { location.assistant_managers = 3 }
+      it { should_not be_valid }
+    end
+
     day_params.each do |day_param|
       context "when #{day_param} is not present" do
         before { location.send("#{day_param}=", nil) }
@@ -194,6 +237,13 @@ describe Location do
     it "day_close attibutes should be set in minutes" do
       close_attributes = days.map { |day| location.send("#{day}_close") }
       expect(close_attributes).to eq closes_in_minutes
+    end
+  end
+
+  describe "#ftes" do
+
+    it "should equal managers plus assistant managers" do
+      expect(location.ftes).to eq (location.managers + location.assistant_managers)
     end
   end
 

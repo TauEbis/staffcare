@@ -103,27 +103,29 @@ ActiveRecord::Schema.define(version: 20141114141451) do
     t.integer  "zone_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "sun_open",         default: 480,  null: false
-    t.integer  "sun_close",        default: 1260, null: false
-    t.integer  "mon_open",         default: 480,  null: false
-    t.integer  "mon_close",        default: 1260, null: false
-    t.integer  "tue_open",         default: 480,  null: false
-    t.integer  "tue_close",        default: 1260, null: false
-    t.integer  "wed_open",         default: 480,  null: false
-    t.integer  "wed_close",        default: 1260, null: false
-    t.integer  "thu_open",         default: 480,  null: false
-    t.integer  "thu_close",        default: 1260, null: false
-    t.integer  "fri_open",         default: 480,  null: false
-    t.integer  "fri_close",        default: 1260, null: false
-    t.integer  "sat_open",         default: 480,  null: false
-    t.integer  "sat_close",        default: 1260, null: false
-    t.integer  "rooms",            default: 1,    null: false
-    t.integer  "max_mds",          default: 1,    null: false
-    t.integer  "min_openers",      default: 1,    null: false
-    t.integer  "min_closers",      default: 1,    null: false
+    t.integer  "sun_open",           default: 480,  null: false
+    t.integer  "sun_close",          default: 1260, null: false
+    t.integer  "mon_open",           default: 480,  null: false
+    t.integer  "mon_close",          default: 1260, null: false
+    t.integer  "tue_open",           default: 480,  null: false
+    t.integer  "tue_close",          default: 1260, null: false
+    t.integer  "wed_open",           default: 480,  null: false
+    t.integer  "wed_close",          default: 1260, null: false
+    t.integer  "thu_open",           default: 480,  null: false
+    t.integer  "thu_close",          default: 1260, null: false
+    t.integer  "fri_open",           default: 480,  null: false
+    t.integer  "fri_close",          default: 1260, null: false
+    t.integer  "sat_open",           default: 480,  null: false
+    t.integer  "sat_close",          default: 1260, null: false
+    t.integer  "rooms",              default: 1,    null: false
+    t.integer  "max_mds",            default: 1,    null: false
+    t.integer  "min_openers",        default: 1,    null: false
+    t.integer  "min_closers",        default: 1,    null: false
     t.string   "report_server_id"
     t.integer  "wiw_id"
     t.string   "uid"
+    t.integer  "managers",           default: 1,    null: false
+    t.integer  "assistant_managers", default: 1,    null: false
   end
 
   add_index "locations", ["uid"], name: "index_locations_on_uid", using: :btree
@@ -188,6 +190,17 @@ ActiveRecord::Schema.define(version: 20141114141451) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "rules", force: true do |t|
+    t.integer "name",               default: 0,  null: false
+    t.integer "grade_id"
+    t.integer "position_id"
+    t.json    "shift_space_params", default: {}, null: false
+    t.json    "step_params",        default: {}, null: false
+  end
+
+  add_index "rules", ["grade_id"], name: "index_rules_on_grade_id", using: :btree
+  add_index "rules", ["position_id"], name: "index_rules_on_position_id", using: :btree
 
   create_table "schedules", force: true do |t|
     t.date     "starts_on"

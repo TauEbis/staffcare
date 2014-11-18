@@ -1,0 +1,27 @@
+<%provide(:title, @title)%>
+
+<%= render 'for_grade' if @grade %>
+
+<% if !@grade %>
+  <h1>Default Rules</h1>
+<%- end %>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Position</th>
+      <th><%= 'Default ' unless @grade%> Rule</th>
+      <th colspan="1"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @rules.each do |rule| %>
+      <tr>
+        <td><%= rule.position.name.titleize %></td>
+        <td><%= rule.label %></td>
+        <td><%= link_to 'Edit', edit_rule_path(rule) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

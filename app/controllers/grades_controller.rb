@@ -1,5 +1,5 @@
 class GradesController < ApplicationController
-  before_action :set_grade, only: [:show, :shifts, :highcharts, :hourly, :update, :destroy]
+  before_action :set_grade, only: [:line_workers, :show, :shifts, :highcharts, :hourly, :update, :destroy]
 
   def create
     source_grade = policy_scope(Grade).find(params[:grade][:source_grade_id])
@@ -18,7 +18,18 @@ class GradesController < ApplicationController
       metadata: {from: source_grade, to: @grade}
     )
 
-    redirect_to location_plan, notice: 'Copied successfully.  You may now edit the coverage.'
+    Rule.copy_template_to_grade(@grade)
+
+    redirect_to rules_grade_path(@grade), notice: 'Physician schedule copied successfully.'
+  end
+
+  def line_workers
+    gen = LineWorkerShiftGenerator.new(@grade)
+    if gen.create!
+      redirect_to grade_path(@grade), notice: 'Staffing schedules generated successfully.'
+    else
+      redirect_to rules_grade_path(@grade), alert: 'Something went wrong. Staffing schedules were not successfully generated.'
+    end
   end
 
   # GET /grades/1

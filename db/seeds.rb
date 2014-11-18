@@ -40,6 +40,11 @@ if Position.all.empty?
   puts "Created Positions"
 end
 
+if Rule.all.empty?
+  Rule.create_default_template
+  puts "Created Rules"
+end
+
 if Rails.env.development?
   if Heatmap.all.empty? && Location.all.empty?
     Rake::Task["rs_load"].invoke

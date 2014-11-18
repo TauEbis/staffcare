@@ -30,6 +30,14 @@ Rails.application.routes.draw do
       get :shifts
       get :hourly
       get :highcharts
+      get :rules, to: "rules#index", as: 'rules'
+      post :line_workers
+    end
+  end
+
+  resources :rules, only: [:index, :edit, :update] do
+    collection do
+      get :default, to: :index, as: 'default'
     end
   end
 
@@ -57,6 +65,7 @@ Rails.application.routes.draw do
 
   get 'dashboard/index'
   get 'dashboard/status'
+  get 'staffing_analyst', to: "staffing_analyst#index", as: 'staffing_analyst'
 
   require 'sidekiq/web'
   require 'sidekiq-status/web'

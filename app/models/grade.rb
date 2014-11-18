@@ -6,6 +6,8 @@ class Grade < ActiveRecord::Base
   belongs_to :location_plan
   belongs_to :user
   has_many :shifts, dependent: :destroy
+  has_many :rules
+  #belongs_to :ma_rule, class_name: 'Rule' # Do we want this ability or is grade.rules.ma.first OK?
 
   attr_reader :source_grade_id
 
@@ -54,7 +56,7 @@ class Grade < ActiveRecord::Base
     end
 
     coverages_will_change!
-    self.coverages[date_s] = ShiftCoverage.new(location_plan, date).shifts_to_coverage(self.shifts.md.for_day(date))
+    self.coverages[date_s] = ShiftCoverage.new().shifts_to_coverage(self.shifts.md.for_day(date))
 
     calculate_grade!(date_s)
     # TODO: unoptimized_sum is already recalculating, but if that is cached we'll need to recalc here

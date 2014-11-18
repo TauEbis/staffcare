@@ -17,7 +17,7 @@ class LocationPlanOptimizerWorker
       optimizer = LocationPlanOptimizer.new(location_plan)
 
       num = 0
-      total optimizer.days.length
+      total location_plan.schedule.days.length
 
       optimizer.optimize! {
         num += 1
