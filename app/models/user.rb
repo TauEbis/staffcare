@@ -13,6 +13,7 @@ class User < ActiveRecord::Base
 
   has_many :memberships
   has_many :locations, through: :memberships
+  has_many :grades
   #has_many :zones, -> { distinct }, through: :locations
 
   def label

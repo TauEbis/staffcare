@@ -46,7 +46,7 @@ feature "Viewing and editing rules: " do
 			visit edit_rule_path(FactoryGirl.create(:rule))
 		end
 
-  	describe "then the index page is not rendered:" do
+  	describe "then the edit page is not rendered:" do
 			it { should_not have_title full_title('Edit Rule') }
 			it { should have_title full_title('Dashboard') }
 		end

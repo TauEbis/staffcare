@@ -8,8 +8,16 @@ class RulePolicy < ApplicationPolicy
     end
   end
 
+  def edit?
+    update?
+  end
+
   def update?
-    user.admin?
+    if record.grade.nil?
+      user.admin?
+    else
+      Pundit.policy!(user, record.grade).update?
+    end
   end
 
   class Scope < Struct.new(:user, :scope)
@@ -17,7 +25,7 @@ class RulePolicy < ApplicationPolicy
       if user.admin?
         scope
       else
-        Rule.none
+        scope
       end
     end
   end
