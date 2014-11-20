@@ -26,51 +26,6 @@ class VisitProjection < ActiveRecord::Base
     end
   end
 
-
-  def day_max(day)
-    visits[day.to_s].max
-  end
-
-  def am_min(day)
-    length = visits[day.to_s].length
-    visits[day.to_s][0..(length/2 -1)].min
-  end
-
-  def pm_min(day)
-    length = visits[day.to_s].length
-    visits[day.to_s][(length/2)..-1].min
-  end
-
-  def sum
-    visits.each_value.inject(0) { | total, v | total + v.sum }
-  end
-
-  def daily_avg
-    sum / total_days
-  end
-
-  def week_avg
-    daily_avg * 7
-  end
-
-  def total_days
-    visits.size
-  end
-
-  def build_visits
-    self.visits = {}
-
-    schedule.days.each do |day|
-      daily_vol = self.volumes[day.to_s]
-      if source == :sample_run || source == :dummy_run
-        self.visits[day.to_s] = heat_maps[day.wday].map{ |percent| percent * daily_vol }
-      else
-        self.visits[day.to_s] = heat_maps.build_day_volume(daily_vol, day, location)
-      end
-    end
-
-  end
-
 	def self.import!(data_provider, schedule, locations)
     all_volumes = data_provider.volume_query(locations, schedule)
     all_heat_maps = data_provider.heat_map_query(locations, schedule)
@@ -96,6 +51,20 @@ class VisitProjection < ActiveRecord::Base
     end
 
     projections
+  end
+
+  def build_visits
+    self.visits = {}
+
+    schedule.days.each do |day|
+      daily_vol = self.volumes[day.to_s]
+      if source == :sample_run || source == :dummy_run
+        self.visits[day.to_s] = heat_maps[day.wday].map{ |percent| percent * daily_vol }
+      else
+        self.visits[day.to_s] = heat_maps.build_day_volume(daily_vol, day, location)
+      end
+    end
+
   end
 
 end

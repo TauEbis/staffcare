@@ -2,14 +2,14 @@
 # given the constraints stored as a location_plan
 class SolutionSetBuilder
 
-  def initialize(location_plan, day)
-    @location_plan = location_plan
-    @open = @location_plan.open_times[day.wday]
-    @close = @location_plan.close_times[day.wday]
-    @max_mds = @location_plan.max_mds
-    @min_openers = @location_plan.min_openers
-    @min_closers = @location_plan.min_closers
+  def set_up(options)
+    @open        = options[:open]
+    @close       = options[:close]
+    @max_mds     = options[:max_mds]
+    @min_openers = options[:min_openers]
+    @min_closers = options[:min_closers]
 
+# Derived instance variables
     @hours_open = @close - @open # half hours in the day
 
     @min_shift = (@hours_open * 0.5).round # shortest allowable shift

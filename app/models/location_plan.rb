@@ -1,30 +1,18 @@
 # Records location configuration at time a schedule is generated
 # Corresponds to a per-location schedule in the UI
 class LocationPlan < ActiveRecord::Base
+
+  has_many :pushes, dependent: :destroy
+  has_many :comments, dependent: :destroy
+  has_many :grades, dependent: :destroy
+  # grades records the grading/score for the schedule for the given scheduling options-
+
+  belongs_to :chosen_grade, class_name: 'Grade'
   belongs_to :location
   belongs_to :schedule
   belongs_to :visit_projection
-  belongs_to :life_cycle
-
-  # grades records the grading/score for the schedule for the given scheduling options-
-  # e.g., use last months schedule, use manual coverage, etc.
-  has_many :grades, dependent: :destroy
-  belongs_to :chosen_grade, class_name: 'Grade'
-
-  has_many :pushes, dependent: :destroy
-
-  has_many :comments, dependent: :destroy
 
   OPTIMIZER_FIELDS = [:max_mds, :rooms, :min_openers, :min_closers, :open_times, :close_times]
-
-  LIFE_CYCLE = [  [0, 0],
-                  [1, 94],                      # life cycle 1
-                  [51, 143],                    # life cycle 2
-                  [76, 188],                    # etc...
-                  [101, 237],
-                  [131, 282],
-                  [166, 330],
-                  [201, 376] ]                  # [min_daily_patients_in_life_cycle, max_weekly_physician_hours_for_life_cycle]
 
   enum approval_state: [:pending, :manager_approved, :rm_approved]
   enum wiw_sync: [:unsynced, :dirty, :synced]
@@ -33,11 +21,14 @@ class LocationPlan < ActiveRecord::Base
   delegate :name, :ftes, to: :location
   delegate :days, to: :schedule
 
-  validates :schedule, presence: true
+  scope :for_zone, -> (zone) { where(location_id: zone.location_ids) }
+  scope :for_user, -> (user) { where(location_id: user.relevant_locations.pluck(:id)) }
+  scope :assigned, -> { where(location_id: Location.assigned.pluck(:id)) }
+  scope :ordered, -> { joins(:location).order('locations.name ASC')}
 
+  validates :schedule, presence: true
   validates :visit_projection, presence: true
   validates :visits, presence: true
-
   validates :location, presence: true
   validates :rooms, presence: true, numericality: { greater_than: 0, less_than: 100 }
   validates :max_mds, presence: true, numericality: { greater_than: 0, less_than: 100 }
@@ -50,94 +41,7 @@ class LocationPlan < ActiveRecord::Base
   validate :valid_closes
   validate :valid_visits
 
-  scope :for_zone, -> (zone) { where(location_id: zone.location_ids) }
-
-  scope :for_user, -> (user) { where(location_id: user.relevant_locations.pluck(:id)) }
-
-  scope :assigned, -> { where(location_id: Location.assigned.pluck(:id)) }
-
-  scope :ordered, -> { joins(:location).order('locations.name ASC')}
-
-  # For a given collection of location_plans, return their 'base' state
-  # If any are pending, then the whole collective state is pending
-  def self.collective_state(location_plans)
-    int_states = location_plans.map{|lp| lp[:approval_state]}
-    LocationPlan.approval_states.key(int_states.min || 0)
-  end
-
-  def life_cycle
-    avg = visit_projection.daily_avg
-
-    for i in (0...LIFE_CYCLE.size)
-      lc = i if (avg > LIFE_CYCLE[i][0])
-    end
-    lc
-  end
-
-  def life_cycle_max_daily_hours
-    LIFE_CYCLE[life_cycle][1] / 7.0
-  end
-
-  def life_cycle_max_total_hours
-    life_cycle_max_daily_hours * visit_projection.total_days
-  end
-
-  def solution_set_options(day)
-    set_solution_set_inputs(day)
-    {open: open_times[day.wday()], close: close_times[day.wday()], max_mds: max_mds, min_openers: min_openers, min_closers: min_closers}
-  end
-
-  # Loads the set of possible shift coverages for a single day
-  # given the stored LocationPlan location configuration
-  def build_solution_set(day)
-    set_solution_set_inputs(day)
-    SolutionSetBuilder.new(self, day).build
-  end
-
-#TODO should the am_min method be called on visits rather than VisitProjection?
-  def set_solution_set_inputs(day)
-    max = self.visit_projection.day_max(day)
-    self.max_mds = normal.length - 1
-    normal.each_with_index do |speed, i|
-      if speed/2 > max
-        self.max_mds= i
-        break
-      end
-    end
-    am_min = self.visit_projection.am_min(day)
-    self.min_openers= 1
-    normal.each_with_index do |speed, i|
-      if speed/2 > am_min && i > 1
-        self.min_openers= [i - 1, 1].max
-        break
-      end
-    end
-    pm_min = self.visit_projection.pm_min(day)
-    self.min_closers= 1
-    normal.each_with_index do |speed, i|
-      if speed/2 > pm_min && i > 1
-        self.min_closers= [i - 1, 1].max
-        break
-      end
-    end
-    self.save!
-  end
-
-  # Copies the chosen grade to a new grade
-  def copy_grade!(grade, user)
-    LocationPlan.transaction do
-      g = self.grades.create!(grade.attributes.merge(id: nil, created_at: nil, source: 'manual', user: user))
-      g.clone_shifts_from!(grade)
-      self.update_attribute(:chosen_grade_id, g.id)
-      dirty!
-
-      g
-    end
-  end
-
-  def dirty!
-    update_attribute(:wiw_sync, :dirty) if synced?
-  end
+# Custom Validations
 
   def valid_opens
     open_times.each do |t|
@@ -166,5 +70,105 @@ class LocationPlan < ActiveRecord::Base
       end
     end
   end
+
+  # For a given collection of location_plans, return their 'base' state
+  # If any are pending, then the whole collective state is pending
+  def self.collective_state(location_plans)
+    int_states = location_plans.map{|lp| lp[:approval_state]}
+    LocationPlan.approval_states.key(int_states.min || 0)
+  end
+
+  def dirty!
+    update_attribute(:wiw_sync, :dirty) if synced?
+  end
+
+  # Copies the chosen grade to a new grade
+  def copy_grade!(grade, user)
+    LocationPlan.transaction do
+      g = self.grades.create!(grade.attributes.merge(id: nil, created_at: nil, source: 'manual', user: user))
+      g.clone_shifts_from!(grade)
+      self.update_attribute(:chosen_grade_id, g.id)
+      dirty!
+
+      g
+    end
+  end
+
+  def solution_set_options(day)
+    @_ss_options ||= {}
+    @_ss_options[day.to_s] ||= recalculate_solution_set_options(day)
+  end
+
+  # Loads the set of possible shift coverages for a single day
+  # given the stored LocationPlan location configuration
+  def build_solution_set(day)
+    @_builder ||= SolutionSetBuilder.new
+    @_builder.set_up(solution_set_options(day))
+    @_builder.build
+  end
+
+  private
+
+    #TODO should the am_min method be called on visits rather than VisitProjection?
+    def recalculate_solution_set_options(day)
+      # Find ceilng for max mds using visits and speeds
+      max_half_hourly_visitors = day_max(day)
+      day_max_mds = normal.length - 1
+      normal.each_with_index do |speed, i|
+        if speed/2 > max_half_hourly_visitors
+          day_max_mds = i
+          break
+        end
+      end
+
+      # Find floor for min_openers using visits and speeds
+      am_min = am_min(day)
+      day_min_openers = self.min_openers
+      normal.each_with_index do |speed, i|
+        if speed/2 > am_min && i > 1
+          day_min_openers= [i - 1, 1].max
+          break
+        end
+      end
+
+      # Find floor for min_closers using visits and speeds
+      pm_min = pm_min(day)
+      day_min_closers = 1
+      normal.each_with_index do |speed, i|
+        if speed/2 > pm_min && i > 1
+          day_min_closers= [i - 1, 1].max
+          break
+        end
+      end
+
+      {open: open_times[day.wday()], close: close_times[day.wday()], max_mds: day_max_mds, min_openers: day_min_openers, min_closers: day_min_closers}
+    end
+
+    # Visits level logic -- extraction candidate
+    def day_max(day)
+      visits[day.to_s].max
+    end
+
+    def am_min(day)
+      length = visits[day.to_s].length
+      visits[day.to_s][0..(length/2 -1)].min
+    end
+
+    def pm_min(day)
+      length = visits[day.to_s].length
+      visits[day.to_s][(length/2)..-1].min
+    end
+
+    def sum
+      visits.each_value.inject(0) { | total, v | total + v.sum }
+    end
+
+    def daily_avg
+      sum / days.size
+    end
+
+    def week_avg
+      daily_avg * 7
+    end
 
 end
