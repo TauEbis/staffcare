@@ -30,7 +30,6 @@ feature "Viewing the staffing analyst panel: " do
 			it { should have_link('Positions', href: positions_path ) }
 			it { should have_link('Heatmaps', href: heatmaps_path ) }
 			it { should have_link('Volume Forecasts', href: patient_volume_forecasts_path ) }
-			it { should have_link('Life Cycles', href: life_cycles_path ) }
 		end
 	end
 

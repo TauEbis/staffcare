@@ -32,23 +32,6 @@ module LocationPlansHelper
     ).html_safe
   end
 
-  def life_cycle_info(location_plan)
-    %{<h5><span> #{location_plan.life_cycle_max_total_hours.round(0)}</span><small> suggested (Life Cycle-#{location_plan.life_cycle})</small> </h5>}.html_safe
-  end
-
-  def life_cycle_tool_tip(location_plan)
-    "#{location_plan.life_cycle_max_total_hours.round(0)} hours suggested (Life Cycle-#{location_plan.life_cycle})"
-  end
-
-  def life_cycle_diff(location_plan, grade = nil)
-    grade ||= location_plan.chosen_grade
-    diff = location_plan.life_cycle_max_total_hours - grade.unoptimized_summed_points['hours']
-    sign = ''
-    sign = '+' if diff < 0
-    sign = '-' if diff > 0
-    sign + number_with_delimiter(diff.round(0).abs).to_s
-  end
-
   private
 
   # WARNING: Does NOT check schedule.active? or location_plan ownership!

@@ -2,14 +2,6 @@
   <div class="row">
     <div class="col-sm-4">
 
-      <% if false # TODO This needs to be injected into the grade data returned to KO %>
-        <h5 class="pull-right"><%= life_cycle_diff(@location_plan) %>
-          <span data-toggle="tooltip" title="<%= life_cycle_tool_tip(@location_plan) %>">
-        <span class="glyphicon glyphicon-question-sign"></span>
-      </span>
-        </h5>
-      <% end %>
-
       <h5 class="text-center"><span data-bind="text: points().hours()"></span><small> (<span data-bind="text: stats().wages()"></span>)</small></h5>
 
       <h5 class="text-left"><small>Efficiency grades:</small></h5>

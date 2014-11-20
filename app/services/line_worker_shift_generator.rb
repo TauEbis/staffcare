@@ -80,7 +80,7 @@ class LineWorkerShiftGenerator
   def create!
     clear_old_shifts!
 
-    # TODO: Assert that we have the values from the lifecycle or preferences
+    # TODO: Assert that we have the values from the rules
 
     days=@grade.location_plan.days
     open_times=@grade.location_plan.open_times
