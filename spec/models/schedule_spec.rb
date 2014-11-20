@@ -18,6 +18,14 @@ describe Schedule, :type => :model do
 			end
 		end
 
+		context "when a schedule has no location_plans" do
+	  	before { schedule.location_plans.delete_all }
+
+			it "should return false" do
+				expect(schedule.lps_complete?).to eq(false)
+			end
+		end
+
 		context "when all location plans are complete" do
 			it "should return true" do
 				expect(schedule.lps_complete?).to eq(true)
@@ -32,6 +40,14 @@ describe Schedule, :type => :model do
 
   	context "when a location plan in the zone is still running" do
 	  	before { schedule.location_plans.for_zone(zone).first.running! }
+
+			it "should return false" do
+				expect(schedule.zone_complete?(zone)).to eq(false)
+			end
+		end
+
+  	context "when a zone has no location_plans" do
+	  	before { schedule.location_plans.for_zone(zone).delete_all }
 
 			it "should return false" do
 				expect(schedule.zone_complete?(zone)).to eq(false)

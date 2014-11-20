@@ -117,7 +117,7 @@ class Schedule < ActiveRecord::Base
   private
 
     def check_complete(lps)
-      !lps.map(&:complete?).include?(false)
+      !lps.empty? && !lps.map(&:complete?).include?(false)
     end
 
 end
