@@ -103,7 +103,7 @@ class LocationPlan < ActiveRecord::Base
   # given the stored LocationPlan location configuration
   def build_solution_set(day)
     @_builder ||= SolutionSetBuilder.new
-    @_builder.set_up(solution_set_options(day))
+    @_builder.setup(solution_set_options(day))
     @_builder.build
   end
 
