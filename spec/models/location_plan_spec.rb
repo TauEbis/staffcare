@@ -27,14 +27,11 @@ describe LocationPlan do
 
         l = LocationPlan.find location_plan.id
         expect(l.normal).to eql([5.5, 3.2, 1.1, 7.9, 2494.2933])
-
-        #binding.pry
       end
-  end
+    end
 
 # Validations
   it { should be_valid }
-end
 
 # TODO: Test custom validations and other methods
 
