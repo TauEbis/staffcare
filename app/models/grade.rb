@@ -101,12 +101,12 @@ class Grade < ActiveRecord::Base
 
     normal_data = range.map do |i|
       num_mds = coverages[date_s][i]
-      (location_plan.normal[num_mds - 1] / 2.0).round(2)  # Div 2.0 for half hours instad of hours
+      (location_plan.normal[num_mds] / 2.0).round(2)  # Div 2.0 for half hours instad of hours
     end
 
     max_data = range.map do |i|
       num_mds = coverages[date_s][i]
-      (location_plan.max[num_mds - 1] / 2.0).round(2)  # Div 2.0 for half hours instad of hours
+      (location_plan.max[num_mds] / 2.0).round(2)  # Div 2.0 for half hours instad of hours
     end
 
     seen_normal_data = range.map do |i|

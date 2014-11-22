@@ -30,11 +30,11 @@ class LocationPlansFactory
 
   def loc_attr(location)
     attr = location.attributes.clone.slice(*LocationPlan::OPTIMIZER_FIELDS.map(&:to_s))
-    attr.merge!({location: location,
-                 open_times: location.open_times,
+    attr.merge!({location:    location,
+                 open_times:  location.open_times,
                  close_times: location.close_times,
-                 normal: location.speeds.map(&:normal),
-                 max: location.speeds.map(&:max)
+                 normal:      [0] + location.speeds.ordered.map(&:normal),
+                 max:         [0] + location.speeds.ordered.map(&:max)
                })
     attr
   end
