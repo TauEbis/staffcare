@@ -69,24 +69,24 @@ ActiveRecord::Schema.define(version: 20141122230754) do
   end
 
   create_table "location_plans", force: true do |t|
-    t.integer  "location_id",                                         null: false
-    t.integer  "schedule_id",                                         null: false
-    t.integer  "visit_projection_id",                                 null: false
+    t.integer  "location_id",                                                                 null: false
+    t.integer  "schedule_id",                                                                 null: false
+    t.integer  "visit_projection_id",                                                         null: false
     t.json     "visits"
-    t.integer  "approval_state",      default: 0,                     null: false
+    t.integer  "approval_state",                              default: 0,                     null: false
     t.integer  "chosen_grade_id"
     t.integer  "max_mds"
     t.integer  "rooms"
     t.integer  "min_openers"
     t.integer  "min_closers"
-    t.integer  "open_times",          default: [],                                 array: true
-    t.integer  "close_times",         default: [],                                 array: true
-    t.decimal "normal",              precision: 8, scale: 4, default: [], null: false, array: true
-    t.decimal "max",                 precision: 8, scale: 4, default: [], null: false, array: true
-    t.integer  "wiw_sync",            default: 0,                     null: false
-    t.datetime "created_at",          default: '2014-10-01 00:00:00', null: false
-    t.datetime "updated_at",          default: '2014-10-01 00:00:00', null: false
-    t.integer  "optimizer_state",     default: 0,                     null: false
+    t.integer  "open_times",                                  default: [],                                 array: true
+    t.integer  "close_times",                                 default: [],                                 array: true
+    t.decimal  "normal",              precision: 8, scale: 4, default: [],                    null: false, array: true
+    t.decimal  "max",                 precision: 8, scale: 4, default: [],                    null: false, array: true
+    t.integer  "wiw_sync",                                    default: 0,                     null: false
+    t.datetime "created_at",                                  default: '2014-10-01 00:00:00', null: false
+    t.datetime "updated_at",                                  default: '2014-10-01 00:00:00', null: false
+    t.integer  "optimizer_state",                             default: 0,                     null: false
     t.string   "optimizer_job_id"
     t.integer  "life_cycle_id"
     t.integer  "scribe_policy"
