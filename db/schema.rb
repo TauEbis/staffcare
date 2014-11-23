@@ -81,8 +81,6 @@ ActiveRecord::Schema.define(version: 20141122230754) do
     t.integer  "min_closers"
     t.integer  "open_times",                                  default: [],                                 array: true
     t.integer  "close_times",                                 default: [],                                 array: true
-    t.decimal  "normal",              precision: 8, scale: 4, default: [],                    null: false, array: true
-    t.decimal  "max",                 precision: 8, scale: 4, default: [],                    null: false, array: true
     t.integer  "wiw_sync",                                    default: 0,                     null: false
     t.datetime "created_at",                                  default: '2014-10-01 00:00:00', null: false
     t.datetime "updated_at",                                  default: '2014-10-01 00:00:00', null: false
@@ -94,6 +92,8 @@ ActiveRecord::Schema.define(version: 20141122230754) do
     t.integer  "ma_policy"
     t.integer  "xray_policy"
     t.integer  "am_policy"
+    t.decimal  "normal",              precision: 8, scale: 4, default: [],                    null: false, array: true
+    t.decimal  "max",                 precision: 8, scale: 4, default: [],                    null: false, array: true
   end
 
   add_index "location_plans", ["life_cycle_id"], name: "index_location_plans_on_life_cycle_id", using: :btree
