@@ -168,8 +168,8 @@ describe LocationPlan do
         location_plan.min_openers = 1
         location_plan.min_closers = 1
         location_plan.visits[day.to_s] = Array.new(28, 7)
-        location_plan.normal = [4, 8,  12, 16, 24]
-        location_plan.max    = [6, 12, 18, 24, 30]
+        location_plan.normal = [0, 4, 8,  12, 16, 24]
+        location_plan.max    = [0, 6, 12, 18, 24, 30]
       end
 
       it "should have the correct options" do
