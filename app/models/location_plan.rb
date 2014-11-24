@@ -97,26 +97,26 @@ class LocationPlan < ActiveRecord::Base
 #TODO should the am_min method be called on visits rather than VisitProjection?
   def set_solution_set_inputs(day)
     max = self.visit_projection.day_max(day)
-    self.max_mds = normal.length
+    self.max_mds = normal.length - 1
     normal.each_with_index do |speed, i|
       if speed/2 > max
-        self.max_mds= i + 1
+        self.max_mds= i
         break
       end
     end
     am_min = self.visit_projection.am_min(day)
     self.min_openers= 1
     normal.each_with_index do |speed, i|
-      if speed/2 > am_min && i > 0
-        self.min_openers= i
+      if speed/2 > am_min && i > 1
+        self.min_openers= [i - 1, 1].max
         break
       end
     end
     pm_min = self.visit_projection.pm_min(day)
     self.min_closers= 1
     normal.each_with_index do |speed, i|
-      if speed/2 > pm_min && i > 0
-        self.min_closers= i
+      if speed/2 > pm_min && i > 1
+        self.min_closers= [i - 1, 1].max
         break
       end
     end
