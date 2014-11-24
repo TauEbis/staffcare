@@ -98,15 +98,15 @@ class Grade < ActiveRecord::Base
     b = breakdowns[date_s]
     size = location_plan.visits[date_s].size
     range = (0...size)
-
+=begin
     normal_data = range.map do |i|
       num_mds = coverages[date_s][i]
-      (location_plan.normal[num_mds - 1] / 2.0).round(2)  # Div 2.0 for half hours instad of hours
+      (location_plan.normal[num_mds] / 2.0).round(2).to_f  # Div 2.0 for half hours instad of hours
     end
-
+=end
     max_data = range.map do |i|
       num_mds = coverages[date_s][i]
-      (location_plan.max[num_mds - 1] / 2.0).round(2)  # Div 2.0 for half hours instad of hours
+      (location_plan.max[num_mds] / 2.0).round(2).to_f  # Div 2.0 for half hours instad of hours
     end
 
     seen_normal_data = range.map do |i|
@@ -128,7 +128,7 @@ class Grade < ActiveRecord::Base
       slack_data: b['slack'].map{|i| i.round(2)},
       waiting_data: waiting_data,
       # penalty_data: b['penalties'].map{|i| i.round(2)},
-      normal_data: normal_data,
+      # normal_data: normal_data,
       max_data: max_data,
       x_axis: x_axis
     }

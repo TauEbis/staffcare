@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141114141451) do
+ActiveRecord::Schema.define(version: 20141122230754) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,24 +69,22 @@ ActiveRecord::Schema.define(version: 20141114141451) do
   end
 
   create_table "location_plans", force: true do |t|
-    t.integer  "location_id",                                         null: false
-    t.integer  "schedule_id",                                         null: false
-    t.integer  "visit_projection_id",                                 null: false
+    t.integer  "location_id",                                                                 null: false
+    t.integer  "schedule_id",                                                                 null: false
+    t.integer  "visit_projection_id",                                                         null: false
     t.json     "visits"
-    t.integer  "approval_state",      default: 0,                     null: false
+    t.integer  "approval_state",                              default: 0,                     null: false
     t.integer  "chosen_grade_id"
     t.integer  "max_mds"
     t.integer  "rooms"
     t.integer  "min_openers"
     t.integer  "min_closers"
-    t.integer  "open_times",          default: [],                                 array: true
-    t.integer  "close_times",         default: [],                                 array: true
-    t.string   "normal",              default: [],                    null: false, array: true
-    t.string   "max",                 default: [],                    null: false, array: true
-    t.integer  "wiw_sync",            default: 0,                     null: false
-    t.datetime "created_at",          default: '2014-10-01 00:00:00', null: false
-    t.datetime "updated_at",          default: '2014-10-01 00:00:00', null: false
-    t.integer  "optimizer_state",     default: 0,                     null: false
+    t.integer  "open_times",                                  default: [],                                 array: true
+    t.integer  "close_times",                                 default: [],                                 array: true
+    t.integer  "wiw_sync",                                    default: 0,                     null: false
+    t.datetime "created_at",                                  default: '2014-10-01 00:00:00', null: false
+    t.datetime "updated_at",                                  default: '2014-10-01 00:00:00', null: false
+    t.integer  "optimizer_state",                             default: 0,                     null: false
     t.string   "optimizer_job_id"
     t.integer  "life_cycle_id"
     t.integer  "scribe_policy"
@@ -94,6 +92,8 @@ ActiveRecord::Schema.define(version: 20141114141451) do
     t.integer  "ma_policy"
     t.integer  "xray_policy"
     t.integer  "am_policy"
+    t.decimal  "normal",              precision: 8, scale: 4, default: [],                    null: false, array: true
+    t.decimal  "max",                 precision: 8, scale: 4, default: [],                    null: false, array: true
   end
 
   add_index "location_plans", ["life_cycle_id"], name: "index_location_plans_on_life_cycle_id", using: :btree

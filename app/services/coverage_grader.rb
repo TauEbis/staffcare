@@ -63,10 +63,10 @@ class CoverageGrader
 	def penalty_with_set_visits(coverage)
 
 		# Physician capacity to see patients
-		normal_capacity = coverage.map { |n| @normal_speeds[n-1]/2 }
-		max_capacity = coverage.map { |n| @max_speeds[n-1]/2 }
+		normal_capacity = coverage.map { |n| @normal_speeds[n]/2 }
+		max_capacity = coverage.map { |n| @max_speeds[n]/2 }
 		@penalty_slack_vector = nil
-		@penalty_slack_vector = coverage.map { |n| (n) * @penalty_slack / @normal_speeds[n-1] }
+		@penalty_slack_vector = coverage.map { |n| (n) * @penalty_slack / @normal_speeds[n] }
 
 		# Reset the initial conditions
 		@queue[0], @thirty_min_wait[0], @greater_than_thirty_min_wait[0],

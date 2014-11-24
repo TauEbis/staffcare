@@ -104,10 +104,10 @@ class Analysis
           @_totals[:seen]     += b['seen'].sum
           @_totals[:queue]    += b['queue'].sum
           @_totals[:turbo]    += b['turbo'].sum
-          @_totals[:penalty]  += b['penalties'].sum # b['penalty'] migh tbe faster, RB????
+          @_totals[:penalty]  += b['penalties'].sum # Would b['penalty'] be faster? -RB
           s = b['slack'].sum
           @_totals[:slack]    += s
-          @_totals[:wasted_time] += s * 60 / g.location_plan.normal[0] # in minutes -- will need to change to normal[1] after refactor
+          @_totals[:wasted_time] += (s * 60 / g.location_plan.normal[1]).to_f # in minutes
         end
       end
 

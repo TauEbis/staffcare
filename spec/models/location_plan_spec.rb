@@ -20,6 +20,19 @@ describe LocationPlan do
     it { should respond_to(:optimizer_job_id) }
     it { should respond_to(:open_times) }
 
+    describe "normal attribute" do
+      it "should save a array with a float" do
+        location_plan.normal = [0.0, 5.5, 3.2, 1.1, 7.9, 2494.2933]
+        expect(location_plan.save).to eq(true)
+
+        l = LocationPlan.find location_plan.id
+        expect(l.normal).to eql([0.0, 5.5, 3.2, 1.1, 7.9, 2494.2933])
+      end
+    end
+
+# Validations
+  it { should be_valid }
+
 # TODO: Test custom validations and other methods
 
 # Delegated Methods
