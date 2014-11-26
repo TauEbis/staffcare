@@ -4,6 +4,19 @@ describe SolutionSetBuilder, :type => :service do
 
 	let(:builder) 			{ SolutionSetBuilder.new }
 
+	describe "#setup" do
+
+		it "should throw an error when min_openers is zero" do
+			options = {open: 8, close: 22, max_mds: 1, min_openers: 0, min_closers: 1}
+			expect{builder.setup(options)}.to raise_error(ArgumentError, "min_openers must be greater than 0")
+		end
+
+		it "should throw an error when min_closers is zero" do
+			options = {open: 8, close: 22, max_mds: 1, min_openers: 1, min_closers: 0}
+			expect{builder.setup(options)}.to raise_error(ArgumentError, "min_closers must be greater than 0")
+		end
+	end
+
 	describe "building a simple solution set" do
 
 		before do

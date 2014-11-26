@@ -9,6 +9,9 @@ class SolutionSetBuilder
     @min_openers = options[:min_openers]
     @min_closers = options[:min_closers]
 
+    raise ArgumentError, 'min_openers must be greater than 0' unless @min_openers > 0
+    raise ArgumentError, 'min_closers must be greater than 0' unless @min_closers > 0
+
 # Derived instance variables
     @hours_open = @close - @open # hours in the day
     @min_shift = (@hours_open * 0.5).round # shortest allowable shift

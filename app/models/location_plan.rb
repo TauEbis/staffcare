@@ -109,36 +109,29 @@ class LocationPlan < ActiveRecord::Base
 
   private
 
-    #TODO should the am_min method be called on visits rather than VisitProjection?
     def recalculate_solution_set_options(day)
+
+      top = [max_mds, normal.length-1].min
+
       # Find ceilng for max mds using visits and speeds
-      max_half_hourly_visitors = day_max(day)
-      day_max_mds = normal.length - 1
-      normal.each_with_index do |speed, i|
-        if speed/2 > max_half_hourly_visitors
-          day_max_mds = i
-          break
-        end
+      max_hourly_visitors = 2 * day_max(day)
+      day_max_mds = max_mds
+      top.downto(1).each do |x|
+        normal[x] > max_hourly_visitors ? day_max_mds = x : break
       end
 
       # Find floor for min_openers using visits and speeds
-      am_min = am_min(day)
-      day_min_openers = self.min_openers
-      normal.each_with_index do |speed, i|
-        if speed/2 > am_min && i > 1
-          day_min_openers= [i - 1, 1].max
-          break
-        end
+      am_min_hourly_visitors = 2 * am_min(day)
+      day_min_openers = min_openers
+      (min_openers..top).each do |x|
+        normal[x] < am_min_hourly_visitors ? day_min_openers = x : break
       end
 
-      # Find floor for min_closers using visits and speeds
-      pm_min = pm_min(day)
-      day_min_closers = 1
-      normal.each_with_index do |speed, i|
-        if speed/2 > pm_min && i > 1
-          day_min_closers= [i - 1, 1].max
-          break
-        end
+      # Find floor for max_closers using visits and speeds
+      pm_min_hourly_visitors = 2 * pm_min(day)
+      day_min_closers = min_closers
+      (min_closers..top).each do |x|
+        normal[x] < pm_min_hourly_visitors ? day_min_closers = x : break
       end
 
       {open: open_times[day.wday()], close: close_times[day.wday()], max_mds: day_max_mds, min_openers: day_min_openers, min_closers: day_min_closers}
@@ -159,16 +152,16 @@ class LocationPlan < ActiveRecord::Base
       visits[day.to_s][(length/2)..-1].min
     end
 
-    def sum
-      visits.each_value.inject(0) { | total, v | total + v.sum }
+    def monthly_visits
+      @_monthly_visits ||= visits.each_value.inject(0) { | total, v | total + v.sum }
     end
 
     def daily_avg
-      sum / days.size
+      @_daily_avg ||= monthly_visits / days.size
     end
 
-    def week_avg
-      daily_avg * 7
+    def weekly_avg
+      @_weekly_avg ||= daily_avg * 7
     end
 
 end

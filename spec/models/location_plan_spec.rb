@@ -193,4 +193,33 @@ describe LocationPlan do
 
   end
 
+# Sanity test some private methods (these methods handle only visits level logic and might be extracted in the future)
+  describe "private methods" do
+    let(:visits) { location_plan.visits }
+    let(:day)   { location_plan.days.first }
+
+    describe "#day_max" do
+      it "should return the max half hourly visitors" do
+        visits[day.to_s][0] = 100
+        expect(location_plan.send(:day_max, day)).to eq(100)
+      end
+    end
+
+    describe "#am_min" do
+      it "should return the max half hourly visitors" do
+        visits[day.to_s][0] = 0.1
+        visits[day.to_s][-1] = 0
+        expect(location_plan.send(:am_min, day)).to eq(0.1)
+      end
+    end
+
+    describe "#pm_min" do
+      it "should return the max half hourly visitors" do
+        visits[day.to_s][0] = 0
+        visits[day.to_s][-1] = 0.1
+        expect(location_plan.send(:pm_min, day)).to eq(0.1)
+      end
+    end
+  end
+
 end
