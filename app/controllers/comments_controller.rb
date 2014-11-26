@@ -5,7 +5,7 @@ class CommentsController < ApplicationController
   respond_to :json
 
   def index
-    @comments = @location_plan.comments.ordered.page params[:page]
+    @comments = @location_plan.comments.ordered.with_users.page params[:page]
   end
 
   def new
