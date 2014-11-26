@@ -17,4 +17,8 @@ class Comment < ActiveRecord::Base
   def user_name
     user.try(:label)
   end
+
+  def user_avatar_url
+    user.try(:avatar_url)
+  end
 end

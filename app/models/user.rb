@@ -44,4 +44,9 @@ class User < ActiveRecord::Base
     end
   end
 
+  def avatar_url
+    e = email.strip.downcase
+    "//robohash.org/#{Digest::MD5.hexdigest(e)}.png?size=75x75&gravatar=hashed"
+  end
+
 end
