@@ -33,7 +33,7 @@ class Grade < ActiveRecord::Base
   end
 
 
-  # shifts comes in as [{"id"=>612, "starts"=>8, "ends"=>12, "hours"=>4, "position_id"=>1}, {"id"=>613, "starts"=>12, "ends"=>20, "hours"=>8, "position_id"=>1}]
+  # shifts comes in as [{"id"=>612, "starts"=>8, "ends"=>12, "hours"=>4, "position_key"=>"md"}, {"id"=>613, "starts"=>12, "ends"=>20, "hours"=>8, "position_key"=>"md"}]
   def update_shift!(date, raw_shifts)
     date_s = date.to_s
 
