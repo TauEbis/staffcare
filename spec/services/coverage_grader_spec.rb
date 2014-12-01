@@ -1,26 +1,108 @@
 require 'spec_helper'
 
 describe CoverageGrader, :type => :service do
-	let (:grader) { CoverageGrader.new(md_rate: 4.25, penalty_slack: 2.5, penalty_30min: 1, penalty_60min: 4, penalty_90min: 16, penalty_eod_unseen: 4) }
-	let (:coverage) { ( Array.new(4,2) + Array.new(20,3) + Array.new(4, 2) ) }
-	let (:visits ) { [3.08, 4.54, 4.97, 3.17, 3.85, 2.74, 3.60, 3.85, 3.08, 3.34, 3.51, 3.60, 3.17, 3.60, 3.68, 2.57, 3.00, 3.08, 4.63, 3.51, 4.37, 4.28, 3.25, 2.48, 2.48, 2.14, 1.45, 0.77] }
-	let (:penalty) { grader.penalty(coverage, visits) }
+	let (:grader) { CoverageGrader.new( penalty_slack: 180, penalty_30min: 10,
+																			penalty_60min: 100, penalty_90min: 300, penalty_eod_unseen: 40, penalty_turbo: 60,
+																			normal: [0, 4, 8, 12, 16, 20], max: [0, 6, 12, 18, 24, 30]) }
 
-	subject { grader }
+	describe "#penalty" do
+		describe "sanity check" do
 
-		it { should respond_to(:penalty) }
-		it { should respond_to(:set_visits=) }
-		it { should respond_to(:penalty_with_set_visits) }
-=begin
-		describe "#set_visits" do
+			describe "single coverage" do
+				let (:coverage) { Array.new(28,1) }
 
-			before { grader.set_visits=visits }
+				it "can see 2 patients per half hour with no penalty" do
+					visits = Array.new(28,2)
+					expect( grader.penalty(coverage, visits) ).to eq(0)
+				end
+			end
 
-			context "when penalty_with_set_vistis is called it should equal the penalty" do
-				let (:penalty_set_visits) { grader.penalty_with_set_visits(coverage) }
-				specify { expect(penalty_set_visits).to eq(penalty) }
+			describe "double coverage" do
+				let (:coverage) { Array.new(28,2) }
+
+				it "can see 4 patients per half hour with no penalty" do
+					visits = Array.new(28,4)
+					expect( grader.penalty(coverage, visits) ).to eq(0)
+				end
 			end
 
 		end
-=end
+
+		describe "error handling" do
+			let (:coverage) { Array.new(29,2) }
+
+			it "throws an error if visits and coverage have different lengths" do
+				visits = Array.new(28,4)
+				expect{grader.penalty(coverage, visits) }.to raise_error(ArgumentError, "timeslots for visits and coverage must be equal")
+			end
+		end
+
+		describe "running without visits a second time" do
+			let (:coverage) { Array.new(28,2) }
+
+			it "should return the same result" do
+				visits = Array.new(28,4)
+				expected = grader.penalty(coverage, visits)
+				expect( grader.penalty(coverage) ).to eq(expected)
+			end
+		end
+
+	end
+
+	describe "#full_grade" do
+		describe "breakdown" do
+			let (:coverage) { Array.new(28,1) }
+
+			it "single coverage with full turbo and always 1 visitor in queue" do
+				visits = [4] + Array.new(27,3)
+				act_breakdown, act_points = grader.full_grade(coverage, visits)
+
+				expect( act_breakdown[:queue] ).to eq( [0] + Array.new(28, 1) )
+				expect( act_breakdown[:seen] ).to eq( Array.new(28, 3) )
+				expect( act_breakdown[:turbo] ).to eq( Array.new(28, 1) )
+				expect( act_breakdown[:slack] ).to eq( Array.new(28, 0) )
+				expect( act_breakdown[:penalties] ).to eq( [60] + Array.new(27, 70) + [40] )
+				expect( act_breakdown[:penalty] ).to eq( 60 + 27 * 70 + 40 )
+			end
+
+			it "single coverage with 3 visitors has constant slack and no turbo or queue" do
+				visits = Array.new(28,1.5)
+				act_breakdown, act_points = grader.full_grade(coverage, visits)
+
+				expect( act_breakdown[:queue] ).to eq( Array.new(29, 0) )
+				expect( act_breakdown[:seen] ).to eq( Array.new(28, 1.5) )
+				expect( act_breakdown[:turbo] ).to eq( Array.new(28, 0) )
+				expect( act_breakdown[:slack] ).to eq( Array.new(28, 0.5) )
+				expect( act_breakdown[:penalties] ).to eq( Array.new(28, 180/4.0/2) + [0] )
+				expect( act_breakdown[:penalty] ).to eq( 28 * 180/8.0 )
+			end
+		end
+
+		describe "points" do
+			let (:coverage) { Array.new(28,1) }
+
+			it "single coverage with full turbo and always 1 visitor in queue" do
+				visits = [4] + Array.new(27,3)
+				act_breakdown, act_points = grader.full_grade(coverage, visits)
+
+				expect( act_points[:md_sat] ).to eq( 28*60*1 + 1*40 )
+				expect( act_points[:patient_sat] ).to eq( 27*10 )
+				expect( act_points[:cost] ).to eq( 0*180 )
+				expect( act_points[:total] ).to eq( 28*60*1 + 1*40 + 27*10 + 0*180 )
+				expect( act_points[:hours] ).to eq( 28*0.5 )
+			end
+
+			it "single coverage with 3 visitors has constant slack and no turbo or queue" do
+				visits = Array.new(28,1.5)
+				act_breakdown, act_points = grader.full_grade(coverage, visits)
+
+				expect( act_points[:md_sat] ).to eq( 28*0 + 0*40 )
+				expect( act_points[:patient_sat] ).to eq( 27*0 )
+				expect( act_points[:cost] ).to eq( 28*180/4*0.5 )
+				expect( act_points[:total] ).to eq( 28*0 + 0*40 + 27*0 + 28*180/4*0.5 )
+				expect( act_points[:hours] ).to eq( 28*0.5 )
+			end
+		end
+	end
+
 end
