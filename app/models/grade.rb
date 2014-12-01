@@ -68,14 +68,8 @@ class Grade < ActiveRecord::Base
     breakdowns_will_change!
     points_will_change!
 
-    grader ||= CoverageGrader.new(self.location_plan.schedule.grader_weights)
-    grader.set_speeds self.location_plan.normal, self.location_plan.max
-    day_visits = location_plan.visits[date_s]
-
-    grader.penalty(self.coverages[date_s], day_visits)
-
-    self.breakdowns[date_s] = grader.breakdown
-    self.points[date_s] = grader.points
+    grader ||= CoverageGrader.new(location_plan.grader_opts)
+    self.breakdowns[date_s], self.points[date_s] = grader.full_grade(coverages[date_s], location_plan.visits[date_s])
   end
 
   def reset_chosen_grade
