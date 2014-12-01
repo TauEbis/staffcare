@@ -68,7 +68,7 @@ class Schedule < ActiveRecord::Base
   end
 
   def grader_weights
-    @_grader_weights ||= self.attributes.slice(*OPTIMIZER_FIELDS.map(&:to_s)).symbolize_keys
+    @_grader_weights ||= self.attributes.slice(*(OPTIMIZER_FIELDS-[:oren_shift]).map(&:to_s)).symbolize_keys
   end
 
   def analysis(zone = nil)

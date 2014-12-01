@@ -94,6 +94,10 @@ class LocationPlan < ActiveRecord::Base
     end
   end
 
+  def grader_opts
+    schedule.grader_weights.merge({normal: normal, max: max})
+  end
+
   def solution_set_options(day)
     @_ss_options ||= {}
     @_ss_options[day.to_s] ||= recalculate_solution_set_options(day)

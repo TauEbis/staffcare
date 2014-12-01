@@ -34,7 +34,7 @@ describe LocationPlanOptimizer, :type => :service do
 			expect(grade.breakdowns.values.first).to eq(dummy_grade.breakdowns.values.first)
 		end
 
-		it "it will create the correct pointss" do
+		it "it will create the correct points" do
 			expect(grade.points.values.first).to eq(dummy_grade.points.values.first)
 		end
 
