@@ -4,11 +4,10 @@ class LocationPlanOptimizerWorker
 
   sidekiq_options retry: false
 
-  def perform(location_plan_id, opts={})
+  def perform(location_plan_id)
     at 0, "Beginning"
 
     location_plan = LocationPlan.find(location_plan_id)
-    rerun = location_plan.complete? # for updates
     location_plan.running!
 
     begin
@@ -23,10 +22,6 @@ class LocationPlanOptimizerWorker
         num += 1
         at num, "Optimizing"
       }
-
-      # TODO: After optimization we should generate shift coverages!
-
-      # TODO: Bubble up Points to higher levels for cached viewing
 
       # TODO: Copy coverage from previous month and grade!
 

@@ -8,10 +8,10 @@ FactoryGirl.define do
     max_mds             3
     min_openers         1
     min_closers         1
-    open_times          [8,8,8,8,8,8,8]
-    close_times         [22,22,22,22,22,22,22]
-    normal              [0, 4, 4, 4, 4, 4]
-    max                 [0, 6, 6, 6, 6, 6]
+    open_times          { [8, 8, 8, 8, 8, 8, 8] }
+    close_times         { [22, 22, 22, 22, 22, 22, 22] }
+    normal              { [0, 4, 8, 12, 16, 24] }
+    max                 { [0, 6, 12, 18, 24, 30] }
     optimizer_state     :complete
 
     # assigns a chosen grade (and creates one if necessary)

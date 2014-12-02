@@ -16,57 +16,36 @@ class CoverageGrader
 
 		@penalty_eod_unseen = weights[:penalty_eod_unseen].to_i # penalty weight for patient not getting seen by end of day
 
+		@normal_speeds = weights[:normal].map(&:to_f) # Normal physician work rate for different team sizes
+
+		@max_speeds = weights[:max].map(&:to_f) # Max physician worl rate for different team sizes
+
 		# Derived Constants
 
 		@penalty_60min_to_90min = @penalty_90min - @penalty_60min
 
 	end
 
-	def penalty(coverage, day_visits)
-		self.set_visits= day_visits
-		penalty_with_set_visits(coverage)
-  end
-
-  def breakdown
-    {
-      queue: @queue,
-      seen: @seen,
-      turbo: @turbo,
-      slack: @slack,
-      penalties: @penalties,
-      penalty: @total_penalty
-    }
-  end
-
-  def points
-		{
-			total: total_score,
-			md_sat: md_sat_score,
-			patient_sat: patient_sat_score,
-			cost: cost_score,
-      hours: @hours_used
-		}
-  end
-
-	def set_speeds normal, max
-		@normal_speeds = normal.map(&:to_f)
-		@max_speeds = max.map(&:to_f)
+	def full_grade(coverage, visits=nil)
+		penalty(coverage, visits)
+		return breakdown, points
 	end
 
-	def set_visits= (raw_visits)
-		@visits = raw_visits
-		@time_slots = @visits.size unless @visits.nil? # @time_slots is half hours slots in the work day
-		@time_slots_range = (0...@time_slots)
-		build_arrays
-	end
+	def penalty(coverage, visits=nil)
 
-	def penalty_with_set_visits(coverage)
-
-		# Physician capacity to see patients
+		# Set provider capacity to see patients
 		normal_capacity = coverage.map { |n| @normal_speeds[n]/2 }
 		max_capacity = coverage.map { |n| @max_speeds[n]/2 }
-		@penalty_slack_vector = nil
 		@penalty_slack_vector = coverage.map { |n| (n) * @penalty_slack / @normal_speeds[n] }
+
+		# Set visits and build arrays that depend on visits size
+		if visits
+			@visits = visits
+			@time_slots = @visits.try(:size) # @time_slots is the number of half hours slots in the work day
+			raise ArgumentError, 'timeslots for visits and coverage must be equal' unless @time_slots == coverage.size
+			@time_slots_range = (0...@time_slots)
+			build_arrays
+		end
 
 		# Reset the initial conditions
 		@queue[0], @thirty_min_wait[0], @greater_than_thirty_min_wait[0],
@@ -116,9 +95,32 @@ class CoverageGrader
 			@penalties=Array.new(@time_slots+1) # penalty per thirty min time slot
 		end
 
-		def total_score
-			@total_penalty
-		end
+		# Methods used by #full_grade
+	  def breakdown
+	    {
+	      queue: @queue,
+	      seen: @seen,
+	      turbo: @turbo,
+	      slack: @slack,
+	      penalties: @penalties,
+	      penalty: @total_penalty
+	    }
+	  end
+
+	  def points
+			{
+				total: total_score,
+				md_sat: md_sat_score,
+				patient_sat: patient_sat_score,
+				cost: cost_score,
+	      hours: @hours_used
+			}
+	  end
+
+		# Methods used to generate points
+			def total_score
+				@total_penalty
+			end
 
 		def md_sat_score
 			score = @turbo.inject(0) { | sum, x | sum + @penalty_turbo * x }

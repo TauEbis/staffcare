@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  resources :life_cycles, except: [:show]
 
   resources :pages
 

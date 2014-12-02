@@ -11,10 +11,8 @@ class LocationPlanOptimizer
     # are now just variables here
     # If we were in a side-effect free functional language, these "coulda been constants"
 
-    grader = CoverageGrader.new(@location_plan.schedule.grader_weights) # Might be better as a dependency injection / instance vsariable
-    grader.set_speeds @location_plan.normal, @location_plan.max
+    grader = CoverageGrader.new(@location_plan.grader_opts) # Might be better as a dependency injection / instance variable
     @picker = CoveragePicker.new(grader)
-
     @loader = SpeedySolutionSetLoader.new
     @sc = ShiftCoverage.new
   end

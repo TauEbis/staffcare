@@ -53,22 +53,27 @@ class SchedulesController < ApplicationController
     if @schedule.update(schedule_params)
 
       if params[:editing]
-        @schedule.location_plans.each do |lp|
-          lp.grades.clear
-        end
-        opts = { skip_locations: !params[:load_locations], skip_visits: !params[:load_visits] }
+        lp_ids = @schedule.location_plans.pluck(:id)
+        grade_ids = Grade.where(location_plan_id: lp_ids).pluck(:id)
+        shift_ids = Shift.where(grade_id: grade_ids).pluck(:id)
+        Grade.where(id: grade_ids).delete_all
+        Shift.where(id: shift_ids).delete_all
+
+        @schedule.location_plans.map(&:not_run!)
+
+        opts = { 'load_locations' => params[:load_locations], 'load_visits' => params[:load_visits] } # sidekiq / redis don't support symbols in arguments
         job_id = ScheduleOptimizerWorker.perform_async(@schedule.id, opts)
         @schedule.update_attribute( :optimizer_job_id, job_id )
-        redirect_to schedules_url, notice: 'Schedule was successfully updated. Optimization is now running.'
 
+        redirect_to schedules_url, notice: 'Schedule was successfully updated. Optimization is now running.'
       else
 
         if params[:notify_managers]
           TodoNotifier.notify!
           @schedule.update_attribute(:active_notices_sent_at, Time.now.utc)
         end
-        redirect_to (flash[:dashboard] ? root_path: @schedule), notice: 'Schedule dealines were successfully set.'
 
+        redirect_to (flash[:dashboard] ? root_path: @schedule), notice: 'Schedule deadlines were successfully set.'
       end
 
     else

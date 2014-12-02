@@ -7,7 +7,7 @@ class Grade < ActiveRecord::Base
   belongs_to :user
   has_many :shifts, dependent: :destroy
   has_many :rules
-  #belongs_to :ma_rule, class_name: 'Rule' # Do we want this ability or is grade.rules.ma.first OK?
+  #belongs_to :ma_rule, class_name: 'Rule' # Do we require this functionality or is grade.rules.ma.first OK?
 
   attr_reader :source_grade_id
 
@@ -33,7 +33,7 @@ class Grade < ActiveRecord::Base
   end
 
 
-  # shifts comes in as [{"id"=>612, "starts"=>8, "ends"=>12, "hours"=>4, "position_id"=>1}, {"id"=>613, "starts"=>12, "ends"=>20, "hours"=>8, "position_id"=>1}]
+  # shifts comes in as [{"id"=>612, "starts"=>8, "ends"=>12, "hours"=>4, "position_key"=>"md"}, {"id"=>613, "starts"=>12, "ends"=>20, "hours"=>8, "position_key"=>"md"}]
   def update_shift!(date, raw_shifts)
     date_s = date.to_s
 
@@ -68,14 +68,8 @@ class Grade < ActiveRecord::Base
     breakdowns_will_change!
     points_will_change!
 
-    grader ||= CoverageGrader.new(self.location_plan.schedule.grader_weights)
-    grader.set_speeds self.location_plan.normal, self.location_plan.max
-    day_visits = location_plan.visits[date_s]
-
-    grader.penalty(self.coverages[date_s], day_visits)
-
-    self.breakdowns[date_s] = grader.breakdown
-    self.points[date_s] = grader.points
+    grader ||= CoverageGrader.new(location_plan.grader_opts)
+    self.breakdowns[date_s], self.points[date_s] = grader.full_grade(coverages[date_s], location_plan.visits[date_s])
   end
 
   def reset_chosen_grade
