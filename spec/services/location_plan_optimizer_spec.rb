@@ -21,7 +21,7 @@ describe LocationPlanOptimizer, :type => :service do
 			lp_optimizer.optimize!
 		end
 
-		it "it will create a grade and make it choosen and more" do
+		it "it will create a grade and make it choosen" do
 			expect(location_plan.grades.size).to eq(1)
 			expect(grade).to eq(location_plan.chosen_grade)
 		end
