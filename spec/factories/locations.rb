@@ -13,6 +13,21 @@ FactoryGirl.define do
     managers                        1
     assistant_managers              1
 
+    sun_open                        480
+    sun_close                       1320
+    mon_open                        480
+    mon_close                       1320
+    tue_open                        480
+    tue_close                       1320
+    wed_open                        480
+    wed_close                       1320
+    thu_open                        480
+    thu_close                       1320
+    fri_open                        480
+    fri_close                       1320
+    sat_open                        480
+    sat_close                       1320
+
     wiw_id                          '153524'
 
     after(:build)                   { |location| location.speeds << FactoryGirl.build(:speed, location: location) }
