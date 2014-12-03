@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141122230754) do
+ActiveRecord::Schema.define(version: 20141203040449) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,32 +48,32 @@ ActiveRecord::Schema.define(version: 20141122230754) do
     t.string   "name"
     t.text     "days"
     t.string   "uid"
-    t.datetime "created_at", default: '2014-10-01 00:00:00', null: false
-    t.datetime "updated_at", default: '2014-10-01 00:00:00', null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   add_index "heatmaps", ["uid"], name: "index_heatmaps_on_uid", using: :btree
 
   create_table "location_plans", force: true do |t|
-    t.integer  "location_id",                                                                 null: false
-    t.integer  "schedule_id",                                                                 null: false
-    t.integer  "visit_projection_id",                                                         null: false
+    t.integer  "location_id",                                              null: false
+    t.integer  "schedule_id",                                              null: false
+    t.integer  "visit_projection_id",                                      null: false
     t.json     "visits"
-    t.integer  "approval_state",                              default: 0,                     null: false
+    t.integer  "approval_state",                              default: 0,  null: false
     t.integer  "chosen_grade_id"
     t.integer  "max_mds"
     t.integer  "rooms"
     t.integer  "min_openers"
     t.integer  "min_closers"
-    t.integer  "open_times",                                  default: [],                                 array: true
-    t.integer  "close_times",                                 default: [],                                 array: true
-    t.integer  "wiw_sync",                                    default: 0,                     null: false
-    t.datetime "created_at",                                  default: '2014-10-01 00:00:00', null: false
-    t.datetime "updated_at",                                  default: '2014-10-01 00:00:00', null: false
-    t.integer  "optimizer_state",                             default: 0,                     null: false
+    t.integer  "open_times",                                  default: [],              array: true
+    t.integer  "close_times",                                 default: [],              array: true
+    t.integer  "wiw_sync",                                    default: 0,  null: false
+    t.datetime "created_at",                                               null: false
+    t.datetime "updated_at",                                               null: false
+    t.integer  "optimizer_state",                             default: 0,  null: false
     t.string   "optimizer_job_id"
-    t.decimal  "normal",              precision: 8, scale: 4, default: [],                    null: false, array: true
-    t.decimal  "max",                 precision: 8, scale: 4, default: [],                    null: false, array: true
+    t.decimal  "normal",              precision: 8, scale: 4, default: [], null: false, array: true
+    t.decimal  "max",                 precision: 8, scale: 4, default: [], null: false, array: true
   end
 
   create_table "locations", force: true do |t|
@@ -131,9 +131,9 @@ ActiveRecord::Schema.define(version: 20141122230754) do
   create_table "patient_volume_forecasts", force: true do |t|
     t.date     "start_date"
     t.date     "end_date"
-    t.json     "volume_by_location", default: {},                    null: false
-    t.datetime "created_at",         default: '2014-10-01 00:00:00', null: false
-    t.datetime "updated_at",         default: '2014-10-01 00:00:00', null: false
+    t.json     "volume_by_location", default: {}, null: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
   end
 
   create_table "positions", force: true do |t|
