@@ -1,7 +1,7 @@
 class ReportServerIngest < ActiveRecord::Base
   validates :end_date, presence: true
   validates :start_date, presence: true
-  validates :data, presence: true 
+  validates :data, presence: true
 
   after_initialize :init
 
@@ -32,14 +32,13 @@ class ReportServerIngest < ActiveRecord::Base
     heatmaps = Hash.new
     records = JSON.parse(self.data)
     records.each do |record|
-       self.add_record(record['Name'], record['ServiceSiteUid'], 
+       self.add_record(record['Name'], record['ServiceSiteUid'],
                        record['VisitDay'], record['VisitHour'], record['VisitCount'])
     end
-      
+
     @locations.each do |location, record|
-      heatmap = Heatmap.new
-      heatmap.uid = record.uid
-      if granularity == 15 
+      heatmap = Heatmap.where(uid: record.uid).first_or_initialize
+      if granularity == 15
         Date::DAYNAMES.each do |day|
           record.get_day(day).keys.sort.each do |hour|
             heatmap.set(day, hour, record.get_visits(day, hour) / record.total_visits)
@@ -47,7 +46,7 @@ class ReportServerIngest < ActiveRecord::Base
         end
       elsif granularity == 30
         Date::DAYNAMES.each do |day|
-          hours = record.get_day(day).keys.sort.each_slice(2) do |hour1, hour2| 
+          hours = record.get_day(day).keys.sort.each_slice(2) do |hour1, hour2|
             total = record.get_visits(day, hour1) + record.get_visits(day, hour2)
             heatmap.set(day, hour1, total / record.total_visits)
           end
