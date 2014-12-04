@@ -54,6 +54,50 @@ describe SolutionSetBuilder, :type => :service do
 		end
 	end
 
+	describe "correctly handles the min shift for a six hour day" do
+
+		before do
+			options = {open: 10, close: 16, max_mds: 2, min_openers: 1, min_closers: 1}
+			builder.setup(options)
+		end
+
+		it "should return the correct coverage" do
+			set = [ Array.new(12,1), Array.new(12,2) ]
+			expect(builder.build).to eq(set)
+		end
+	end
+
+	describe "odd day length: correctly handles the min shift for an seven hour day" do
+
+		before do
+			options = {open: 10, close: 17, max_mds: 2, min_openers: 1, min_closers: 1}
+			builder.setup(options)
+		end
+
+		it "should return the correct coverage" do
+			set = [ (Array.new(12,2) + [1,1]), Array.new(14, 2), Array.new(14, 1), ([1,1] + Array.new(12,2)), ([1,1] + Array.new(10,2) + [1,1])]
+			expect(Set.new(builder.build)).to eq(Set.new(set))
+		end
+	end
+
+	describe "correctly handles the min shift for an eight hour day" do
+
+		before do
+			options = {open: 10, close: 18, max_mds: 2, min_openers: 1, min_closers: 1}
+			builder.setup(options)
+		end
+
+		it "should return the correct coverage" do
+			terse_list = [ [10, 10, 16, 18], [10, 10, 17, 18], [10, 10, 18, 18],
+										 [10, 11, 16, 18], [10, 11, 17, 18], [10, 11, 18, 18],
+										 [10, 12, 16, 18], [10, 12, 17, 18], [10, 12, 18, 18],
+										 [10, 14, 14, 18] 																		 ]
+
+			set = terse_list.map{ |terse| builder.send(:expand_coverage, terse) }
+			expect(Set.new(builder.build)).to eq(Set.new(set))
+		end
+	end
+
 # Sanity testing private methods
 	describe "#expand_coverage" do
 		before do
