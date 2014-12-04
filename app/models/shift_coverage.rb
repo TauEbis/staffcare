@@ -1,8 +1,7 @@
 class ShiftCoverage
 
-	SCORES 		= 			{ 12 =>	[0,0,0,0,0,0,5, 10, 20, 15, 30, 18, 25        ],
-		  								14 => [0,0,0,0,0,0,0, 10, 15, 14, 25, 20, 30,  1,  5] }
-#						hours in day =>	[0,1,2,3,4,5,6,  7,  8,  9, 10, 11, 12, 13, 14] scores for each shift length
+	SCORES 		= 					[0,0,0,0,0,0,0, 5, 10, 25, 30, 15, 20,  5,  10]
+#					hours in day:	[0,1,2,3,4,5,6,  7,  8,  9, 10, 11, 12, 13, 14] scores for each shift length
 
 
   # TODO This needs some testing!
@@ -83,9 +82,7 @@ class ShiftCoverage
 		end
 
 		def score(set)
-			lengths = set.map{ |shift| shift[1] - shift[0] }
-			result = lengths.map{ |l| SCORES[(@closes_at - @opens_at)][l] }.sum
-			result
+			set.map{ |shift| SCORES[ shift[1] - shift[0] ] }.sum / set.size.to_f
 		end
 
 		def coverage_opens_closes(coverage)

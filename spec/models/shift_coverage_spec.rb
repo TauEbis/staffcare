@@ -28,4 +28,11 @@ RSpec.describe ShiftCoverage, :type => :model do
       expect( shifts.first.ends_at.hour ).to eql(18)
     end
   end
+
+  describe "sanity test private methods" do
+    it "scores correctly" do
+      set = [ [10, 18], [13, 22] ]
+      expect(sc.send(:score, set)). to eq(35/2.0 )
+    end
+  end
 end
