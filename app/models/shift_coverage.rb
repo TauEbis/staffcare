@@ -38,6 +38,9 @@ class ShiftCoverage
     @time = day.in_time_zone
 		@opens_at = location_plan.open_times[day.wday]
 		@closes_at = location_plan.close_times[day.wday]
+
+		hours_open = @closes_at - @opens_at
+		@min_shift = [(hours_open * 0.5).round, 6].max
 		@midday = ( @opens_at + @closes_at )/2
 
   	shifts = pick_best(equiv_shifts_for(coverage))
@@ -154,7 +157,7 @@ class ShiftCoverage
 			result = result.reject do |set|
 				reject = false
 				set.each do |shift|
-					reject = true if (shift[1]-shift[0] < (@closes_at - @opens_at)/2)
+					reject = true if (shift[1]-shift[0] < @min_shift)
 				end
 				reject
 			end
@@ -162,7 +165,7 @@ class ShiftCoverage
 			found_splits = false
 			result.each do |set|
 				set.each do |shift|
-					found_splits = true if shift[1]-shift[0] == (@closes_at - @opens_at)
+					found_splits = true if shift[1]-shift[0] == 2 * @min_shift
 				end
 			end
 

@@ -29,8 +29,22 @@ RSpec.describe ShiftCoverage, :type => :model do
     end
   end
 
+  describe "#equiv_shifts_for" do
+    let (:short_lp) { build(:location_plan, open_times: [10,10,10,10,10,10,10], close_times: [18,18,18,18,18,18,18]) }
+    it "respects the min_shift" do
+      coverage = Array.new(16,1)
+      sc.coverage_to_shifts(coverage, short_lp, Time.zone.now.to_date)
+      expect(sc.equiv_shifts_for(coverage)).to eq [[[10,18]]]
+    end
+    it "splits long shifts" do
+      coverage = Array.new(16,1)
+      sc.coverage_to_shifts(coverage, location_plan, Time.zone.now.to_date)
+      expect(sc.equiv_shifts_for(coverage)).to eq [ [[8,22]], [[8,15], [15,22]] ]
+    end
+  end
+
   describe "sanity test private methods" do
-    it "scores correctly" do
+    it "#score: scores correctly" do
       set = [ [10, 18], [13, 22] ]
       expect(sc.send(:score, set)). to eq(35/2.0 )
     end
