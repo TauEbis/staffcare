@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe ShiftCoverage, :type => :model do
-  # Location plan must alwasy start at the same hour of the day because it determines our coverage array
+  # Location plan must always start at the same hour of the day because it determines our coverage array
   let (:location_plan) { create(:location_plan, open_times: [8,8,8,8,8,8,8], close_times: [22,22,22,22,22,22,22]) }
 
   # Starts at 10am
@@ -26,6 +26,15 @@ RSpec.describe ShiftCoverage, :type => :model do
       expect( shifts.length ).to eql(1)
       expect( shifts.first.starts_at.hour ).to eql(10)
       expect( shifts.first.ends_at.hour ).to eql(18)
+    end
+
+    it "picks best" do
+      coverage = Array.new(28, 1)
+      shifts = sc.coverage_to_shifts(coverage, location_plan, Time.zone.now.to_date)
+      # It doesn't pick to split the shift because the average score is lower
+      expect( shifts.length ).to eql(1)
+      expect( shifts.first.starts_at.hour ).to eql(8)
+      expect( shifts.first.ends_at.hour ).to eql(22)
     end
   end
 

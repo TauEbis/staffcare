@@ -55,17 +55,12 @@ class ShiftCoverage
 
 		def pick_best(list)
 			pick = list.first
+			best_score = score(pick)
 
-			if SCORES[(@closes_at - @opens_at)]
-				best_score = score(pick)
-
-				list.each do |set|
-					if score(set) > best_score
-						pick = set
-						best_score = score(set)
-					end
+			list.each do |set|
+				if score(set) > best_score
+					pick, best_score = set, score(set)
 				end
-
 			end
 
 			pick
