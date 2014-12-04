@@ -3,38 +3,25 @@ class ShiftCoverage
 	SCORES 		= 					[0,0,0,0,0,0,0, 5, 10, 25, 30, 15, 20,  5,  10]
 #					hours in day:	[0,1,2,3,4,5,6,  7,  8,  9, 10, 11, 12, 13, 14] scores for each shift length
 
-
-  # TODO This needs some testing!
+# This method is called by the grade to recalculate coverage after manual shift changes
   def shifts_to_coverage(shifts)
-
-    starts = shifts.map{|s| s.starts_hour}.sort.reverse
-    ends   = shifts.map{|s| s.ends_hour}.sort.reverse
 
 		a_shift = shifts.first
 		opens_at = a_shift.grade.location_plan.open_times[a_shift.date.wday]
 		closes_at = a_shift.grade.location_plan.close_times[a_shift.date.wday]
 
-    cnt = 0
-    coverage = []
+		coverage = Array.new((closes_at-opens_at) * 2, 0)
+		shifts.each do |s|
+			arrive = ( s.starts_hour - opens_at ) * 2
+			leave = ( s.ends_hour - closes_at ) * 2
+			coverage[arrive...leave] = coverage[arrive...leave].map{ |x| + 1 }
+		end
 
-    (opens_at...closes_at).step(0.5) do |hour|
-      while starts[-1] == hour
-        starts.pop
-        cnt +=1
-      end
-
-      while ends[-1] == hour
-        ends.pop
-        cnt -=1
-      end
-
-      coverage << cnt
-    end
-
-    coverage
+		coverage
   end
 
-  def coverage_to_shifts(coverage, location_plan, day)  # This method is only used for physician shifts currently
+# This method is only used for physician shifts currently -- All the methods beneath this are in the call chain of this method
+  def coverage_to_shifts(coverage, location_plan, day)
     @time = day.in_time_zone
 		@opens_at = location_plan.open_times[day.wday]
 		@closes_at = location_plan.close_times[day.wday]
