@@ -187,6 +187,12 @@ describe LocationPlan do
         expected = {open: location_plan.open_times[day.wday], close: location_plan.close_times[day.wday], max_mds: 4, min_openers: 3, min_closers: 3}
         expect(location_plan.solution_set_options(day)).to eq(expected)
       end
+
+      it "should not return max_mds greater than the length of the speed vectors" do
+        location_plan.normal = [0, 4, 8]
+        location_plan.max    = [0, 6, 12]
+        expect(location_plan.solution_set_options(day)[:max_mds]).to eq(2)
+      end
     end
 
     describe "#build_solution_set(day)" do
