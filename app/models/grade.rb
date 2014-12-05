@@ -139,6 +139,10 @@ class Grade < ActiveRecord::Base
     @_analysis ||= Analysis.new(self, date)
   end
 
+  def over_staffed?(date)
+    coverages[date.to_s].index { |x| x > (location_plan.normal.length - 1) } != nil
+  end
+
   # This is the one function that is not abstracted by Analysis
   # Because we need it for every single day to draw the calendar
   def pen_per_pat(date_s)

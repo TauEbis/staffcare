@@ -103,5 +103,33 @@ describe Grade, :type => :model do
         expect{ Shift.find(old_id) }.to raise_error ActiveRecord::RecordNotFound
       end
     end
+
+  end
+
+  describe "#over_staffed?" do
+
+    let(:date_s) { location_plan.days.first.to_s }
+
+    context "when not overstaffed" do
+
+      it "should return false" do
+        max = grade.coverages[date_s].max
+        expect(location_plan.normal.length - 1 >= max).to be(true)
+        expect(grade.over_staffed?(date_s)).to eq(false)
+      end
+    end
+
+    context "when overstaffed" do
+      before do
+        max = grade.coverages[date_s].max
+        location_plan.normal = location_plan.normal[(0..(max-2))]
+        location_plan.save
+      end
+
+      it "should return true" do
+        expect(grade.over_staffed?(date_s)).to eq(true)
+      end
+    end
+
   end
 end
