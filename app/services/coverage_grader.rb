@@ -34,9 +34,12 @@ class CoverageGrader
 	def penalty(coverage, visits=nil)
 
 		# Set provider capacity to see patients
-		normal_capacity = coverage.map { |n| @normal_speeds[n]/2 }
-		max_capacity = coverage.map { |n| @max_speeds[n]/2 }
-		@penalty_slack_vector = coverage.map { |n| (n) * @penalty_slack / @normal_speeds[n] }
+		limit = @normal_speeds.length - 1 # Subtract 1 since normal[1] is first speed
+		sheared_coverage = coverage.map { |n| [n,limit].min } # Assumption is that above the limit adding mds does not increase capacity
+		normal_capacity = sheared_coverage.map { |n| @normal_speeds[n]/2 }
+		max_capacity = sheared_coverage.map { |n| @max_speeds[n]/2 }
+		@penalty_slack_vector = sheared_coverage.map { |n| [n,limit].min * @penalty_slack / @normal_speeds[n] } # Sheared since @overstaffed_penalty is added in later.
+		above_limit = (sheared_coverage != coverage)
 
 		# Set visits and build arrays that depend on visits size
 		if visits
@@ -53,8 +56,8 @@ class CoverageGrader
 
 		# Calculate slack and wait/queue arrays
 		@time_slots_range.each do |x|
-			@seen[x] = [ @visits[x] + @queue[x], max_capacity[x].to_f ].min
-			delta = normal_capacity[x].to_f - @seen[x]
+			@seen[x] = [ @visits[x] + @queue[x], max_capacity[x] ].min
+			delta = normal_capacity[x] - @seen[x]
 			@slack[x] = [ delta , 0 ].max
 			@turbo[x] = [ delta * (-1) , 0 ].max
 
@@ -75,10 +78,11 @@ class CoverageGrader
 											@penalty_60min_to_90min * @greater_than_sixty_min_wait[x]
 		end
 		@penalties[@time_slots] = @penalty_eod_unseen * @queue[@time_slots]
+		@overstaffed_penalty = above_limit ? calc_overstaffed(coverage, sheared_coverage) : 0 # Gotcha: Will also silently adjust @penalties appropriately
 
     @hours_used = coverage.sum / 2
 
-		@total_penalty = @penalties.inject(0) { | sum, x | sum + x }
+		@total_penalty = @penalties.sum
 	end
 
 	private
@@ -101,7 +105,7 @@ class CoverageGrader
 	      queue: @queue,
 	      seen: @seen,
 	      turbo: @turbo,
-	      slack: @slack,
+	      slack: b_slack,
 	      penalties: @penalties,
 	      penalty: @total_penalty
 	    }
@@ -117,10 +121,14 @@ class CoverageGrader
 			}
 	  end
 
+		def b_slack
+			@overstaffed_penalty == 0 ? @slack : @slack.zip(@overstaffing).map{|x, y| x + y*@normal_speeds[1]/2 }
+		end
+
 		# Methods used to generate points
-			def total_score
-				@total_penalty
-			end
+		def total_score
+			@total_penalty
+		end
 
 		def md_sat_score
 			score = @turbo.inject(0) { | sum, x | sum + @penalty_turbo * x }
@@ -140,8 +148,16 @@ class CoverageGrader
 		end
 
 		def cost_score
-			score = @slack.inject(0) { | sum, x | sum + @penalty_slack_vector[x] * x }
-			score
+			@slack.zip(@penalty_slack_vector).map { | x, y| x * y }.sum + @overstaffed_penalty
+		end
+
+		def calc_overstaffed(coverage, sheared_coverage)
+			@overstaffing = coverage.zip(sheared_coverage).map{ |x, y| x - y }
+			overstaffing_penalties = @overstaffing.map{ |x| x * @penalty_slack / 2 }
+			@time_slots_range.each do |x|
+				@penalties[x] += overstaffing_penalties[x]
+			end
+			overstaffing_penalties.sum
 		end
 
 end

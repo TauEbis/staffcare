@@ -47,6 +47,25 @@ describe CoverageGrader, :type => :service do
 			end
 		end
 
+		describe "running with coverage greater than top speed" do
+			let (:coverage) { Array.new(28,2) } # double coverage
+
+			it "should return the same result" do
+				visits = Array.new(28,4) # 8 pph
+
+				grader.instance_variable_set(:@normal_speeds, [0, 4])
+				grader.instance_variable_set(:@max_speeds, [0, 6])
+
+				act_breakdown, act_points = grader.full_grade(coverage, visits)
+
+				expect( act_breakdown[:seen] ).to eq(Array.new(28,3)) # 6 pph -- 1 md turboing
+				expect( act_points[:hours] ).to eq(28) # double coverage
+				expect( grader.instance_variable_get(:@penalty_slack_vector) ).to eq(Array.new(28, 45)) # slack penalty for 1 md coverage
+				expect( act_breakdown[:slack] ).to eq(Array.new(28, 2)) # no slack for 1 md + full slack for second md
+				expect( act_points[:cost] ).to eq(180*14) # cost of the completely unused md
+			end
+		end
+
 	end
 
 	describe "#full_grade" do
