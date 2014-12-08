@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141208090532) do
+ActiveRecord::Schema.define(version: 20141208171531) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,14 +32,28 @@ ActiveRecord::Schema.define(version: 20141208090532) do
   add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
 
   create_table "grades", force: true do |t|
-    t.integer  "location_plan_id",              null: false
-    t.integer  "source",           default: 0,  null: false
-    t.json     "coverages",        default: {}, null: false
-    t.json     "breakdowns",       default: {}, null: false
-    t.json     "points",           default: {}, null: false
+    t.integer  "location_plan_id",                                         null: false
+    t.integer  "source",                                      default: 0,  null: false
+    t.json     "coverages",                                   default: {}, null: false
+    t.json     "breakdowns",                                  default: {}, null: false
+    t.json     "points",                                      default: {}, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
+    t.integer  "location_id",                                              null: false
+    t.integer  "schedule_id",                                              null: false
+    t.integer  "visit_projection_id",                                      null: false
+    t.json     "visits"
+    t.integer  "max_mds"
+    t.integer  "rooms"
+    t.integer  "min_openers"
+    t.integer  "min_closers"
+    t.integer  "open_times",                                  default: [],              array: true
+    t.integer  "close_times",                                 default: [],              array: true
+    t.integer  "optimizer_state",                             default: 0,  null: false
+    t.string   "optimizer_job_id"
+    t.decimal  "normal",              precision: 8, scale: 4, default: [], null: false, array: true
+    t.decimal  "max",                 precision: 8, scale: 4, default: [], null: false, array: true
   end
 
   add_index "grades", ["user_id"], name: "index_grades_on_user_id", using: :btree
@@ -55,25 +69,13 @@ ActiveRecord::Schema.define(version: 20141208090532) do
   add_index "heatmaps", ["uid"], name: "index_heatmaps_on_uid", using: :btree
 
   create_table "location_plans", force: true do |t|
-    t.integer  "location_id",                                              null: false
-    t.integer  "schedule_id",                                              null: false
-    t.integer  "visit_projection_id",                                      null: false
-    t.json     "visits"
-    t.integer  "approval_state",                              default: 0,  null: false
+    t.integer  "location_id",                 null: false
+    t.integer  "schedule_id",                 null: false
+    t.integer  "approval_state",  default: 0, null: false
     t.integer  "chosen_grade_id"
-    t.integer  "max_mds"
-    t.integer  "rooms"
-    t.integer  "min_openers"
-    t.integer  "min_closers"
-    t.integer  "open_times",                                  default: [],              array: true
-    t.integer  "close_times",                                 default: [],              array: true
-    t.integer  "wiw_sync",                                    default: 0,  null: false
-    t.datetime "created_at",                                               null: false
-    t.datetime "updated_at",                                               null: false
-    t.integer  "optimizer_state",                             default: 0,  null: false
-    t.string   "optimizer_job_id"
-    t.decimal  "normal",              precision: 8, scale: 4, default: [], null: false, array: true
-    t.decimal  "max",                 precision: 8, scale: 4, default: [], null: false, array: true
+    t.integer  "wiw_sync",        default: 0, null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
   end
 
   create_table "locations", force: true do |t|
