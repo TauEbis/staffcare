@@ -89,7 +89,7 @@ function DayInfo(data){
   self.analysis = ko.observable(new Analysis(data.analysis));
 }
 
-var position_keys = ['md', 'scribe', 'ma', 'xray', 'pcr', 'manager', 'am'];
+var position_keys = ['md', 'scribe', 'ma', 'pcr', 'xray', 'am', 'manager'];
 
 // Overall viewmodel for a day, along with initial state
 function CoverageViewModel() {
@@ -131,6 +131,7 @@ function CoverageViewModel() {
     if(data.day_info){
       self.generateAvailableTimes(data.day_info.open_time, data.day_info.close_time);
       self.positions($.map(data.positions, function(elem, i){ return new Position(elem); }));
+      self.positions( self.positions.sort( function(a, b){ return position_keys.indexOf(a.key()) - position_keys.indexOf(b.key()) }) );
 
       colorNewDay(data.day_info.date, data.day_info.analysis.stats.pen_per_pat ); // coloring based on waste per patient
 
