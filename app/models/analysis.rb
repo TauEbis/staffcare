@@ -107,7 +107,8 @@ class Analysis
           @_totals[:penalty]  += b['penalties'].sum # Would b['penalty'] be faster? -RB
           s = b['slack'].sum
           @_totals[:slack]    += s
-          @_totals[:wasted_time] += (s * 60 / g.location_plan.normal[1]).to_f # in minutes
+          @_totals[:wasted_time] += s * 60.0 / g.location_plan.normal[1].to_f # in minutes
+          @_totals[:wasted_time] += g.over_staffing_wasted_mins(date_s) if g.over_staffed?(date_s) # in minutes
         end
       end
 

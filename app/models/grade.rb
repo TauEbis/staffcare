@@ -139,8 +139,20 @@ class Grade < ActiveRecord::Base
     @_analysis ||= Analysis.new(self, date)
   end
 
-  def over_staffed?(date)
-    coverages[date.to_s].index { |x| x > (location_plan.normal.length - 1) } != nil
+  def over_staffed?(date_s)
+    @_over_staffed ||= {}
+    @_over_staffed[date_s] ||= ( coverages[date_s].index { |x| x > (location_plan.normal.length - 1) } != nil )
+  end
+
+  def over_staffing_wasted_mins(date_s)
+    @_over_staffed_wasted_mins ||= {}
+    @_over_staffed_wasted_mins[date_s] ||= begin
+      coverage = coverages[date_s]
+      limit = location_plan.normal.length - 1                         # Subtract 1 since normal[1] is first speed
+      sheared_coverage = coverage.map { |n| [n,limit].min }           # Assumption is that above the limit adding mds does not increase capacity
+      coverage.zip(sheared_coverage).map{ |x, y| x - y  }.sum * 30    # 30 minute blocks
+    end
+    @_over_staffed_wasted_mins[date_s]
   end
 
   # This is the one function that is not abstracted by Analysis

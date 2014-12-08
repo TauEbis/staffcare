@@ -38,7 +38,7 @@ class CoverageGrader
 		sheared_coverage = coverage.map { |n| [n,limit].min } # Assumption is that above the limit adding mds does not increase capacity
 		normal_capacity = sheared_coverage.map { |n| @normal_speeds[n]/2 }
 		max_capacity = sheared_coverage.map { |n| @max_speeds[n]/2 }
-		@penalty_slack_vector = sheared_coverage.map { |n| [n,limit].min * @penalty_slack / @normal_speeds[n] } # Sheared since @overstaffed_penalty is added in later.
+		@penalty_slack_vector = sheared_coverage.map { |n| [n,limit].min * @penalty_slack / @normal_speeds[n] } # Sheared since this is slack in the system not waste in system.
 		above_limit = (sheared_coverage != coverage)
 
 		# Set visits and build arrays that depend on visits size
@@ -78,7 +78,7 @@ class CoverageGrader
 											@penalty_60min_to_90min * @greater_than_sixty_min_wait[x]
 		end
 		@penalties[@time_slots] = @penalty_eod_unseen * @queue[@time_slots]
-		@overstaffed_penalty = above_limit ? calc_overstaffed(coverage, sheared_coverage) : 0 # Gotcha: Will also silently adjust @penalties appropriately
+		@total_overstaffed_penalty = above_limit ? calc_overstaffed(coverage, sheared_coverage) : 0 # Gotcha: Will also silently adjust @penalties appropriately
 
     @hours_used = coverage.sum / 2
 
@@ -105,7 +105,7 @@ class CoverageGrader
 	      queue: @queue,
 	      seen: @seen,
 	      turbo: @turbo,
-	      slack: b_slack,
+	      slack: @slack, # patients who could be seen (without turboing) but are not seeen because there are not enough visitors
 	      penalties: @penalties,
 	      penalty: @total_penalty
 	    }
@@ -120,10 +120,6 @@ class CoverageGrader
 	      hours: @hours_used
 			}
 	  end
-
-		def b_slack
-			@overstaffed_penalty == 0 ? @slack : @slack.zip(@overstaffing).map{|x, y| x + y*@normal_speeds[1]/2 }
-		end
 
 		# Methods used to generate points
 		def total_score
@@ -143,21 +139,20 @@ class CoverageGrader
 													@penalty_60min * @greater_than_thirty_min_wait[x] +
 													@penalty_60min_to_90min * @greater_than_sixty_min_wait[x]
 			end
-			score = @patient_sat.inject(0) { | sum, x | sum + x }
-			score
+			@patient_sat.sum
 		end
 
 		def cost_score
-			@slack.zip(@penalty_slack_vector).map { | x, y| x * y }.sum + @overstaffed_penalty
+			@slack.zip(@penalty_slack_vector).map { | x, y| x * y }.sum + @total_overstaffed_penalty
 		end
 
 		def calc_overstaffed(coverage, sheared_coverage)
-			@overstaffing = coverage.zip(sheared_coverage).map{ |x, y| x - y }
-			overstaffing_penalties = @overstaffing.map{ |x| x * @penalty_slack / 2 }
+			overstaffing = coverage.zip(sheared_coverage).map{ |x, y| x - y }
+			overstaffed_penalties = overstaffing.map{ |x| x * @penalty_slack / 2 }
 			@time_slots_range.each do |x|
-				@penalties[x] += overstaffing_penalties[x]
+				@penalties[x] += overstaffed_penalties[x]
 			end
-			overstaffing_penalties.sum
+			overstaffed_penalties.sum
 		end
 
 end
