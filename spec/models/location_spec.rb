@@ -179,6 +179,14 @@ describe Location do
       end
     end
 
+    context "when day is less than 6 hours" do
+      before do
+          location.send("mon_open=", 600)
+          location.send("mon_close=", 900)
+        end
+      it { should_not be_valid }
+    end
+
 # Scope
   describe "scope" do
     let!(:a_name) { FactoryGirl.create(:location, name: "Alfred_St", zone: zone) }

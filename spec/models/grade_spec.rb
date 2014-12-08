@@ -103,5 +103,48 @@ describe Grade, :type => :model do
         expect{ Shift.find(old_id) }.to raise_error ActiveRecord::RecordNotFound
       end
     end
+
+  end
+
+  describe "#over_staffed?" do
+    let(:date)       { location_plan.days.first }
+    let(:date_s)     { location_plan.days.first.to_s }
+
+    context "when not overstaffed" do
+
+      it "should return false" do
+        max = grade.coverages[date_s].max
+        expect(location_plan.normal.length - 1 >= max).to be(true)
+        expect(grade.over_staffed?(date_s)).to eq(false)
+      end
+
+      it "#over_staffing_wasted_mins should return 0" do
+        expect(grade.over_staffing_wasted_mins(date_s)).to eq(0)
+      end
+    end
+
+    context "when overstaffed" do
+      before do
+        max = grade.coverages[date_s].max
+        location_plan.normal = location_plan.normal[(0..(max-1))]
+        location_plan.save
+      end
+
+      it "should return true" do
+        expect(grade.over_staffed?(date_s)).to eq(true)
+      end
+
+      it "#over_staffing_wasted_mins should return wasted mins" do
+        expect(grade.over_staffing_wasted_mins(date_s)).to eq(14*60)
+      end
+
+      it "Analysis should have the right wasted time" do
+        totals = Analysis.new(grade, date).totals
+        s = totals[:slack]
+        slack_mins = s / location_plan.normal[1] * 60
+        expect(totals[:wasted_time]).to eq(14*60 + slack_mins )
+      end
+    end
+
   end
 end

@@ -4,21 +4,21 @@ class CoverageGrader
 
 	  # Grader Function Coefficients
 
-		@penalty_slack = weights[:penalty_slack].to_f # penalty weight for doctor waiting with no patients to see
+		@md_hourly = weights[:md_hourly].to_i # penalty weight for doctor waiting with no patients to see -- in dollars (hourly rate)
 
-		@penalty_turbo = weights[:penalty_turbo].to_f # penalty weight for doctor working above normal speed
+		@penalty_turbo = weights[:penalty_turbo].to_i # penalty weight for doctor working above normal speed -- in dollars
 
-		@penalty_30min = weights[:penalty_30min].to_i # penalty weight for patient waiting 30 mins before seeing a doctor
+		@penalty_30min = weights[:penalty_30min].to_i # penalty weight for patient waiting 30 mins before seeing a doctor -- in dollars
 
-		@penalty_60min = weights[:penalty_60min].to_i # penalty weight for patient waiting 60 mins before seeing a doctor
+		@penalty_60min = weights[:penalty_60min].to_i # penalty weight for patient waiting 60 mins before seeing a doctor -- in dollars
 
-		@penalty_90min = weights[:penalty_90min].to_i # penalty weight for patient waiting 90 mins or more before seeing a doctor
+		@penalty_90min = weights[:penalty_90min].to_i # penalty weight for patient waiting 90 mins or more before seeing a doctor -- in dollars
 
-		@penalty_eod_unseen = weights[:penalty_eod_unseen].to_i # penalty weight for patient not getting seen by end of day
+		@penalty_eod_unseen = weights[:penalty_eod_unseen].to_i # penalty weight for patient not getting seen by end of day -- in dollars
 
-		@normal_speeds = weights[:normal].map(&:to_f) # Normal physician work rate for different team sizes
+		@normal_speeds = weights[:normal].map(&:to_f) # Normal physician work rate for different team sizes -- in dollars
 
-		@max_speeds = weights[:max].map(&:to_f) # Max physician worl rate for different team sizes
+		@max_speeds = weights[:max].map(&:to_f) # Max physician worl rate for different team sizes -- in dollars
 
 		# Derived Constants
 
@@ -34,9 +34,13 @@ class CoverageGrader
 	def penalty(coverage, visits=nil)
 
 		# Set provider capacity to see patients
-		normal_capacity = coverage.map { |n| @normal_speeds[n]/2 }
-		max_capacity = coverage.map { |n| @max_speeds[n]/2 }
-		@penalty_slack_vector = coverage.map { |n| (n) * @penalty_slack / @normal_speeds[n] }
+		limit = @normal_speeds.length - 1 # Subtract 1 since normal[1] is first speed
+		sheared_coverage = coverage.map { |n| [n,limit].min } # Assumption is that above the limit adding mds does not increase capacity
+		normal_capacity = sheared_coverage.map { |n| @normal_speeds[n]/2 }
+		max_capacity = sheared_coverage.map { |n| @max_speeds[n]/2 }
+		above_limit = (sheared_coverage != coverage)
+
+		@penalty_slack_vector = sheared_coverage.map { |n| n * @md_hourly / @normal_speeds[[n,1].max] } # Sheared since this is slack in the system not waste in system.
 
 		# Set visits and build arrays that depend on visits size
 		if visits
@@ -53,8 +57,8 @@ class CoverageGrader
 
 		# Calculate slack and wait/queue arrays
 		@time_slots_range.each do |x|
-			@seen[x] = [ @visits[x] + @queue[x], max_capacity[x].to_f ].min
-			delta = normal_capacity[x].to_f - @seen[x]
+			@seen[x] = [ @visits[x] + @queue[x], max_capacity[x] ].min
+			delta = normal_capacity[x] - @seen[x]
 			@slack[x] = [ delta , 0 ].max
 			@turbo[x] = [ delta * (-1) , 0 ].max
 
@@ -75,10 +79,11 @@ class CoverageGrader
 											@penalty_60min_to_90min * @greater_than_sixty_min_wait[x]
 		end
 		@penalties[@time_slots] = @penalty_eod_unseen * @queue[@time_slots]
+		@total_overstaffed_penalty = above_limit ? calc_overstaffed(coverage, sheared_coverage) : 0 # Gotcha: Will also silently adjust @penalties appropriately
 
     @hours_used = coverage.sum / 2
 
-		@total_penalty = @penalties.inject(0) { | sum, x | sum + x }
+		@total_penalty = @penalties.sum
 	end
 
 	private
@@ -101,7 +106,7 @@ class CoverageGrader
 	      queue: @queue,
 	      seen: @seen,
 	      turbo: @turbo,
-	      slack: @slack,
+	      slack: @slack, # patients who could be seen (without turboing) but are not seeen because there are not enough visitors
 	      penalties: @penalties,
 	      penalty: @total_penalty
 	    }
@@ -118,9 +123,9 @@ class CoverageGrader
 	  end
 
 		# Methods used to generate points
-			def total_score
-				@total_penalty
-			end
+		def total_score
+			@total_penalty
+		end
 
 		def md_sat_score
 			score = @turbo.inject(0) { | sum, x | sum + @penalty_turbo * x }
@@ -135,13 +140,20 @@ class CoverageGrader
 													@penalty_60min * @greater_than_thirty_min_wait[x] +
 													@penalty_60min_to_90min * @greater_than_sixty_min_wait[x]
 			end
-			score = @patient_sat.inject(0) { | sum, x | sum + x }
-			score
+			@patient_sat.sum
 		end
 
 		def cost_score
-			score = @slack.inject(0) { | sum, x | sum + @penalty_slack_vector[x] * x }
-			score
+			@slack.zip(@penalty_slack_vector).map { | x, y| x * y }.sum + @total_overstaffed_penalty
+		end
+
+		def calc_overstaffed(coverage, sheared_coverage)
+			overstaffing = coverage.zip(sheared_coverage).map{ |x, y| x - y }
+			overstaffed_penalties = overstaffing.map{ |x| x * @md_hourly / 2 }
+			@time_slots_range.each do |x|
+				@penalties[x] += overstaffed_penalties[x]
+			end
+			overstaffed_penalties.sum
 		end
 
 end

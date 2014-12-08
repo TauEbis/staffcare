@@ -40,11 +40,13 @@ class Location < ActiveRecord::Base
   end
 
   DAY_PARAMS.each do |day_param|
-    validates day_param, presence: true, numericality: { greater_than_or_equal_to: 480, less_than_or_equal_to: 1320 }
+    validates day_param, presence: true, numericality: { greater_than_or_equal_to: 480, less_than_or_equal_to: 1320,
+                                                          message: "Opening hours must be between 8AM and 10PM" }
   end
 
   DAYS.each do |day|
-    validates "#{day}_close".to_sym, numericality: { greater_than_or_equal_to: "#{day}_open".to_sym, message: "Closing time must be greater than opening time"}, unless: "send(\"#{day}_open\").nil?"
+    validates "#{day}_close".to_sym, numericality: { greater_than_or_equal_to: ->(location) { location.send("#{day}_open".to_sym) + 360 },
+                                                     message: "Closing time must be at least 6 hours after opening time"}, unless: "send(\"#{day}_open\").nil?"
   end
 
   def ftes

@@ -119,7 +119,7 @@ class LocationPlan < ActiveRecord::Base
 
       # Find ceilng for max mds using visits and speeds
       max_hourly_visitors = 2 * day_max(day)
-      day_max_mds = max_mds
+      day_max_mds = top # No point sending grader coverage it doesn't have speeds for
       top.downto(1).each do |x|
         normal[x] > max_hourly_visitors ? day_max_mds = x : break
       end

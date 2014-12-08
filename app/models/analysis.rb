@@ -76,11 +76,11 @@ class Analysis
 
   def stats
     @_stats ||= begin
-      ppp = totals[:penalty] / totals[:visits] rescue 0
+      ppp = totals[:penalty] / totals[:visits] rescue 0 # NOTE: These rescues won't work if the values are floats
       wr  = totals[:visits] / totals[:coverage] rescue 0  # patients per hour
 
       {
-        wages: (totals[:coverage] * @schedule.penalty_slack).to_f,
+        wages: (totals[:coverage] * @schedule.md_hourly).to_f,
         wait_time: totals[:queue] * 30,  # in minutes
         work_rate: wr,
         pen_per_pat: ppp,
@@ -107,7 +107,8 @@ class Analysis
           @_totals[:penalty]  += b['penalties'].sum # Would b['penalty'] be faster? -RB
           s = b['slack'].sum
           @_totals[:slack]    += s
-          @_totals[:wasted_time] += (s * 60 / g.location_plan.normal[1]).to_f # in minutes
+          @_totals[:wasted_time] += s * 60.0 / g.location_plan.normal[1].to_f # in minutes
+          @_totals[:wasted_time] += g.over_staffing_wasted_mins(date_s) if g.over_staffed?(date_s) # in minutes
         end
       end
 

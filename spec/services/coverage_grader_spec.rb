@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe CoverageGrader, :type => :service do
-	let (:grader) { CoverageGrader.new( penalty_slack: 180, penalty_30min: 10,
+	let (:grader) { CoverageGrader.new( md_hourly: 180, penalty_30min: 10,
 																			penalty_60min: 100, penalty_90min: 300, penalty_eod_unseen: 40, penalty_turbo: 60,
 																			normal: [0, 4, 8, 12, 16, 20], max: [0, 6, 12, 18, 24, 30]) }
 
@@ -44,6 +44,25 @@ describe CoverageGrader, :type => :service do
 				visits = Array.new(28,4)
 				expected = grader.penalty(coverage, visits)
 				expect( grader.penalty(coverage) ).to eq(expected)
+			end
+		end
+
+		describe "running with coverage greater than top speed" do
+			let (:coverage) { Array.new(28,2) } # double coverage
+
+			it "should return the same result" do
+				visits = Array.new(28,4) # 8 pph
+
+				grader.instance_variable_set(:@normal_speeds, [0, 4])
+				grader.instance_variable_set(:@max_speeds, [0, 6])
+
+				act_breakdown, act_points = grader.full_grade(coverage, visits)
+
+				expect( act_breakdown[:seen] ).to eq(Array.new(28,3)) # 6 pph -- 1 md turboing
+				expect( act_points[:hours] ).to eq(28) # double coverage
+				expect( grader.instance_variable_get(:@penalty_slack_vector) ).to eq(Array.new(28, 45)) # slack penalty for 1 md coverage
+				expect( act_breakdown[:slack] ).to eq(Array.new(28, 0)) # no slack in system for 1 md
+				expect( act_points[:cost] ).to eq(180*14) # cost of the completely unused md
 			end
 		end
 
@@ -103,6 +122,17 @@ describe CoverageGrader, :type => :service do
 				expect( act_points[:hours] ).to eq( 28*0.5 )
 			end
 		end
+
+		context "when coverage is zero" do
+			let (:coverage) { Array.new(28,0) }
+			it "should not return NaN errors" do
+				visits = Array.new(28,2)
+				act_breakdown, act_points = grader.full_grade(coverage, visits)
+				expect( act_points[:cost].nan? ).to be(false)
+				expect( act_points[:total].nan? ).to be(false)
+			end
+		end
+
 	end
 
 end

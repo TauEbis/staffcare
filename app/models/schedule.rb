@@ -14,10 +14,9 @@ class Schedule < ActiveRecord::Base
 
   default_scope -> { order(starts_on: :desc, updated_at: :desc) }
 
-  OPTIMIZER_FIELDS = [:penalty_30min, :penalty_60min, :penalty_90min, :penalty_eod_unseen, :penalty_turbo, :penalty_slack, :oren_shift]
+  OPTIMIZER_FIELDS = [:penalty_30min, :penalty_60min, :penalty_90min, :penalty_eod_unseen, :penalty_turbo, :md_hourly]
 
-# Will remove Oren shift shortly
-  (OPTIMIZER_FIELDS-[:oren_shift]).each do |field|
+  (OPTIMIZER_FIELDS).each do |field|
     validates field, presence: true, numericality: { greater_than_or_equal_to: 0, less_than: 5000 }
   end
 
@@ -45,8 +44,7 @@ class Schedule < ActiveRecord::Base
       penalty_90min: 300,
       penalty_eod_unseen: 40,
       penalty_turbo: 60,
-      penalty_slack: 180,
-      oren_shift: true
+      md_hourly: Position.find_by(key: :md).hourly_rate,
     }
   end
 
@@ -68,7 +66,7 @@ class Schedule < ActiveRecord::Base
   end
 
   def grader_weights
-    @_grader_weights ||= self.attributes.slice(*(OPTIMIZER_FIELDS-[:oren_shift]).map(&:to_s)).symbolize_keys
+    @_grader_weights ||= self.attributes.slice(*OPTIMIZER_FIELDS.map(&:to_s)).symbolize_keys
   end
 
   def analysis(zone = nil)
