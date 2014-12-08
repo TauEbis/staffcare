@@ -38,7 +38,7 @@ class CoverageGrader
 		sheared_coverage = coverage.map { |n| [n,limit].min } # Assumption is that above the limit adding mds does not increase capacity
 		normal_capacity = sheared_coverage.map { |n| @normal_speeds[n]/2 }
 		max_capacity = sheared_coverage.map { |n| @max_speeds[n]/2 }
-		@penalty_slack_vector = sheared_coverage.map { |n| [n,limit].min * @penalty_slack / @normal_speeds[n] } # Sheared since this is slack in the system not waste in system.
+		@penalty_slack_vector = sheared_coverage.map { |n| n * @penalty_slack / @normal_speeds[[n,1].max] } # Sheared since this is slack in the system not waste in system.
 		above_limit = (sheared_coverage != coverage)
 
 		# Set visits and build arrays that depend on visits size

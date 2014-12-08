@@ -122,6 +122,17 @@ describe CoverageGrader, :type => :service do
 				expect( act_points[:hours] ).to eq( 28*0.5 )
 			end
 		end
+
+		context "when coverage is zero" do
+			let (:coverage) { Array.new(28,0) }
+			it "should not return NaN errors" do
+				visits = Array.new(28,2)
+				act_breakdown, act_points = grader.full_grade(coverage, visits)
+				expect( act_points[:cost].nan? ).to be(false)
+				expect( act_points[:total].nan? ).to be(false)
+			end
+		end
+
 	end
 
 end

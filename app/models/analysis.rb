@@ -76,7 +76,7 @@ class Analysis
 
   def stats
     @_stats ||= begin
-      ppp = totals[:penalty] / totals[:visits] rescue 0
+      ppp = totals[:penalty] / totals[:visits] rescue 0 # NOTE: These rescues won't work if the values are floats
       wr  = totals[:visits] / totals[:coverage] rescue 0  # patients per hour
 
       {
