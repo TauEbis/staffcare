@@ -5,6 +5,13 @@
   <%= simple_form_for(@user, url: update_profile_user_path(@user), method: :post, html: { class: 'form-horizontal' }) do |f| %>
     <%= f.error_notification %>
 
+    <div class="text-center">
+      <a href='https://en.gravatar.com/' target='_blank'>
+        <img id="profile_avatar" class="thumbnail hidden-xs" alt="avatar" src="<%= @user.avatar_url %>">
+      </a>
+      <a href='https://en.gravatar.com/' target='_blank'> edit photo </a>
+    </div>
+
     <div class="form-group">
       <%= f.label :name %>
       <%= f.text_field :name, :autofocus => true, class: 'form-control' %>
