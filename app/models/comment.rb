@@ -7,6 +7,7 @@ class Comment < ActiveRecord::Base
   validates :location_plan_id, presence: true
 
   scope :ordered, -> { order('created_at DESC') }
+  scope :with_users, -> { includes(:user) }
 
   enum cause: [:comment, :state_changed, :copied, :edited, :deleted]
 
@@ -16,5 +17,9 @@ class Comment < ActiveRecord::Base
 
   def user_name
     user.try(:label)
+  end
+
+  def user_avatar_url
+    user.try(:avatar_url)
   end
 end
