@@ -40,7 +40,8 @@ class Location < ActiveRecord::Base
   end
 
   DAY_PARAMS.each do |day_param|
-    validates day_param, presence: true, numericality: { greater_than_or_equal_to: 480, less_than_or_equal_to: 1320 }
+    validates day_param, presence: true, numericality: { greater_than_or_equal_to: 480, less_than_or_equal_to: 1320,
+                                                          message: "Opening hours must be between 8AM and 10PM" }
   end
 
   DAYS.each do |day|
