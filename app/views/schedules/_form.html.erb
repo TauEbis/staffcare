@@ -13,7 +13,7 @@
           <%= render 'shared/date_picker_field', f: f, date_field: :starts_on, picker_type: "monthpicker" %>
         <% end -%>
 
-          <%= render 'field', f: f, data_field: :penalty_slack, label: "Physician Hourly" %>
+          <%= render 'field', f: f, data_field: :md_hourly, label: "Physician Hourly" %>
           <br>
           <div class="bg-success">
             Each item below is a penalized by the optimizer as wasteful inefficiency.
@@ -26,8 +26,6 @@
           <%= render 'field', f: f, data_field: :penalty_90min, label: "Next 30 minutes of wait time (60-89) to first see MD" %>
           <%= render 'field', f: f, data_field: :penalty_turbo, label: "Overworking physician by a patient in a given hour" %>
           <%= render 'field', f: f, data_field: :penalty_eod_unseen, label: "Making physican see a patient after closing" %>
-
-          <%= f.hidden_field :oren_shift, required: true %>
 
         <% if @editing && @schedule.any_updates? -%>
 

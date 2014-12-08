@@ -80,7 +80,7 @@ class Analysis
       wr  = totals[:visits] / totals[:coverage] rescue 0  # patients per hour
 
       {
-        wages: (totals[:coverage] * @schedule.penalty_slack).to_f,
+        wages: (totals[:coverage] * @schedule.md_hourly).to_f,
         wait_time: totals[:queue] * 30,  # in minutes
         work_rate: wr,
         pen_per_pat: ppp,

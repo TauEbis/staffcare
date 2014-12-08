@@ -161,11 +161,11 @@ describe LocationPlan do
     end
 
     describe "#grader_opts" do
-      it"" do
-        location_plan.schedule.update_attributes(penalty_slack: 2.5,  penalty_turbo: 5, penalty_30min: 1, penalty_60min: 4, penalty_90min: 16, penalty_eod_unseen: 4)
+      it "returns the speeds plus the schedule weights" do
+        location_plan.schedule.update_attributes(md_hourly: 120,  penalty_turbo: 5, penalty_30min: 1, penalty_60min: 4, penalty_90min: 16, penalty_eod_unseen: 4)
         location_plan.normal = [0, 5, 6, 7, 8, 9]
         location_plan.max =    [0, 10, 12, 14, 16, 18]
-        expected = { penalty_30min: 1.to_d, penalty_60min: 4.to_d, penalty_90min: 16.to_d, penalty_eod_unseen: 4.to_d, penalty_slack: 2.5.to_d, penalty_turbo: 5.to_d,
+        expected = { penalty_30min: 1.to_d, penalty_60min: 4.to_d, penalty_90min: 16.to_d, penalty_eod_unseen: 4.to_d, md_hourly: 120.to_d, penalty_turbo: 5.to_d,
                     normal: [0, 5, 6, 7, 8, 9], max: [0, 10, 12, 14, 16, 18] }
         expect(location_plan.grader_opts).to eq(expected)
       end

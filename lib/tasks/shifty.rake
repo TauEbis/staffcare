@@ -19,7 +19,7 @@ namespace :shifty do
       location.speeds.create(doctors: 5, normal: 20, max: 30)
     end
 
-    schedule = Schedule.create!(starts_on: Date.parse("2014-06-06"), md_rate: 4.25, penalty_slack: 2.5, penalty_30min: 1, penalty_60min: 4, penalty_90min: 16, penalty_eod_unseen: 4, oren_shift: true)
+    schedule = Schedule.create!(starts_on: Date.parse("2014-06-06"), md_hourly: 10, penalty_30min: 1, penalty_60min: 4, penalty_90min: 16, penalty_eod_unseen: 4)
 
     provider = DataProvider.new(:sample_run)
 
@@ -58,7 +58,7 @@ namespace :shifty do
       location.speeds.create(doctors: 5, normal: 20, max: 30)
     end
 
-    schedule = Schedule.create!(starts_on: Date.parse("2014-06-06"), md_rate: 4.25, penalty_slack: 2.5, penalty_30min: 1, penalty_60min: 4, penalty_90min: 16, penalty_eod_unseen: 4, oren_shift: true)
+    schedule = Schedule.create!(starts_on: Date.parse("2014-06-06"), md_hourly: 10, penalty_30min: 1, penalty_60min: 4, penalty_90min: 16, penalty_eod_unseen: 4)
     schedule.custom_length(0)
     schedule.save
 

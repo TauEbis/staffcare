@@ -9,8 +9,8 @@ FactoryGirl.define do
     penalty_60min           100
     penalty_90min           300
     penalty_eod_unseen      40
-    penalty_slack           60
-    penalty_turbo           180
+    md_hourly               180
+    penalty_turbo           60
 
     optimizer_state         :complete
 

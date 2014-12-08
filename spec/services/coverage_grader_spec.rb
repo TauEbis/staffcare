@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe CoverageGrader, :type => :service do
-	let (:grader) { CoverageGrader.new( penalty_slack: 180, penalty_30min: 10,
+	let (:grader) { CoverageGrader.new( md_hourly: 180, penalty_30min: 10,
 																			penalty_60min: 100, penalty_90min: 300, penalty_eod_unseen: 40, penalty_turbo: 60,
 																			normal: [0, 4, 8, 12, 16, 20], max: [0, 6, 12, 18, 24, 30]) }
 

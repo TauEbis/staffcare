@@ -37,6 +37,7 @@ RSpec.describe SchedulesController, :type => :controller do
   let(:valid_session) { {} }
 
   before do
+    create(:position, key: :md)
     sign_in create(:admin_user)
   end
 
