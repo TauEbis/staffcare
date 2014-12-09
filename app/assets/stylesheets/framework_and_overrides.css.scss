@@ -7,10 +7,24 @@ img {
   @extend .img-responsive;
   margin: 0 auto;
   }
-// override for the 'Home' navigation link
+
+// padding for text next to logo in navbar
 .navbar-brand {
-  font-size: inherit;
+  .brand-name {
+    padding-left: 5px;
   }
+}
+
+// padding for account dropdown in navbar
+.navbar-right {
+  .gravatar {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  }
+  img {
+    display: inline;
+  }
+}
 
 // THESE ARE EXAMPLES YOU CAN MODIFY
 // create your own classes
