@@ -24,7 +24,7 @@ namespace :shifty do
     provider = DataProvider.new(:sample_run)
 
     # Factory creates LocationPlans and VisitProjection
-    factory = LocationPlansFactory.new({
+    factory = GradeFactory.new({
         schedule: schedule,
         locations: locations,
         data_provider: provider})
@@ -64,7 +64,7 @@ namespace :shifty do
 
     provider = DataProvider.new(:dummy)
     # Factory creates LocationPlans and VisitProjection
-    factory = LocationPlansFactory.new({
+    factory = GradeFactory.new({
                                            schedule: schedule,
                                            locations: locations,
                                            data_provider: provider})

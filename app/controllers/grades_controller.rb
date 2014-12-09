@@ -55,8 +55,8 @@ class GradesController < ApplicationController
           day = {
             date: @date.to_s,
             formatted_date: I18n.localize(@date, format: :with_dow),
-            open_time: @location_plan.open_times[@date.wday],
-            close_time: @location_plan.close_times[@date.wday],
+            open_time: @grade.open_times[@date.wday],
+            close_time: @grade.close_times[@date.wday],
             analysis: Analysis.new(@grade, @date).to_knockout
           }
 

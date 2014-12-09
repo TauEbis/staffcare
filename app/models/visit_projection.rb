@@ -2,7 +2,7 @@ class VisitProjection < ActiveRecord::Base
   belongs_to :schedule
   belongs_to :location
 
-  has_one :location_plan
+  has_one :grade
 
 		# visits  # visits data hashed by day
 		# heat_maps = a Heatmap object

@@ -15,21 +15,21 @@ class ScheduleOptimizerWorker
       at 0, "Loading location plans"
 
       if first_run || opts['load_locations'] || opts['load_visits']
-        # Factory creates/updates LocationPlans and VisitProjection
-        factory = LocationPlansFactory.new( schedule: schedule, data_provider: DataProvider.new("database") )
+        # Factory creates Grades and VisitProjection
+        factory = GradeFactory.new( schedule: schedule, data_provider: DataProvider.new("database") )
         first_run ? factory.create : factory.update(opts)
       end
 
-      at 0, "Enqueuing LocationPlanOptimizers"
+      at 0, "Enqueuing GradeOptimizers"
 
       num = 0
-      total schedule.location_plans.length
+      total schedule.grades.length
 
-      schedule.location_plans.each do |location_plan|
+      schedule.grades.each do |grade|
         num += 1
-        at num, "Enqueueing LocationPlanOptimizers"
-        job_id = LocationPlanOptimizerWorker.perform_async(location_plan.id)
-        location_plan.update_attribute(:optimizer_job_id, job_id)
+        at num, "Enqueueing GradeOptimizers"
+        job_id = GradeOptimizerWorker.perform_async(grade.id)
+        grade.update_attribute(:optimizer_job_id, job_id)
       end
 
       at num, "ScheduleOptimizer finished"

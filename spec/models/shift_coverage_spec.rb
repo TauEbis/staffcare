@@ -1,14 +1,14 @@
 require 'spec_helper'
 
 RSpec.describe ShiftCoverage, :type => :model do
-  # Location plan must always start at the same hour of the day because it determines our coverage array
-  let (:location_plan) { create(:location_plan, open_times: [8,8,8,8,8,8,8], close_times: [22,22,22,22,22,22,22]) }
+  # Grade must always start at the same hour of the day because it determines our coverage array
+  let (:grade)         { create(:grade, open_times: [8,8,8,8,8,8,8], close_times: [22,22,22,22,22,22,22]) }
   let (:sc)            { ShiftCoverage.new }
 
   describe "Converting Shifts to Coverage" do
-    let (:shift)       { create(:shift, grade: location_plan.chosen_grade, starts_at: Time.zone.now.beginning_of_day + 10.hours) }
-    let (:shift_2)     { create(:shift, grade: location_plan.chosen_grade, starts_at: Time.zone.now.beginning_of_day + 8.hours) }
-    let (:shift_3)     { create(:shift, grade: location_plan.chosen_grade, starts_at: Time.zone.now.beginning_of_day + 14.hours) }
+    let (:shift)       { create(:shift, grade: grade, starts_at: Time.zone.now.beginning_of_day + 10.hours) }
+    let (:shift_2)     { create(:shift, grade: grade, starts_at: Time.zone.now.beginning_of_day + 8.hours) }
+    let (:shift_3)     { create(:shift, grade: grade, starts_at: Time.zone.now.beginning_of_day + 14.hours) }
 
     it "converts correctly" do
       shifts = [shift]
@@ -30,7 +30,7 @@ RSpec.describe ShiftCoverage, :type => :model do
   describe "Converting Coverage to Shifts" do
     it "converts correctly" do
       coverage = [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0]
-      shifts = sc.coverage_to_shifts(coverage, location_plan, Time.zone.now.to_date)
+      shifts = sc.coverage_to_shifts(coverage, grade, Time.zone.now.to_date)
 
       expect( shifts.length ).to eql(1)
       expect( shifts.first.starts_at.hour ).to eql(10)
@@ -39,7 +39,7 @@ RSpec.describe ShiftCoverage, :type => :model do
 
     it "converts overlapping coverage correctly" do
       coverage = [1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1]
-      shifts = sc.coverage_to_shifts(coverage, location_plan, Time.zone.now.to_date)
+      shifts = sc.coverage_to_shifts(coverage, grade, Time.zone.now.to_date)
 
       expect( shifts.length ).to eql(3)
       expect( shifts.map(&:starts_at).map(&:hour) ).to eql([8, 10, 14])
@@ -48,7 +48,7 @@ RSpec.describe ShiftCoverage, :type => :model do
 
     it "picks best" do
       coverage = Array.new(28, 1)
-      shifts = sc.coverage_to_shifts(coverage, location_plan, Time.zone.now.to_date)
+      shifts = sc.coverage_to_shifts(coverage, grade, Time.zone.now.to_date)
       # It doesn't pick to split the shift because the average score is lower
       expect( shifts.length ).to eql(1)
       expect( shifts.first.starts_at.hour ).to eql(8)

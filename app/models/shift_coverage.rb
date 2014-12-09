@@ -8,8 +8,8 @@ class ShiftCoverage
   def shifts_to_coverage(shifts)
 
 		a_shift = shifts.first
-		opens_at = a_shift.grade.location_plan.open_times[a_shift.date.wday]
-		closes_at = a_shift.grade.location_plan.close_times[a_shift.date.wday]
+		opens_at = a_shift.grade.open_times[a_shift.date.wday]
+		closes_at = a_shift.grade.close_times[a_shift.date.wday]
 
 		coverage = Array.new((closes_at-opens_at) * 2, 0)
 		shifts.each do |s|
@@ -22,11 +22,11 @@ class ShiftCoverage
   end
 
 # This method is only used for physician shifts currently -- All the methods beneath this are in the call chain of this method
-  def coverage_to_shifts(coverage, location_plan, day)
+  def coverage_to_shifts(coverage, grade, day)
     time = day.in_time_zone
-		@opens_at = location_plan.open_times[day.wday]
+		@opens_at = grade.open_times[day.wday]
 
-		hours_open = location_plan.close_times[day.wday] - @opens_at
+		hours_open = grade.close_times[day.wday] - @opens_at
 		@min_shift = [(hours_open * 0.5).round, MIN_SHIFT].max
 
   	shifts = pick_best(equiv_shifts_for(coverage))

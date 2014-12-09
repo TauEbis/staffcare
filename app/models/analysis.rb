@@ -24,7 +24,7 @@ class Analysis
 
     # The assumption here is all grades are part of the same schedule
     # We dont' check for it because it's expensive
-    @schedule = @grades.first.location_plan.schedule
+    @schedule = @grades.first.schedule
 
     @days = date ? Array(date) : @schedule.days
   end
@@ -100,14 +100,14 @@ class Analysis
           b = g.breakdowns[date_s]
 
           @_totals[:coverage] += g.coverages[date_s].sum / 2
-          @_totals[:visits]   += g.location_plan.visits[date_s].sum
+          @_totals[:visits]   += g.visits[date_s].sum
           @_totals[:seen]     += b['seen'].sum
           @_totals[:queue]    += b['queue'].sum
           @_totals[:turbo]    += b['turbo'].sum
           @_totals[:penalty]  += b['penalties'].sum # Would b['penalty'] be faster? -RB
           s = b['slack'].sum
           @_totals[:slack]    += s
-          @_totals[:wasted_time] += s * 60.0 / g.location_plan.normal[1].to_f # in minutes
+          @_totals[:wasted_time] += s * 60.0 / g.normal[1].to_f # in minutes
           @_totals[:wasted_time] += g.over_staffing_wasted_mins(date_s) if g.over_staffed?(date_s) # in minutes
         end
       end

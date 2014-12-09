@@ -4,8 +4,8 @@ describe ScheduleDestroyer, :type => :service do
 
   describe "Given a schedule and its dependency tree" do
 
-    let!(:schedule)         { create(:schedule_with_children) }
-    let!(:destroyer)         { ScheduleDestroyer.new(schedule.reload) } # to reload associations
+    let!(:schedule)   { create(:schedule_with_children) }
+    let!(:destroyer)  { ScheduleDestroyer.new(schedule.reload) } # to reload associations
 
     context "when #destroy is called" do
 
