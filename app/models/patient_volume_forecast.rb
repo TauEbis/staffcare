@@ -3,7 +3,6 @@
 class PatientVolumeForecast < ActiveRecord::Base
 
   validates :volume_by_location, presence: true
-  # TODO: Appear to be several ways to validate a date string is good- want ISO (yyy-mm-dd) format
   validates :start_date, presence: true, uniqueness: true
   validates :end_date, presence: true
   validate :legal_volume_by_location, unless: "volume_by_location.blank?"
@@ -15,31 +14,17 @@ class PatientVolumeForecast < ActiveRecord::Base
 
   paginates_per 50
 
-  def self.next_start_date
-    ordered.last ? ordered.last.start_date + 7 : ''
-  end
+  # Validations
 
-  def self.next_end_date
-    ordered.last ? ordered.last.end_date + 7 : ''
-  end
-
-  # checks if the forecast includes data for the given date
-  def contains_day?(date)
-    if date >= self.start_date and date <= self.end_date
-      return true
-    else
-      return false
+  def valid_end_date
+    unless end_date.is_a? Date
+      errors.add(:end_date, "Please select an end date")
+      return
     end
-  end
 
-  def contains_location?(loc)
-    return self.volume_by_location.has_key?(loc.report_server_id)
-  end
-
-  #Returns the projected volume for the given location and day
-  #NB: Right now returns the week volume for that day to match heatmaps
-  def get_volume(location, day)
-    return self.volume_by_location[location.report_server_id]
+    unless end_date == start_date + 6
+      errors.add(:end_date, "End date and start date must be one week apart")
+    end
   end
 
   def valid_start_date
@@ -50,17 +35,6 @@ class PatientVolumeForecast < ActiveRecord::Base
 
     unless start_date.friday?
       errors.add(:start_date, "Forecast week must start on a Friday.")
-    end
-  end
-
-  def valid_end_date
-    unless end_date.is_a? Date
-      errors.add(:end_date, "Please select an end date")
-      return
-    end
-
-    unless end_date == start_date + 6
-      errors.add(:end_date, "End date and start date must be one week apart")
     end
   end
 
@@ -81,9 +55,32 @@ class PatientVolumeForecast < ActiveRecord::Base
     end
   end
 
-  # Exports only forecasts that start on a date after today
+# Methods
+
+  # These instance methods are only used by the DataProvider
+
+  #Returns the projected volume for the given location and day
+  #NB: Right now returns the week volume for that day to match heatmaps
+  def get_volume(location, day)
+    return self.volume_by_location[location.report_server_id]
+  end
+
+  # checks if the forecast includes data for the given date
+  def contains_day?(date)
+    if date >= self.start_date and date <= self.end_date
+      return true
+    else
+      return false
+    end
+  end
+
+  def contains_location?(loc)
+    return self.volume_by_location.has_key?(loc.report_server_id)
+  end
+
+ # These class methods are used to export forecasts
   def self.to_csv(options = {})
-    only_future = !options[:all_time]
+    only_future = !options[:all_time]  # Exports only forecasts that start on a date after today
   	CSV.generate(options.except(:all_time)) do |csv|
   		locations = Location.ordered.all
   		attribute_columns = [ 'start_date', 'end_date' ]
@@ -111,6 +108,15 @@ class PatientVolumeForecast < ActiveRecord::Base
 		end
   end
 
+  def self.next_start_date
+    ordered.last ? ordered.last.start_date + 7 : ''
+  end
+
+  def self.next_end_date
+    ordered.last ? ordered.last.end_date + 7 : ''
+  end
+
+ # These methods are used to import forecasts
   def self.import(file)
     spreadsheet = open_spreadsheet(file)
     header = spreadsheet.row(1)
@@ -140,16 +146,6 @@ class PatientVolumeForecast < ActiveRecord::Base
     end
   end
 
-  def self.format_date(suspect)
-     if suspect.include? '/'
-       return Date.strptime(suspect, "%m/%d/%y").to_s
-     else
-       return suspect
-     end
-  end
-
-
-
   def self.open_spreadsheet(file)
     case File.extname(file.original_filename)
       when ".csv" then Roo::CSV.new(file.path)
@@ -158,4 +154,13 @@ class PatientVolumeForecast < ActiveRecord::Base
       else raise "Unknown file type: #{file.original_filename}"
     end
   end
+
+  def self.format_date(suspect)
+     if suspect.include? '/'
+       return Date.strptime(suspect, "%m/%d/%y").to_s
+     else
+       return suspect
+     end
+  end
+
 end
