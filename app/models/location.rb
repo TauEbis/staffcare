@@ -82,12 +82,14 @@ class Location < ActiveRecord::Base
     users.each do |user|
       return user if user.manager?
     end
+    nil
   end
 
   def rm
     users.each do |user|
       return user if user.rm?
     end
+    nil
   end
 
   def validate_nested_speeds_sequence

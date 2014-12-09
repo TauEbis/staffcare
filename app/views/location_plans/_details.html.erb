@@ -1,13 +1,17 @@
 <div class="row">
     <div class="col-sm-1"><strong> Manager: </strong></div>
     <div class="col-sm-2">
-      <%= image_tag @location_plan.location.manager.avatar_url %>
-      <p class="text-center"><%= @location_plan.location.manager.name %><p>
+      <% if manager = @location_plan.location.manager  %>
+        <%= image_tag manager.avatar_url %>
+        <p class="text-center"><%= manager.name %><p>
+      <%- end -%>
     </div>
     <div class="col-sm-2 col-sm-offset-1 text-right"><strong> Regional Manager: </strong></div>
     <div class="col-sm-2">
-      <%= image_tag @location_plan.location.rm.avatar_url %>
-      <p class="text-center"><%= @location_plan.location.rm.name %><p>
+      <% if rm = @location_plan.location.rm  %>
+        <%= image_tag rm.avatar_url %>
+        <p class="text-center"><%= rm.name %><p>
+      <%- end -%>
     </div>
 </div>
 

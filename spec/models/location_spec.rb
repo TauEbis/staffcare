@@ -257,19 +257,55 @@ describe Location do
 
   describe "#manager" do
     let(:manager) { create(:user, role: :manager) }
-    before { location.users << manager }
 
-    it "should return the first manager" do
-      expect(location.manager).to eq (manager)
+    context "when there is a manager" do
+      before { location.users << manager }
+
+      it "should return the first manager" do
+        expect(location.manager).to eq (manager)
+      end
+    end
+
+    context "when no manager" do
+      it "should return nil" do
+        expect(location.manager).to eq (nil)
+      end
+    end
+
+    context "when multiple managers" do
+      let(:manager_2) { create(:user, role: :manager) }
+      before { location.users << manager; location.users << manager_2 }
+
+      it "should return the first manager" do
+        expect(location.manager).to eq (manager)
+      end
     end
   end
 
   describe "#rm" do
     let(:rm) { create(:user, role: :rm) }
-    before { location.users << rm }
 
-    it "should return the first rm" do
-      expect(location.rm).to eq (rm)
+    context "when there is a rm" do
+      before { location.users << rm }
+
+      it "should return the first rm" do
+        expect(location.rm).to eq (rm)
+      end
+    end
+
+    context "when no rm" do
+      it "should return nil" do
+        expect(location.rm).to eq (nil)
+      end
+    end
+
+    context "when multiple managers" do
+      let(:rm_2) { create(:user, role: :rm) }
+      before { location.users << rm; location.users << rm_2 }
+
+      it "should return the first rm" do
+        expect(location.rm).to eq (rm)
+      end
     end
   end
 
