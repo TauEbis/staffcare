@@ -72,7 +72,7 @@ class PatientVolumeForecast < ActiveRecord::Base
     end
 
     locations = Location.all
-    location_names = locations.map(&:name)
+    location_names = locations.map(&:report_server_id)
     volume_by_location.keys.each do |csv_name|
       # Whitelist 'id' to prevent problems with the seed data
       if location_names.index(csv_name) == nil and csv_name != 'id'
