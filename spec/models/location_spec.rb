@@ -255,4 +255,22 @@ describe Location do
     end
   end
 
+  describe "#manager" do
+    let(:manager) { create(:user, role: :manager) }
+    before { location.users << manager }
+
+    it "should return the first manager" do
+      expect(location.manager).to eq (manager)
+    end
+  end
+
+  describe "#rm" do
+    let(:rm) { create(:user, role: :rm) }
+    before { location.users << rm }
+
+    it "should return the first rm" do
+      expect(location.rm).to eq (rm)
+    end
+  end
+
 end

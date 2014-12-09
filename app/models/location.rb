@@ -78,6 +78,18 @@ class Location < ActiveRecord::Base
     @_close_times ||= DAYS.map {|day| send("#{day}_close") / 60 }
   end
 
+  def manager
+    users.each do |user|
+      return user if user.manager?
+    end
+  end
+
+  def rm
+    users.each do |user|
+      return user if user.rm?
+    end
+  end
+
   def validate_nested_speeds_sequence
     doctor_set = speeds.map(&:doctors).sort
     max = doctor_set.length
