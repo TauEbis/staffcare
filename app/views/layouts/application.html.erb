@@ -8,6 +8,8 @@
     <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
     <script src="/highcharts/highcharts.js"></script>
     <%= csrf_meta_tags %>
+    <link rel="shortcut icon" href="<%= image_path('favicon.ico') %>" type="image/x-icon">
+    <link rel="icon" href="<%= image_path('favicon.ico') %>" type="image/x-icon">
   </head>
   <body id="<%= params[:controller].parameterize %>_controller">
     <header>
