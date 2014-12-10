@@ -1,22 +1,22 @@
-class LocationPlanOptimizerWorker
+class GradeOptimizerWorker
   include Sidekiq::Worker
   include Sidekiq::Status::Worker
 
   sidekiq_options retry: false
 
-  def perform(location_plan_id)
+  def perform(grade)
     at 0, "Beginning"
 
-    location_plan = LocationPlan.find(location_plan_id)
-    location_plan.running!
+    grade = Grade.find(grade)
+    grade.running!
 
     begin
       at 0, "Optimizing"
 
-      optimizer = LocationPlanOptimizer.new(location_plan)
+      optimizer = GradeOptimizer.new(grade)
 
       num = 0
-      total location_plan.schedule.days.length
+      total grade.days.length
 
       optimizer.optimize! {
         num += 1
@@ -25,8 +25,8 @@ class LocationPlanOptimizerWorker
 
       # TODO: Copy coverage from previous month and grade!
 
-      at num, "LocationPlanOptimizer finished"
-      location_plan.complete!
+      at num, "GradeOptimizer finished"
+      grade.complete!
 
     rescue ActiveRecord::RecordInvalid => exception
       at 0, exception.message

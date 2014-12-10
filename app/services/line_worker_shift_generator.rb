@@ -82,10 +82,10 @@ class LineWorkerShiftGenerator
 
     # TODO: Assert that we have the values from the rules
 
-    days=@grade.location_plan.days
-    open_times=@grade.location_plan.open_times
-    close_times=@grade.location_plan.close_times
-    ftes=@grade.location_plan.ftes
+    days=@grade.days
+    open_times=@grade.open_times
+    close_times=@grade.close_times
+    ftes=@grade.ftes
 
     @rules.each do | rule |
 

@@ -6,7 +6,7 @@ feature "List & View schedules: " do
 
 	given(:admin) 		{ FactoryGirl.create(:admin_user) }
 	given!(:schedule) { FactoryGirl.create(:schedule_with_children) }
-	background 				{ schedule.reload }
+	before { schedule.reload }
 
   describe "Given am admin visits the index page," do
 
@@ -24,7 +24,7 @@ feature "List & View schedules: " do
 
   describe "Given am admin visits the show page," do
 
-		background do
+		before do
 			signin admin
 			visit schedule_path(schedule)
 		end
@@ -35,8 +35,8 @@ feature "List & View schedules: " do
 		end
 
 		context "when a location_plan is still running" do
-			background do
-				schedule.location_plans.map(&:running!)
+			before do
+				schedule.grades.map(&:running!)
 				visit schedule_path(schedule)
 			end
 

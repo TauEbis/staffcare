@@ -16,7 +16,7 @@
   </div>
   <div class="col-sm-9">
     <% if @schedule.lps_complete? -%>
-      <%= render 'location_plans/analysis', analysis: @schedule.analysis %>
+      <%= render 'grades/analysis', analysis: @schedule.analysis %>
     <% end -%>
   </div>
 </div>
@@ -33,7 +33,7 @@
     </div>
     <div class="col-sm-9">
       <% if @schedule.zone_complete?(zone) -%>
-        <%= render 'location_plans/analysis', analysis: @schedule.analysis(zone) %>
+        <%= render 'grades/analysis', analysis: @schedule.analysis(zone) %>
       <% end -%>
     </div>
   </div>

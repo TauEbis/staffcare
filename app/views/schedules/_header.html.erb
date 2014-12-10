@@ -15,11 +15,11 @@
   <small> <%= @schedule.state.to_s.humanize %></small>
 </h1>
 
-<% if @schedule.location_plans.complete.count < @schedule.location_plans.count -%>
+<% if @schedule.grades.complete.count < @schedule.grades.count -%>
   <div class="alert alert-info" role="alert">
-    Location plan optimization status:
-    <%= @schedule.location_plans.complete.count %> of
-    <%= @schedule.location_plans.count %> complete
+    Optimization status:
+    <%= @schedule.grades.complete.count %> of
+    <%= @schedule.grades.count %> complete
   </div>
 <% end -%>
 

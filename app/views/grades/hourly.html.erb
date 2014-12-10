@@ -17,15 +17,15 @@
   </tr>
   </thead>
   <tbody>
-  <% size = @location_plan.visits[@date_s].size %>
-  <% start = @location_plan.location.open_times[@date.wday] %>
+  <% size = @grade.visits[@date_s].size %>
+  <% start = @grade.open_times[@date.wday] %>
   <% analysis = @grade.analysis(@date) %>
   <% (0...size).each do |i| -%>
     <tr>
       <td><%= (start + (i / 2.0)).to_time_of_day %></td>
       <td><%= @grade.coverages[@date_s][i] %></td>
       <td><%= (@grade.breakdowns[@date_s]['seen'][i] / @grade.coverages[@date_s][i]).round(2) %></td>
-      <td><%= @location_plan.visits[@date_s][i].round(2) %></td>
+      <td><%= @grade.visits[@date_s][i].round(2) %></td>
       <td><%= @grade.breakdowns[@date_s]['seen'][i].round(2) %></td>
       <td class='people'><%= @grade.breakdowns[@date_s]['queue'][i].round(2) %></td>
       <td class='people'><%= @grade.breakdowns[@date_s]['turbo'][i].round(2) %></td>

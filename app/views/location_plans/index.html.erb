@@ -9,22 +9,22 @@
 </div>
 
 <% location_plans_for_picker.each do |location_plan| %>
+  <% grade = location_plan.chosen_grade %>
 
   <div class="panel panel-default">
     <% location = location_plan.location %>
     <% if location_plan.complete? -%>
-
       <div class="panel-body">
         <div class="table">
           <div class="col-sm-3">
             <div class="row">
               <h4><%= link_to location.name, location_plan_path(location_plan) %> <span class="pull-right"><%= state_label location_plan, :small %></span>
-              <p><small><%= location_plan.chosen_grade.try(:label) -%></small></p></h4>
-              <small><%= location_plan.rooms %> rooms &bull; Max <%= location_plan.max_mds %> MDs</small>
+              <p><small><%= grade.try(:label) -%></small></p></h4>
+              <small><%= grade.rooms %> rooms &bull; Max <%= grade.max_mds %> MDs</small>
             </div>
           </div>
           <div class="col-sm-9">
-            <%= render 'location_plans/analysis', analysis: location_plan.chosen_grade.analysis %>
+            <%= render 'grades/analysis', analysis: grade.analysis %>
           </div>
         </div>
       </div>
@@ -32,7 +32,7 @@
     <% else -%>
       <div class="panel-body">
         <h4><%= location.name %></h4>
-        <%= render 'shared/optimizer_status', object: location_plan %>
+        <%= render 'shared/optimizer_status', object: grade %>
       </div>
     <% end -%>
   </div>

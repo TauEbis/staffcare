@@ -5,7 +5,10 @@ class SchedulesController < ApplicationController
 
   # GET /schedules
   def index
-    @schedules = policy_scope(Schedule).ordered.includes(location_plans: [:visit_projection, :location]).page params[:page]
+    @schedules = policy_scope(Schedule)
+      .ordered
+      .includes(location_plans: [{chosen_grade: :visit_projection}, :location])
+      .page params[:page]
     authorize @schedules
   end
 
@@ -95,7 +98,7 @@ class SchedulesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_schedule
-      @schedule = Schedule.includes(location_plans: [:visit_projection, location: [:zone]]).find(params[:id])
+      @schedule = Schedule.includes(location_plans: [{location: [:zone]}, :chosen_grade]).find(params[:id])
       authorize @schedule
     end
 

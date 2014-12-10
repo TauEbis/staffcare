@@ -3,6 +3,7 @@ class Schedule < ActiveRecord::Base
 
   has_many :visit_projections, dependent: :destroy
   has_many :location_plans, dependent: :destroy
+  has_many :grades, dependent: :destroy
 
   enum state: [ :draft, :active, :locked, :archived ]
 
@@ -87,11 +88,13 @@ class Schedule < ActiveRecord::Base
 
     forecasts = PatientVolumeForecast.where(start_date: ((starts_on-6)..ends_on) )
     forecasts_updates = forecasts.map(&:updated_at).max
-    location_plans.each do |lp|
-      new_locations = true if lp.updated_at < lp.location.updated_at
-      new_heatmaps = true if lp.visit_projection.updated_at < Heatmap.find_by!(uid: lp.location.uid).updated_at
-      new_forecasts = true if lp.visit_projection.updated_at < forecasts_updates
-    end
+
+    # FOOBAR
+    # location_plans.each do |lp|
+    #   new_locations = true if lp.updated_at < lp.location.updated_at
+    #   new_heatmaps = true if lp.visit_projection.updated_at < Heatmap.find_by!(uid: lp.location.uid).updated_at
+    #   new_forecasts = true if lp.visit_projection.updated_at < forecasts_updates
+    # end
 
     {heatmaps: new_heatmaps, forecasts: new_forecasts, location: new_locations}
   end

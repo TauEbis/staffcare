@@ -2,21 +2,14 @@ FactoryGirl.define do
   factory :location_plan do
     location
     schedule
-    visit_projection    { create(:visit_projection, location: location, schedule: schedule) }
-    visits              { visit_projection.visits }
-    rooms               5
-    max_mds             3
-    min_openers         1
-    min_closers         1
-    open_times          { [8, 8, 8, 8, 8, 8, 8] }
-    close_times         { [22, 22, 22, 22, 22, 22, 22] }
-    normal              { [0, 4, 8, 12, 16, 24] }
-    max                 { [0, 6, 12, 18, 24, 30] }
-    optimizer_state     :complete
 
     # assigns a chosen grade (and creates one if necessary)
     after(:create) do |location_plan, evaluator|
-      g = location_plan.grades(true).first || create(:grade, location_plan: location_plan)
+      g = location_plan.reload.grades(true).first || create(:grade,
+                                                     location_plan: location_plan,
+                                                     location: location_plan.location,
+                                                     schedule: location_plan.schedule)
+
       location_plan.update_attribute(:chosen_grade_id, g.id )
     end
 
@@ -29,7 +22,10 @@ FactoryGirl.define do
       end
 
       after(:create) do |location_plan, evaluator|
-        create_list(:grade_with_children, evaluator.grade_count, location_plan: location_plan)
+        create_list(:grade_with_children, evaluator.grade_count,
+                    location:  location_plan.location,
+                    schedule: location_plan.schedule,
+                    location_plan: location_plan)
         create_list(:push, evaluator.push_count, location_plan: location_plan)
         create(:heatmap, location: location_plan.location, uid: location_plan.location.uid )
       end

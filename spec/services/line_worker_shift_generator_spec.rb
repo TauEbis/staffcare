@@ -5,9 +5,9 @@ describe LineWorkerShiftGenerator, :type => :service do
   let(:rule)          { FactoryGirl.create(:rule, position: create(:position, key: :ma), grade: grade) }
   let(:generator)     { LineWorkerShiftGenerator.new(grade) }
 
-  let(:days)          { grade.location_plan.days }
-  let(:open_times)    { grade.location_plan.open_times }
-  let(:close_times)   { grade.location_plan.close_times }
+  let(:days)          { grade.days }
+  let(:open_times)    { grade.open_times }
+  let(:close_times)   { grade.close_times }
 
 
   describe "Creating shifts for different policies" do
@@ -142,8 +142,8 @@ describe LineWorkerShiftGenerator, :type => :service do
 
       describe "given 2 FTES" do
         before do
-          allow(grade.location_plan).to receive(:ftes).and_return(2)
-          allow(grade.location_plan).to receive(:days).and_return([monday])
+          allow(grade).to receive(:ftes).and_return(2)
+          allow(grade).to receive(:days).and_return([monday])
           generator.create!
         end
 
@@ -167,8 +167,8 @@ describe LineWorkerShiftGenerator, :type => :service do
 
       describe "given 3 FTES" do
         before do
-          allow(grade.location_plan).to receive(:ftes).and_return(3)
-          allow(grade.location_plan).to receive(:days).and_return([monday])
+          allow(grade).to receive(:ftes).and_return(3)
+          allow(grade).to receive(:days).and_return([monday])
           generator.create!
         end
 

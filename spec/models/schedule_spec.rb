@@ -8,10 +8,10 @@ describe Schedule, :type => :model do
 	before { schedule.reload }
 
   describe "#lps_complete?" do
-  	before { schedule.location_plans.map(&:complete!) }
+  	before { schedule.grades.map(&:complete!) }
 
   	context "when a location plan is still running" do
-	  	before { schedule.location_plans.first.running! }
+	  	before { schedule.grades.first.running! }
 
 			it "should return false" do
 				expect(schedule.lps_complete?).to eq(false)
@@ -36,10 +36,10 @@ describe Schedule, :type => :model do
   describe "#zone_complete?" do
   	let(:zone) {schedule.zones.first}
 
-  	before { schedule.location_plans.for_zone(zone).map(&:complete!) }
+  	before { schedule.grades.for_zone(zone).map(&:complete!) }
 
   	context "when a location plan in the zone is still running" do
-	  	before { schedule.location_plans.for_zone(zone).first.running! }
+	  	before { schedule.grades.for_zone(zone).first.running! }
 
 			it "should return false" do
 				expect(schedule.zone_complete?(zone)).to eq(false)

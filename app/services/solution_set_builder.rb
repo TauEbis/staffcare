@@ -1,5 +1,5 @@
 # Loads the possible combinatoric set of valid shifts for a given day
-# given the constraints stored in a location_plan
+# given the constraints stored in a grade
 class SolutionSetBuilder
 
   def setup(options)

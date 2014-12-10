@@ -13,7 +13,7 @@ module ApplicationHelper
       location_plans.ordered.
       for_zone(@zone).                              # For this zone
       for_user(current_user).                        # And for this user
-      includes(:location, :chosen_grade, :visit_projection)
+      includes(:location, {:chosen_grade => :visit_projection})
   end
 
   def full_title page_title

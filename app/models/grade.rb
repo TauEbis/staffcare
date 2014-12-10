@@ -4,6 +4,9 @@
 # that the grade belongs to.
 class Grade < ActiveRecord::Base
   belongs_to :location_plan
+  belongs_to :location
+  belongs_to :schedule
+  belongs_to :visit_projection
   belongs_to :user
   has_many :shifts, dependent: :destroy
   has_many :rules
@@ -11,13 +14,68 @@ class Grade < ActiveRecord::Base
 
   attr_reader :source_grade_id
 
-  enum source: [:optimizer, :last_month, :manual]
+  OPTIMIZER_FIELDS = [:max_mds, :rooms, :min_openers, :min_closers, :open_times, :close_times]
 
-  scope :ordered, -> { order(source: :asc, created_at: :desc) }
+  delegate :name, :ftes, to: :location
+  delegate :days, to: :schedule
+
+  enum source: [:optimizer, :last_month, :manual]
+  enum optimizer_state: [ :not_run, :running, :complete, :error ]
 
   before_destroy :reset_chosen_grade
 
   accepts_nested_attributes_for :shifts
+
+  scope :for_zone, -> (zone) { where(location_id: zone.location_ids) }
+  scope :for_user, -> (user) { where(location_id: user.relevant_locations.pluck(:id)) }
+  scope :assigned, -> { where(location_id: Location.assigned.pluck(:id)) }
+  #scope :ordered, -> { joins(:location).order('locations.name ASC')}
+  scope :ordered, -> { order(source: :asc, created_at: :desc) }
+
+  validates :schedule, presence: true
+  validates :visit_projection, presence: true
+  validates :visits, presence: true
+  validates :location, presence: true
+  validates :rooms, presence: true, numericality: { greater_than: 0, less_than: 100 }
+  validates :max_mds, presence: true, numericality: { greater_than: 0, less_than: 100 }
+  validates :open_times, presence: true
+  validates :close_times, presence: true
+  # validates :normal, presence: true
+  # validates :max, presence: true
+
+  validate :valid_opens
+  validate :valid_closes
+  validate :valid_visits
+
+  # Custom Validations
+
+  def valid_opens
+    open_times.each do |t|
+      unless 8 <=t && t <= 22
+        errors.add(:base, "Site must open after 8AM and before 10PM")
+        return
+      end
+    end
+  end
+
+  def valid_closes
+    close_times.each do |t|
+      unless 8 <=t && t <= 22
+        errors.add(:base, "Site must close after 8AM and before 10PM")
+        return
+      end
+    end
+  end
+
+  def valid_visits
+    visits.each do |day, day_visits|
+      dow = Date.parse(day).wday
+      unless day_visits.size == 2 * (close_times[dow] - open_times[dow])
+        errors.add(:base, "The visit projection must match the opening hours")
+        return
+      end
+    end
+  end
 
   def label
     case source
@@ -68,8 +126,8 @@ class Grade < ActiveRecord::Base
     breakdowns_will_change!
     points_will_change!
 
-    grader ||= CoverageGrader.new(location_plan.grader_opts)
-    self.breakdowns[date_s], self.points[date_s] = grader.full_grade(coverages[date_s], location_plan.visits[date_s])
+    grader ||= CoverageGrader.new(grader_opts)
+    self.breakdowns[date_s], self.points[date_s] = grader.full_grade(coverages[date_s], visits[date_s])
   end
 
   def reset_chosen_grade
@@ -90,17 +148,17 @@ class Grade < ActiveRecord::Base
   def for_highcharts(date)
     date_s = date.to_s
     b = breakdowns[date_s]
-    size = location_plan.visits[date_s].size
+    size = visits[date_s].size
     range = (0...size)
 =begin
     normal_data = range.map do |i|
       num_mds = coverages[date_s][i]
-      (location_plan.normal[num_mds] / 2.0).round(2).to_f  # Div 2.0 for half hours instad of hours
+      (normal[num_mds] / 2.0).round(2).to_f  # Div 2.0 for half hours instad of hours
     end
 =end
     max_data = range.map do |i|
       num_mds = coverages[date_s][i]
-      (location_plan.max[num_mds] / 2.0).round(2).to_f  # Div 2.0 for half hours instad of hours
+      (max[num_mds] / 2.0).round(2).to_f  # Div 2.0 for half hours instad of hours
     end
 
     seen_normal_data = range.map do |i|
@@ -108,14 +166,14 @@ class Grade < ActiveRecord::Base
     end
 
     waiting_data = range.map do |i|
-      location_plan.visits[date_s][i].round(2) + b['queue'][i].round(2)
+      visits[date_s][i].round(2) + b['queue'][i].round(2)
     end
 
-    start = location_plan.location.open_times[date.wday]
+    start = open_times[date.wday]
     x_axis = (0..size).map {|i| (start + (i / 2.0)).to_time_of_day }
 
     {
-      visits_data: location_plan.visits[date_s].map{|i| i.round(2)},
+      visits_data: visits[date_s].map{|i| i.round(2)},
       seen_normal_data: seen_normal_data,
       queue_data: b['queue'].map{|i| i.round(2)},
       turbo_data: b['turbo'].map{|i| i.round(2)},
@@ -141,14 +199,14 @@ class Grade < ActiveRecord::Base
 
   def over_staffed?(date_s)
     @_over_staffed ||= {}
-    @_over_staffed[date_s] ||= ( coverages[date_s].index { |x| x > (location_plan.normal.length - 1) } != nil )
+    @_over_staffed[date_s] ||= ( coverages[date_s].index { |x| x > (normal.length - 1) } != nil )
   end
 
   def over_staffing_wasted_mins(date_s)
     @_over_staffed_wasted_mins ||= {}
     @_over_staffed_wasted_mins[date_s] ||= begin
       coverage = coverages[date_s]
-      limit = location_plan.normal.length - 1                         # Subtract 1 since normal[1] is first speed
+      limit = normal.length - 1                         # Subtract 1 since normal[1] is first speed
       sheared_coverage = coverage.map { |n| [n,limit].min }           # Assumption is that above the limit adding mds does not increase capacity
       coverage.zip(sheared_coverage).map{ |x, y| x - y  }.sum * 30    # 30 minute blocks
     end
@@ -158,7 +216,81 @@ class Grade < ActiveRecord::Base
   # This is the one function that is not abstracted by Analysis
   # Because we need it for every single day to draw the calendar
   def pen_per_pat(date_s)
-    points[date_s]['total'] / location_plan.visits[date_s].sum # would totals(date)[:penalty]/totals(date)[:visits] be clearer?
+    points[date_s]['total'] / visits[date_s].sum # would totals(date)[:penalty]/totals(date)[:visits] be clearer?
+  end
+
+  def grader_opts
+    schedule.grader_weights.merge({normal: normal, max: max})
+  end
+
+  def solution_set_options(day)
+    @_ss_options ||= {}
+    @_ss_options[day.to_s] ||= recalculate_solution_set_options(day)
+  end
+
+  # Loads the set of possible shift coverages for a single day
+  # given the stored LocationPlan location configuration
+  def build_solution_set(day)
+    @_builder ||= SolutionSetBuilder.new
+    @_builder.setup(solution_set_options(day))
+    @_builder.build
+  end
+
+  def monthly_visits
+    @_monthly_visits ||= visits.each_value.inject(0) { | total, v | total + v.sum }
+  end
+
+  def daily_avg
+    @_daily_avg ||= monthly_visits / days.size
+  end
+
+  def weekly_avg
+    @_weekly_avg ||= daily_avg * 7
+  end
+
+  private
+
+  def recalculate_solution_set_options(day)
+
+    top = [max_mds, normal.length-1].min
+
+    # Find ceilng for max mds using visits and speeds
+    max_hourly_visitors = 2 * day_max(day)
+    day_max_mds = top # No point sending grader coverage it doesn't have speeds for
+    top.downto(1).each do |x|
+      normal[x] > max_hourly_visitors ? day_max_mds = x : break
+    end
+
+    # Find floor for min_openers using visits and speeds
+    am_min_hourly_visitors = 2 * am_min(day)
+    day_min_openers = min_openers
+    (min_openers..top).each do |x|
+      normal[x] < am_min_hourly_visitors ? day_min_openers = x : break
+    end
+
+    # Find floor for max_closers using visits and speeds
+    pm_min_hourly_visitors = 2 * pm_min(day)
+    day_min_closers = min_closers
+    (min_closers..top).each do |x|
+      normal[x] < pm_min_hourly_visitors ? day_min_closers = x : break
+    end
+
+    {open: open_times[day.wday()], close: close_times[day.wday()], max_mds: day_max_mds, min_openers: day_min_openers, min_closers: day_min_closers}
+  end
+
+  # Visits level logic -- extraction candidate
+  def day_max(day)
+    visits[day.to_s].max
+  end
+
+  def am_min(day)
+    length = visits[day.to_s].length
+    visits[day.to_s][0..(length/2 -1)].min
+  end
+
+  def pm_min(day)
+    length = visits[day.to_s].length
+    visits[day.to_s][(length/2)..-1].min
   end
 
 end
