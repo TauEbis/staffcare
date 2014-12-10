@@ -23,6 +23,7 @@ RSpec.describe CommentsController, :type => :controller do
     end
   end
 
+=begin
   describe "GET show" do
     it "returns the comment" do
       comment
@@ -35,6 +36,7 @@ RSpec.describe CommentsController, :type => :controller do
       expect(r['id']).to eq(comment.id)
     end
   end
+=end
 
   describe "POST create" do
     it "returns the comment" do

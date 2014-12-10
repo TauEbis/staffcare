@@ -4,16 +4,13 @@ function Comment(data) {
   var self = this;
   self.user_id     = ko.observable(data.user_id);
   self.user_name   = ko.observable(data.user_name);
+  self.user_avatar_url = ko.observable(data.user_avatar_url);
   self.location_plan_id = ko.observable(data.location_plan_id);
   self.grade_id    = ko.observable(data.grade_id);
   self.cause       = ko.observable(data.cause);
   self.body        = ko.observable(data.body);
   self.created_at  = ko.observable(new Date(data.created_at));
   self.timestamp   = ko.observable(data.timestamp);
-
-  self.avatar = ko.pureComputed(function() {
-    return "//robohash.org/" + $.md5("staffcare:" + self.user_id()) + ".png?size=75x75";
-  });
 }
 
 function CommentViewModel() {
@@ -72,6 +69,19 @@ $(document).ready(function() {
   var comment_view = $('#comment_view');
   var d = comment_view.data();
   if(d) {
+
+    // Custom Binding
+    ko.bindingHandlers.enterKey = {
+      init: function (element, valueAccessor, allBindings, data, context) {
+        var wrapper = function (data, event) {
+          if (event.keyCode === 13) {
+            valueAccessor().call(this, data, event);
+          }
+        };
+        ko.applyBindingsToNode(element, { event: { keyup: wrapper } }, context);
+      }
+    };
+
     commentContext = new CommentViewModel();
     ko.applyBindings(commentContext);
 

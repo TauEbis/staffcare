@@ -1,0 +1,35 @@
+<div class="row">
+    <div class="col-sm-1"><strong> Manager: </strong></div>
+    <div class="col-sm-2">
+      <% if manager = @location_plan.location.manager  %>
+        <%= image_tag manager.avatar_url %>
+        <p class="text-center"><%= manager.name %><p>
+      <%- end -%>
+    </div>
+    <div class="col-sm-2 col-sm-offset-1 text-right"><strong> Regional Manager: </strong></div>
+    <div class="col-sm-2">
+      <% if rm = @location_plan.location.rm  %>
+        <%= image_tag rm.avatar_url %>
+        <p class="text-center"><%= rm.name %><p>
+      <%- end -%>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-1"><strong> Visits: </strong></div>
+    <div class="col-sm-4"><%= @location_plan.monthly_visits.round(0) %> visitors per month &bull; <%= @location_plan.daily_avg.round(0) %> daily average</div>
+</div>
+
+<div class="row">
+    <div class="col-sm-1"><strong> Details: </strong></div>
+    <div class="col-sm-3"><%= @location_plan.rooms %> rooms &bull; Max <%= @location_plan.max_mds %> MDs</div>
+</div>
+
+<div class="row">
+    <div class="col-sm-1"><strong> Open/Close: </strong></div>
+    <% Location::DAYS.each_with_index do |day, i| -%>
+      <div class="col-sm-1">
+        <p><%= "#{day.humanize}: #{@location_plan.open_times[i]}am - #{@location_plan.close_times[i]-12}pm" %></p>
+      </div>
+    <% end -%>
+</div>
