@@ -5,9 +5,6 @@ class ReportServerIngest < ActiveRecord::Base
 
   after_initialize :init
 
-  #has_many :heatmaps
-  #validates_associated :heatmaps
-
   def init
     @locations = {}
     @totals = {}
@@ -40,14 +37,14 @@ class ReportServerIngest < ActiveRecord::Base
       heatmap = Heatmap.where(uid: record.uid).first_or_initialize
       if granularity == 15
         Date::DAYNAMES.each do |day|
-          record.get_day(day).keys.sort.each do |hour|
+          record.days[day].keys.sort.each do |hour|
             heatmap.set(day, hour, record.get_visits(day, hour) / record.total_visits)
           end
         end
       elsif granularity == 30
         Date::DAYNAMES.each do |day|
-          hours = record.get_day(day).keys.sort.each_slice(2) do |hour1, hour2|
-            total = record.get_visits(day, hour1) + record.get_visits(day, hour2)
+          hours = record.days[day].keys.sort.each_slice(2) do |hour1, hour2|
+            total = record.days[day][hour1] + record.days[day][hour2]
             heatmap.set(day, hour1, total / record.total_visits)
           end
         end
