@@ -236,6 +236,18 @@ class Grade < ActiveRecord::Base
     @_builder.build
   end
 
+  def monthly_visits
+    @_monthly_visits ||= visits.each_value.inject(0) { | total, v | total + v.sum }
+  end
+
+  def daily_avg
+    @_daily_avg ||= monthly_visits / days.size
+  end
+
+  def weekly_avg
+    @_weekly_avg ||= daily_avg * 7
+  end
+
   private
 
   def recalculate_solution_set_options(day)
@@ -279,18 +291,6 @@ class Grade < ActiveRecord::Base
   def pm_min(day)
     length = visits[day.to_s].length
     visits[day.to_s][(length/2)..-1].min
-  end
-
-  def monthly_visits
-    @_monthly_visits ||= visits.each_value.inject(0) { | total, v | total + v.sum }
-  end
-
-  def daily_avg
-    @_daily_avg ||= monthly_visits / days.size
-  end
-
-  def weekly_avg
-    @_weekly_avg ||= daily_avg * 7
   end
 
 end
