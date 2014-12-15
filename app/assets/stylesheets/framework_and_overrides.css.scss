@@ -8,10 +8,15 @@ img {
   margin: 0 auto;
   }
 
+// match navbar color to citymd.com
+.navbar-inverse {
+  background-color: #333333;
+}
+
 // padding for text next to logo in navbar
 .navbar-brand {
   .brand-name {
-    padding-left: 5px;
+    padding-left: 15px;
   }
 }
 
