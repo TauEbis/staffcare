@@ -2,26 +2,18 @@ class Heatmap < ActiveRecord::Base
   validates :days, presence:true
   validates :uid, presence:true
 
-  serialize :days, Hash
-
   belongs_to :location, primary_key: :uid, foreign_key: :uid
   belongs_to :report_server_ingest
 
   scope :ordered, -> { joins(:location).order('locations.name ASC') }
 
-  def set(day, hour, percentage)
-    if !self.days.has_key? day
       self.days[day] = {}
     end
-    self.days[day][hour] = percentage
   end
 
-  def get_days
-    return self.days
-  end
-
-  def build_day_volume(total_volume, day, location)
-    percents = self.days[Date::DAYNAMES[day.wday]].values
+# this shouldn't be in the heatmap
+  def build_day_volume(total_volume, day)
+    percents = days[Date::DAYNAMES[day.wday]].values
 
     start_time = location.open_times[day.wday]
     end_time   = location.close_times[day.wday]
@@ -32,7 +24,6 @@ class Heatmap < ActiveRecord::Base
 
     percents[start_index...end_index].map{ |percent| percent * total_volume }
   end
-
 
 end
 

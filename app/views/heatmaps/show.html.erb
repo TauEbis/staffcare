@@ -22,7 +22,7 @@
       <tr>
         <td class="col-sm-1"> <%= time[0..-4] %> </td>
         <% @days.each do |day| %>
-  	      <td nowrap class="col-sm-1"><%= "#{(@heatmap.get_days[day][time]*100).round(4)}%" %></td>
+  	      <td nowrap class="col-sm-1"><%= "#{(@heatmap.days[day][time]*100).round(4)}%" %></td>
         <% end %>
       </tr>
     <% end %>

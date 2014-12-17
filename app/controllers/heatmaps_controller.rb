@@ -9,8 +9,8 @@ class HeatmapsController < ApplicationController
 
   # GET /heatmaps/1
   def show
-  	@days=@heatmap.get_days.keys
-  	@times=@heatmap.get_days[@days.first].keys
+  	@days=@heatmap.days.keys
+  	@times=@heatmap.days[@days.first].keys
   end
 
   private
