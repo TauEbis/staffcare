@@ -105,4 +105,22 @@ class Location < ActiveRecord::Base
     end
   end
 
+  # Used by ReportServerIngest
+  def self.create_default(name, passed_attributes={})
+    attr = { name: name, report_server_id: name.gsub(' ', '_'), max_mds: 3, rooms: 12,
+             open_times: [9,8,8,8,8,8,9], close_times: [21,22,22,22,22,22,21]
+            }.merge.passed_attributes
+
+    z0 = Zone.where(name: 'Unassigned').first_or_initialize
+    z0.locations.build(attr)
+
+    location.speeds.build(doctors: 1, normal: 4, max: 6)
+    location.speeds.build(doctors: 2, normal: 8, max: 12)
+    location.speeds.build(doctors: 3, normal: 12, max: 18)
+    location.speeds.build(doctors: 4, normal: 16, max: 24)
+    location.speeds.build(doctors: 5, normal: 20, max: 30)
+
+    location.save!
+  end
+
 end
