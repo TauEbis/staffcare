@@ -1,5 +1,5 @@
-desc "Manual report server information ingest"
-task :rs_ingest => :environment do
+desc "Manual report server information import"
+task :rs_import => :environment do
   ReportServerFactory.new.import!
 end
 
