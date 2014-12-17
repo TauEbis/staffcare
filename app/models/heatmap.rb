@@ -5,6 +5,7 @@ class Heatmap < ActiveRecord::Base
   serialize :days, Hash
 
   belongs_to :location, primary_key: :uid, foreign_key: :uid
+  belongs_to :report_server_ingest
 
   scope :ordered, -> { joins(:location).order('locations.name ASC') }
 
