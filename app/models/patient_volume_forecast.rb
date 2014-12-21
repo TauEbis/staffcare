@@ -9,6 +9,7 @@ class PatientVolumeForecast < ActiveRecord::Base
   validate :valid_start_date, unless: "start_date.blank?"
   validate :valid_end_date, unless: "start_date.blank?"
 
+  scope :for_date, -> (date) { where("start_date <= ? AND end_date >= ?", date, date) }
   scope :ordered, -> { order(start_date: :asc, id: :desc) }
   default_scope -> { order(start_date: :asc, id: :desc) }
 
@@ -55,27 +56,14 @@ class PatientVolumeForecast < ActiveRecord::Base
     end
   end
 
-# Methods
+  # Class Methods
 
-  # These instance methods are only used by the DataProvider
-
-  #Returns the projected volume for the given location and day
-  #NB: Right now returns the week volume for that day to match heatmaps
-  def get_volume(location, day)
-    return self.volume_by_location[location.report_server_id]
-  end
-
-  # checks if the forecast includes data for the given date
-  def contains_day?(date)
-    if date >= self.start_date and date <= self.end_date
-      return true
-    else
-      return false
+  #Returns the projected weekly volume for the given location and day
+  #NB: Returns the week volume for ease of use with heatmaps
+  def self.get_weekly_volume(location, date)
+    if forecast = for_date(date).first
+      forecast.volume_by_location[location.report_server_id]
     end
-  end
-
-  def contains_location?(loc)
-    return self.volume_by_location.has_key?(loc.report_server_id)
   end
 
  # These class methods are used to export forecasts
@@ -162,5 +150,25 @@ class PatientVolumeForecast < ActiveRecord::Base
        return suspect
      end
   end
+
+# Unused instance methods
+=begin
+  def get_volume(location, day)
+    return self.volume_by_location[location.report_server_id]
+  end
+
+  # checks if the forecast includes data for the given date
+  def contains_day?(date)
+    if date >= self.start_date and date <= self.end_date
+      return true
+    else
+      return false
+    end
+  end
+
+  def contains_location?(loc)
+    return self.volume_by_location.has_key?(loc.report_server_id)
+  end
+=end
 
 end
