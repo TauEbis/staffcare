@@ -16,7 +16,7 @@ class ScheduleOptimizerWorker
 
       if first_run || opts['load_locations'] || opts['load_visits']
         # Factory creates Grades and VisitProjection
-        factory = GradeFactory.new( schedule: schedule, data_provider: DataProvider.new("database") )
+        factory = GradeFactory.new( schedule: schedule, volume_source: :patient_volume_forecasts )
         first_run ? factory.create : factory.update(opts)
       end
 
