@@ -21,6 +21,8 @@ class GradeFactory
       grade.schedule = @schedule
       grade.location_plan = lp
       grade.save!
+      lp.chosen_grade = grade
+      lp.save!
     end
   end
 
