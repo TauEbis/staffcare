@@ -24,5 +24,32 @@ class Heatmap < ActiveRecord::Base
     save!
   end
 
+  def shear_to_opening_hours
+    open_times, close_times = location.open_times, location.close_times
+    sheared_heatmap = {}
+
+    Date::DAYNAMES.each_with_index do |day_name, day_index|
+      start_hour = open_times[day_index]
+      end_hour   = close_times[day_index]
+
+      start_to_s = Time.now.beginning_of_day.change(hour: start_hour).to_s(:time)
+      end_to_s = Time.now.beginning_of_day.change(hour: end_hour).to_s(:time)
+
+      sheared_heatmap[day_name] = days[day_name].select{ |k,v| start_to_s <= k && k < end_to_s } # string comparison
+    end
+    self.class.normalize!(sheared_heatmap)
+  end
+
+# Used to normalize sheared heatmaps so that they sum to 100%
+  def self.normalize!(sheared_heatmap)
+    total = sheared_heatmap.values.map(&:values).map(&:sum).sum
+
+    Date::DAYNAMES.each do |day_name|
+      sheared_heatmap[day_name].each{ |k,v| sheared_heatmap[day_name][k] = v/total } # normalize
+    end
+
+    sheared_heatmap
+  end
+
 end
 
