@@ -2,18 +2,16 @@ require 'spec_helper'
 
 describe GradeFactory, :type => :service do
 
-  let(:data_provider) { DataProvider.new("database") }
-
 	describe "#create" do
 
 	  let!(:location) 			{ create(:location) }
 
 		let(:schedule) 				{ create(:schedule) }
-	  let(:factory)  				{ GradeFactory.new(schedule: schedule, data_provider: data_provider) }
+	  let(:factory)  				{ GradeFactory.new(schedule: schedule, volume_source: :patient_volume_forecasts) }
 	  let(:projection)			{ create(:visit_projection, location: location, schedule: schedule) }
 
 		before do
-			allow(VisitProjection).to receive(:import!).and_return({ location.report_server_id => projection })
+			allow(factory.projector).to receive(:project!).and_return( projection )
 			factory.create
 		end
 
@@ -54,14 +52,14 @@ describe GradeFactory, :type => :service do
   	let!(:location) 			{ create(:location, max_mds: 10) }
 
 		let(:schedule) 				{ create(:schedule) }
-		let(:factory)  				{ GradeFactory.new(schedule: schedule, data_provider: data_provider) }
+		let(:factory)  				{ GradeFactory.new(schedule: schedule, volume_source: :patient_volume_forecasts) }
 
 		let!(:grade)					{	create(:grade, schedule: schedule, location: location) }
 		let!(:old_projection) { grade.visit_projection }
 		let!(:old_max_mds)		{ grade.max_mds }
 		let(:new_projection)	{ create(:visit_projection, location: location, schedule: schedule.reload) }
 
-		before { allow(VisitProjection).to receive(:import!).and_return({ location.report_server_id => new_projection })}
+		before { allow(factory.projector).to receive(:project!).and_return(new_projection) }
 
 		context "when opts['load_locations'] and opts['load_visits']" do
 
