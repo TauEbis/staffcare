@@ -9,8 +9,9 @@ class HeatmapsController < ApplicationController
 
   # GET /heatmaps/1
   def show
-  	@days=@heatmap.days.keys
-  	@times=@heatmap.days[@days.first].keys
+    @sheared_heatmap = @heatmap.shear_to_opening_hours
+  	@days = @sheared_heatmap.keys
+  	@times = @sheared_heatmap[@days.second].keys # Use first weekday to set times
   end
 
   private
