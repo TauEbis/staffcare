@@ -63,6 +63,8 @@ class PatientVolumeForecast < ActiveRecord::Base
   def self.get_weekly_volume(location, date)
     if forecast = for_date(date).first
       forecast.volume_by_location[location.report_server_id]
+    else
+      nil
     end
   end
 

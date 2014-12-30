@@ -11,7 +11,7 @@ class VisitProjector
       location: location,
       volumes: volumes,
       heatmap: heatmap,
-      visits: build_visits(volumes, heatmap)
+      visits: build_visits(schedule, volumes, heatmap)
     )
 
     projection
@@ -44,7 +44,7 @@ class VisitProjector
   	end
 
     # Returns the projected visits by combining the weekly volume data and the heatmap
-    def build_visits(volumes, heatmap)
+    def build_visits(schedule, volumes, heatmap)
       visits = {}
 
       schedule.days.each do |day|
