@@ -309,4 +309,7 @@ describe Location do
     end
   end
 
+# Class Methods
+pending "::create_default"
+
 end

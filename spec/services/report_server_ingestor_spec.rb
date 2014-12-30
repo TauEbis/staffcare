@@ -14,4 +14,8 @@ describe ReportServerIngestor do
       expect(locations_hash['CityMD 14th St'][:day_volumes]).to eq( {'Sunday' => {'08:00:00' => 0.000000} } )
     end
   end
+
+  pending "#create_ingest!"
+  pending "#create_locations!"
+  pending "#create_heatmaps!"
 end
