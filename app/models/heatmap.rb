@@ -1,8 +1,7 @@
 class Heatmap < ActiveRecord::Base
   validates :days, presence:true
-  validates :uid, presence:true
 
-  belongs_to :location, primary_key: :uid, foreign_key: :uid
+  belongs_to :location
   belongs_to :report_server_ingest
 
   scope :ordered, -> { joins(:location).order('locations.name ASC') }

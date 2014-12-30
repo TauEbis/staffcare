@@ -36,14 +36,15 @@ class ReportServerIngestor
 
   def create_locations!
     @locations_hash.each do |name, loc_data|
-      # Create new locations if we haven't heard of this UID before.
+      # Create new location if we haven't heard of this UID before.
       Location.create_default( name, {uid: loc_data[:uid]} ) if !Location.find_by(uid: loc_data[:uid])
     end
   end
 
   def create_heatmaps!(granularity=30)
     @locations_hash.values.each do |loc_data|
-      heatmap = Heatmap.where(uid: loc_data[:uid]).first_or_initialize
+      loc_id = Location.find_by(uid: loc_data[:uid]).id
+      heatmap = Heatmap.where(location_id: loc_id).first_or_initialize
       heatmap.recalc_from_volumes(loc_data[:day_volumes], granularity)
       @ingest.heatmaps << heatmap
       heatmap.save!

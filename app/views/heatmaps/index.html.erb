@@ -15,7 +15,7 @@
     <% @heatmaps.each do |heatmap| %>
       <tr>
         <td><%= link_to heatmap.location.name, heatmap %></td>
-        <td><%= heatmap.uid %></td>
+        <td><%= heatmap.location.uid %></td>
         <td colspan="2"><%= heatmap.updated_at.to_formatted_s(:short) %></td>
       </tr>
     <% end %>

@@ -3,7 +3,7 @@
 class Location < ActiveRecord::Base
   belongs_to :zone
 
-  has_one :heatmap, primary_key: :uid, foreign_key: :uid
+  has_one :heatmap
   has_many :memberships
   has_many :users, through: :memberships
   has_many :speeds, dependent: :destroy, inverse_of: :location
@@ -105,7 +105,7 @@ class Location < ActiveRecord::Base
     end
   end
 
-  # Used by ReportServerIngest
+  # Used by ReportServerIngestor
   def self.create_default(name, passed_attributes={})
     attr = { name: name, report_server_id: name.gsub(' ', '_'), max_mds: 3, rooms: 12,
              open_times: [9,8,8,8,8,8,9], close_times: [21,22,22,22,22,22,21]

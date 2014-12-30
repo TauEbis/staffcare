@@ -24,7 +24,7 @@ end
 task :heatmap_dump => :environment do
   maps = Heatmap.all
   maps.each do |heatmap|
-    puts heatmap.uid
+    puts heatmap.location.uid
     puts heatmap.days
   end
 end
