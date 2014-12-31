@@ -69,6 +69,7 @@ if Rails.env.development?
   if User.all.empty?
     user = User.find_or_create_by!(email: 'admin@admin.com') do |user|
       user.password = user.password_confirmation = 'password'
+      user.name = 'Admin User'
       user.admin!
       Location.all.each do |location|
         user.locations << location unless user.locations.include?(location)
@@ -78,6 +79,7 @@ if Rails.env.development?
 
     user = User.find_or_create_by!(email: 'manager@manager.com') do |user|
       user.password = user.password_confirmation = 'password'
+      user.name = 'Manager User'
       user.manager!
       locs = Location.find_by name: "CityMD 14th St"
       user.locations << locs
@@ -86,6 +88,7 @@ if Rails.env.development?
 
     user = User.find_or_create_by!(email: 'rm@rm.com') do |user|
       user.password = user.password_confirmation = 'password'
+      user.name = 'RM User'
       user.rm!
       locs = Zone.find_by(name: "Manhattan").locations
       user.locations << locs
