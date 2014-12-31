@@ -3,16 +3,16 @@
 class Location < ActiveRecord::Base
   belongs_to :zone
 
-  has_one :heatmap, primary_key: :uid, foreign_key: :uid
+  has_one :heatmap
   has_many :memberships
   has_many :users, through: :memberships
   has_many :speeds, dependent: :destroy, inverse_of: :location
   accepts_nested_attributes_for :speeds, reject_if: proc { |attributes| attributes['doctors'].blank? }
 
   validates :name, presence: true
-  #validates :uid, presence: true # The prevents creating new locations
+  #validates :uid, presence: true # This only alllows creating new locations via reportserver
   validates :zone, presence: true
-  validates :report_server_id, uniqueness: true, presence: true
+  validates :upload_id, uniqueness: true, presence: true
   validates :rooms, presence: true, numericality: { greater_than: 0, less_than: 100 }
   validates :max_mds, presence: true, numericality: { greater_than: 0, less_than: 100 }
   validates :managers, presence: true, numericality: { greater_than: 0, less_than_or_equal_to: 1 }
@@ -103,6 +103,24 @@ class Location < ActiveRecord::Base
     elsif doctor_set != (1..max).to_a
       errors.add(:base, "Physician numbers must be sequential")
     end
+  end
+
+  # Used by ReportServerIngestor
+  def self.create_default(name, passed_attributes={})
+    attr = { name: name, upload_id: name.gsub(' ', '_'), max_mds: 3, rooms: 12,
+             open_times: [9,8,8,8,8,8,9], close_times: [21,22,22,22,22,22,21]
+            }.merge(passed_attributes)
+
+    z0 = Zone.where(name: 'Unassigned').first_or_initialize
+    location = z0.locations.build(attr)
+
+    location.speeds.build(doctors: 1, normal: 4, max: 6)
+    location.speeds.build(doctors: 2, normal: 8, max: 12)
+    location.speeds.build(doctors: 3, normal: 12, max: 18)
+    location.speeds.build(doctors: 4, normal: 16, max: 24)
+    location.speeds.build(doctors: 5, normal: 20, max: 30)
+
+    location.save!
   end
 
 end

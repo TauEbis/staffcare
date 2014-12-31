@@ -77,6 +77,7 @@ group :development, :test do
   gem 'spring'
   gem 'spring-commands-rspec'
   gem 'growl'
+  gem 'dotenv-rails'
 end
 
 group :test do

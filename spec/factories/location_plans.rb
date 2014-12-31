@@ -27,7 +27,7 @@ FactoryGirl.define do
                     schedule: location_plan.schedule,
                     location_plan: location_plan)
         create_list(:push, evaluator.push_count, location_plan: location_plan)
-        create(:heatmap, location: location_plan.location, uid: location_plan.location.uid )
+        create(:heatmap, location: location_plan.location )
       end
 
     end

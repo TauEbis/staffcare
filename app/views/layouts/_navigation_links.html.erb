@@ -1,7 +1,6 @@
 <%# add navigation links to this file %>
 <% if user_signed_in? %>
   <ul class="nav navbar-nav">
-    <li><%= link_to 'Home', root_path %><li>
   <% if policy(Schedule).index? -%>
     <li><%= link_to 'Schedules', schedules_path %></li>
   <% end -%>
@@ -18,10 +17,11 @@
   <% end -%>
   </ul>
   <ul class="nav navbar-nav navbar-right">
+    <li><%= link_to 'Help', pages_path %></li>
     <li class="dropdown">
       <a href="#" class="dropdown-toggle gravatar" data-toggle="dropdown" role="button" aria-expanded="false">
         <%= image_tag(current_user.avatar_url(46)) %>
-        <span class="navbar-text"><%= current_user.name %></span>
+        <span class="navbar-text"><%= "#{current_user.label} (#{current_user.role})" %></span>
         <span class="caret"></span>
       </a>
       <ul class="dropdown-menu" role="menu">
@@ -30,8 +30,6 @@
         <li><%= link_to 'Sign out', destroy_user_session_path, :method=>'delete' %></li>
       </ul>
     </li>
-    <li><%= link_to 'Help', pages_path %></li>
-    <li><%= link_to 'Sign out', destroy_user_session_path, :method=>'delete' %></li>
   <ul>
 
 <% else %>

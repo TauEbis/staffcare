@@ -1,51 +1,27 @@
-require 'json'
-
-class VolumeHistoryImporter
+class ReportServerFetcher
   include HTTParty
-  attr_reader :start_date, :end_date, :session_id
-  attr_accessor :username, :password
   base_uri 'https://api.citymd.com/rio'
-
-  USER_ENV_KEY = "CITYMD_API_REPORTS_USER"
-  PASS_ENV_KEY = "CITYMD_API_REPORTS_PASSWORD"
 
   BAD_IP_MESSAGE = "is not an authorized IP Address."
   BAD_USERNAME_MESSAGE = "Invalid Login"
   BAD_PASSWORD_MESSAGE = "Invalid login"
 
   #debug_output $stderr
+
   # Create a new object to wrap a connection to the server
   # start_date - Beginning of date range to request data
   # end_date - End of " " " " "
   # locations - An array of location GUIDs or nil for all.
-  def initialize(start_date, end_date, location)
-    location ||= 'ALL'
-    # FIXME: These values should be 1) changed and 2) Not hard coded.
-    @username = ENV[USER_ENV_KEY]||'Rio'
-    @password = ENV[PASS_ENV_KEY]||'CitymdRio'
+  def initialize(start_date, end_date, locations = 'ALL')
+    @username = Rails.application.secrets.rs_username
+    @password = Rails.application.secrets.rs_password
 
     if @username and @password
       @options = { query: { startdate: start_date.to_s, enddate: end_date.to_s,
-                            servicesiteuid: location } }
+                            servicesiteuid: locations } }
       @session_id = nil
     else
-      raise "No API password found in the environment! Set #{USER_ENV_KEY} and #{PASS_ENV_KEY} to correct this error."
-    end
-  end
-
-  def self.valid_guid?(guid)
-    if /^\h\h\h\h\h\h\h\h\-\h\h\h\h\-\h\h\h\h\-\h\h\h\h\-\h\h\h\h\h\h\h\h\h\h\h\h$/.match(guid) != nil
-      return true
-    else
-      return false
-    end
-  end
-
-  def authenticated?
-    if @session_id != nil
-      return true
-    else
-      return false
+      raise "No CityMD API username/password found in the environment!"
     end
   end
 
@@ -57,28 +33,31 @@ class VolumeHistoryImporter
         @options[:query][:sessionID] = @session_id
         @options[:headers] = { 'Cookie' => response.headers['Set-Cookie'] }
       else
-        handle_auth_error(response.body)
+        self.class.handle_auth_error(response.body)
       end
     else
       raise IOError, "Connection error- got #{response.message} (#{response.code}) from server."
     end
   end
 
+# NOTE: JSON data records are structured: [{"Name"=>"PC Bellmore", "ServiceSiteUid"=>"28a537db-55f0-434d-9b90-e1245b6a46bd", "VisitDay"=>4, "VisitHour"=>"20:30:00", "VisitCount"=>1.928571}]
+# NOTE: VisitDay is 1-7 with Sunday = 1
+# NOTE: VisitCount is an average over the querry date range (start_date to end_date)
   def fetch_data!
-    if self.session_id == nil
-      self.authenticate!()
-    end
+    authenticate! if !authenticated?
     response = self.class.get('/patientload', @options)
     if response.code == 200
-      return response.body
+      return JSON.parse(response.body)
     else
       raise IOError, "Error retrieving data- got #{response.message} (#{response.code}) from server."
     end
   end
 
-  private
+  def self.valid_guid?(body)
+    /^\h\h\h\h\h\h\h\h\-\h\h\h\h\-\h\h\h\h\-\h\h\h\h\-\h\h\h\h\h\h\h\h\h\h\h\h$/.match(body) != nil
+  end
 
-  def handle_auth_error(msg)
+  def self.handle_auth_error(msg)
     if msg.match(BAD_USERNAME_MESSAGE)
       raise SecurityError, "Authentication error- Bad username."
     elsif msg.match(BAD_PASSWORD_MESSAGE)
@@ -90,6 +69,11 @@ class VolumeHistoryImporter
     end
   end
 
+  private
+
+    def authenticated?
+      @session_id != nil
+    end
 end
 
 

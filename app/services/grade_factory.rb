@@ -1,9 +1,12 @@
 # Creates a Grade using the provided options and data source
 class GradeFactory
 
+  attr_accessor :projector
+
   def initialize(opts = {})
-    @schedule      = opts[:schedule]
-    @data_provider = opts[:data_provider]
+    @schedule = opts[:schedule]
+    @volume_source = opts[:volume_source]
+    @projector = opts[:projector] || VisitProjector.new
   end
 
   def create
@@ -18,6 +21,8 @@ class GradeFactory
       grade.schedule = @schedule
       grade.location_plan = lp
       grade.save!
+      lp.chosen_grade = grade
+      lp.save!
     end
   end
 
@@ -46,10 +51,8 @@ class GradeFactory
     end
 
     def visit_attr(location)
-      @_visit_projections ||= VisitProjection.import!(@data_provider, @schedule, @locations)
-
-      { visit_projection: @_visit_projections[location.report_server_id],
-        visits: @_visit_projections[location.report_server_id].visits     }
+      @_visit_projection = @projector.project!(location, @schedule, @volume_source)
+      { visit_projection: @_visit_projection, visits: @_visit_projection.visits }
     end
 
 end

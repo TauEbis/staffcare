@@ -1,37 +1,55 @@
 class Heatmap < ActiveRecord::Base
   validates :days, presence:true
-  validates :uid, presence:true
 
-  serialize :days, Hash
-
-  belongs_to :location, primary_key: :uid, foreign_key: :uid
+  belongs_to :location
+  belongs_to :report_server_ingest
 
   scope :ordered, -> { joins(:location).order('locations.name ASC') }
 
-  def set(day, hour, percentage)
-    if !self.days.has_key? day
+  # volumes  comes in as: { day1 => { time1 => quarter_hourly_volume1 }, day2 => ... }
+  def recalc_from_volumes(volumes, granularity=30)
+    days_will_change!
+    total = volumes.values.flat_map(&:values).sum # total visit
+    volumes.keys.each do |day|
       self.days[day] = {}
+      volumes[day].keys.sort.each_slice(2) do |time1, time2|    # time is assumed to be in 15 minute intervals
+        self.days[day][time1] = volumes[day][time1] / total
+        if granularity == 30
+          self.days[day][time1] += volumes[day][time2] / total
+        elsif granularity == 15
+          self.days[day][time2] = volumes[day][time2] / total
+        end
+      end
     end
-    self.days[day][hour] = percentage
+    save!
   end
 
-  def get_days
-    return self.days
+  def shear_to_opening_hours
+    open_times, close_times = location.open_times, location.close_times
+    sheared_heatmap = {}
+
+    Date::DAYNAMES.each_with_index do |day_name, day_index|
+      start_hour = open_times[day_index]
+      end_hour   = close_times[day_index]
+
+      start_to_s = Time.now.beginning_of_day.change(hour: start_hour).to_s(:time)
+      end_to_s = Time.now.beginning_of_day.change(hour: end_hour).to_s(:time)
+
+      sheared_heatmap[day_name] = days[day_name].select{ |k,v| start_to_s <= k && k < end_to_s } # string comparison
+    end
+    self.class.normalize!(sheared_heatmap)
   end
 
-  def build_day_volume(total_volume, day, location)
-    percents = self.days[Date::DAYNAMES[day.wday]].values
+# Used to normalize sheared heatmaps so that they sum to 100%
+  def self.normalize!(sheared_heatmap)
+    total = sheared_heatmap.values.map(&:values).map(&:sum).sum
 
-    start_time = location.open_times[day.wday]
-    end_time   = location.close_times[day.wday]
+    Date::DAYNAMES.each do |day_name|
+      sheared_heatmap[day_name].each{ |k,v| sheared_heatmap[day_name][k] = v/total } # normalize
+    end
 
-    # Assuming percents is always 28 starting at 8am
-    start_index = (start_time - 8) * 2
-    end_index   = (end_time - 8) * 2
-
-    percents[start_index...end_index].map{ |percent| percent * total_volume }
+    sheared_heatmap
   end
-
 
 end
 

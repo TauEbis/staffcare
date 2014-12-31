@@ -27,6 +27,8 @@ describe PatientVolumeForecast, :type => :model do
     it { should_not be_valid }
   end
 
+pending "test custom validations"
+
 # Scope
   describe "scope" do
     friday = Date.parse('2014-07-18')
@@ -47,5 +49,13 @@ describe PatientVolumeForecast, :type => :model do
       end
     end
   end
+
+# Class methods
+pending "::get_weekly_volume"
+pending "::to_csv"
+pending "::next_start_date"
+pending "::next_end_date"
+pending "::format_date"
+pending "::import"
 
 end
