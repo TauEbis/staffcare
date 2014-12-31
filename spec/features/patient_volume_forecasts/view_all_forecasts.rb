@@ -43,7 +43,7 @@ feature "Viewing all patient volume forecasts: " do
 			end
 
 			it "then it should have the correct volume data" do
-				locations.map(&:report_server_id).each do |l_id|
+				locations.map(&:upload_id).each do |l_id|
 					volume = earlier_input_projection.volume_by_location[l_id.to_s]
 					expect(volume).not_to be_nil
 					expect(page).to have_content(volume)

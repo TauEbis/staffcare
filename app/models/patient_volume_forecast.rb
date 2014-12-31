@@ -47,7 +47,7 @@ class PatientVolumeForecast < ActiveRecord::Base
     end
 
     locations = Location.all
-    location_names = locations.map(&:report_server_id)
+    location_names = locations.map(&:upload_id)
     volume_by_location.keys.each do |csv_name|
       # Whitelist 'id' to prevent problems with the seed data
       if location_names.index(csv_name) == nil and csv_name != 'id'
@@ -62,7 +62,7 @@ class PatientVolumeForecast < ActiveRecord::Base
   #NB: Returns the week volume for ease of use with heatmaps
   def self.get_weekly_volume(location, date)
     if forecast = for_date(date).first
-      forecast.volume_by_location[location.report_server_id]
+      forecast.volume_by_location[location.upload_id]
     else
       nil
     end
@@ -74,7 +74,7 @@ class PatientVolumeForecast < ActiveRecord::Base
   	CSV.generate(options.except(:all_time)) do |csv|
   		locations = Location.ordered.all
   		attribute_columns = [ 'start_date', 'end_date' ]
-  		location_columns = locations.map(&:report_server_id)
+  		location_columns = locations.map(&:upload_id)
   		columns = ['id'] + attribute_columns + location_columns
 
   		csv << columns
@@ -84,7 +84,7 @@ class PatientVolumeForecast < ActiveRecord::Base
           next
         end
   			attribute_rows = projection.attributes.values_at(*attribute_columns)
-  			location_rows = projection.volume_by_location.values_at(*locations.map(&:report_server_id))
+  			location_rows = projection.volume_by_location.values_at(*locations.map(&:upload_id))
 				row = [projection.id] + attribute_rows + location_rows
 
 				csv << row
@@ -156,7 +156,7 @@ class PatientVolumeForecast < ActiveRecord::Base
 # Unused instance methods
 =begin
   def get_volume(location, day)
-    return self.volume_by_location[location.report_server_id]
+    return self.volume_by_location[location.upload_id]
   end
 
   # checks if the forecast includes data for the given date
@@ -169,7 +169,7 @@ class PatientVolumeForecast < ActiveRecord::Base
   end
 
   def contains_location?(loc)
-    return self.volume_by_location.has_key?(loc.report_server_id)
+    return self.volume_by_location.has_key?(loc.upload_id)
   end
 =end
 

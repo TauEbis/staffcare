@@ -13,7 +13,7 @@ describe Location do
     it { should respond_to(:zone_id) }
     it { should respond_to(:min_openers) }
     it { should respond_to(:min_closers) }
-    it { should respond_to(:report_server_id) }
+    it { should respond_to(:upload_id) }
     it { should respond_to(:managers) }
     it { should respond_to(:assistant_managers) }
 

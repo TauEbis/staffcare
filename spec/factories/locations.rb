@@ -3,7 +3,7 @@
 FactoryGirl.define do
   factory :location do
     sequence(:name) 				{ |n| "Location #{n}" }
-    sequence(:report_server_id)     { |n| "Location_#{n}" }
+    sequence(:upload_id)     { |n| "Location_#{n}" }
     zone
     sequence(:uid)                  { |n| "87a75e22-e9c5-4dbc-875e-9523b0fdc78#{n}" }
     rooms                           5

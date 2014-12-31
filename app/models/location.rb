@@ -12,7 +12,7 @@ class Location < ActiveRecord::Base
   validates :name, presence: true
   #validates :uid, presence: true # This only alllows creating new locations via reportserver
   validates :zone, presence: true
-  validates :report_server_id, uniqueness: true, presence: true
+  validates :upload_id, uniqueness: true, presence: true
   validates :rooms, presence: true, numericality: { greater_than: 0, less_than: 100 }
   validates :max_mds, presence: true, numericality: { greater_than: 0, less_than: 100 }
   validates :managers, presence: true, numericality: { greater_than: 0, less_than_or_equal_to: 1 }
@@ -107,7 +107,7 @@ class Location < ActiveRecord::Base
 
   # Used by ReportServerIngestor
   def self.create_default(name, passed_attributes={})
-    attr = { name: name, report_server_id: name.gsub(' ', '_'), max_mds: 3, rooms: 12,
+    attr = { name: name, upload_id: name.gsub(' ', '_'), max_mds: 3, rooms: 12,
              open_times: [9,8,8,8,8,8,9], close_times: [21,22,22,22,22,22,21]
             }.merge(passed_attributes)
 

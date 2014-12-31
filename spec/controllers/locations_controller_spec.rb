@@ -23,7 +23,7 @@ describe LocationsController, :type => :controller do
   # This should return the minimal set of attributes required to create a valid
   # Location. As you add validations to Location, be sure to
   # adjust the attributes here as well.
-  let(:valid_attributes) { { "name" => "MyString", 'uid' => '87a75e22-e9c5-4dbc-875e-9523b0fdc78e', 'report_server_id' => 'my_string', 'zone_id' => zone.id, 'managers' => 1, 'assistant_managers' => 1, 'rooms' => 4, 'max_mds' => 2, 'speeds_attributes' => { '0' => { 'doctors' => 1, 'normal' => 4, 'max' => 6 } } } }
+  let(:valid_attributes) { { "name" => "MyString", 'uid' => '87a75e22-e9c5-4dbc-875e-9523b0fdc78e', 'upload_id' => 'my_string', 'zone_id' => zone.id, 'managers' => 1, 'assistant_managers' => 1, 'rooms' => 4, 'max_mds' => 2, 'speeds_attributes' => { '0' => { 'doctors' => 1, 'normal' => 4, 'max' => 6 } } } }
   let(:valid_update_attributes) { { "name" => "MyString", 'zone_id' => zone.id, 'rooms' => 4, 'max_mds' => 2 } }
   #TODO Check that the valid_update_attributes are still a reasonable test
 

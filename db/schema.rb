@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141229193026) do
+ActiveRecord::Schema.define(version: 20141231132315) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -102,7 +102,7 @@ ActiveRecord::Schema.define(version: 20141229193026) do
     t.integer  "max_mds",            default: 1,    null: false
     t.integer  "min_openers",        default: 1,    null: false
     t.integer  "min_closers",        default: 1,    null: false
-    t.string   "report_server_id"
+    t.string   "upload_id"
     t.integer  "wiw_id"
     t.string   "uid"
     t.integer  "managers",           default: 1,    null: false
