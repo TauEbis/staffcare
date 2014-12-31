@@ -10,7 +10,7 @@ class Location < ActiveRecord::Base
   accepts_nested_attributes_for :speeds, reject_if: proc { |attributes| attributes['doctors'].blank? }
 
   validates :name, presence: true
-  #validates :uid, presence: true # The prevents creating new locations
+  #validates :uid, presence: true # This only alllows creating new locations via reportserver
   validates :zone, presence: true
   validates :report_server_id, uniqueness: true, presence: true
   validates :rooms, presence: true, numericality: { greater_than: 0, less_than: 100 }
@@ -109,10 +109,10 @@ class Location < ActiveRecord::Base
   def self.create_default(name, passed_attributes={})
     attr = { name: name, report_server_id: name.gsub(' ', '_'), max_mds: 3, rooms: 12,
              open_times: [9,8,8,8,8,8,9], close_times: [21,22,22,22,22,22,21]
-            }.merge.passed_attributes
+            }.merge(passed_attributes)
 
     z0 = Zone.where(name: 'Unassigned').first_or_initialize
-    z0.locations.build(attr)
+    location = z0.locations.build(attr)
 
     location.speeds.build(doctors: 1, normal: 4, max: 6)
     location.speeds.build(doctors: 2, normal: 8, max: 12)
