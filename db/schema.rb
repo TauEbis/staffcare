@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141231132315) do
+ActiveRecord::Schema.define(version: 20150103082218) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -218,9 +218,9 @@ ActiveRecord::Schema.define(version: 20141231132315) do
     t.integer  "doctors",                             null: false
     t.decimal  "normal",      precision: 5, scale: 2, null: false
     t.decimal  "max",         precision: 5, scale: 2, null: false
-    t.integer  "location_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "location_id"
   end
 
   add_index "speeds", ["doctors", "location_id"], name: "index_speeds_on_doctors_and_location_id", unique: true, using: :btree
@@ -274,6 +274,20 @@ ActiveRecord::Schema.define(version: 20141231132315) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "visits", force: true do |t|
+    t.date     "date",                                 null: false
+    t.json     "volumes",                 default: {}, null: false
+    t.integer  "granularity",             default: 15, null: false
+    t.integer  "dow",                                  null: false
+    t.integer  "location_id"
+    t.integer  "report_server_ingest_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "visits", ["location_id"], name: "index_visits_on_location_id", using: :btree
+  add_index "visits", ["report_server_ingest_id"], name: "index_visits_on_report_server_ingest_id", using: :btree
 
   create_table "zones", force: true do |t|
     t.string   "name"

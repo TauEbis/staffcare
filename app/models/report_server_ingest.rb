@@ -4,6 +4,7 @@ class ReportServerIngest < ActiveRecord::Base
   validates :data, presence: true
 
   has_many :heatmaps
+  has_many :visits
 
 end
 
