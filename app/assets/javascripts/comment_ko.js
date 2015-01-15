@@ -27,7 +27,6 @@ function CommentViewModel() {
   self.fetch_data = function() {
     $.ajax(self.url(), {data: {page: 1}} )
       .done(function(data, status, xhr) {
-        console.log(data);
         self.load(data);
       })
       .fail(function(xhr, status, error) {

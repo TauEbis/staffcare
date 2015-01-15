@@ -13,6 +13,11 @@ Rails.application.routes.draw do
       get :request_approvals
     end
     resources :location_plans, shallow: true, only: [:index, :show, :update]
+    resource  :staffing do
+      member do
+        get :table
+      end
+    end
   end
 
   resources :location_plans, only: [] do

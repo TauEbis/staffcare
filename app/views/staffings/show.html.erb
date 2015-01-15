@@ -1,0 +1,56 @@
+<div id="staffings_display" data-schedule-id="<%= @schedule.id %>"></div>
+
+<h1>Staffing Analyst Panel <%= @schedule.starts_on %></h1>
+
+<select><option>Schedule Select</option></select>
+
+<div class="row">
+  <ul class="chevronbar">
+    <li class="first">
+      <span>Settings</span>
+    </li>
+    <li class="">
+      <span>Policies</span>
+    </li>
+    <li class="">
+      <span>Staffing Plan (90 days out)</span>
+    </li>
+    <li class="">
+      <span>Demand Adjustments</span>
+    </li>
+    <li class="">
+      <span>Supply Adjustments</span>
+    </li>
+    <li class="">
+      <span>Supply vs. Demand</span>
+    </li>
+  </ul>
+</div>
+
+<div class="row">
+  <h3>
+    Demand Forecast Adjustments
+
+    <select><option>Zone</option></select>
+    <select><option>Location</option></select>
+  </h3>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+
+    <select><option>Extra Selector</option></select>
+
+    <% @grade = @schedule.grades.last %>
+    <%= render 'grades/daygrid' %>
+  </div>
+  <div class="col-sm-9">
+    <div id="highcharts-container" style="width: 100%; height: 400px; margin: 0 auto"></div>
+  </div>
+</div>
+
+<div class="row">
+  <table id="staffing-table" class="table table-striped table-bordered">
+
+  </table>
+</div>
