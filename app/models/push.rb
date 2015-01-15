@@ -2,7 +2,7 @@
 class Push < ActiveRecord::Base
   belongs_to :location_plan
 
-  enum state: [ :not_run, :running, :complete, :error ]
+  enum state: [ :not_run, :running, :complete, :error, :presync ]
 
   scope :ordered, -> { order(id: :desc) }
 
