@@ -9,7 +9,7 @@ function StaffingViewModel() {
   self.end_date  = ko.observable("");
 
   self.url = ko.pureComputed(function() {
-    return "/schedules/" + self.schedule_id() + "/staffings/table";
+    return "/schedules/" + self.schedule_id() + "/staffing/table";
   });
 
   self.fetch_data = function() {
