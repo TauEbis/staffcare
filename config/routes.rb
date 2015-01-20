@@ -2,11 +2,7 @@ Rails.application.routes.draw do
 
   resources :pages
 
-  resources :pushes, only: [:index, :new, :create, :show] do
-    collection do
-      get :confirm
-    end
-  end
+  resources :pushes, only: [:index, :new, :create, :show]
 
   resources :schedules do
     member do

@@ -32,13 +32,6 @@ RSpec.describe PushesController, :type => :controller do
     end
   end
 
-  describe "GET 'confirm'" do
-    it "returns http success" do
-      get 'confirm', location_plan_ids: location_plan.to_param
-      expect(response).to be_success
-    end
-  end
-
   describe "POST create" do
     describe "with valid params" do
       it "creates a new Push" do

@@ -2,7 +2,7 @@
 
 <h1>Select locations to push to When I Work</h1>
 
-<%= form_tag confirm_pushes_path, method: :get, html: {class: 'form-horizontal'} do %>
+<%= form_tag pushes_path, method: :post, html: {class: 'form-horizontal'} do %>
   <% @zones.each do |zone| %>
     <fieldset>
       <legend>
@@ -10,19 +10,30 @@
         <small><a href="#" class="select-all">All</a> | <a href="#" class="select-none">None</a></small>
       </legend>
 
-      <ul>
-        <% @location_plans[zone.id].each do |location_plan| -%>
-          <li>
-            <%= check_box_tag 'location_plan_ids[]', location_plan.id %> <%= location_plan.name %>
-          </li>
-        <% end -%>
-      </ul>
+      <% @location_plans[zone.id].each do |location_plan| -%>
+        <div class="checkbox">
+          <label>
+            <%= check_box_tag 'location_plan_ids[]', location_plan.id, false, class: '' %>
+            <%= location_plan.name %>
+            <% if location_plan.unsynced? -%>
+              <span class="label label-danger">Not synced</span>
+            <% elsif location_plan.dirty? -%>
+              <span class="label label-warning">Partially synced</span>
+            <% else -%>
+              <span class="label label-success">Synced</span>
+            <% end -%>
+          </label>
+        </div>
+      <% end -%>
     </fieldset>
   <% end -%>
 
   <%= hidden_field_tag :schedule_id, @schedule.id %>
 
   <div class="form-actions">
-    <%= submit_tag 'Review push', class: 'btn btn-success' %>
+    <%= button_tag class: 'btn btn-success' do %>
+      Begin Push
+      <span class="glyphicon glyphicon-chevron-right"></span>
+    <% end -%>
   </div>
 <% end %>

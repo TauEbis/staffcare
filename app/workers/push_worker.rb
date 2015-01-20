@@ -4,14 +4,17 @@ class PushWorker
 
   def perform(push_id)
     at 0, "Beginning"
+    num = 0
 
     push = Push.find(push_id)
-    push.running!
+
+    push.presync!
+    at 0, "Pre Syncing"
 
     wiw_pusher = WiwPusher.new(push)
 
+    push.running!
     total push.total_length
-    num = 0
 
     wiw_pusher.push! {
       num += 1

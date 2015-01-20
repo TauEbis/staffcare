@@ -14,10 +14,6 @@ class PushesController < ApplicationController
     #redirect_to '/', alert: "Must have a location or a schedule to start a push" if !@schedule && !@location_plans
   end
 
-  def confirm
-    @pushers = @location_plans.inject({}){|acc, lp| acc[lp.id] = WiwPusher.new(lp); acc }
-  end
-
   def create
     group_id = Time.now.utc.to_i
 
