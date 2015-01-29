@@ -51,6 +51,8 @@ Rails.application.routes.draw do
 
   resources :heatmaps, only: [:index, :show]
 
+  resources :visits, only: [:index, :show]
+
   resources :positions, only: [:index, :edit, :update]
 
   resources :speeds, only: [:destroy]

@@ -1,0 +1,35 @@
+<%provide(:title, "Visits to #{@visit.location.name} on #{@visit.date.to_formatted_s(:long)}")%>
+
+<h1>Visits to <%= "#{@visit.location.name} on #{@visit.date.strftime("%a, %B %e, %Y")}" %>
+</h1>
+
+<br>
+<div class="row">
+<div class="table-responsive col-sm-4">
+  <table class="table table-striped table-hover table-bordered text-right">
+    <thead>
+    <tr>
+      <th class="text-right">Time</th>
+      <th class="text-right">Patient Visits</th>
+    </tr>
+    </thead>
+
+    <tbody>
+      <% @times.each do |time| %>
+        <tr>
+          <td class="col-sm-1"> <%= time[0..-4] %> </td>
+    	    <td nowrap class="col-sm-1"> <%= @visit.volumes[time] %> </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+</div>
+
+<h2>
+  <%- if @visit.updated_at %>
+    <small class="pull-right"> imported on: <%= @visit.updated_at.to_formatted_s(:short) %> </small>
+  <%- end %>
+</h2>
+
+<%= link_to 'Back', visits_path %>

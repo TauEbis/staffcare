@@ -33,8 +33,8 @@
       <tr>
   	      <td nowrap><%= forecast.start_date %></td>
   	      <td nowrap><%= forecast.end_date %></td>
-  	    <% @locations.map(&:upload_id).each do |rsid| %>
-       		<td><%= forecast.volume_by_location[rsid].try(:round, 0) %></td>
+  	    <% @locations.map(&:upload_id).each do |upload_id| %>
+       		<td><%= forecast.volume_by_location[upload_id].try(:round, 0) %></td>
        	<% end %>
           <td><%= link_to 'Edit', edit_patient_volume_forecast_path(forecast) %></td>
           <td><%= link_to 'Delete', forecast, method: :delete, data: { confirm: 'Are you sure?' } %></td>
