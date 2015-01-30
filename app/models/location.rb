@@ -106,6 +106,26 @@ class Location < ActiveRecord::Base
     end
   end
 
+  def average_timeslot_volumes # hashed by day of week and time
+    avg_visits = {}
+    (0..6).each do |dow|
+      total_days = visits.where(dow: dow).size
+      summed_visits = visits.where(dow: dow).map(&:volumes).inject do | h1, h2 |
+        h1.merge(h2){ |key, oldval, newval| oldval + newval }
+      end
+      avg_visits[Date::DAYNAMES[dow]] = summed_visits.each{ |k,v| summed_visits[k] = v/total_days }
+    end
+    avg_visits
+  end
+
+  def sufficient_data?
+    (0..6).each do |dow|
+      total_days = visits.where(dow: dow).size
+      return false if total_days < 3
+    end
+    true
+  end
+
   # Used by ReportServerIngestor
   def self.create_default(name, passed_attributes={})
     attr = { name: name, upload_id: name.gsub(' ', '_'), max_mds: 3, rooms: 12,

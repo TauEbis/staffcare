@@ -6,7 +6,7 @@ class Speed < ActiveRecord::Base
 
   validates :location, presence: true
   validates :doctors, presence: true, numericality: { greater_than: 0, less_than: 100, only_integer: true },
-  										uniqueness: { scope: :location, message: "must be unique per location" }
+  										uniqueness: { scope: :location, message: "must be unique per location" }#, unless "location_id.nil?"
   validates :normal, presence: true, numericality: { greater_than: 0, less_than: 100 }
   validates :max, presence: true, numericality: { greater_than: :normal, less_than: 100 }, unless: "normal.nil?"
 
