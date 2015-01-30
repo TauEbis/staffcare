@@ -1,19 +1,17 @@
-# A service that ingests data from report server. Saves it in an ingest record,
+# A service that ingests data from report server. Saves it in a ReportServerIngest,
 # and creates/updates other records that depend on report server data.
 class ReportServerIngestor
 
-  def initialize(start_date, end_date, data)
+  def ingest!(start_date, end_date, data, calc_heatmaps=true)
     @start_date = start_date
     @end_date = end_date
     @data = data
-    @locations_hash = {}
-  end
 
-  def ingest!
     create_ingest!
     hash_data_by_location
     create_locations!
-    create_heatmaps!(30)
+    create_visits!
+    create_heatmaps!(30) if calc_heatmaps
   end
 
   def create_ingest!
@@ -21,9 +19,10 @@ class ReportServerIngestor
   end
 
   def hash_data_by_location
+    @locations_hash = {}
     @data.each do |el|
       loc_name = el['Name']
-      dow = el['VisitDay'] - 1        # Note that the VisitDay is indexed for Sunday = 1, not 0
+      dow = el['VisitDay'] - 1   # Note that the VisitDay is indexed for Sunday = 1, not 0, and does not contain a date.
       hour = el['VisitHour']
       count = el['VisitCount']
       @locations_hash[loc_name] ||= {}
@@ -41,13 +40,34 @@ class ReportServerIngestor
     end
   end
 
+  def create_visits!
+    if (@end_date - @start_date).to_i == 6
+      @locations_hash.values.each do |loc_data|
+        loc_id = Location.find_by(uid: loc_data[:uid]).id
+        loc_data[:day_volumes].each do |k,v|
+          dow = Date::DAYNAMES.index(k)
+          offset = (dow - @start_date.wday).modulo(7)
+          date = @start_date + offset.days
+          visit = Visit.where(location_id: loc_id, date: date).first_or_initialize
+          visit.volumes = v
+          visit.granularity = Time.parse(v.keys.second).min - Time.parse(v.keys.first).min
+          visit.dow = dow
+          @ingest.visits << visit
+          visit.save!
+        end
+      end
+    end
+  end
+
   def create_heatmaps!(granularity=30)
     @locations_hash.values.each do |loc_data|
-      loc_id = Location.find_by(uid: loc_data[:uid]).id
-      heatmap = Heatmap.where(location_id: loc_id).first_or_initialize
-      heatmap.recalc_from_volumes(loc_data[:day_volumes], granularity)
-      @ingest.heatmaps << heatmap
-      heatmap.save!
+      loc = Location.find_by(uid: loc_data[:uid])
+      if loc.sufficient_data?
+        heatmap = Heatmap.where(location_id: loc.id).first_or_initialize
+        heatmap.recalc_from_volumes(loc.average_timeslot_volumes, granularity) #change to recalc from raw visits
+        @ingest.heatmaps << heatmap
+        heatmap.save!
+      end
     end
   end
 
