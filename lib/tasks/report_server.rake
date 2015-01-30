@@ -1,38 +1,61 @@
-desc "Manual report server information import"
-task :rs_import => :environment do
-  ReportServerFactory.new.import!
-end
+namespace :rs do
 
-desc "Loading dummy data"
-task :rs_load => :environment do
-  start_date = Date.parse('2014-05-08')
-  end_date = Date.parse('2014-08-08')
-  data = JSON.parse( File.read('mock_data/rs_data.json') )
-
-  ReportServerFactory.new(start_date: start_date, end_date: end_date, data: data).import!
-end
-
-task :report_server_dump => :environment do
-  ingest = ReportServerIngest.last
-  puts ingest.id
-  puts ingest.start_date
-  puts ingest.end_date
-  puts ingest.data
-end
-
-# Not really report server related
-task :heatmap_dump => :environment do
-  maps = Heatmap.all
-  maps.each do |heatmap|
-    puts heatmap.location.uid
-    puts heatmap.days
+  desc "Load last week's visits"
+  task :weekly_visit_import => :environment do
+    ReportServerFactory.new.weekly_import!
   end
-end
 
-task :location_dump => :environment do
-  locs = Location.all
-  locs.each do |location|
-    puts location.name
-    puts location.uid
+  desc "Load visits from 2013 to present"
+  task :bulk_visit_import => :environment do
+    ReportServerFactory.new.bulk_import!
   end
+
+  desc "Loading dummy data"
+  task :dummy_visit_import => :environment do
+    first_sunday = Date.parse('2012-12-30')
+    last_sunday = Date.parse('2014-11-23')
+
+    data_set = []
+    File.open('mock_data/ingest_data.dump', 'r').each_line do |line|
+      data_set << JSON.parse(line)
+    end
+
+    ReportServerFactory.new.bulk_import!(first_sunday: first_sunday, last_sunday: last_sunday, data_set: data_set)
+  end
+
+  desc "Dumping dummy data"
+  task :dump_ingest_data => :environment do
+    File.open("mock_data/ingest_data.dump", "w+") do |f|
+      ingest_ids = Visit.ordered.pluck(:report_server_ingest_id).uniq
+      ingest_ids.each do |ingest_id|
+        f << ReportServerIngest.find(ingest_id).data.to_json + "\n"
+      end
+    end
+  end
+
+  task :last_ingest_dump => :environment do
+    ingest = ReportServerIngest.last
+    puts ingest.id
+    puts ingest.start_date
+    puts ingest.end_date
+    puts ingest.data
+  end
+
+  # Not really report server related
+  task :heatmap_dump => :environment do
+    maps = Heatmap.all
+    maps.each do |heatmap|
+      puts heatmap.location.uid
+      puts heatmap.days
+    end
+  end
+
+  task :location_dump => :environment do
+    locs = Location.all
+    locs.each do |location|
+      puts location.name
+      puts location.uid
+    end
+  end
+
 end
