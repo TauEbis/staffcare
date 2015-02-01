@@ -12,7 +12,7 @@ feature "Viewing the report server data and forecasts panel: " do
 		end
 
   	describe "then the index page is not rendered:" do
-			it { should_not have_title full_title('Report Server Data &amp; Forecasts') }
+			it { should_not have_title full_title('Report Server Data & Forecasts') }
 			it { should have_title full_title('Dashboard') }
 		end
 	end
@@ -25,7 +25,7 @@ feature "Viewing the report server data and forecasts panel: " do
 		end
 
   	describe "then the index page is rendered:" do
-			it { should have_title full_title('Report Server Data &amp; Forecasts') }
+			it { should have_title full_title('Report Server Data & Forecasts') }
 			it { should have_link('Visits', href: visits_path ) }
 			it { should have_link('Heatmaps', href: heatmaps_path ) }
 			it { should have_link('Volume Forecasts', href: patient_volume_forecasts_path ) }
