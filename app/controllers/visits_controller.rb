@@ -8,6 +8,11 @@ class VisitsController < ApplicationController
     @dates = Kaminari.paginate_array(Visit.date_range.map(&:to_s)).page(params[:page]).per(7*4)
     @totals = Visit.totals_by_date_by_location(@dates.first, @dates.last)
     @locations = Location.ordered.all
+
+    respond_to do |format|
+      format.html
+      format.csv { send_data Visit.to_csv }
+    end
   end
 
   # GET /visits/1
