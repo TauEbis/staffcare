@@ -67,7 +67,8 @@ Rails.application.routes.draw do
 
   get 'dashboard/index'
   get 'dashboard/status'
-  get 'staffing_analyst', to: "staffing_analyst#index", as: 'staffing_analyst'
+  get 'staffing_analyst', to: "landing_pages#staffing_analyst", as: 'staffing_analyst'
+  get 'report_server_data_and_forecasts', to: "landing_pages#report_server_data_and_forecasts", as: 'report_server_data_and_forecasts'
 
   require 'sidekiq/web'
   require 'sidekiq-status/web'
