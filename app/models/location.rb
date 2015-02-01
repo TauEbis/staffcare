@@ -106,6 +106,8 @@ class Location < ActiveRecord::Base
     end
   end
 
+  # Used to calculate heatmaps for location
+
   def average_timeslot_volumes # hashed by day of week and time
     avg_visits = {}
     (0..6).each do |dow|

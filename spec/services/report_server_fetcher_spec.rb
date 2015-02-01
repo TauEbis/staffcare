@@ -2,8 +2,7 @@ require 'spec_helper'
 
 describe ReportServerFetcher, :type => :service do
   day = Date.parse('2014-07-01')
-  let(:fetcher) { ReportServerFetcher.new(day, day, '414F0BD3-0460-405D-9136-0F16DB212BA9') }
-  let(:all_fetcher) { ReportServerFetcher.new(day, day, 'ALL') }
+  let(:fetcher) { ReportServerFetcher.new }
   subject { fetcher }
 
 # Class methods
@@ -82,7 +81,7 @@ describe ReportServerFetcher, :type => :service do
     context "when called before authenticate" do
       before {
         VCR.use_cassette('report_server_fetch_then_auth') do
-          fetcher.fetch_data!()
+          fetcher.fetch_data!(day, day, '414F0BD3-0460-405D-9136-0F16DB212BA9')
         end
       }
       it "should call authenticate and create a session" do
@@ -95,7 +94,7 @@ describe ReportServerFetcher, :type => :service do
         VCR.use_cassette('report_server_auth_then_fetch') do
           fetcher.authenticate!()
           session = fetcher.instance_variable_get(:@session_id)
-          fetcher.fetch_data!()
+          fetcher.fetch_data!(day, day, '414F0BD3-0460-405D-9136-0F16DB212BA9')
           expect(session).to eq fetcher.instance_variable_get(:@session_id)
         end
       end
@@ -104,7 +103,7 @@ describe ReportServerFetcher, :type => :service do
     context "when called with a single location" do
       it "should retrieve data for only one site" do
         VCR.use_cassette('report_server_single_site') do
-          data = fetcher.fetch_data!()
+          data = fetcher.fetch_data!(day, day, '414F0BD3-0460-405D-9136-0F16DB212BA9')
           data.each do |record|
             expect(record['ServiceSiteUid']).to eq "414f0bd3-0460-405d-9136-0f16db212ba9"
             expect(record['Name']).to eq "CityMD 57th St"
@@ -116,7 +115,7 @@ describe ReportServerFetcher, :type => :service do
     context "when called with all locations specified" do
       it "should retrieve data for all locations" do
         VCR.use_cassette('report_server_all_sites') do
-          data = all_fetcher.fetch_data!()
+          data = fetcher.fetch_data!(day, day, 'ALL')
           locations = {}
           data.each do |record|
             locations[record['Name']] = 1

@@ -10,6 +10,10 @@ class ReportServerFetcher
 
   # Create a new object to wrap a connection to the server
   def initialize
+    @options = {}
+    @options[:query] = {}
+    @session_id = nil
+
     @username = Rails.application.secrets.rs_username
     @password = Rails.application.secrets.rs_password
 
@@ -26,9 +30,7 @@ class ReportServerFetcher
   # end_date - End of " " " " "
   # locations - An array of location GUIDs or nil for all.
   def fetch_data!(start_date, end_date, locations = 'ALL')
-    @options = { query: { startdate: start_date.to_s, enddate: end_date.to_s,
-                          servicesiteuid: locations } }
-    @session_id = nil
+    @options[:query] = { startdate: start_date.to_s, enddate: end_date.to_s, servicesiteuid: locations }
 
     authenticate! if !authenticated?
     response = self.class.get('/patientload', @options)
