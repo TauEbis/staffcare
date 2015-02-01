@@ -4,8 +4,8 @@ class Visit < ActiveRecord::Base
 
   validates :granularity, presence: true, numericality: { greater_than: 0, less_than_or_equal_to: 60 }
   validates :dow, presence: true, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 6 }
-  validates :volumes, presence: true, uniqueness: { scope: [:location, :date] }
-  validates :date, presence: true
+  validates :volumes, presence: true
+  validates :date, presence: true, uniqueness: { scope: :location }
   validate :valid_volumes
 
   scope :for_date_range, -> (start_date, end_date) { where("date >= ? AND date <= ?", start_date, end_date) }
