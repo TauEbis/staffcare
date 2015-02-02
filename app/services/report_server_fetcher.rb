@@ -30,7 +30,7 @@ class ReportServerFetcher
   # end_date - End of " " " " "
   # locations - An array of location GUIDs or nil for all.
   def fetch_data!(start_date, end_date, locations = 'ALL')
-    @options[:query] = { startdate: start_date.to_s, enddate: end_date.to_s, servicesiteuid: locations }
+    @options[:query].merge!( { startdate: start_date.to_s, enddate: end_date.to_s, servicesiteuid: locations } )
 
     authenticate! if !authenticated?
     response = self.class.get('/patientload', @options)
@@ -46,7 +46,7 @@ class ReportServerFetcher
     if response.code == 200
       if self.class.valid_guid?(response.body)
         @session_id = response.body.chomp
-        @options[:query][:sessionID] = @session_id
+        @options[:query].merge!( { sessionID: @session_id } )
         @options[:headers] = { 'Cookie' => response.headers['Set-Cookie'] }
       else
         self.class.handle_auth_error(response.body)
