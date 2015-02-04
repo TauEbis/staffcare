@@ -9,6 +9,8 @@ class Schedule < ActiveRecord::Base
 
   enum optimizer_state: [ :not_run, :running, :complete, :error ]
 
+  enum volume_source: [:patient_volume_forecasts, :volume_forecaster]
+
   scope :not_draft, -> { where("state <> ?", Schedule.states[:draft]) }
   scope :ordered, -> { order(starts_on: :desc, updated_at: :desc) }
   scope :has_deadlines, -> { where("manager_deadline is not NULL AND rm_deadline is not NULL AND sync_deadline is not NULL") }
