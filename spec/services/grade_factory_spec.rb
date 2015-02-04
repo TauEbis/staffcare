@@ -11,7 +11,7 @@ describe GradeFactory, :type => :service do
 	  let(:projection)			{ create(:visit_projection, location: location, schedule: schedule) }
 
 		before do
-			allow(factory.projector).to receive(:project!).and_return( projection )
+			allow(factory.builder).to receive(:build_projection!).and_return( projection )
 			factory.create
 		end
 
@@ -59,7 +59,7 @@ describe GradeFactory, :type => :service do
 		let!(:old_max_mds)		{ grade.max_mds }
 		let(:new_projection)	{ create(:visit_projection, location: location, schedule: schedule.reload) }
 
-		before { allow(factory.projector).to receive(:project!).and_return(new_projection) }
+		before { allow(factory.builder).to receive(:build_projection!).and_return(new_projection) }
 
 		context "when opts['load_locations'] and opts['load_visits']" do
 

@@ -1,12 +1,12 @@
 # Creates a Grade using the provided options and data source
 class GradeFactory
 
-  attr_accessor :projector
+  attr_accessor :builder
 
   def initialize(opts = {})
     @schedule = opts[:schedule]
     @volume_source = opts[:volume_source]
-    @projector = opts[:projector] || VisitProjector.new
+    @builder = opts[:builder] || VisitBuilder.new
   end
 
   def create
@@ -51,7 +51,7 @@ class GradeFactory
     end
 
     def visit_attr(location)
-      @_visit_projection = @projector.project!(location, @schedule, @volume_source)
+      @_visit_projection = @builder.build_projection!(location, @schedule, @volume_source)
       { visit_projection: @_visit_projection, visits: @_visit_projection.visits }
     end
 
