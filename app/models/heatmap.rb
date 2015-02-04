@@ -40,6 +40,26 @@ class Heatmap < ActiveRecord::Base
     self.class.normalize!(sheared_heatmap)
   end
 
+  def in_normalized_chunks(chunks)
+    normalized_chunks=[]
+    (0..6).each do |wday|
+      normalized_chunks[wday] = []
+
+      day_hash = shear_to_opening_hours[Date::DAYNAMES[wday]]
+      num_of_keys = day_hash.keys.size
+      step = num_of_keys / chunks
+
+      (0..chunks-1).each do |chunk|
+        chunk_keys = day_hash.keys[(chunk*step..chunk*step+step-1)]
+        chunk_keys = day_hash.keys[(chunk*step..-1)] if chunk == chunks-1
+        heatmap_chunk = day_hash.select{ |k,v| chunk_keys.include?(k) }
+        chunk_total = heatmap_chunk.values.sum
+        normalized_chunks[wday][chunk] = heatmap_chunk.each { |k,v| heatmap_chunk[k] = v/chunk_total }
+      end
+    end
+    normalized_chunks
+  end
+
 # Used to normalize sheared heatmaps so that they sum to 100%
   def self.normalize!(sheared_heatmap)
     total = sheared_heatmap.values.map(&:values).map(&:sum).sum

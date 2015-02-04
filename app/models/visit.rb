@@ -9,6 +9,7 @@ class Visit < ActiveRecord::Base
   validate :valid_volumes
 
   scope :for_date_range, -> (start_date, end_date) { where("date >= ? AND date <= ?", start_date, end_date) }
+  scope :for_date_range_and_location, -> (start_date, end_date, location) { where("date >= ? AND date <= ? AND location_id = ?", start_date, end_date, location.id) }
   scope :ordered, -> { order(date: :asc, id: :desc) }
   default_scope -> { ordered }
 
@@ -28,11 +29,25 @@ class Visit < ActiveRecord::Base
   end
 
   def total
-    volumes.values.sum
+    @_total ||= volumes.values.sum
   end
 
-# Class methods for preparing data for VisitsController index action
+  def in_chunks(chunks)
+    chunked_totals = []
+    num_of_keys = volumes.keys.size
+    step = num_of_keys / chunks
 
+    (0..(chunks-1)).each do |chunk|
+      chunk_keys = volumes.keys[(chunk*step..chunk*step+step-1)]
+      chunk_keys = volumes.keys[(chunk*step..-1)] if chunk == chunks-1
+      chunk_total = volumes.select{ |k,v| chunk_keys.include?(k) }.values.sum
+      chunked_totals << chunk_total
+    end
+
+    chunked_totals
+  end
+
+# Two class methods for preparing data for VisitsController index action
   def self.date_range
     Visit.ordered.first.date..Visit.ordered.last.date
   end
@@ -73,6 +88,5 @@ class Visit < ActiveRecord::Base
 
     end
   end
-
 
 end
