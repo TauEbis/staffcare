@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150202125852) do
+ActiveRecord::Schema.define(version: 20150204170002) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -282,14 +282,14 @@ ActiveRecord::Schema.define(version: 20150202125852) do
   add_index "users", ["unlock_token"], name: "index_users_on_unlock_token", unique: true, using: :btree
 
   create_table "visit_projections", force: true do |t|
-    t.integer  "schedule_id", null: false
-    t.integer  "location_id", null: false
-    t.string   "source"
+    t.integer  "schedule_id",               null: false
+    t.integer  "location_id",               null: false
     t.json     "heatmap"
     t.json     "volumes"
     t.json     "visits"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "volume_source", default: 0, null: false
   end
 
   create_table "visits", force: true do |t|

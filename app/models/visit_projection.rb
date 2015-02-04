@@ -8,8 +8,10 @@ class VisitProjection < ActiveRecord::Base
   validates :visits, presence: true
   validate :valid_volumes
 
+  enum volume_source: [:patient_volume_forecasts, :volume_forecaster]
+
   def valid_volumes
-    if source == :patient_volume_forecasts
+    if patient_volume_forecasts?
       unless volumes && !volumes.empty?
         errors.add(:base, "Please add valid patient volume forecasts for this schedule.")
         return
@@ -21,7 +23,7 @@ class VisitProjection < ActiveRecord::Base
         end
       end
 
-    elsif source == :volume_forecaster
+    elsif volume_forecaster?
       unless volumes && !volumes.empty?
         errors.add(:base, "The forecaster could not generate valid forecasts for this schedule.")
         return

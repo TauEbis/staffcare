@@ -8,7 +8,7 @@ class VisitBuilder
     days = schedule.days.first..schedule.days.last # Not presently used
 
     projection = VisitProjection.create(
-      source: volume_source,
+      volume_source: volume_source,
       schedule: schedule,
       location: location,
       volumes: volumes,
