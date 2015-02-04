@@ -15,7 +15,7 @@ class AssignmentsController < ApplicationController
       format.html
       format.json do
         @shifts = @schedule.location_plans.inject({}) do |hsh, lp|
-          hsh[lp.id] = lp.chosen_grade.shifts.group_by {|s| s.date }
+          hsh[lp.id] = lp.chosen_grade.shifts.md.group_by {|s| s.date }
           hsh
         end
       end
