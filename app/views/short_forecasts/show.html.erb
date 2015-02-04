@@ -1,0 +1,55 @@
+<%provide(:title, "short_forecast for #{@short_forecast.location.name}")%>
+
+<h1>
+  Forecast for week of <%= "#{@start_date.strftime("%B %e, %Y")} at #{@short_forecast.location.name}" %>
+</h1>
+<div class='pull-right'>
+  <a href=<%= short_forecast_path(@short_forecast, week: @prev) %> >
+    <span class="glyphicon glyphicon-chevron-left"></span> Previous week
+  </a>
+   |
+  <a href=<%= short_forecast_path(@short_forecast, week: @next) %> >
+     Next week <span class="glyphicon glyphicon-chevron-right"></span>
+  </a>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-striped table-hover table-bordered text-right">
+    <thead>
+    <tr>
+      	<th class="text-right">Time</th>
+      <% Date::DAYNAMES.each do |day_name| %>
+      	<th class="text-right"><%= day_name %></th>
+      <% end %>
+    </tr>
+    </thead>
+
+    <tbody>
+
+      <tr>
+        <td class="col-sm-1"><em> Sum </em></td>
+        <% (@start_date..@start_date+6.days).each do |day| %>
+          <td nowrap class="col-sm-1"><em><%= @short_forecast.visits[day.to_s].values.sum.try(:round, 1) %></em></td>
+        <% end %>
+      </tr>
+
+
+    <% @times.each do |time| %>
+      <tr>
+        <td class="col-sm-1"> <%= time[0..-4] %> </td>
+        <% (@start_date..@start_date+6.days).each do |day| %>
+  	      <td nowrap class="col-sm-1"><%= @short_forecast.visits[day.to_s][time].try(:round, 1) %></td>
+        <% end %>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+</div>
+
+<h2>
+  <%- if @short_forecast.updated_at %>
+    <small class="pull-right"> imported on: <%= @short_forecast.updated_at.to_formatted_s(:short) %> </small>
+  <%- end %>
+</h2>
+
+<%= link_to 'Back', short_forecasts_path %>

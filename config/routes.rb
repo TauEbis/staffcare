@@ -53,6 +53,8 @@ Rails.application.routes.draw do
 
   resources :visits, only: [:index, :show]
 
+  resources :short_forecasts, only: [:index, :show]
+
   resources :positions, only: [:index, :edit, :update]
 
   resources :speeds, only: [:destroy]

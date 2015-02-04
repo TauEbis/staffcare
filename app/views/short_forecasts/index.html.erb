@@ -1,0 +1,34 @@
+<%provide(:title, 'All Short Term Forecasts')%>
+
+<h1>Short Term Forecasts</h1>
+
+<%- unless @dates.blank? %>
+
+<div class="table-responsive">
+  <table class="table table-striped table-hover table-bordered">
+    <thead>
+    <tr>
+        <th>Location</th>
+      <% @dates.each do |date| %>
+          <th><%= "Week of #{date.strftime("%b %d")}" %></th>
+      <% end %>
+    </tr>
+    </thead>
+
+    <tbody>
+
+    <% @short_forecasts.each do |short_forecast| %>
+      <tr>
+          <td nowrap><%= short_forecast.location.name %></td>
+        <% @dates.each_with_index do |date, i| %>
+          <td><%=link_to short_forecast.weekly_total(date).try(:round, 0), short_forecast_path(short_forecast, week: i) %></td>
+        <% end %>
+      </tr>
+    <% end %>
+
+    </tbody>
+
+  </table>
+</div>
+
+<%- end %>
