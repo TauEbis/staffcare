@@ -26,10 +26,8 @@ feature "Viewing the staffing analyst panel: " do
 
   	describe "then the index page is rendered:" do
 			it { should have_title full_title('Staffing Analyst') }
-			it { should have_link('Non-physician rules', href: default_rules_path ) }
+			it { should have_link('Non-Physician Staffing Rules', href: default_rules_path ) }
 			it { should have_link('Positions', href: positions_path ) }
-			it { should have_link('Heatmaps', href: heatmaps_path ) }
-			it { should have_link('Volume Forecasts', href: patient_volume_forecasts_path ) }
 		end
 	end
 

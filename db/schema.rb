@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141231132315) do
+ActiveRecord::Schema.define(version: 20150204170020) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -197,6 +197,7 @@ ActiveRecord::Schema.define(version: 20141231132315) do
     t.date     "rm_deadline"
     t.date     "sync_deadline"
     t.datetime "active_notices_sent_at"
+    t.integer  "volume_source",                                  default: 0, null: false
   end
 
   create_table "shifts", force: true do |t|
@@ -214,13 +215,30 @@ ActiveRecord::Schema.define(version: 20141231132315) do
   add_index "shifts", ["position_id"], name: "index_shifts_on_position_id", using: :btree
   add_index "shifts", ["wiw_id"], name: "index_shifts_on_wiw_id", using: :btree
 
+  create_table "short_forecasts", force: true do |t|
+    t.json     "visits",                  default: {}, null: false
+    t.date     "start_date",                           null: false
+    t.date     "end_date",                             null: false
+    t.integer  "lookback_window",         default: 10, null: false
+    t.integer  "forecast_window",         default: 12, null: false
+    t.json     "lookback_data",           default: {}
+    t.json     "forecaster_opts",         default: {}
+    t.integer  "location_id"
+    t.integer  "report_server_ingest_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "short_forecasts", ["location_id"], name: "index_short_forecasts_on_location_id", using: :btree
+  add_index "short_forecasts", ["report_server_ingest_id"], name: "index_short_forecasts_on_report_server_ingest_id", using: :btree
+
   create_table "speeds", force: true do |t|
     t.integer  "doctors",                             null: false
     t.decimal  "normal",      precision: 5, scale: 2, null: false
     t.decimal  "max",         precision: 5, scale: 2, null: false
-    t.integer  "location_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "location_id"
   end
 
   add_index "speeds", ["doctors", "location_id"], name: "index_speeds_on_doctors_and_location_id", unique: true, using: :btree
@@ -265,15 +283,29 @@ ActiveRecord::Schema.define(version: 20141231132315) do
   add_index "users", ["unlock_token"], name: "index_users_on_unlock_token", unique: true, using: :btree
 
   create_table "visit_projections", force: true do |t|
-    t.integer  "schedule_id", null: false
-    t.integer  "location_id", null: false
-    t.string   "source"
+    t.integer  "schedule_id",               null: false
+    t.integer  "location_id",               null: false
     t.json     "heatmap"
     t.json     "volumes"
     t.json     "visits"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "volume_source", default: 0, null: false
   end
+
+  create_table "visits", force: true do |t|
+    t.date     "date",                                 null: false
+    t.json     "volumes",                 default: {}, null: false
+    t.integer  "granularity",             default: 15, null: false
+    t.integer  "dow",                                  null: false
+    t.integer  "location_id"
+    t.integer  "report_server_ingest_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "visits", ["location_id"], name: "index_visits_on_location_id", using: :btree
+  add_index "visits", ["report_server_ingest_id"], name: "index_visits_on_report_server_ingest_id", using: :btree
 
   create_table "zones", force: true do |t|
     t.string   "name"

@@ -9,6 +9,8 @@ class Schedule < ActiveRecord::Base
 
   enum optimizer_state: [ :not_run, :running, :complete, :error ]
 
+  enum volume_source: [:patient_volume_forecasts, :volume_forecaster]
+
   scope :not_draft, -> { where("state <> ?", Schedule.states[:draft]) }
   scope :ordered, -> { order(starts_on: :desc, updated_at: :desc) }
   scope :has_deadlines, -> { where("manager_deadline is not NULL AND rm_deadline is not NULL AND sync_deadline is not NULL") }
@@ -48,6 +50,12 @@ class Schedule < ActiveRecord::Base
       md_hourly: Position.find_by(key: :md).hourly_rate,
     }
   end
+
+# Collection for form
+  VOLUME_OPTIONS = [
+    'Uploaded Forecasts',
+    'Automated Short Term Forecasts'
+  ].zip(Schedule::volume_sources.keys).freeze
 
   def length
     @_length ||= (ends_on - starts_on + 1).to_i

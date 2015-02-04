@@ -1,0 +1,30 @@
+<%provide(:title, "Report Server Data & Forecasts".html_safe)%>
+<h1>Report Server Data & Forecasts</h1>
+
+<br>
+
+<div class="panel panel-primary">
+
+  <div class="panel-heading">
+    <h3 class="panel-title">Patient Volume Data</h3>
+  </div>
+
+  <div class="panel-body">
+
+    <div class="row">
+      <div class="col-sm-8">
+        <h3>
+        	<li><%= link_to 'Visits', visits_path %> <small>(Report Server)</small></li>
+	        <br>
+        	<li><%= link_to 'Heatmaps', heatmaps_path %> <small>(Report Server)</small> </li>
+          <br>
+          <li><%= link_to 'Short Term Forecasts', short_forecasts_path %> <small>(Report Server Calculation)</small> </li>
+        	<br>
+	        <li><%= link_to 'Volume Forecasts', patient_volume_forecasts_path %> <small>(CityMD uploaded projections)</small> </li>
+	      </h3>
+      </div>
+    </div>
+
+  </div>
+
+</div>

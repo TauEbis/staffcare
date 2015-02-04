@@ -13,6 +13,8 @@
           <%= render 'shared/date_picker_field', f: f, date_field: :starts_on, picker_type: "monthpicker" %>
         <% end -%>
 
+          <%= f.input :volume_source, label: "Forecast Type",
+                      :as => :select, :collection => Schedule::VOLUME_OPTIONS, include_blank: false %>
           <%= render 'field', f: f, data_field: :md_hourly, label: "Physician Hourly" %>
           <br>
           <div class="bg-success">
