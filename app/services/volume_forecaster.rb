@@ -1,6 +1,6 @@
 class VolumeForecaster
 
-	attr_reader :opts, :data_start_date, :data_end_date
+	attr_reader :opts
 
 	# Two class methods used for setting up forecasters
 
@@ -32,7 +32,7 @@ class VolumeForecaster
 		@data_start_date = data_date_range.first
 		@data_end_date = data_date_range.last
 
-		@visits = location.visits.for_date_range(data_start_date, data_end_date)
+		@visits = location.visits.for_date_range(@data_start_date, @data_end_date)
 	  @coeffs = build_coeffs(@opts[:degree], @opts[:chunks]) 	# {sunday_0: [1,2,3,4], sunday_1: [1,2,3,4]}
 	end
 
