@@ -3,11 +3,13 @@ namespace :rs do
   desc "Load last week's visits"
   task :weekly_visit_import => :environment do
     ReportServerFactory.new.weekly_import!
+    ShortForecast.build_latest!
   end
 
   desc "Load visits from 2013 to present"
   task :bulk_visit_import => :environment do
     ReportServerFactory.new.bulk_import!
+    ShortForecast.build_latest!
   end
 
   desc "Loading dummy data"
@@ -21,6 +23,7 @@ namespace :rs do
     end
 
     ReportServerFactory.new.bulk_import!(first_sunday: first_sunday, last_sunday: last_sunday, data_set: data_set)
+    ShortForecast.build_latest!
   end
 
   desc "Dumping dummy data"
