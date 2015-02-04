@@ -1,0 +1,37 @@
+<h1>Assignments - <%= schedule_date_span @schedule %></h1>
+
+<div id="assignment_view" data-schedule-id="<%= @schedule.id %>">
+  <table class="table table-striped table-condensed assignments_table">
+    <thead><tr>
+      <th></th>
+      <% @schedule.days.each do |day| -%>
+        <th><%= day.strftime('%a')[0] %> <br> <%= day.strftime('%-d') %></th>
+      <% end -%>
+    </tr></thead>
+
+    <tbody data-bind="foreach: location_plans">
+      <tr>
+        <th data-bind="text: name"></th>
+        <!-- ko foreach: days -->
+          <td>
+            <table class="table table-condensed table-hover inner_shifts_table">
+              <tbody data-bind="foreach: shifts">
+                <tr data-bind="css: css_class">
+                  <td data-bind="click: $parent.displayDay">
+                    <span data-bind="text: starts_hour"></span> -
+                    <span data-bind="text: ends_hour"></span>
+                    <span data-bind="text: physician_initials"></span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        <!-- /ko -->
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<%= render 'modal' %>
+
+<%#= link_to 'Back', assignments_path %>

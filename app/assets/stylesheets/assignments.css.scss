@@ -1,0 +1,17 @@
+body#assignments_controller {
+  div.container {
+    width: 1000px;
+  }
+}
+
+table.assignments_table {
+  font-size: 80%;
+}
+
+table.inner_shifts_table {
+  td {
+    // Inner table
+    white-space: nowrap;
+    cursor: pointer;
+  }
+}
