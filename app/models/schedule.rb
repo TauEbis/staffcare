@@ -51,6 +51,12 @@ class Schedule < ActiveRecord::Base
     }
   end
 
+# Collection for form
+  VOLUME_OPTIONS = [
+    'Uploaded Forecasts',
+    'Automated Forecasts'
+  ].zip(Schedule::volume_sources.keys).freeze
+
   def length
     @_length ||= (ends_on - starts_on + 1).to_i
   end

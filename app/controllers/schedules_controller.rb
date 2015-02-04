@@ -104,7 +104,7 @@ class SchedulesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def schedule_params
-      params.require(:schedule).permit(:starts_on, :state, :manager_deadline, :rm_deadline, :sync_deadline, *Schedule::OPTIMIZER_FIELDS)
+      params.require(:schedule).permit(:starts_on, :state, :manager_deadline, :rm_deadline, :sync_deadline, :volume_source, *Schedule::OPTIMIZER_FIELDS)
     end
 
     # Custom Pundit error message.
