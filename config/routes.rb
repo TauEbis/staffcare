@@ -4,6 +4,8 @@ Rails.application.routes.draw do
 
   resources :pushes, only: [:index, :new, :create, :show]
 
+  resources :assignments
+
   resources :schedules do
     member do
       get :request_approvals
