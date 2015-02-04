@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150103082218) do
+ActiveRecord::Schema.define(version: 20150202125852) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -213,6 +213,23 @@ ActiveRecord::Schema.define(version: 20150103082218) do
   add_index "shifts", ["grade_id", "starts_at"], name: "index_shifts_on_grade_id_and_starts_at", using: :btree
   add_index "shifts", ["position_id"], name: "index_shifts_on_position_id", using: :btree
   add_index "shifts", ["wiw_id"], name: "index_shifts_on_wiw_id", using: :btree
+
+  create_table "short_forecasts", force: true do |t|
+    t.json     "visits",                  default: {}, null: false
+    t.date     "start_date",                           null: false
+    t.date     "end_date",                             null: false
+    t.integer  "lookback_window",         default: 10, null: false
+    t.integer  "forecast_window",         default: 12, null: false
+    t.json     "lookback_data",           default: {}
+    t.json     "forecaster_opts",         default: {}
+    t.integer  "location_id"
+    t.integer  "report_server_ingest_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "short_forecasts", ["location_id"], name: "index_short_forecasts_on_location_id", using: :btree
+  add_index "short_forecasts", ["report_server_ingest_id"], name: "index_short_forecasts_on_report_server_ingest_id", using: :btree
 
   create_table "speeds", force: true do |t|
     t.integer  "doctors",                             null: false
