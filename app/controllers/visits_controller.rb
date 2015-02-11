@@ -6,7 +6,7 @@ class VisitsController < ApplicationController
   # GET /visits
   def index
     @dates = Kaminari.paginate_array(Visit.date_range.map(&:to_s)).page(params[:page]).per(7*4)
-    @totals = Visit.totals_by_date_by_location(@dates.first, @dates.last)
+    @totals = Visit.totals_by_date_by_location(@dates.first..@dates.last)
     @locations = Location.ordered.all
 
     respond_to do |format|

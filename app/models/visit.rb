@@ -8,8 +8,8 @@ class Visit < ActiveRecord::Base
   validates :date, presence: true, uniqueness: { scope: :location }
   validate :valid_volumes
 
-  scope :for_date_range, -> (start_date, end_date) { where("date >= ? AND date <= ?", start_date, end_date) }
-  scope :for_date_range_and_location, -> (start_date, end_date, location) { where("date >= ? AND date <= ? AND location_id = ?", start_date, end_date, location.id) }
+  scope :for_date_range, -> (range) { where arel_table[:date].in(range) }
+  scope :for_date_range_and_location, -> (range, location) { where arel_table[:date].in(range).and(arel_table[:location_id].eq(location.id)) }
   scope :ordered, -> { order(date: :asc, id: :desc) }
   default_scope -> { ordered }
 
@@ -52,8 +52,8 @@ class Visit < ActiveRecord::Base
     Visit.ordered.first.date..Visit.ordered.last.date
   end
 
-  def self.totals_by_date_by_location(start_date=nil, end_date=nil)
-    visits = (start_date.nil? || end_date.nil?) ? Visit.includes(:location).all : Visit.includes(:location).for_date_range(start_date, end_date)
+  def self.totals_by_date_by_location(range=nil)
+    visits = range.nil? ? Visit.includes(:location).all : Visit.includes(:location).for_date_range(range)
 
     totals = {}
 
@@ -77,9 +77,12 @@ class Visit < ActiveRecord::Base
 
       date_range.each do |date|
         attribute_rows = [ date.to_s ]
-        date_totals = totals_by_date_by_location(date, date)[date.to_s]
-        location_rows = location_ids.map do |l_id|
-          (l_total = date_totals[l_id]) ? l_total[:total] : ''
+        if date_totals = totals_by_date_by_location(date..date)[date.to_s]
+          location_rows = location_ids.map do |l_id|
+            (l_total = date_totals[l_id]) ? l_total[:total] : ''
+          end
+        else
+          location_rows = []
         end
 
         row = attribute_rows + location_rows

@@ -7,7 +7,7 @@ class VolumeForecaster
 	# Finds locations with sufficient visit data for a forecast
 	def self.locations_with_sufficient_data(date_range)
     Location.ordered.all.select do |location|
-      location.visits.for_date_range(date_range.first, date_range.last).size == date_range.to_a.size
+      location.visits.for_date_range(date_range).size == date_range.to_a.size
     end
   end
 
@@ -32,7 +32,7 @@ class VolumeForecaster
 		@data_start_date = data_date_range.first
 		@data_end_date = data_date_range.last
 
-		@visits = location.visits.for_date_range(@data_start_date, @data_end_date)
+		@visits = location.visits.for_date_range(data_date_range)
 	  @coeffs = build_coeffs(@opts[:degree], @opts[:chunks]) 	# {sunday_0: [1,2,3,4], sunday_1: [1,2,3,4]}
 	end
 
