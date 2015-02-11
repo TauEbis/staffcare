@@ -49,7 +49,7 @@ class Heatmap < ActiveRecord::Base
       num_of_keys = day_hash.keys.size
       step = num_of_keys / chunks
 
-      (0..chunks-1).each do |chunk|
+      (0...chunks).each do |chunk|
         chunk_keys = day_hash.keys[(chunk*step..chunk*step+step-1)]
         chunk_keys = day_hash.keys[(chunk*step..-1)] if chunk == chunks-1
         heatmap_chunk = day_hash.select{ |k,v| chunk_keys.include?(k) }

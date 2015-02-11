@@ -110,19 +110,20 @@ class Location < ActiveRecord::Base
 
   def average_timeslot_volumes # hashed by day of week and time
     avg_visits = {}
-    (0..6).each do |dow|
-      total_days = visits.where(dow: dow).size
-      summed_visits = visits.where(dow: dow).map(&:volumes).inject do | h1, h2 |
+    (0..6).each do |day_of_week|
+      day_of_week_visits = visits.where(dow: day_of_week)
+      total_days = day_of_week_visits.size
+      summed_visits = day_of_week_visits.map(&:volumes).inject do | h1, h2 |
         h1.merge(h2){ |key, oldval, newval| oldval + newval }
       end
-      avg_visits[Date::DAYNAMES[dow]] = summed_visits.each{ |k,v| summed_visits[k] = v/total_days }
+      avg_visits[Date::DAYNAMES[day_of_week]] = summed_visits.each{ |k,v| summed_visits[k] = v/total_days }
     end
     avg_visits
   end
 
   def sufficient_data?
-    (0..6).each do |dow|
-      total_days = visits.where(dow: dow).size
+    (0..6).each do |day_of_week|
+      total_days = visits.where(dow: day_of_week).size
       return false if total_days < 3
     end
     true

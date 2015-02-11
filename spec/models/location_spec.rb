@@ -309,6 +309,51 @@ describe Location do
     end
   end
 
+  describe "#sufficient_data?" do
+
+    context "when 1 visit" do
+      before do
+        1.times { create(:visit, location: location) }
+      end
+
+      it "should not have sufficient visits data" do
+        expect(location.sufficient_data?).to be false
+      end
+    end
+
+    context "when 3 visits" do
+      before do
+        21.times { |n| create(:visit, location: location) } # 3 for each day_of_week
+      end
+
+      it "should not have sufficient visits data" do
+        expect(location.sufficient_data?).to be true
+      end
+    end
+
+  end
+
+  describe "#average_timeslot_volumes" do
+
+    context "when 2 visits exist on each day of the week" do
+      before do
+        7.times do
+          create(:visit, location: location, volumes: {"09:00:00"=>3.0, "09:15:00"=>1.0, "09:30:00"=>2.0, "09:45:00"=>8.0} )
+        end
+        7.times do
+          create(:visit, location: location, volumes: {"09:00:00"=>7.0, "09:15:00"=>0.0, "09:30:00"=>2.0, "09:45:00"=>1.0} )
+        end
+      end
+
+      it "should return a hash containing the average value per timeslot" do
+        expect(location.average_timeslot_volumes.values.first).to eq( {"09:00:00"=>5.0, "09:15:00"=>0.5, "09:30:00"=>2.0, "09:45:00"=>4.5} )
+      end
+    end
+
+  end
+
+
+
 # Class Methods
 pending "::create_default"
 
