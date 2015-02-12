@@ -106,6 +106,35 @@ class Location < ActiveRecord::Base
     end
   end
 
+  # Used to calcluate date range for ReportServerFactory#scheduled_import!
+
+  def self.date_of_first_missing_visit
+    suspects = ordered.map(&:first_missing_visit_date).compact
+    !suspects.empty? ? suspects.sort.first : nil
+  end
+
+  def first_missing_visit_date
+    return nil unless visits
+    if consecutive_visits?
+      visits.ordered.last.date + 1.days
+    else
+      first_missing_consecutive_visit_date
+    end
+  end
+
+  def consecutive_visits?
+    return true unless visits
+    (visits.ordered.first.date..visits.ordered.last.date).to_a.size == visits.size
+  end
+
+  def first_missing_consecutive_visit_date
+    missing_dates = (visits.ordered.first.date..visits.ordered.last.date).to_a - visits.ordered.pluck(:date)
+    missing_dates.each do |date|
+      return date unless (date.day == 25 && date.month == 12) # Xmas doesn't count
+    end
+    return nil
+  end
+
   # Used to calculate heatmaps for location
 
   def average_timeslot_volumes # hashed by day of week and time

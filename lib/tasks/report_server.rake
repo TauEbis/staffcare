@@ -1,8 +1,8 @@
 namespace :rs do
 
   desc "Load last week's visits"
-  task :weekly_visit_import => :environment do
-    ReportServerFactory.new.weekly_import!
+  task :week_visit_import => :environment do
+    ReportServerFactory.new.week_import!
     ShortForecast.build_latest!
   end
 
