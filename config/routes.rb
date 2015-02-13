@@ -53,7 +53,9 @@ Rails.application.routes.draw do
 
   resources :heatmaps, only: [:index, :show]
 
-  resources :visits, only: [:index, :show]
+  resources :visits, only: [:index, :show] do
+    collection { get :am_pm }
+  end
 
   resources :short_forecasts, only: [:index, :show]
 

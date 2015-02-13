@@ -1,12 +1,11 @@
 class VisitPolicy < ApplicationPolicy
 
-  class Scope < Struct.new(:user, :scope)
-    def resolve
-      if user.admin?
-        scope
-      else
-        scope
-      end
-    end
+  def index?
+    user.admin?
   end
+
+  def am_pm?
+    index?
+  end
+
 end

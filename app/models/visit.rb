@@ -92,4 +92,22 @@ class Visit < ActiveRecord::Base
     end
   end
 
+ # This class method is used to export visits in am/pm sub-totals
+  def self.am_pm_to_csv(options = {})
+    CSV.generate(options) do |csv|
+      columns = [ 'date', 'dow', 'time', 'location', 'volume']
+      csv << columns
+
+  # self.includes(:location).ordered performs slower here even though it causes an n+1 querry warning
+      ordered.each do |visit|
+        chunked_volumes = visit.in_chunks(2)
+        am_row = [ visit.date.to_s, visit.dow, 'am', visit.location.name, chunked_volumes[0] ]
+        pm_row = [ visit.date.to_s, visit.dow, 'pm', visit.location.name, chunked_volumes[1] ]
+        csv << am_row
+        csv << pm_row
+      end
+
+    end
+  end
+
 end
