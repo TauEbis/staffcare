@@ -1,45 +1,121 @@
-// Knockout specific parts of Coverage management
+function Position(data, visits, starts_hour, ends_hour) {
+  var self = this
+    , distribute = function(visits) {
+        var hourly_patients = {};
 
-// Class to represent a row in the list of all shifts for a day
+        for(var hour=starts_hour, i=0; hour < ends_hour; hour++, i+=2) {
+          var active_shifts = [];
+
+          // visits are a collection of patients per half hour.
+          // Every 2 items must be added to represent an hour of patients
+          // TODO: ensure there are no odd number of items
+          //       as this will introduce errors in calculation
+          hourly_patients[hour] = visits[i] + visits[i+1];
+
+          self.shifts().forEach(function(shift, index) {
+            if(shift.covers(hour)) { active_shifts.push(index); }
+          });
+
+          console.log("visits", visits);
+          console.log("hourly_patients", hourly_patients);
+          console.log("active_shifts", active_shifts);
+
+          active_shifts.forEach(function(id, _) {
+            self.shifts()[id].patient_load
+              .push( hourly_patients[hour]/active_shifts.length );
+
+            console.log("patient_loads", self.shifts()[id].patient_load());
+            console.log("patients_per_hour", self.shifts()[id].patients_per_hour());
+          });
+        }
+
+      }
+    , observe = function(shift) {
+        shift.starts.subscribe(function(_) { distribute(visits) });
+        shift.ends.subscribe(function(_) { distribute(visits) });
+        // ...then later...
+        // subscription.dispose(); // I no longer want notifications
+        return shift;
+      }
+  ;
+
+  self.name = ko.observable(data.name);
+  self.key  = ko.observable(data.key);
+  self.visits = ko.observable(visits);
+
+  self.shifts = ko.observableArray(
+    $.map(data.shifts, function(shift, _){ return observe( new Shift(shift) ); } )
+  );
+  distribute(visits);
+
+  self.addShift = function(position) {
+    self.shifts.push(
+      new Shift({starts_hour: starts_hour, ends_hour: ends_hour, position_key: position.key})
+    );
+    distribute(visits);
+  };
+
+  self.removeShift = function(shift) {
+    self.shifts.remove(shift);
+    distribute(visits);
+  };
+};
+
 function Shift(data) {
-  var self = this;
-  self.id = ko.observable(data.id);
+  var self   = this
+  ;
+
+  self.id     = ko.observable(data.id);
   self.date   = ko.observable(data.date);
+  self.ends   = ko.observable(data.ends_hour);
   self.starts = ko.observable(data.starts_hour);
-  self.ends = ko.observable(data.ends_hour);
-  self.position_key = ko.observable(data.position_key);
+  self.position_key      = ko.observable(data.position_key);
+  self.patient_load      = ko.observableArray([]);
+  self.patients_per_hour = ko.computed(function() {
+    var sum = 0;
+
+    for( var i = 0; i < self.patient_load().length; i++ ){
+      sum += self.patient_load()[i];
+    }
+
+    // test for divide by 0 errors
+    return Number( (sum / self.patient_load().length).toFixed(1) );
+  });
 
   self.hours = ko.computed(function(){
     return self.ends() - self.starts();
   });
+
   self.formatted = ko.computed(function(){
+  //TODO: usage of timeOfDay should be removed as it is not a concern of the shift
     return timeOfDay(self.ends()) + " - " + timeOfDay(self.starts());
   });
 
   self.shift_bar_width = ko.computed(function(){
-    return (self.hours() * 51) + "px";
+    //TODO: usage of shift_bar_width should be removed as it is not a concern of the shift
+    var hourly_bar_width = 41;
+
+    return (self.hours() * hourly_bar_width) + "px";
   });
 
   self.shift_bar_offset = ko.computed(function(){
-    return (self.starts() - 8) * 51 + "px";
+    //TODO: usage of shift_bar_offset should be removed as it is not a concern of the shift
+    var opens = 8 // this is very brittle. Should be coming from the Grade open time.
+      , hourly_bar_width = 41
+    ;
+
+    return ((self.starts() - opens) * hourly_bar_width) + "px";
   });
 
-}
+  self.covers = function(hour) {
+    var covers = false;
 
-function Position(data) {
-  var self = this;
-  self.name = ko.observable(data.name);
-  self.key  = ko.observable(data.key);
-  self.shifts = ko.observableArray($.map(data.shifts, function(elem, i){
-    return new Shift(elem);
-  }));
-
-  self.addShift = function(position) {
-    self.shifts.push(new Shift({starts_hour: 10, ends_hour: 20, position_key: position.key}));
+    for(var _hour = self.starts(); _hour < self.ends(); _hour++) {
+      if(hour === _hour) { covers = true; }
+    }
+    return covers;
   };
-
-  self.removeShift = function(shift) { self.shifts.remove(shift) };
-}
+};
 
 // Analysis is all the summed info about a time period.  This could be a day, the whole month,
 // or even the whole month across multiple locations
@@ -109,35 +185,37 @@ function CoverageViewModel() {
   self.prev_day_info = ko.observable(null);
   self.prev_date = null;
 
+
   self.load = function(data) {
-//    console.log(data);
-
-    if(data.day_info){
-
-      if(data.day_info.date == self.prev_date){
-        self.prev_grade( self.grade() );
-        self.prev_day_info( self.day_info() );
-      }else{
-        self.prev_grade( null );
-        self.prev_day_info( null );
-      }
-
-      self.day_info(new DayInfo(data.day_info));
-      self.prev_date = data.day_info.date;
-    }
+    var visits = data.visits || [];
 
     self.grade(new Grade(data.grade));
 
-    if(data.day_info){
-      self.generateAvailableTimes(data.day_info.open_time, data.day_info.close_time);
-      self.positions($.map(data.positions, function(elem, i){ return new Position(elem); }));
-      self.positions( self.positions.sort( function(a, b){ return position_keys.indexOf(a.key()) - position_keys.indexOf(b.key()) }) );
+    if(!data.day_info){ return; }
 
-      colorNewDay(data.day_info.date, data.day_info.analysis.stats.pen_per_pat ); // coloring based on waste per patient
-
-      // We dont' want to set loaded until we've loaded a DAY, not just the grade-wide data
-      self.loaded(true);
+    if(data.day_info.date == self.prev_date){
+      self.prev_grade( self.grade() );
+      self.prev_day_info( self.day_info() );
+    }else{
+      self.prev_grade( null );
+      self.prev_day_info( null );
     }
+
+    self.day_info(new DayInfo(data.day_info));
+    self.prev_date = data.day_info.date;
+
+    self.generateAvailableTimes(data.day_info.open_time, data.day_info.close_time);
+
+    self.positions($.map(data.positions, function(position, _){
+
+      return new Position(position, visits, data.day_info.open_time, data.day_info.close_time);
+    }));
+    self.positions( self.positions.sort( function(a, b){ return position_keys.indexOf(a.key()) - position_keys.indexOf(b.key()) }) );
+
+    colorNewDay(data.day_info.date, data.day_info.analysis.stats.pen_per_pat ); // coloring based on waste per patient
+
+    // We dont' want to set loaded until we've loaded a DAY, not just the grade-wide data
+    self.loaded(true);
   };
 
   self.position_name = function(index) {
@@ -158,6 +236,7 @@ function CoverageViewModel() {
 
     var gid = self.grade().id();
 
+// does this ever get used? Me thinks not.
     $.ajax("/grades/" + gid, {
       data: ko.toJSON({ date: self.day_info().date(), shifts: shifts}),
       type: "patch", contentType: "application/json",

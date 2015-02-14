@@ -52,6 +52,9 @@ class GradesController < ApplicationController
 
         if @date
           @date_s = @date.to_s
+
+          data[:visits] = @grade.visits[@date_s].map {|count| count.round(2)}
+
           day = {
             date: @date.to_s,
             formatted_date: I18n.localize(@date, format: :with_dow),

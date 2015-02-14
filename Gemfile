@@ -82,6 +82,8 @@ group :development, :test do
 end
 
 group :test do
+  gem 'teaspoon'
+  gem 'guard-teaspoon'
   gem 'capybara'
   gem 'database_cleaner'
   gem 'faker'

@@ -56,7 +56,6 @@ function load_coverage_day_info(grade_id, date){
     .fail(function(xhr, status, error) {
       inject_coverage_fail('#coverage_hourly', xhr, status, error);
     });
-
 }
 
 // A wrapper function that can include or NOT include the date if we want to load just the grade-overview data

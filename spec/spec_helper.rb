@@ -30,6 +30,7 @@ VCR.configure do |c|
 end
 
 RSpec.configure do |config|
+  config.filter_run_excluding js: true
   # ## Mock Framework
   #
   # If you prefer to use mocha, flexmock or RR, uncomment the appropriate line:

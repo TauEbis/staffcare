@@ -5,6 +5,31 @@
 $bk-aqua: #ADD8E6;
 
 #grades_controller {
+  #positions {
+    .shifts {
+      .totals {
+        float: left;
+        width: 105px;
+        position: relative;
+
+        h5 {
+          margin-top: 0px;
+        }
+      }
+
+      .shift-bar {
+        padding: 0;
+
+        div {
+          margin: 0;
+          padding: 0;
+          width: 100%;
+          height: 30px;
+          background-color: #2a62bc;
+        }
+      }
+    }
+  }
   table .header-fixed {
     position: fixed;
     top: 40px;

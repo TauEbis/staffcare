@@ -236,9 +236,9 @@ ActiveRecord::Schema.define(version: 20150204170020) do
     t.integer  "doctors",                             null: false
     t.decimal  "normal",      precision: 5, scale: 2, null: false
     t.decimal  "max",         precision: 5, scale: 2, null: false
+    t.integer  "location_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "location_id"
   end
 
   add_index "speeds", ["doctors", "location_id"], name: "index_speeds_on_doctors_and_location_id", unique: true, using: :btree
