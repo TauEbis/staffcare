@@ -7,10 +7,6 @@ require 'rspec/its'
 RSpec.configure { |c| c.deprecation_stream = 'log/deprecations.log' } # Configuration set here because pundit also sets the deprecation stream
 require "pundit/rspec"
 
-require 'webmock/rspec'
-require 'vcr'
-
-
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
 # run as spec files by default. This means that files in spec/support that end
@@ -24,13 +20,26 @@ Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 # If you are not using ActiveRecord, you can remove this line.
 ActiveRecord::Migration.maintain_test_schema!
 
-VCR.configure do |c|
-  c.cassette_library_dir = 'spec/cassettes'
-  c.hook_into :webmock # or :fakeweb
-end
+# VCR.configure do |c|
+#   c.cassette_library_dir = 'spec/cassettes'
+#   c.hook_into :webmock # or :fakeweb
+# end
+
+# Capybara.register_driver :chrome do |app|
+#     Capybara::Selenium::Driver.new(app, browser: :chrome)
+# end
 
 RSpec.configure do |config|
+  # Run specs in random order to surface order dependencies. If you find an
+  # order dependency and want to debug it, you can fix the order by providing
+  # the seed, which is printed after each run.
+  #     --seed 1234
+  config.order = :random
+  config.fixture_path = "#{::Rails.root}/spec/fixtures"
+  config.render_views = true
+  config.filter_run focus: true
   config.filter_run_excluding js: true
+  config.run_all_when_everything_filtered = true
   # ## Mock Framework
   #
   # If you prefer to use mocha, flexmock or RR, uncomment the appropriate line:
@@ -39,21 +48,10 @@ RSpec.configure do |config|
   # config.mock_with :flexmock
   # config.mock_with :rr
 
-  # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  config.fixture_path = "#{::Rails.root}/spec/fixtures"
-
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
   config.use_transactional_fixtures = false
-
-  # Run specs in random order to surface order dependencies. If you find an
-  # order dependency and want to debug it, you can fix the order by providing
-  # the seed, which is printed after each run.
-  #     --seed 1234
-  config.order = "random"
-
-  config.render_views = true
 
   # RSpec Rails can automatically mix in different behaviours to your tests
   # based on their file location, for example enabling you to call `get` and
