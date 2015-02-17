@@ -10,12 +10,10 @@ class ReportServerFactory
 
   def scheduled_import!
     start_date = Location.date_of_first_missing_visit || default_start_date
-    start_date = start_date - start_date.wday
-    if default_start_date - start_date == 0.days
-      week_import!
-    else
-      bulk_import!(first_sunday: start_date, last_sunday: default_start_date)
-    end
+    start_date = to_sunday(start_date)
+    start_date = [ start_date, default_start_date ].min       # Make sure start_date isn't in the future
+
+    default_start_date == start_date ? week_import! : bulk_import!(first_sunday: start_date)
   end
 
   def week_import!(opts={})
@@ -29,13 +27,13 @@ class ReportServerFactory
 
   def bulk_import!(opts={})
     first_sunday = opts[:first_sunday] || Date.parse('2013-01-01')
-    first_start  = first_sunday - first_sunday.wday                     # Make sure it's a sunday
+    first_sunday = to_sunday(first_sunday)
     last_sunday  = opts[:last_sunday] || default_start_date
-    last_start   = last_sunday - last_sunday.wday                       # Make sure it's a sunday
-    weeks        = (last_start - first_start).to_i / 7
+    last_sunday  = to_sunday(last_sunday)
+    weeks        = (last_sunday - first_sunday).to_i / 7
 
     (0..weeks).each do |n|
-      w_opts = { start_date: first_start + 7*n, calc_heatmaps: (n == weeks) }
+      w_opts = { start_date: first_sunday + 7*n, calc_heatmaps: (n == weeks) }
       if opts[:data_set] # An array of raw json representing each weeks data
         w_opts[:data] = opts[:data_set][n]
       end
@@ -46,11 +44,15 @@ class ReportServerFactory
   private
 
     def default_start_date
-      Date.today - Date.today.wday - WEEKS_TO_WAIT * 7
+      @_def_start ||= to_sunday(Date.today) - WEEKS_TO_WAIT * 7
     end
 
     def default_end_date
-      default_start_date + 6
+      @_def_end ||= default_start_date + 6
+    end
+
+    def to_sunday(date)
+      date - date.wday
     end
 
 end
