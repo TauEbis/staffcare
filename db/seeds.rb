@@ -22,6 +22,7 @@ end
 if Rails.env.development?
   if Heatmap.all.empty? && Location.all.empty?
     Rake::Task["rs:dummy_visit_import"].invoke
+    Rake::Task["hours:load"].invoke
     renamed_l = Location.find_by(name: "PC Park Slope")
     renamed_l.name = "CityMD Park Slope"
     renamed_l.save
