@@ -2,38 +2,15 @@ class VolumeForecaster
 
 	attr_reader :opts
 
-	# Two class methods used for setting up forecasters
-
-	# Finds locations with sufficient visit data for a forecast
-	def self.locations_with_sufficient_data(date_range)
-    Location.ordered.all.select do |location|
-      location.visits.for_date_range(date_range).size == date_range.to_a.size
-    end
-  end
-
-  # Finds the date range for a lookback window and a possible uppderbound
-	def self.calc_data_date_range(lookback_window = 10, upper_bound = nil) # upper_bound is < not <=
-		if upper_bound
-			last_visit_date = [upper_bound - 1.days, Visit.ordered.last.date].min
-		else
-			last_visit_date = Visit.ordered.last.date
-		end
-		data_end_date = last_visit_date.wday == 6 ? last_visit_date : last_visit_date - last_visit_date.wday - 1.days # A Saturday
-		data_start_date = data_end_date - lookback_window.weeks + 1.days # A Sunday
-
-		data_start_date..data_end_date
-	end
-
 	def initialize(data_date_range, location, opts={})
 		@opts = opts
 		@opts[:chunks] ||= 2 	# Chunks: Volume chunks is 2 by default. Roughly am/pm (1/2 day)
-		@opts[:degree] ||= 0 	# Polynomial degree is linear by default
 
 		@data_start_date = data_date_range.first
 		@data_end_date = data_date_range.last
 
 		@visits = location.visits.for_date_range(data_date_range)
-	  @coeffs = build_coeffs(@opts[:degree], @opts[:chunks]) 	# {sunday_0: [1,2,3,4], sunday_1: [1,2,3,4]}
+	  @coeffs = build_coeffs(@opts[:chunks]) 	# {sunday_0: [1,2,3,4], sunday_1: [1,2,3,4]}
 	end
 
 	# Returns a full location forecast as arrays of volumes indexed by chunk and hashed by date
@@ -51,9 +28,10 @@ class VolumeForecaster
 	# Returns the location forecast for a chunk of a date
 	def forecast(date, chunk)
 		key = key(date, chunk)
-
 		x = dist_to_origin(date)
-		@coeffs[key].each_with_index.map { |c, i| c * x**i }.sum # return value of polynomial
+
+		y = @coeffs[key][0] + @coeffs[key][1] * Math.log(x + @coeffs[key][2]) # return value of a + b * ln (x+c)
+		return [y,0].max
 	end
 
 	# Dumps all visits data used by the forecaster
@@ -61,6 +39,28 @@ class VolumeForecaster
 		lookback_data = {}
 		@visits.each { |visit| lookback_data[visit.date] = visit.volumes }
 		lookback_data
+	end
+
+	# Two class methods used for setting up forecasters
+
+	# Finds locations with sufficient visit data for a forecast
+	def self.locations_with_sufficient_data(date_range)
+    Location.ordered.all.select do |location|
+      location.visits.for_date_range(date_range).size == date_range.to_a.size
+    end
+  end
+
+  # Finds the date range for a lookback window and a possible upperbound
+	def self.calc_data_date_range(lookback_window = 10, upper_bound = nil) # upper_bound is < not <=
+		if upper_bound
+			last_visit_date = [upper_bound - 1.days, Visit.ordered.last.date].min
+		else
+			last_visit_date = Visit.ordered.last.date
+		end
+		data_end_date = last_visit_date.wday == 6 ? last_visit_date : last_visit_date - last_visit_date.wday - 1.days # A Saturday
+		data_start_date = data_end_date - lookback_window.weeks + 1.days # A Sunday
+
+		data_start_date..data_end_date
 	end
 
 	private
@@ -72,21 +72,42 @@ class VolumeForecaster
 			offset = (dow - @data_start_date.wday).modulo(7)
 			first_dow = @data_start_date + offset.days
 
-			offset = (@data_end_date.wday - dow).modulo(7)
-			last_dow = @data_end_date - (offset).days
-
-			origin = ((last_dow - first_dow).to_i/7) / (2.0)
-			dist = (date-last_dow).to_i/7 + origin
+			dist = (date-first_dow).to_i/7 + 1
 			dist
 		end
 
 		# chunked_visits has form {monday_0: [100, 200, 150, 125], monday_1: [100, 200, 150, 125], tuesday_0: [100, 200, 150, 125] ...}
-		def build_coeffs(degree, chunks)
+		def build_coeffs(chunks)
 			coeffs={}
 
 			chunked_visits = build_chunked_visits(chunks) # {mon_0: [summed_visits_for_chunk_day_1, summed_visits_for_chunk_day_2, ...], ... }
 			chunked_visits.each do |key, chunk|
-				coeffs[key] = (0..degree).map{ |d| (oly_avg delta(chunk, d)) / factorial(d) }
+				len = chunk.size
+
+				x_data = (1..len).to_a
+				log_x_data = x_data.map { |x| Math.log(x) }
+				y_data = chunk
+
+				x_vector = x_data.to_vector(:scale)
+				x_log_vector = log_x_data.to_vector(:scale)
+				y_vector = y_data.to_vector(:scale)
+
+				ds = {'x'=>x_vector,'y'=>y_vector}.to_dataset
+				log_ds = {'x'=>x_log_vector,'y'=>y_vector}.to_dataset
+
+				mlr = Statsample::Regression::Simple.new_from_vectors(x_vector,y_vector)
+				m = mlr.b
+
+				log_mlr = Statsample::Regression::Simple.new_from_vectors(x_log_vector,y_vector)
+				n = log_mlr.b
+				n = n.abs * m/m.abs
+
+				co_b = len**2 * m**2/n
+				co_c = len**2 * (m/n) - len
+
+				co_a = mlr.y(len) - co_b * Math.log(len+co_c)
+				coeffs[key] = [ co_a, co_b, co_c ]
+
 			end
 			coeffs
 		end
@@ -108,28 +129,6 @@ class VolumeForecaster
 
 		def key(date, chunk)
 			"#{Date::DAYNAMES[date.wday]}_#{chunk}".to_sym
-		end
-
-		def factorial(x)
-			(1..x).inject(:*) || 1
-		end
-
-		def oly_avg(arry)
-			arry.map!(&:to_f) # do we want BigDecimals here?
-
-			if arry.length > 2
-				min = arry.min  # Do I want abs value for min and max?
-				max = arry.max
-				arry.delete_at(arry.index(min))
-				arry.delete_at(arry.index(max))
-			end
-
-			arry.sum/(arry.length)
-		end
-
-		def delta(arry, degree)
-			diff = arry[1..-1].zip(arry[0..-2]).map { |x, y| x - y } if degree != 0
-			degree == 0 ? arry : delta(diff, degree-1)
 		end
 
 end

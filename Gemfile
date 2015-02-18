@@ -43,6 +43,7 @@ gem 'httparty'
 gem 'clockwork'
 
 gem 'airbrake'
+gem 'statsample', '>= 1.4.0'
 
 group :staging, :production do
   gem 'rails_12factor'
