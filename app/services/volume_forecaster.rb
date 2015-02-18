@@ -104,10 +104,9 @@ class VolumeForecaster
 
 				co_b = len**2 * m**2/n
 				co_c = len**2 * (m/n) - len
-
 				co_a = mlr.y(len) - co_b * Math.log(len+co_c)
-				coeffs[key] = [ co_a, co_b, co_c ]
 
+				coeffs[key] = [ co_a, co_b, co_c ]
 			end
 			coeffs
 		end

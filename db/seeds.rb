@@ -26,6 +26,7 @@ if Rails.env.development?
     renamed_l = Location.find_by(name: "PC Park Slope")
     renamed_l.name = "CityMD Park Slope"
     renamed_l.save
+    ShortForecast.build_latest!
     puts "Created Locations & Heatmaps"   # Open and closing times currently need to be adjusted manually
   end
 
