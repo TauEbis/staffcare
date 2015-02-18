@@ -4,8 +4,10 @@ class ShortForecastsController < ApplicationController
 
   # GET /short_forecasts
   def index
-    @short_forecasts = policy_scope(ShortForecast).all
-    @dates = (@short_forecasts.first.start_date..@short_forecasts.first.end_date).select{ |date| date.wday == 0 }
+    start_date = ShortForecast.first.start_date
+    end_date = ShortForecast.first.end_date
+    @short_forecasts = policy_scope(ShortForecast).where(start_date: start_date, end_date: end_date)
+    @dates = (start_date..end_date).select{ |date| date.wday == 0 }
   end
 
   # GET /short_forecasts/1
