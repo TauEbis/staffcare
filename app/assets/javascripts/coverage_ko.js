@@ -30,11 +30,18 @@ function Position(data, visits, starts_hour, ends_hour) {
         }
 
       }
-    , observe = function(shift) {
+    , subscribe = function(shift) {
         shift.starts.subscribe(function(_) { distribute(visits) });
         shift.ends.subscribe(function(_) { distribute(visits) });
-        // ...then later...
-        // subscription.dispose(); // I no longer want notifications
+
+        return shift;
+      }
+    , unsubscribe = function(shift) {
+      // Memory leak unless we unsubscribe.
+      // This seems to be a concern of the Shift
+//      shift.starts.dispose();
+//      shift.ends.dispose();
+
         return shift;
       }
   ;
@@ -44,19 +51,21 @@ function Position(data, visits, starts_hour, ends_hour) {
   self.visits = ko.observable(visits);
 
   self.shifts = ko.observableArray(
-    $.map(data.shifts, function(shift, _){ return observe( new Shift(shift) ); } )
+    $.map(data.shifts, function(shift, _){ return subscribe( new Shift(shift) ); } )
   );
   distribute(visits);
 
   self.addShift = function(position) {
     self.shifts.push(
-      new Shift({starts_hour: starts_hour, ends_hour: ends_hour, position_key: position.key})
+      subscribe(
+        new Shift({starts_hour: starts_hour, ends_hour: ends_hour, position_key: position.key})
+      )
     );
     distribute(visits);
   };
 
   self.removeShift = function(shift) {
-    self.shifts.remove(shift);
+    self.shifts.remove( unsubscribe( shift ) );
     distribute(visits);
   };
 };
@@ -78,7 +87,7 @@ function Shift(data) {
       sum += self.patient_load()[i];
     }
 
-    // test for divide by 0 errors
+    //TODO: test for divide by 0 errors
     return Number( (sum / self.patient_load().length).toFixed(1) );
   });
 
@@ -229,6 +238,7 @@ function CoverageViewModel() {
     }
   };
 
+// does this ever get used? Me thinks not.
   self.save = function() {
     var shifts = jQuery.map(self.positions(), function(position, i){ // Actually a flatmap. Stupid jQuery
       return position.shifts();
@@ -236,7 +246,7 @@ function CoverageViewModel() {
 
     var gid = self.grade().id();
 
-// does this ever get used? Me thinks not.
+  //TODO: Remove. Not being used.
     $.ajax("/grades/" + gid, {
       data: ko.toJSON({ date: self.day_info().date(), shifts: shifts}),
       type: "patch", contentType: "application/json",
