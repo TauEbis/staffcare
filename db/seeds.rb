@@ -26,9 +26,11 @@ if Rails.env.development?
     renamed_l = Location.find_by(name: "PC Park Slope")
     renamed_l.name = "CityMD Park Slope"
     renamed_l.save
-    ShortForecast.build_latest!
     puts "Created Locations & Heatmaps"   # Open and closing times currently need to be adjusted manually
   end
+
+  ShortForecast.build_latest!
+  puts "Created Short term forecasts"
 
   if PatientVolumeForecast.all.empty?
     f = File.open("mock_data/patient_volume_forecasts.csv", "r")

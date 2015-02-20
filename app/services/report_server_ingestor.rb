@@ -11,7 +11,7 @@ class ReportServerIngestor
     hash_data_by_location
     create_locations!
     create_visits!
-    create_heatmaps!(30) if calc_heatmaps
+    create_heatmaps! if calc_heatmaps
   end
 
   def create_ingest!
@@ -59,12 +59,12 @@ class ReportServerIngestor
     end
   end
 
-  def create_heatmaps!(granularity=30)
+  def create_heatmaps!
     @locations_hash.values.each do |loc_data|
       loc = Location.find_by(uid: loc_data[:uid])
       if loc.sufficient_data?
         heatmap = Heatmap.where(location_id: loc.id).first_or_initialize
-        heatmap.recalc_from_volumes(loc.average_timeslot_volumes, granularity) #change to recalc from raw visits
+        heatmap.recalc_from_volumes(loc.average_timeslot_volumes)
         @ingest.heatmaps << heatmap
         heatmap.save!
       end
