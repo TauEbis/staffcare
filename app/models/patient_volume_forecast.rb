@@ -13,7 +13,7 @@ class PatientVolumeForecast < ActiveRecord::Base
   scope :ordered, -> { order(start_date: :asc, id: :desc) }
   default_scope -> { order(start_date: :asc, id: :desc) }
 
-  paginates_per 50
+  paginates_per 20
 
   # Validations
 
