@@ -41,15 +41,7 @@ class VolumeForecaster
 		lookback_data
 	end
 
-	# Two class methods used for setting up forecasters
-
-	# Finds locations with sufficient visit data for a forecast
-	def self.locations_with_sufficient_data(date_range)
-    Location.ordered.all.select do |location|
-      location.visits.for_date_range(date_range).size == date_range.to_a.size
-    end
-  end
-
+	# Class method used for setting up forecasters
   # Finds the date range for a lookback window and a possible upperbound
 	def self.calc_data_date_range(lookback_window = 10, upper_bound = nil) # upper_bound is < not <=
 		if upper_bound

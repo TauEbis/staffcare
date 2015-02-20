@@ -309,7 +309,7 @@ describe Location do
     end
   end
 
-  describe "#sufficient_data?" do
+  describe "#sufficient_data_for_heatmap?" do
 
     context "when 1 visit" do
       before do
@@ -317,7 +317,7 @@ describe Location do
       end
 
       it "should not have sufficient visits data" do
-        expect(location.sufficient_data?).to be false
+        expect(location.sufficient_data_for_heatmap?).to be false
       end
     end
 
@@ -327,7 +327,7 @@ describe Location do
       end
 
       it "should not have sufficient visits data" do
-        expect(location.sufficient_data?).to be true
+        expect(location.sufficient_data_for_heatmap?).to be true
       end
     end
 

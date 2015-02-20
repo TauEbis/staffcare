@@ -150,12 +150,17 @@ class Location < ActiveRecord::Base
     avg_visits
   end
 
-  def sufficient_data?
+  def sufficient_data_for_heatmap?
     (0..6).each do |day_of_week|
       total_days = visits.where(dow: day_of_week).size
-      return false if total_days < 3
+      return false if total_days < 1
     end
     true
+  end
+
+# Used by ShortForecast and VisitBuilder to verify if the VolumeForecaster can be used
+  def has_visits_data(date_range)
+    visits.for_date_range(date_range).size == date_range.to_a.size
   end
 
   # Used by ReportServerIngestor

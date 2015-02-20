@@ -24,7 +24,7 @@ class ShortForecast < ActiveRecord::Base
 
 		lookback_window = 10 # weeks of data to look at
 		date_range = VolumeForecaster.calc_data_date_range(lookback_window)
-    locations = VolumeForecaster.locations_with_sufficient_data(date_range)
+    locations =  Location.ordered.select { |location| location.has_visits_data(date_range) }
 
 		locations.each do |location|
 			short_forecast = ShortForecast.where(location: location).first_or_initialize

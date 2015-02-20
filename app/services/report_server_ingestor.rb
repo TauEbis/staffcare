@@ -62,7 +62,7 @@ class ReportServerIngestor
   def create_heatmaps!
     @locations_hash.values.each do |loc_data|
       loc = Location.find_by(uid: loc_data[:uid])
-      if loc.sufficient_data?
+      if loc.sufficient_data_for_heatmap?
         heatmap = Heatmap.where(location_id: loc.id).first_or_initialize
         heatmap.recalc_from_volumes(loc.average_timeslot_volumes)
         @ingest.heatmaps << heatmap
