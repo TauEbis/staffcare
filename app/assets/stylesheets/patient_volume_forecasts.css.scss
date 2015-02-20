@@ -48,6 +48,12 @@ $gray-light:   lighten(#000, 80%);
 		}
 	}
 
+  .all {
+    padding-left: 20px;
+    position: relative;
+    top: 7px;
+  }
+
 	hr {
   border-color: $gray-light;
   border-style: solid none;

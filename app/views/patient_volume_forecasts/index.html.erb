@@ -7,6 +7,7 @@
   <div class="col-sm-12">
     <div class="link-wrapper">
       <div class="pull-left top-paginator"> <%= paginate @patient_volume_forecasts %></div>
+      <%= link_to 'All on 1-Page', patient_volume_forecasts_path(all: true), class: "all" %>
     </div>
   </div>
 </div>
@@ -49,6 +50,7 @@
 <div class='row'>
   <div class="col-sm-12">
     <span class="pull-left bottom-paginator"> <%= paginate @patient_volume_forecasts %></span>
+    <%= link_to 'All on 1-Page', patient_volume_forecasts_path(all: true), class: "all" %>
     <span class="pull-right">Download:
       <%= link_to " CSV (Future)", patient_volume_forecasts_path(format: "csv", ) %> |
       <%= link_to " CSV (All)", patient_volume_forecasts_path(format: "csv", all_time: true) %>
