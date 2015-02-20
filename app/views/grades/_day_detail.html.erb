@@ -14,19 +14,18 @@
   </div>
 
   <div data-bind="ifnot: grade().editable">
-    <div data-bind="foreach: positions">
+    <div id='positions' data-bind="foreach: positions">
       <h5 data-bind="text: name"></h5>
-      <div data-bind="foreach: shifts">
+      <div class='shifts' data-bind="foreach: shifts">
         <div class="row form-inline form-group">
           <div class="col-sm-3">
             <span data-bind="text: timeOfDay(starts())"></span> - <span data-bind="text: timeOfDay(ends())"></span>
           </div>
-          <div class="col-sm-1 text-center">
+          <div class="totals">
             <h5><span data-bind="text: hours()"></span><small> hrs</small></h5>
           </div>
-          <div class="col-sm-8">
-            <div class="shift-bar" data-bind="style: {width: shift_bar_width(), marginLeft: shift_bar_offset()}"></div>
-          </div>
+          <div class="col-sm-8 shift-bar" data-bind="style: {width: shift_bar_width(), marginLeft: shift_bar_offset()}">
+            <div></div>
           <br>
         </div>
       </div> <!-- foreach: shifts -->
