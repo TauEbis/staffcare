@@ -3,9 +3,12 @@
 class VisitBuilder
 
   def build_projection!(location, schedule, volume_source)
+    volume_source = verify_source(location, schedule, volume_source)
+
     heatmap = heatmap_query(location)
     volumes = volume_query(location, schedule, volume_source)
     days = schedule.days.first..schedule.days.last # Not presently used
+
 
     projection = VisitProjection.create(
       volume_source: volume_source,
@@ -91,9 +94,21 @@ class VisitBuilder
   	end
 
     def create_forecaster_for(location, schedule)
-      lookback_window = 10 # weeks of data to look at
-      date_range = VolumeForecaster.calc_data_date_range(lookback_window, schedule.days.first)
+      date_range = forecaster_data_date_range(schedule)
       VolumeForecaster.new(date_range, location)
+    end
+
+    def verify_source(location, schedule, volume_source)
+      if volume_source == :volume_forecaster
+        date_range = forecaster_data_date_range(schedule)
+        volume_source = location.has_visits_data(date_range) ? :volume_forecaster : :patient_volume_forecasts
+      end
+      volume_source
+    end
+
+    def forecaster_data_date_range(schedule)
+      lookback_window = 10 # weeks of data for VolumeForecaster to consider
+      VolumeForecaster.calc_data_date_range(lookback_window, schedule.days.first)
     end
 
   end

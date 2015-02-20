@@ -106,26 +106,61 @@ class Location < ActiveRecord::Base
     end
   end
 
+  # Used to calcluate date range for ReportServerFactory#scheduled_import!
+
+  def self.date_of_first_missing_visit
+    suspects = ordered.map(&:first_missing_visit_date).compact
+    !suspects.empty? ? suspects.sort.first : nil
+  end
+
+  def first_missing_visit_date
+    return nil unless visits
+    if consecutive_visits?
+      visits.ordered.last.date + 1.days
+    else
+      first_missing_consecutive_visit_date
+    end
+  end
+
+  def consecutive_visits?
+    return true unless visits
+    (visits.ordered.first.date..visits.ordered.last.date).to_a.size == visits.size
+  end
+
+  def first_missing_consecutive_visit_date
+    missing_dates = (visits.ordered.first.date..visits.ordered.last.date).to_a - visits.ordered.pluck(:date)
+    missing_dates.each do |date|
+      return date unless (date.day == 25 && date.month == 12) # Xmas doesn't count
+    end
+    return nil
+  end
+
   # Used to calculate heatmaps for location
 
   def average_timeslot_volumes # hashed by day of week and time
     avg_visits = {}
-    (0..6).each do |dow|
-      total_days = visits.where(dow: dow).size
-      summed_visits = visits.where(dow: dow).map(&:volumes).inject do | h1, h2 |
+    (0..6).each do |day_of_week|
+      day_of_week_visits = visits.where(dow: day_of_week)
+      total_days = day_of_week_visits.size
+      summed_visits = day_of_week_visits.map(&:volumes).inject do | h1, h2 |
         h1.merge(h2){ |key, oldval, newval| oldval + newval }
       end
-      avg_visits[Date::DAYNAMES[dow]] = summed_visits.each{ |k,v| summed_visits[k] = v/total_days }
+      avg_visits[Date::DAYNAMES[day_of_week]] = summed_visits.each{ |k,v| summed_visits[k] = v/total_days }
     end
     avg_visits
   end
 
-  def sufficient_data?
-    (0..6).each do |dow|
-      total_days = visits.where(dow: dow).size
-      return false if total_days < 3
+  def sufficient_data_for_heatmap?
+    (0..6).each do |day_of_week|
+      total_days = visits.where(dow: day_of_week).size
+      return false if total_days < 1
     end
     true
+  end
+
+# Used by ShortForecast and VisitBuilder to verify if the VolumeForecaster can be used
+  def has_visits_data(date_range)
+    visits.for_date_range(date_range).size == date_range.to_a.size
   end
 
   # Used by ReportServerIngestor

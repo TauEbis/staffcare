@@ -1,8 +1,8 @@
 namespace :rs do
 
   desc "Load last week's visits"
-  task :weekly_visit_import => :environment do
-    ReportServerFactory.new.weekly_import!
+  task :week_visit_import => :environment do
+    ReportServerFactory.new.week_import!
     ShortForecast.build_latest!
   end
 
@@ -15,7 +15,7 @@ namespace :rs do
   desc "Loading dummy data"
   task :dummy_visit_import => :environment do
     first_sunday = Date.parse('2012-12-30')
-    last_sunday = Date.parse('2014-11-23')
+    last_sunday = Date.parse('2015-02-08')
 
     data_set = []
     File.open('mock_data/ingest_data.dump', 'r').each_line do |line|
@@ -23,7 +23,6 @@ namespace :rs do
     end
 
     ReportServerFactory.new.bulk_import!(first_sunday: first_sunday, last_sunday: last_sunday, data_set: data_set)
-    ShortForecast.build_latest!
   end
 
   desc "Dumping dummy data"
