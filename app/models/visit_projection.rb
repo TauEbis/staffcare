@@ -3,7 +3,7 @@ class VisitProjection < ActiveRecord::Base
   belongs_to :schedule
   belongs_to :location
 
-  has_one :grade
+  has_many :grades
 
   validates :visits, presence: true
   validate :valid_volumes
