@@ -21,11 +21,17 @@
           <div class="col-sm-3">
             <span data-bind="text: timeOfDay(starts())"></span> - <span data-bind="text: timeOfDay(ends())"></span>
           </div>
+
           <div class="totals">
-            <h5><span data-bind="text: hours()"></span><small> hrs</small></h5>
+            <h5>
+              <span data-bind="text: hours()"></span> <small>hrs</small>
+              (<span data-bind="text: patients_per_hour()"></span> <small>pph</small>)
+            </h5>
           </div>
+
           <div class="col-sm-8 shift-bar" data-bind="style: {width: shift_bar_width(), marginLeft: shift_bar_offset()}">
             <div></div>
+          </div>
           <br>
         </div>
       </div> <!-- foreach: shifts -->
