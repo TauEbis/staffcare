@@ -1,5 +1,25 @@
 var coverageContext;
 
+$(function() {
+  var sticky         = $('#grades_controller #save'),
+      sticky_height  = sticky.outerHeight(),
+      fix_navigation = function() {
+console.log($(window).scrollTop());
+console.log("length:", sticky.length);
+
+//      if ($(window).scrollTop() > sticky_height + 70){
+          sticky.addClass('fixed').css('top','0')
+//          .next().css('padding-top', (sticky_height + 'px'));
+//      } else {
+//        sticky.removeClass('fixed')
+//          .next().css('padding-top','0');
+//      } // if scrollTop is more than sticky_height
+      };
+
+  $(window).scroll(fix_navigation);
+//sticky.find('a').click(fix_navigation);
+});
+
 $(document).ready(function() {
   ///////   Grade#Show stuff
   // Initial load of daygrid

@@ -13,6 +13,14 @@
     </div>
   </div>
 
+  <div id='save' class="row fixed">
+    <div class="pull-right">
+      <button data-bind="click: save" class="btn btn-default">
+        <span class="glyphicon glyphicon-refresh"></span> Save and Recalculate
+      </button>
+    </div>
+  </div>
+
   <div data-bind="ifnot: grade().editable">
     <div id='positions' data-bind="foreach: positions">
       <h5 data-bind="text: name"></h5>
@@ -75,16 +83,6 @@
         Add <span data-bind="text: name"></span> Shift
       </a>
     </div> <!-- foreach: positions -->
-
-    <div class="row">
-      <div class="col-sm-4 form-group">
-      </div>
-      <div class="pull-right">
-        <button data-bind="click: save" class="btn btn-default">
-          <span class="glyphicon glyphicon-refresh"></span> Save and Recalculate
-        </button>
-      </div>
-    </div>
   </div>
 </div>
 
