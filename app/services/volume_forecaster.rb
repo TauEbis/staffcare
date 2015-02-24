@@ -84,19 +84,22 @@ class VolumeForecaster
 				x_log_vector = log_x_data.to_vector(:scale)
 				y_vector = y_data.to_vector(:scale)
 
-				ds = {'x'=>x_vector,'y'=>y_vector}.to_dataset
-				log_ds = {'x'=>x_log_vector,'y'=>y_vector}.to_dataset
+				slr = Statsample::Regression::Simple.new_from_vectors(x_vector,y_vector)
+				m = slr.b
 
-				mlr = Statsample::Regression::Simple.new_from_vectors(x_vector,y_vector)
-				m = mlr.b
+				log_slr = Statsample::Regression::Simple.new_from_vectors(x_log_vector,y_vector)
+				n = log_slr.b
 
-				log_mlr = Statsample::Regression::Simple.new_from_vectors(x_log_vector,y_vector)
-				n = log_mlr.b
-				n = n.abs * m/m.abs
-
-				co_b = len**2 * m**2/n
-				co_c = len**2 * (m/n) - len
-				co_a = mlr.y(len) - co_b * Math.log(len+co_c)
+				if m != 0
+					n = n.abs * m/m.abs
+					co_b = len**2 * m**2/n
+					co_c = len**2 * (m/n) - len
+					co_a = slr.y(len) - co_b * Math.log(len+co_c)
+				else
+					co_b = 0
+					co_c = -1 * len # Could be zero since multiplication by co_b = zero in forecast equation
+					co_a = slr.a
+				end
 
 				coeffs[key] = [ co_a, co_b, co_c ]
 			end
