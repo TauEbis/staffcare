@@ -20,14 +20,14 @@ if Rule.all.empty?
 end
 
 if Rails.env.development?
-  if Heatmap.all.empty? && Location.all.empty?
-    Rake::Task["rs:dummy_visit_import"].invoke
-    Rake::Task["hours:load"].invoke
-    renamed_l = Location.find_by(name: "PC Park Slope")
+
+  Rake::Task["rs:dummy_visit_import"].invoke
+  Rake::Task["hours:load"].invoke
+  if renamed_l = Location.find_by(name: "PC Park Slope")
     renamed_l.name = "CityMD Park Slope"
     renamed_l.save
-    puts "Created Locations & Heatmaps"   # Open and closing times currently need to be adjusted manually
   end
+  puts "Created Locations & Heatmaps"   # Open and closing times currently need to be adjusted manually
 
   ShortForecast.build_latest!
   puts "Created Short term forecasts"
