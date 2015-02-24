@@ -114,16 +114,16 @@ class Location < ActiveRecord::Base
   end
 
   def first_missing_visit_date
-    return nil unless visits
-    if consecutive_visits?
-      visits.ordered.last.date + 1.days
+    if visits.empty?
+      return nil
+    elsif !consecutive_visits?
+      return first_missing_consecutive_visit_date
     else
-      first_missing_consecutive_visit_date
+      return visits.ordered.last.date + 1.days
     end
   end
 
   def consecutive_visits?
-    return true unless visits
     (visits.ordered.first.date..visits.ordered.last.date).to_a.size == visits.size
   end
 
