@@ -1,43 +1,42 @@
-<div class="row">
-    <div class="col-sm-1"><strong> Manager: </strong></div>
-    <div class="col-sm-2">
-      <% if manager = @location_plan.location.manager  %>
-        <%= image_tag manager.avatar_url %>
-        <p class="text-center"><%= manager.label %><p>
-      <%- end -%>
-    </div>
-    <div class="col-sm-2 col-sm-offset-1 text-right"><strong> Regional Manager: </strong></div>
-    <div class="col-sm-2">
-      <% if rm = @location_plan.location.rm  %>
-        <%= image_tag rm.avatar_url %>
-        <p class="text-center"><%= rm.label %><p>
-      <%- end -%>
-    </div>
-</div>
+<section id='details'>
+  <h5>Location Details</h5>
+
+  <article>
+  <% if manager = @location_plan.location.manager  %>
+    <%= image_tag manager.avatar_url %>
+    <header>Manager:</header>
+
+    <%= manager.label %>
+  <%- end -%>
+  </article>
+
+  <article>
+  <% if rm = @location_plan.location.rm  %>
+    <%= image_tag rm.avatar_url %>
+    <header>Regional Manager:</header>
+
+    <%= rm.label %>
+  <%- end -%>
+  </article>
 
 <% grade = @location_plan.chosen_grade %>
 
-<div class="row">
-    <div class="col-sm-1"><strong> Visits: </strong></div>
-    <div class="col-sm-4">
-      <%= grade.monthly_visits.round(0) %> visitors per month
-      &bull; <%= grade.daily_avg.round(0) %> daily average
-    </div>
-</div>
+  <dl>
+    <dt>Visits:</dt>
+    <dd>Monthly: <%= grade.monthly_visits.round(0) %></dd>
+    <dd>Daily: <%= grade.daily_avg.round(0) %></dd>
 
-<div class="row">
-    <div class="col-sm-1"><strong> Details: </strong></div>
-    <div class="col-sm-3">
-      <%= grade.rooms %> rooms
-      &bull; Max <%= grade.max_mds %> MDs
-    </div>
-</div>
+    <dt>Details:</dt>
+    <dd>Size: <%= grade.rooms %></dd>
+    <dd>MaxMDs: <%= grade.max_mds %></dd>
 
-<div class="row">
-    <div class="col-sm-1"><strong> Open/Close: </strong></div>
+    <dt>Open/Close:</dt>
+    <dd>
     <% Location::DAYS.each_with_index do |day, i| -%>
-      <div class="col-sm-1">
-        <p><%= "#{day.humanize}: #{grade.open_times[i]}am - #{grade.close_times[i]-12}pm" %></p>
-      </div>
+      <time><%=
+      "#{day.humanize}: #{grade.open_times[i]}am - #{grade.close_times[i]-12}pm"
+      -%> &bull;</time>
     <% end -%>
-</div>
+    </dd>
+  </dl>
+</section>
