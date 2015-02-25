@@ -19,24 +19,18 @@
   <%- end -%>
   </article>
 
-<% grade = @location_plan.chosen_grade %>
-
   <dl>
     <dt>Visits:</dt>
-    <dd>Monthly: <%= grade.monthly_visits.round(0) %></dd>
-    <dd>Daily: <%= grade.daily_avg.round(0) %></dd>
+    <dd>Monthly: <%= @grade.monthly_visits.round 0 %></dd>
+    <dd>Daily: <%= @grade.daily_avg.round 0 %></dd>
 
     <dt>Details:</dt>
-    <dd>Size: <%= grade.rooms %></dd>
-    <dd>MaxMDs: <%= grade.max_mds %></dd>
+    <dd>Size: <%= @grade.rooms %></dd>
+    <dd>MaxMDs: <%= @grade.max_mds %></dd>
 
     <dt>Open/Close:</dt>
     <dd>
-    <% Location::DAYS.each_with_index do |day, i| -%>
-      <time><%=
-      "#{day.humanize}: #{grade.open_times[i]}am - #{grade.close_times[i]-12}pm"
-      -%> &bull;</time>
-    <% end -%>
+      <%= open_close_times_for @grade %>
     </dd>
   </dl>
 </section>
