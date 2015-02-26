@@ -1,47 +1,6 @@
-<% location = @location_plan.location %>
-
 <%= render 'analysis_line' %>
 
 <%= render 'location_plans/header' %>
-
-<% if false %>
-<div class="row">
-  <div class="col-sm-8">
-    <% if policy(@location_plan).update? -%>
-      <%= simple_form_for @location_plan, wrapper: :horizontal_form, html: {class: 'form-inline'} do |f| %>
-        <%= f.association :chosen_grade, collection: @location_plan.grades.ordered, label_method: :label, label: false, include_blank: false %>
-        <% unless policy(@location_plan.chosen_grade).update? -%>
-            <span data-toggle="tooltip" title="You can only edit your own coverage solution.  Use Copy & Edit to make your own copy">
-              (un-editable)
-              <span class="glyphicon glyphicon-question-sign"></span>
-            </span>
-        <% end -%>
-      <% end -%>
-    <% else -%>
-      <h4><%= @grade.label %>
-        <small>
-          <%- if policy(@schedule).state_draft?
-                msg = "You must first request approvals before editing"
-              elsif policy(@schedule).state_locked?
-                msg = "You must first un-lock the schedule before editing"
-              else
-                msg = "The coverage is now RM approved and can no longer be edited"
-              end -%>
-          <span data-toggle="tooltip" title="<%= msg %>">
-                (un-editable)
-                <span class="glyphicon glyphicon-question-sign"></span>
-              </span>
-        </small>
-      </h4>
-    <% end -%>
-  </div>
-  <div class="pull-right">
-    <%= link_to 'Generate Non-Physician Shifts', new_location_plan_line_worker_path(@location_plan), class: 'btn btn-default' %>
-  </div>
-</div>
-<% end %>
-
-<br>
 
 <div class="location_plan_container">
   <div class="row">
@@ -54,10 +13,10 @@
     <div class="col-md-3">
       <%= render 'daygrid' %>
     </div>
+
     <div class="col-sm-9">
       <div id="highcharts-container" style="width: 100%; height: 400px; margin: 0 auto"></div>
     </div>
-
   </div>
 
   <div class="row">
@@ -69,15 +28,11 @@
     </div>
   </div>
 
-
   <div class="row">
     <div class="col-sm-12 hidden" id="coverage_hourly_load">
       <img src="<%= image_path('load.gif') %>" alt="Loading">
     </div>
-    <div id="coverage_hourly">
 
-    </div>
+    <div id="coverage_hourly"></div>
   </div>
-
-
 </div>
