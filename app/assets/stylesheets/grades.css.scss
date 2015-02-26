@@ -40,13 +40,11 @@ $table-header-z-index: 1020;
     $totals-hours: 105px;
 
     a.add {
-     background: red;
      display:block;
      width: $shift-hours;
     }
 
     .totals {
-      background: red;
       float: left;
       height: 30px;
       margin: 0;
@@ -61,9 +59,8 @@ $table-header-z-index: 1020;
     & > h5, & > .totals {
       width: $shift-hours;
       line-height: 30px;
-      margin: 35px 0 0;
+      margin: 35px 0 10px;
       float:left;
-      background: yellow;
       position: relative;
       font-size: 120%;
     }
