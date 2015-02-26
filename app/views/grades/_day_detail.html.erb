@@ -50,7 +50,10 @@
 
   <div data-bind="if: grade().editable">
     <div id='positions' data-bind="foreach: positions">
-      <h5 data-bind="text: name"></h5>
+      <header>
+        <h5 data-bind="text: name"></h5>
+       (<span data-bind="text: daily_patients_per_position()"></span>)
+      </header>
 
       <div class='shifts' data-bind="foreach: shifts">
         <div class="row form-inline form-group">
