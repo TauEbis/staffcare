@@ -50,6 +50,14 @@ function Position(data, visits, starts_hour, ends_hour) {
   self.key  = ko.observable(data.key);
   self.visits = ko.observable(visits);
 
+  self.daily_patients = ko.computed(function() {
+    return Number( 888 );
+  });
+
+  self.cost = ko.computed(function() {
+    return "$" + Number( 8888 );
+  });
+
   self.shifts = ko.observableArray(
     $.map(data.shifts, function(shift, _){ return subscribe( new Shift(shift) ); } )
   );

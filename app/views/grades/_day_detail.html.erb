@@ -24,17 +24,18 @@
   <div data-bind="ifnot: grade().editable">
     <div id='positions' data-bind="foreach: positions">
       <h5 data-bind="text: name"></h5>
+
+      <div class='totals'>
+        <h5>
+          <span data-bind="text: daily_patients()">88.88</span> <small>hrs</small>
+          (<span data-bind="text: cost()">$249</span></span>)
+        </h5>
+      </div>
+
       <div class='shifts' data-bind="foreach: shifts">
         <div class="row form-inline form-group">
           <div class="col-sm-3">
             <span data-bind="text: timeOfDay(starts())"></span> - <span data-bind="text: timeOfDay(ends())"></span>
-          </div>
-
-          <div class="totals">
-            <h5>
-              <span data-bind="text: hours()"></span> <small>hrs</small>
-              (<span data-bind="text: patients_per_hour()"></span> <small>pph</small>)
-            </h5>
           </div>
 
           <div class="col-sm-8 shift-bar" data-bind="style: {width: shift_bar_width(), marginLeft: shift_bar_offset()}">
@@ -50,10 +51,14 @@
 
   <div data-bind="if: grade().editable">
     <div id='positions' data-bind="foreach: positions">
-      <header>
-        <h5 data-bind="text: name"></h5>
-       (<span data-bind="text: daily_patients_per_position()"></span>)
-      </header>
+      <h5 data-bind="text: name"></h5>
+
+      <div class='totals'>
+        <h5>
+          <span data-bind="text: daily_patients()">88.88</span> <small>hrs</small>
+          (<span data-bind="text: cost()">$249</span></span>)
+        </h5>
+      </div>
 
       <div class='shifts' data-bind="foreach: shifts">
         <div class="row form-inline form-group">
@@ -79,9 +84,10 @@
           </div>
           <br>
         </div>
+
       </div> <!-- foreach: shifts -->
 
-      <a href="#" data-bind="click: addShift">
+      <a class='add' href="#" data-bind="click: addShift">
         <span class="glyphicon glyphicon-plus"></span>
         Add <span data-bind="text: name"></span> Shift
       </a>
