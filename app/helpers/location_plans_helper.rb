@@ -15,6 +15,13 @@ module LocationPlansHelper
     }
   }
 
+  def open_close_times_for(grade)
+    Location::DAYS.enum_for(:each_with_index)
+      .collect do |day, i|
+        %(<time>#{day.humanize}: #{grade.open_times[i]}am - #{grade.close_times[i]-12}pm &bull;</time>\n)
+    end.join.html_safe
+  end
+
   def collective_state_label(state)
     %{<span class="label label-#{APPROVAL_STATE_MAP[state][:css]}">#{APPROVAL_STATE_MAP[state][:label]}</span>}.html_safe
   end
@@ -67,5 +74,4 @@ module LocationPlansHelper
   def change_state_link(text, state, btn_class, location_plan)
     link_to text, change_state_location_plans_path(location_plan_ids: [location_plan], state: state), method: :post, class: "btn #{btn_class}"
   end
-
 end

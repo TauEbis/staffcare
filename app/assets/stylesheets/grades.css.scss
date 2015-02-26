@@ -1,10 +1,40 @@
-// Place all the styles related to the location_plans_controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
-
 $bk-aqua: #ADD8E6;
+$save-height: 80px;
+$masthead-height: 50px;
+$table-header-z-index: 1020;
 
 #grades_controller {
+  main {
+   margin-top: 135px;
+  }
+
+  #save {
+    height: $save-height;
+    display: block;
+    position: relative;
+
+    &.fixed {
+      left:0;
+      top: $masthead-height;
+      width: 100%;
+      z-index: $table-header-z-index + 1;
+      position: fixed;
+      background: #fff;
+
+      -webkit-border-radius: 0;
+         -moz-border-radius: 0;
+              border-radius: 0;
+      -webkit-box-shadow: inset 0 1px 0 #fff, 0 1px 5px rgba(0,0,0,.1);
+         -moz-box-shadow: inset 0 1px 0 #fff, 0 1px 5px rgba(0,0,0,.1);
+              box-shadow: inset 0 1px 0 #fff, 0 1px 5px rgba(0,0,0,.1);
+      filter: progid:DXImageTransform.Microsoft.gradient(enabled=false); /* IE6-9 */
+    }
+
+    button {
+      margin: 25px 125px;
+    }
+  }
+
   #positions {
     .shifts {
       .totals {
@@ -32,15 +62,17 @@ $bk-aqua: #ADD8E6;
   }
   table .header-fixed {
     position: fixed;
-    top: 40px;
+    background: #fff;
+    top: $masthead-height + $save-height;
     z-index: 1020; /* 10 less than .navbar-fixed to prevent any overlap */
     border-bottom: 1px solid #d5d5d5;
+
     -webkit-border-radius: 0;
        -moz-border-radius: 0;
             border-radius: 0;
-    -webkit-box-shadow: inset 0 1px 0 #fff, 0 1px 5px rgba(0,0,0,.1);
-       -moz-box-shadow: inset 0 1px 0 #fff, 0 1px 5px rgba(0,0,0,.1);
-            box-shadow: inset 0 1px 0 #fff, 0 1px 5px rgba(0,0,0,.1);
+    -webkit-box-shadow: inset 0 1px 0 #fff, 0 0 5px rgba(0,0,0,.1);
+       -moz-box-shadow: inset 0 1px 0 #fff, 0 0 5px rgba(0,0,0,.1);
+            box-shadow: inset 0 1px 0 #fff, 0 0 5px rgba(0,0,0,.1);
     filter: progid:DXImageTransform.Microsoft.gradient(enabled=false); /* IE6-9 */
   }
 

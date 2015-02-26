@@ -1,11 +1,81 @@
-// Place all the styles related to the location_plans_controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
-
 $bk-aqua: #ADD8E6;
 
 #location_plans_controller {
 
+  #details {
+    width: auto;
+    position: relative;
+
+    &>h5 {
+      width: auto;
+      display: block;
+      margin-left: 17px;
+    }
+
+    dl {
+      width: 63%;
+      float:right;
+      position: relative;
+      border-left: 2px solid #000;
+
+      dt, dd {
+        margin-left: 15px;
+      }
+
+      dt {
+        margin-top: 14px;
+
+        &:first-of-type {
+          margin-top: 0;
+        }
+      }
+      dd {
+        p {
+          margin: 0;
+        }
+
+        time {
+          white-space: nowrap;
+          margin: 2px 4px 2px 0;
+        }
+      }
+    }
+
+    #managers {
+      float:left;
+      width: 35%;
+      margin: 0 0 0 15px;
+      display: block;
+      position: relative;
+    }
+    article {
+      width: auto;
+      margin: 20px 0;
+      display: block;
+      position: relative;
+
+      &:after {
+        height: 0;
+        clear: both;
+        content: " ";
+        font-size: 0;
+        display: block;
+        visibility: hidden;
+      }
+
+      img {
+        float:left;
+        display: block;
+        position: relative;
+        margin: 0 30px 10px 0;
+      }
+
+      header {
+        display: block;
+        font-weight: bold;
+      }
+    }
+  }
   .shrink {
     font-size: 14px;
     vertical-align: text-top;
