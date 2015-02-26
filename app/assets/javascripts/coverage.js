@@ -1,17 +1,5 @@
 var coverageContext;
 
-$(function() {
-  var sticky         = $('#grades_controller #save'),
-      sticky_height  = sticky.outerHeight(),
-      fix_navigation = function() {
-
-        if ($(window).scrollTop() > sticky_height + 70){
-        } // if scrollTop is more than sticky_height
-      };
-
-  $(window).scroll(fix_navigation);
-});
-
 $(document).ready(function() {
   // Initial load of daygrid
   var grid = $('#grades_controller .daygrid');

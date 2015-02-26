@@ -1,6 +1,6 @@
 $.fn.fixedHeader = function (options) {
  var config = {
-   topOffset: 40,
+   topOffset: 130,
    bgColor: '#FFFFFF'
  };
  if (options){ $.extend(config, options); }
@@ -11,15 +11,15 @@ $.fn.fixedHeader = function (options) {
   var $win = $(window)
     , $head = $('thead.header', o)
     , isFixed = 0;
-  var headTop = $head.length && $head.offset().top - config.topOffset;
+  var headTop = $head.length && $head.offset().top + config.topOffset;
 
   function processScroll() {
     if (!o.is(':visible')) return;
     var i, scrollTop = $win.scrollTop();
-    var t = $head.length && $head.offset().top - config.topOffset;
+    var t = $head.length && $head.offset().top + config.topOffset;
     if (!isFixed && headTop != t) { headTop = t; }
     if      (scrollTop >= headTop && !isFixed) { isFixed = 1; }
-    else if (scrollTop <= headTop && isFixed) { isFixed = 0; }
+    else if (scrollTop < headTop && isFixed) { isFixed = 0; }
     isFixed ? $('thead.header-copy', o).removeClass('hide')
             : $('thead.header-copy', o).addClass('hide');
   }
