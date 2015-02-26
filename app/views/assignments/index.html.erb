@@ -16,11 +16,10 @@
           <td>
             <table class="table table-condensed table-hover inner_shifts_table">
               <tbody data-bind="foreach: shifts">
-                <tr data-bind="css: css_class">
+                <tr>
                   <td data-bind="click: $parent.displayDay">
                     <span data-bind="text: starts_hour"></span> -
                     <span data-bind="text: ends_hour"></span>
-                    <span data-bind="text: physician_initials"></span>
                   </td>
                 </tr>
               </tbody>

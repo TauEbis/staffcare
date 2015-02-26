@@ -6,33 +6,7 @@ function Assignment(data) {
   self.id = ko.observable(data.id);
   self.starts_hour = ko.observable(data.starts_hour);
   self.ends_hour = ko.observable(data.ends_hour);
-  //self.physician_initials = ko.observable(data.physician_initials);
 
-  /////  DEMO CODE FOR EFFECT
-  self.physician_initials = ko.pureComputed(function() {
-    if(self.id() % 3 == 0 || self.id() % 7 == 0) {
-      return '--'
-    } else {
-      return 'DB'
-    }
-  });
-
-  self.selected_physician = ko.pureComputed(function() {
-    if(self.id() % 3 == 0 || self.id() % 7 == 0) {
-      return 'Unassigned'
-    } else {
-      return 'Drew Blas'
-    }
-  });
-
-  self.css_class = ko.pureComputed(function() {
-    if(self.id() % 3 == 0 || self.id() % 7 == 0) {
-      return 'danger'
-    } else {
-      return ''
-    }
-  })
-  /////  END DEMO CODE FOR EFFECT
 
   self.timeLabel = ko.pureComputed(function() {
     return timeOfDay(self.starts_hour()) + " - " + timeOfDay(self.ends_hour());
@@ -76,8 +50,6 @@ function AssignmentViewModel() {
   self.url = ko.pureComputed(function() {
     return "/assignments?schedule_id=" + self.schedule_id();
   });
-
-  self.physician_list = ['Unassigned', 'Drew Blas', 'Rio Bennin'];
 
   self.load_all = function() {
     self.fetch_data(self.url(), self.load);
