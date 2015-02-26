@@ -3,6 +3,9 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 $bk-aqua: #ADD8E6;
+$save-height: 80px;
+$masthead-height: 50px;
+$table-header-z-index: 1020;
 
 #grades_controller {
   main {
@@ -10,17 +13,18 @@ $bk-aqua: #ADD8E6;
   }
 
   #save {
-    height: 80px;
+    height: $save-height;
     display: block;
     position: relative;
 
     &.fixed {
-      position: fixed;
-      top:50px;
       left:0;
-      background: #fff;
+      top: $masthead-height;
       width: 100%;
-      z-index: 1021;
+      z-index: $table-header-z-index + 1;
+      position: fixed;
+      background: #fff;
+
       -webkit-border-radius: 0;
          -moz-border-radius: 0;
               border-radius: 0;
@@ -62,9 +66,10 @@ $bk-aqua: #ADD8E6;
   }
   table .header-fixed {
     position: fixed;
-    top: 130px;
+    top: $masthead-height + $save-height;
     z-index: 1020; /* 10 less than .navbar-fixed to prevent any overlap */
     border-bottom: 1px solid #d5d5d5;
+
     -webkit-border-radius: 0;
        -moz-border-radius: 0;
             border-radius: 0;
