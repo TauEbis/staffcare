@@ -1,23 +1,25 @@
 <section id='details'>
   <h5>Location Details</h5>
 
-  <article>
-  <% if manager = @location_plan.location.manager  %>
-    <%= image_tag manager.avatar_url %>
-    <header>Manager:</header>
+  <section id='managers'>
+    <article>
+    <% if manager = @location_plan.location.manager  %>
+      <%= image_tag manager.avatar_url %>
+      <header>Manager:</header>
 
-    <%= manager.label %>
-  <%- end -%>
-  </article>
+      <%= manager.label %>
+    <%- end -%>
+    </article>
 
-  <article>
-  <% if rm = @location_plan.location.rm  %>
-    <%= image_tag rm.avatar_url %>
-    <header>Regional Manager:</header>
+    <article>
+    <% if rm = @location_plan.location.rm  %>
+      <%= image_tag rm.avatar_url %>
+      <header>Regional Manager:</header>
 
-    <%= rm.label %>
-  <%- end -%>
-  </article>
+      <%= rm.label %>
+    <%- end -%>
+    </article>
+  </section>
 
   <dl>
     <dt>Visits:</dt>

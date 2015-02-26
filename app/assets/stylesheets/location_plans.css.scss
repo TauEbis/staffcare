@@ -5,7 +5,6 @@ $bk-aqua: #ADD8E6;
   #details {
     width: auto;
     position: relative;
-    margin-bottom: -70px;
 
     &>h5 {
       width: auto;
@@ -15,7 +14,6 @@ $bk-aqua: #ADD8E6;
 
     dl {
       width: 63%;
-      top: -106px;
       float:right;
       position: relative;
       border-left: 2px solid #000;
@@ -43,13 +41,27 @@ $bk-aqua: #ADD8E6;
       }
     }
 
-    article {
+    #managers {
       float:left;
-      clear:left;
-      width: 30%;
-      margin: 20px;
+      width: 35%;
+      margin: 0 0 0 15px;
       display: block;
       position: relative;
+    }
+    article {
+      width: auto;
+      margin: 20px 0;
+      display: block;
+      position: relative;
+
+      &:after {
+        height: 0;
+        clear: both;
+        content: " ";
+        font-size: 0;
+        display: block;
+        visibility: hidden;
+      }
 
       img {
         float:left;
