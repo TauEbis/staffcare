@@ -8,7 +8,7 @@ feature "List & View schedules: " do
 	given!(:schedule) { FactoryGirl.create(:schedule_with_children) }
 	before { schedule.reload }
 
-  describe "Given am admin visits the index page," do
+  describe "Given an admin visits the index page," do
 
 		background do
 			signin admin

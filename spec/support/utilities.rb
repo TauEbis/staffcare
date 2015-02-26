@@ -1,18 +1,15 @@
 include ApplicationHelper
-include Warden::Test::Helpers
-Warden.test_mode!
 
 def signin(user, options={})
-	if options[:no_capybara]
-		# Sign in when not using capybara dsl
-		Warden.test_reset!
-		login_as(user, :scope => :user)
-	else
-		visit new_user_session_path			unless options[:already_on_signin_page]
-		fill_in "Email", 								with: user.email.upcase
-		fill_in "Password", 						with: user.password
-		click_button "Sign in" 					unless options[:no_submit]
-	end
+  if options[:no_capybara]
+    # Sign in when not using capybara dsl
+    login_as(user, :scope => :user)
+  else
+    visit new_user_session_path unless options[:already_on_signin_page]
+    fill_in "Email", with: user.email.upcase
+    fill_in "Password", with: user.password
+    click_button "Sign in" unless options[:no_submit]
+  end
 end
 
 def new_patient_volume_forecast(forecast, locations, options={})

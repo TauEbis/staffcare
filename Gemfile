@@ -88,7 +88,7 @@ group :test do
   gem 'database_cleaner'
   gem 'faker'
   gem 'launchy'
-  gem 'selenium-webdriver'
+  gem 'selenium-webdriver', '~> 2.44.0'
   gem 'rspec-its'
   gem 'webmock'
   gem 'vcr'
