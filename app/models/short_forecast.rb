@@ -16,13 +16,32 @@ class ShortForecast < ActiveRecord::Base
   	visits.values.first.keys.sort
   end
 
+ # This class method is used to export short_forecasts in weekly totals
+  def self.to_csv(options = {})
+    CSV.generate(options) do |csv|
+      first_sunday = ShortForecast.first.start_date
+      last_sunday = ShortForecast.first.end_date - 6.days
+      sundays = first_sunday.step( last_sunday, 7).to_a
+
+      columns = ['location'] + sundays
+      csv << columns
+
+      all.each do |forecast|
+        row = [ forecast.location.name ] + sundays.map{ |sunday| forecast.weekly_total(sunday) }
+        csv << row
+      end
+
+    end
+  end
+
   # Class method to rebuild the shrort forecasts. Called every week by a rake task
-	def self.build_latest!
+	def self.build_latest!(lookback_window = 10)
+    #lookback_window is weeks of data to look at
+
 		forecast_window = 12 # weeks to forecast
 		start_date = Date.today - Date.today.wday
 		end_date = start_date + forecast_window.weeks - 1.days
 
-		lookback_window = 10 # weeks of data to look at
 		date_range = VolumeForecaster.calc_data_date_range(lookback_window)
     locations =  Location.ordered.select { |location| location.has_visits_data(date_range) }
 
