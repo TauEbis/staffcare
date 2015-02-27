@@ -1,7 +1,7 @@
 <h1>Assignments - <%= schedule_date_span @schedule %></h1>
 
 <div class="row">
-  <div class="col-lg-12">
+  <div class="col-sm-10">
     <%= form_tag(assignments_path, class: 'form-inline', method: :get) do %>
       <%= hidden_field_tag :schedule_id, @schedule.id %>
 
@@ -23,6 +23,14 @@
 
       <button type="submit" class="btn btn-default">Filter</button>
     <% end %>
+  </div>
+  <div class="col-sm-2">
+    <button class="btn btn-default" id="assignment_zoom_out">
+      <span class="glyphicon glyphicon-zoom-out"></span>
+    </button>
+    <button class="btn btn-default" id="assignment_zoom_in">
+      <span class="glyphicon glyphicon-zoom-in"></span>
+    </button>
   </div>
 </div>
 

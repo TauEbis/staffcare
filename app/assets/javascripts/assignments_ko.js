@@ -109,4 +109,15 @@ $(document).ready(function() {
     assignmentContext.end_date(d.endDate);
     assignmentContext.load_all();
   }
+
+  var zoom_level = 100;
+
+  $('#assignment_zoom_in').on('click', function() {
+    zoom_level = zoom_level + 20;
+    assignment_view.css('zoom', zoom_level + "%");
+  });
+  $('#assignment_zoom_out').on('click', function() {
+    zoom_level = zoom_level - 20;
+    assignment_view.css('zoom', zoom_level + "%");
+  });
 });
