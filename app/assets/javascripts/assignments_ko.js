@@ -27,9 +27,8 @@ function DayData(data, parent) {
   self.date = moment(data.date);
   self.dow = self.date.format("ddd").charAt(0);
   self.day_num = self.date.format("D");
-
+  self.is_weekend = self.date.day() == 6 || self.date.day() == 0;
   self.location_plan = parent;
-
 
   self.shifts = ko.observableArray($.map(data.shifts, function(elem, i){
     return new Assignment(elem);

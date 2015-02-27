@@ -32,7 +32,7 @@
       <th></th>
       <!-- ko with: location_plans()[0] -->
         <!-- ko foreach: days -->
-        <th>
+        <th data-bind="css: {weekend: is_weekend}">
           <span data-bind="text: dow"></span><br>
           <span data-bind="text: day_num"></span>
         </th>
@@ -44,7 +44,7 @@
       <tr>
         <th data-bind="text: name"></th>
         <!-- ko foreach: days -->
-          <td>
+          <td data-bind="css: {weekend: is_weekend}">
             <table class="table table-condensed table-hover inner_shifts_table">
               <tbody data-bind="foreach: shifts">
                 <tr>
