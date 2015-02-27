@@ -1,6 +1,7 @@
 class AssignmentsController < ApplicationController
   #before_action :set_assignment, only: [:show, :edit, :update, :destroy]
   before_action :set_schedule
+  before_action :set_zones, only: [:index]
   skip_after_filter :verify_authorized
   skip_after_filter :verify_policy_scoped
 
@@ -9,13 +10,14 @@ class AssignmentsController < ApplicationController
   def index
     @wide_container = true # Control the body wrapper css class for the giant grid
 
-    @location_plans = @schedule.location_plans
+    @start_date = params[:start_date] ? Date.parse(params[:start_date].to_s) : @schedule.starts_on
+    @end_date = params[:end_date] ? Date.parse(params[:end_date].to_s) + 1 : @schedule.ends_on # Plus one here because arel range doesn't understand how to include the end date
 
     respond_to do |format|
       format.html
       format.json do
-        @shifts = @schedule.location_plans.inject({}) do |hsh, lp|
-          hsh[lp.id] = lp.chosen_grade.shifts.md.group_by {|s| s.date }
+        @shifts = @location_plans.inject({}) do |hsh, lp|
+          hsh[lp.id] = lp.chosen_grade.shifts.for_date_range(@start_date..@end_date).md.group_by {|s| s.date }
           hsh
         end
       end
@@ -28,9 +30,16 @@ class AssignmentsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_assignment
-      @assignment = Assignment.find(params[:id])
+    def set_zones
+      @zone = if params[:zone_id]
+                user_zones.find(params[:zone_id].to_i)
+              else
+                user_zones.ordered.first
+              end
+
+      @zones = user_zones.ordered
+
+      @location_plans = @schedule.location_plans.for_user(current_user).where(location_id: @zone.location_ids)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

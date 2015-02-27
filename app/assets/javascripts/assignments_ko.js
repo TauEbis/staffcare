@@ -22,8 +22,15 @@ function Assignment(data) {
 
 function DayData(data, parent) {
   var self = this;
-  self.date = ko.observable(data.date);
+
+  // None of this changes, so instead of wrapping in an observable and a bunch of computed properties, we just eval it once
+  self.date = moment(data.date);
+  self.dow = self.date.format("ddd").charAt(0);
+  self.day_num = self.date.format("D");
+
   self.location_plan = parent;
+
+
   self.shifts = ko.observableArray($.map(data.shifts, function(elem, i){
     return new Assignment(elem);
   }));
@@ -49,21 +56,26 @@ function AssignmentViewModel() {
   var self = this;
 
   self.schedule_id = ko.observable(0);
-  self.location_plan_ids = ko.observableArray([]);
+  self.zone_id = ko.observable(0);
+  self.start_date = ko.observable(0);
+  self.end_date = ko.observable(0);
   self.location_plans = ko.observableArray([]);
 
   self.selected_day = ko.observable(null);
 
-  self.url = ko.pureComputed(function() {
-    return "/assignments?schedule_id=" + self.schedule_id();
-  });
+  self.url = "/assignments";
 
   self.load_all = function() {
-    self.fetch_data(self.url(), self.load);
+    self.fetch_data(self.url, self.load);
   };
 
   self.fetch_data = function(url, callback) {
-    $.ajax(url, {dataType: "json", data: {page: 1}} )
+    $.ajax(url, {dataType: "json", data: {
+        schedule_id: self.schedule_id(),
+        zone_id: self.zone_id(),
+        start_date: self.start_date(),
+        end_date: self.end_date()
+      }} )
       .done(function(data, status, xhr) {
         callback(data);
       })
@@ -83,8 +95,6 @@ function AssignmentViewModel() {
 
     self.location_plans(c);
   };
-
-
 }
 
 $(document).ready(function() {
@@ -95,6 +105,9 @@ $(document).ready(function() {
     ko.applyBindings(assignmentContext);
 
     assignmentContext.schedule_id(d.scheduleId);
+    assignmentContext.zone_id(d.zoneId);
+    assignmentContext.start_date(d.startDate);
+    assignmentContext.end_date(d.endDate);
     assignmentContext.load_all();
   }
 });

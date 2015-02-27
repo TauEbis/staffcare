@@ -10,6 +10,7 @@ class Shift < ActiveRecord::Base
   validates :position, presence: true
 
   scope :for_day, ->(day) { where(starts_at: day.in_time_zone.beginning_of_day..day.in_time_zone.end_of_day) }
+  scope :for_date_range, -> (range) { where arel_table[:starts_at].in(range) }
 
   scope :md, -> { where( position: Position.where(key: :md) ) }
   scope :not_md, -> { where.not( position: Position.where(key: :md) ) } # nil position keys included
