@@ -50,19 +50,37 @@ function Position(data, visits, starts_hour, ends_hour) {
   self.key  = ko.observable(data.key);
   self.visits = ko.observable(visits);
 
-  self.daily_patients = ko.computed(function() {
-    return Number( 888 );
-  });
-
-  self.cost = ko.computed(function() {
-    return "$" + Number( 8888 );
-  });
-
   self.shifts = ko.observableArray(
     $.map(data.shifts, function(shift, _){ return subscribe( new Shift(shift) ); } )
   );
   distribute(visits);
 
+  self.daily_patients = ko.computed(function() {
+//  var sum = 0;
+
+//  self.shifts().forEach(function(shift, index) {
+//    console.log('Patient Load', shift.patient_load() );
+//    shift.patient_load()
+//      .forEach(function(patients, _) { sum += patients; });
+//  });
+
+//  return Number( sum );
+  });
+
+  self.hours = ko.computed(function() {
+    var sum = 0;
+
+    self.shifts().forEach(function(shift, index) {
+      console.log('Patient Hours', shift.hours() );
+      sum += shift.hours();
+    });
+
+    return Number( sum );
+  });
+
+  self.cost = ko.computed(function() {
+    return "$" + Number( 8888 );
+  });
   self.addShift = function(position) {
     self.shifts.push(
       subscribe(
