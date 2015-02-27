@@ -5,11 +5,21 @@ $table-header-z-index: 1020;
 
 #grades_controller {
   main {
-   margin-top: 135px;
+   margin-top: 155px;
+  }
+
+/* Please rename these next two classes...obviously! Le Duh!! */
+  .moveit {
+     position: relative;
+     top: -15px;
+  }
+
+  .moveit2 {
+    margin-top: 7px;
   }
 
   #save {
-    height: $save-height;
+    height: $save-height + 10px;
     display: block;
     position: relative;
 
@@ -31,7 +41,7 @@ $table-header-z-index: 1020;
     }
 
     button {
-      margin: 25px 125px;
+      margin: 5px 125px;
     }
   }
 
