@@ -7,6 +7,13 @@ function Assignment(data) {
   self.starts_hour = ko.observable(data.starts_hour);
   self.ends_hour = ko.observable(data.ends_hour);
 
+  self.mini_starts_hour = ko.pureComputed(function() {
+    return miniTimeOfDay(self.starts_hour())
+  });
+
+  self.mini_ends_hour = ko.pureComputed(function() {
+    return miniTimeOfDay(self.ends_hour())
+  });
 
   self.timeLabel = ko.pureComputed(function() {
     return timeOfDay(self.starts_hour()) + " - " + timeOfDay(self.ends_hour());

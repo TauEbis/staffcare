@@ -99,6 +99,18 @@ function timeOfDay(t){
   }
 }
 
+function miniTimeOfDay(t){
+  if(t == 24 || t == 0){
+    return '12a';
+  }else if(t == 12){
+    return '12p';
+  }else if(t > 12){
+    return (t-12) + 'p';
+  }else{
+    return t + 'a';
+  }
+}
+
 function diffClass(num){
   if(num < 1 && num > -1){
     return ""
