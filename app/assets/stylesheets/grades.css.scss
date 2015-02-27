@@ -1,35 +1,26 @@
 $bk-aqua: #ADD8E6;
-$save-height: 80px;
+$save-height: 85px;
 $masthead-height: 50px;
 $table-header-z-index: 1020;
 
 #grades_controller {
   main {
-   margin-top: 155px;
-  }
-
-/* Please rename these next two classes...obviously! Le Duh!! */
-  .moveit {
-     position: relative;
-     top: -15px;
-  }
-
-  .moveit2 {
-    margin-top: 7px;
+   margin-top: 150px;
+   position: relative;
   }
 
   #save {
-    height: $save-height + 10px;
     display: block;
     position: relative;
+    height: $save-height;
 
     &.fixed {
       left:0;
-      top: $masthead-height;
       width: 100%;
-      z-index: $table-header-z-index + 1;
       position: fixed;
       background: #fff;
+      top: $masthead-height;
+      z-index: $table-header-z-index + 1;
 
       -webkit-border-radius: 0;
          -moz-border-radius: 0;
@@ -40,8 +31,47 @@ $table-header-z-index: 1020;
       filter: progid:DXImageTransform.Microsoft.gradient(enabled=false); /* IE6-9 */
     }
 
-    button {
-      margin: 5px 125px;
+    & > h3 {
+      margin-left: 10%;
+    }
+    #statistics {
+      width: 43%;
+      float: left;
+      margin-left: 2%;
+      position: relative;
+
+      div > h4:last-of-type {
+        margin-bottom: 5px;
+        position: relative;
+      }
+      div > h5:first-of-type {
+        margin-top: 0;
+      }
+    }
+    #actions {
+      width: 31%;
+      position: relative;
+      text-align: right;
+      height: $save-height;
+
+      &:after {
+        height: 0;
+        clear: both;
+        content: " ";
+        font-size: 0;
+        display: block;
+        visibility: hidden;
+      }
+      .btn {
+        margin-top: 7px;
+        padding: 5px 12px;
+        position: relative;
+      }
+      .btn-warning, button {
+        margin-right: 28%;
+        position: relative;
+      }
+      button { width: 193px; }
     }
   }
 
