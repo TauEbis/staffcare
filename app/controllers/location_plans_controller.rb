@@ -81,14 +81,9 @@ class LocationPlansController < ApplicationController
     @zone = if params[:zone_id]
               user_zones.find(params[:zone_id].to_i)
             else
+              # When does this ever get called
               user_zones.ordered.first
             end
-  end
-
-  def send_manager_to_location_plan
-    if current_user.single_manager?
-      params[:location_plan_id] = @schedule.location_plans.for_user(current_user).first
-    end
   end
 
   # For member actions
@@ -98,6 +93,12 @@ class LocationPlansController < ApplicationController
 
     @zone     = @location_plan.location.zone
     @schedule = @location_plan.schedule
+  end
+
+  def send_manager_to_location_plan
+    if current_user.single_manager?
+      params[:location_plan_id] = @schedule.location_plans.for_user(current_user).first
+    end
   end
 
   def set_basics
