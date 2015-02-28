@@ -189,7 +189,7 @@ function build_highcharts(source){
       headerFormat: '{point.key}<br>'
     },
     title: {
-      text: 'Schedule Efficiency'
+      text: ''
     },
     yAxis: [{
       min: 0,

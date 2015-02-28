@@ -1,21 +1,25 @@
 <div data-bind="if: loaded">
-  <div class="row">
-    <div class="col-sm-8">
-      <h3>
-        <span data-bind="text: day_info().formatted_date()"></span>
-        <small> (Open <span data-bind="text: timeOfDay(day_info().open_time())"></span> - <span data-bind="text: timeOfDay(day_info().close_time())"></span>)</small>
-      </h3>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-8 col-sm-offset-4">
-      <div data-bind="template: {name: 'analysis-line', data: day_info().analysis()}"></div>
-    </div>
-  </div>
 
   <div id='save' class='fixed'>
-    <div data-bind='if: grade().editable' class='pull-right'>
-      <button data-bind='click: save' class='btn btn-default'>
+    <h3 class='pull-left'>
+      <div data-bind="text: day_info().formatted_date()"></div>
+      <small> Open <span data-bind="text: timeOfDay(day_info().open_time())"></span> - <span data-bind="text: timeOfDay(day_info().close_time())"></span></small>
+    </h3>
+
+    <div id='statistics' class='col-sm-8'>
+      <%= render 'grades/header_without_hours' %>
+
+      <div data-bind="if: loaded">
+        <div data-bind="template: {name: 'analysis-line-without-hours', data: day_info().analysis()}"></div>
+      </div>
+    </div>
+
+    <div id='actions' class='pull-right'>
+      <%= action_links @location_plan %>
+      <%= state_label @location_plan %>
+
+      <button data-bind='visible: grade().editable'
+              data-bind='click: save' class='btn btn-default'>
         <span class='glyphicon glyphicon-refresh'></span> Save and Recalculate
       </button>
     </div>

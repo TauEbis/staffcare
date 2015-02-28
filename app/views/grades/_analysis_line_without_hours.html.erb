@@ -1,0 +1,32 @@
+<script type="text/html" id="analysis-line-without-hours">
+  <div class="row">
+      <div class="col-sm-3 text-center">
+        <h5><span data-bind="text: stats().wait_time()"></span> <small>wait mins</small></h5>
+        <h5><span data-bind="text: letters().patient_sat()"></span> <small>(<span data-bind="text: toCurrency(points().patient_sat())"></span>)</small></h5>
+        <h5 data-bind="if: $root.diff_grade_points">
+          <span data-bind="text: diffFormat($root.diff_grade_points().patient_sat()), css: diffClass($root.diff_grade_points().patient_sat())"></span>
+        </h5>
+      </div>
+      <div class="col-sm-3 text-center">
+        <h5><span data-bind="text: stats().work_rate()"></span> <small> pats per hr</small></h5>
+        <h5><span data-bind="text: letters().md_sat()"></span> <small>(<span data-bind="text: toCurrency(points().md_sat())"></span>)</small></h5>
+        <h5 data-bind="if: $root.diff_grade_points">
+          <span data-bind="text: diffFormat($root.diff_grade_points().md_sat()), css: diffClass($root.diff_grade_points().md_sat())"></span>
+        </h5>
+      </div>
+      <div class="col-sm-3 text-center">
+        <h5><span data-bind="text: stats().wasted_time()"></span> <small> wasted mins</small></h5>
+        <h5><span data-bind="text: letters().cost()"></span> <small>(<span data-bind="text: toCurrency(points().cost())"></span>)</small></h5>
+        <h5 data-bind="if: $root.diff_grade_points">
+          <span data-bind="text: diffFormat($root.diff_grade_points().cost()), css: diffClass($root.diff_grade_points().cost())"></span>
+        </h5>
+      </div>
+      <div class="col-sm-3 text-center">
+        <h5><span data-bind="text: stats().pen_per_pat()"></span> <small> waste per pat</small></h5>
+        <h5><span data-bind="text: letters().total()"></span> <small>(<span data-bind="text: toCurrency(points().total())"></span>)</small></h5>
+        <h5 data-bind="if: $root.diff_grade_points">
+          <span data-bind="text: diffFormat($root.diff_grade_points().total()), css: diffClass($root.diff_grade_points().total())"></span>
+        </h5>
+      </div>
+  </div>
+</script>
