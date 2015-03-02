@@ -20,14 +20,16 @@ function Assignment(data) {
   });
 }
 
-function DayData(data, parent) {
+function DayData(data, parent, index) {
   var self = this;
+  self.index = index;
 
   // None of this changes, so instead of wrapping in an observable and a bunch of computed properties, we just eval it once
   self.date = moment(data.date);
   self.dow = self.date.format("ddd").charAt(0);
   self.day_num = self.date.format("D");
   self.is_weekend = self.date.day() == 6 || self.date.day() == 0;
+  self.is_sunday = self.date.day() == 0;
   self.location_plan = parent;
 
   self.shifts = ko.observableArray($.map(data.shifts, function(elem, i){
@@ -37,6 +39,19 @@ function DayData(data, parent) {
   self.displayDay = function() {
     assignmentContext.selected_day(self);
     $('#showAssignmentModal').modal();
+
+  };
+
+  self.total_hours = function() {
+    var total = 0;
+    self.shifts().forEach(function(shift, i) {
+      total += shift.ends_hour() - shift.starts_hour();
+    });
+    return total;
+  };
+
+  self.hours_for_week = function() {
+    return self.location_plan.hours_for_week(self.index);
   };
 
   self.url = "/location_plans/" + parent.id();
@@ -47,8 +62,22 @@ function LocationPlan(data) {
   self.id = ko.observable(data.id);
   self.name = ko.observable(data.name);
   self.days = ko.observableArray($.map(data.days, function(elem, i){
-    return new DayData(elem, self);
+    return new DayData(elem, self, i);
   }));
+
+  // Calculates the total hours of the 7 days of the week ending on the given day
+  self.hours_for_week = function(index) {
+    var min = index - 6;
+    if (min < 0) { min = 0 }
+
+    var total = 0;
+
+    for(var i=min; i <= index; i++){
+      total += self.days()[i].total_hours();
+    }
+
+    return total;
+  }
 }
 
 function AssignmentViewModel() {

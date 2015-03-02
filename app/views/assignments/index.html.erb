@@ -35,8 +35,8 @@
 </div>
 
 <div id="assignment_view" data-schedule-id="<%= @schedule.id %>" data-zone-id="<%= @zone.id %>" data-start-date="<%= @start_date %>" data-end-date="<%= @end_date %>">
-  <table class="table table-condensed assignments_table">
-    <thead><tr>
+  <table class="table table-condensed table-fixed-header assignments_table">
+    <thead class="header"><tr>
       <th></th>
       <!-- ko with: location_plans()[0] -->
         <!-- ko foreach: days -->
@@ -52,7 +52,7 @@
       <tr>
         <th data-bind="text: name"></th>
         <!-- ko foreach: days -->
-          <td data-bind="css: {weekend: is_weekend}">
+          <td class="assignment_day" data-bind="css: {weekend: is_weekend}">
             <table class="table table-striped table-condensed table-hover inner_shifts_table">
               <tbody data-bind="foreach: shifts">
                 <tr>
@@ -63,6 +63,11 @@
                 </tr>
               </tbody>
             </table>
+            <div class="assignment_day_total">
+              <b><span data-bind="text: total_hours()"></span> hrs</b>
+              <br>
+              <b data-bind="if: is_sunday"><span data-bind="text: hours_for_week()"></span> total</b>
+            </div>
           </td>
         <!-- /ko -->
       </tr>

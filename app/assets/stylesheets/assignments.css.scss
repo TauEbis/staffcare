@@ -20,3 +20,17 @@ table.inner_shifts_table {
 .weekend {
   background-color: #fee;
 }
+
+// These two work in concert to position the total hours at the bottom of the day cell
+// ------------------------------
+.assignment_day {
+  position: relative;
+  height: 100%;
+}
+
+.assignment_day_total {
+  position: absolute;
+  bottom: 0;
+  text-align: right;
+}
+// ------------------------------
