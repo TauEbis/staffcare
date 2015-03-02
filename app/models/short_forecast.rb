@@ -36,7 +36,7 @@ class ShortForecast < ActiveRecord::Base
 
   # Class method to rebuild the shrort forecasts. Called every week by a rake task
 	def self.build_latest!(lookback_window = 10)
-    #lookback_window is weeks of data to look at
+    # lookback_window is weeks of data to look at
 
 		forecast_window = 12 # weeks to forecast
 		start_date = Date.today - Date.today.wday

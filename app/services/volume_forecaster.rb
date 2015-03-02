@@ -9,7 +9,10 @@ class VolumeForecaster
 		@data_start_date = data_date_range.first
 		@data_end_date = data_date_range.last
 
-		@visits = location.visits.for_date_range(data_date_range)
+		@lookback_window = data_date_range.to_a.size/7 # weeks of data to fit curve to
+		@rolling_avg_length = 10 # weeks to attempt to average for data smoothing
+
+		@visits = location.visits.for_date_range((@data_start_date-(@rolling_avg_length - 1).weeks)..@data_end_date)
 	  @coeffs = build_coeffs(@opts[:chunks]) 	# {sunday_0: [1,2,3,4], sunday_1: [1,2,3,4]}
 	end
 
@@ -73,7 +76,8 @@ class VolumeForecaster
 			coeffs={}
 
 			chunked_visits = build_chunked_visits(chunks) # {mon_0: [summed_visits_for_chunk_day_1, summed_visits_for_chunk_day_2, ...], ... }
-			chunked_visits.each do |key, chunk|
+			smoothed_chunked_visits = rolling_avg(chunked_visits)
+			smoothed_chunked_visits.each do |key, chunk|
 				len = chunk.size
 
 				x_data = (1..len).to_a
@@ -120,6 +124,21 @@ class VolumeForecaster
 
 			chunked_visits
 		end
+
+		def rolling_avg(chunked_visits)
+			avg={}
+			chunked_visits.each do |k,v|
+				avg[k] = []
+				first_week = v.length - @lookback_window
+				(0...@lookback_window).each do |i|
+					set_size = [first_week + i + 1, @lookback_window].min
+					start_point = first_week + i + 1 - set_size
+					avg[k][i] = v[start_point,set_size].sum/set_size
+				end
+			end
+			avg
+		end
+
 
 		def key(date, chunk)
 			"#{Date::DAYNAMES[date.wday]}_#{chunk}".to_sym
