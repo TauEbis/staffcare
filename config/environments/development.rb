@@ -47,11 +47,11 @@ Rails.application.configure do
 
   config.after_initialize do
     Bullet.enable        = true
-    Bullet.alert         = true
+    Bullet.alert         = false
     Bullet.bullet_logger = false
     Bullet.console       = false
     Bullet.growl         = false
     Bullet.rails_logger  = true
-    Bullet.add_footer    = true
+    Bullet.add_footer    = false
   end
 end
