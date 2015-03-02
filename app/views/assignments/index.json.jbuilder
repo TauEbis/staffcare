@@ -3,6 +3,7 @@ json.extract! @schedule, :id, :days
 json.location_plans @schedule.location_plans do |location_plan|
   json.id location_plan.id
   json.name location_plan.name
+  json.chosen_grade_id location_plan.chosen_grade_id
   if @shifts[location_plan.id]
     json.days @shifts[location_plan.id].keys do |day|
       json.date day

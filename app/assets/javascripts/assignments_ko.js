@@ -26,6 +26,7 @@ function DayData(data, parent, index) {
 
   // None of this changes, so instead of wrapping in an observable and a bunch of computed properties, we just eval it once
   self.date = moment(data.date);
+  self.raw_date = data.date;
   self.dow = self.date.format("ddd").charAt(0);
   self.day_num = self.date.format("D");
   self.is_weekend = self.date.day() == 6 || self.date.day() == 0;
@@ -38,8 +39,8 @@ function DayData(data, parent, index) {
 
   self.displayDay = function() {
     assignmentContext.selected_day(self);
-    $('#showAssignmentModal').modal();
-
+    $('#show_assignment_modal').modal();
+    load_highcharts(self.location_plan.chosen_grade_id, self.raw_date );
   };
 
   self.total_hours = function() {
@@ -61,6 +62,7 @@ function LocationPlan(data) {
   var self = this;
   self.id = ko.observable(data.id);
   self.name = ko.observable(data.name);
+  self.chosen_grade_id = data.chosen_grade_id;
   self.days = ko.observableArray($.map(data.days, function(elem, i){
     return new DayData(elem, self, i);
   }));

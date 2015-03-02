@@ -36,13 +36,7 @@ function load_coverage_day_info(grade_id, date){
 
   load_grade_info(grade_id, {date: date});
 
-  $.ajax( "/grades/" + grade_id + "/highcharts", {data: {date: date}} )
-    .done(function(data, status, xhr) {
-      build_highcharts(data);
-    })
-    .fail(function(xhr, status, error) {
-      inject_coverage_fail('#coverage_hourly', xhr, status, error);
-    });
+  load_highcharts(grade_id, date);
 
   $.ajax( "/grades/" + grade_id + "/hourly", {data: {date: date}} )
     .done(function(data, status, xhr) {
@@ -161,6 +155,15 @@ function colorNewDay(date, score) {
   });
 }
 
+function load_highcharts(grade_id, date) {
+  $.ajax( "/grades/" + grade_id + "/highcharts", {data: {date: date}} )
+    .done(function(data, status, xhr) {
+      build_highcharts(data);
+    })
+    .fail(function(xhr, status, error) {
+      inject_coverage_fail('#coverage_hourly', xhr, status, error);
+    });
+}
 
 function build_highcharts(source){
   $('#highcharts-container').highcharts({
