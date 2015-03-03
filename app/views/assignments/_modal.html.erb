@@ -11,12 +11,13 @@
       </div>
       <div class="modal-body">
         <h4>
+          Physician Shifts
         </h4>
 
         <form class="form-horizontal">
           <div data-bind="foreach: shifts">
             <div class="form-group">
-              <label data-bind="text: timeLabel" class="col-sm-4 control-label"></label>
+              <label data-bind="text: timeLabel" class="col-sm-4 col-sm-offset-1 text-left"></label>
               <div class="col-sm-4">
 
               </div>
@@ -28,7 +29,11 @@
 
         <hr>
 
-        <div id="highcharts-container"></div>
+        <h4>
+          Schedule Efficiency
+        </h4>
+
+        <div id="highcharts-container" style="width: 750px; height: 400px; margin: 0 auto"></div>
 
       </div>
       <div class="modal-footer">
