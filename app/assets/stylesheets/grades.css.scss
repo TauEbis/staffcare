@@ -66,10 +66,10 @@ $table-header-z-index: 1020;
     }
     & > h5 {
       clear: both;
-      margin-left: 20px;
       width: $shift-hours - 20px;
     }
-    & > header {
+    & > .totals {
+      margin-left: 20px;
     }
     .shifts {
       clear: both;
