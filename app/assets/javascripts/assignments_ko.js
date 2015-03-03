@@ -18,6 +18,26 @@ function Assignment(data) {
   self.timeLabel = ko.pureComputed(function() {
     return timeOfDay(self.starts_hour()) + " - " + timeOfDay(self.ends_hour());
   });
+
+  self.hours = ko.computed(function(){
+    return self.ends_hour() - self.starts_hour();
+  });
+
+  self.shift_bar_width = ko.computed(function(){
+    //TODO: usage of shift_bar_width should be removed as it is not a concern of the shift
+    var hourly_bar_width = 46;
+
+    return (self.hours() * hourly_bar_width) + "px";
+  });
+
+  self.shift_bar_offset = ko.computed(function(){
+    //TODO: usage of shift_bar_offset should be removed as it is not a concern of the shift
+    var opens = 8 // this is very brittle. Should be coming from the Grade open time.
+      , hourly_bar_width = 46
+    ;
+
+    return ((self.starts_hour() - opens) * hourly_bar_width) + "px";
+  });
 }
 
 function DayData(data, parent, index) {

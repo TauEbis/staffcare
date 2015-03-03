@@ -16,10 +16,18 @@
 
         <form class="form-horizontal">
           <div data-bind="foreach: shifts">
-            <div class="form-group">
-              <label data-bind="text: timeLabel" class="col-sm-4 col-sm-offset-1 text-left"></label>
-              <div class="col-sm-4">
-
+            <div class="form-group shifts row">
+              <label data-bind="text: timeLabel" class="col-sm-2 time-label text-left"></label>
+              <div class="shift-data">
+              <div class="col-sm-6 shift-bar" data-bind="style: {width: shift_bar_width(), marginLeft: shift_bar_offset()}">
+                <div></div>
+              </div>
+              <div class="totals col-sm-1">
+                <h5>
+                  <span data-bind="text: hours()"></span> <small>hrs</small>
+<% if false %>   (<span data-bind="text: patients_per_hour()"></span> <small>pph</small>) <% end %>
+                </h5>
+              </div>
               </div>
             </div>
           </div>
