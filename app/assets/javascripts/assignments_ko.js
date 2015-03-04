@@ -151,6 +151,7 @@ $(document).ready(function() {
   var assignment_view = $('#assignment_view');
   var d = assignment_view.data();
   if(d) {
+    $('.table-fixed-header').fixedHeader();
     assignmentContext = new AssignmentViewModel();
     ko.applyBindings(assignmentContext);
 
