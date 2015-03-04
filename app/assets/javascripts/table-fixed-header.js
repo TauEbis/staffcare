@@ -2,7 +2,8 @@ $.fn.fixedHeader = function (options) {
  var config = {
    topOffset: $('nav').height(), //  height of StaffCare Masthead
    bgColor: '#FFFFFF',
-   wait_msecs: 1000
+   wait_msecs: 1000,
+   column_freeze: false
  };
  if (options){ $.extend(config, options); }
 
@@ -34,7 +35,7 @@ $.fn.fixedHeader = function (options) {
 
       $.each(ww, function (i, w){ ww_sum += parseInt(w) || 0;});
 
-      o.find('thead.header-copy').css({ 'width': ww_sum,'background-color': config.bgColor, 'position': 'fixed', 'top': config.topOffset / zoom });
+      o.find('thead.header-copy').css({ 'z-index': 20, 'width': ww_sum,'background-color': config.bgColor, 'position': 'fixed', 'top': config.topOffset / zoom });
     }
 
   setTimeout(function () { set_css() }, config.wait_msecs); // May need to wait for bootstrap to resize columns after knockout injects bound data
@@ -61,6 +62,15 @@ $.fn.fixedHeader = function (options) {
     if (isFixed) {
       o.find('thead.header-copy').css({ 'left': -1 * (scrollLeft - headLeft) });
     };
+
+    if (config.column_freeze) {
+      if (scrollLeft >= headLeft) {
+        o.find('tbody > tr > th').css({'position': 'relative', 'left': scrollLeft - headLeft, 'z-index': 10, 'opacity': 1, 'background-color': config.bgColor});
+      } else {
+        o.find('tbody > tr > th').css({'position': 'relative', 'left': 0, 'z-index': 10, 'opacity': 1, 'background-color': config.bgColor});
+      };
+    };
+
   }
 
   $win.on('scroll', processScroll);
