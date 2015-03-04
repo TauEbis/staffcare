@@ -2,16 +2,69 @@ body#assignments_controller {
   div.container {
     width: 1000px;
   }
-}
 
-table.assignments_table {
-  font-size: 80%;
-}
+  table.assignments_table {
+    font-size: 80%;
+    margin-top: 10px;
+  }
 
-table.inner_shifts_table {
-  td {
-    // Inner table
-    white-space: nowrap;
-    cursor: pointer;
+  table.inner_shifts_table {
+    margin-bottom: 30px;
+    td {
+      // Inner table
+      white-space: nowrap;
+      cursor: pointer;
+    }
+  }
+
+  #show_assignment_modal .modal-dialog {
+    width: 800px;
+  }
+
+  .weekend {
+    background-color: #fee;
+  }
+
+  // These two work in concert to position the total hours at the bottom of the day cell
+  // ------------------------------
+  .assignment_day {
+    position: relative;
+    height: 100%;
+  }
+
+  .assignment_day_total {
+    position: absolute;
+    bottom: 0;
+    right: 5px;
+    text-align: right;
+  }
+  // ------------------------------
+
+  // shift bars in modal (duplicated from grades.css -- refactor candidate)
+  .shifts {
+    label.time-label {
+      width: 90px;
+    }
+    .totals {
+      width: 50px;
+      padding: 5px 5px;
+
+      h5 {
+        margin-top: 0px;
+      }
+    }
+
+    .shift-bar {
+      padding: 0;
+
+      div {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 30px;
+        background-color: #2a62bc;
+      }
+    }
   }
 }
+

@@ -1,30 +1,73 @@
 <h1>Assignments - <%= schedule_date_span @schedule %></h1>
 
-<div id="assignment_view" data-schedule-id="<%= @schedule.id %>">
-  <table class="table table-striped table-condensed assignments_table">
-    <thead><tr>
+<div class="row">
+  <div class="col-sm-10">
+    <%= form_tag(assignments_path, class: 'form-inline', method: :get) do %>
+      <%= hidden_field_tag :schedule_id, @schedule.id %>
+
+      <div class="form-group">
+        <label for="zone_id">Zone: </label>
+        <select id="zone_id" name="zone_id" class="form-control">
+          <%= options_from_collection_for_select @zones, :id, :name, @zone.id %>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Date Range: </label>
+        <div class="input-daterange input-group" data-behaviour="datepicker" data-date-start-date="<%= @schedule.starts_on %>" data-date-end-date="<%= @schedule.ends_on %>">
+          <input type="text" name="start_date" id="start_date" class="input-sm form-control" value="<%= @start_date %>" />
+          <span class="input-group-addon">to</span>
+          <input type="text" name="end_date" id="end_date" class="input-sm form-control" value="<%= @end_date %>" />
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-default">Filter</button>
+    <% end %>
+  </div>
+  <div class="col-sm-2">
+    <button class="btn btn-default" id="assignment_zoom_out">
+      <span class="glyphicon glyphicon-zoom-out"></span>
+    </button>
+    <button class="btn btn-default" id="assignment_zoom_in">
+      <span class="glyphicon glyphicon-zoom-in"></span>
+    </button>
+  </div>
+</div>
+
+<div id="assignment_view" data-schedule-id="<%= @schedule.id %>" data-zone-id="<%= @zone.id %>" data-start-date="<%= @start_date %>" data-end-date="<%= @end_date %>">
+  <table class="table table-condensed table-fixed-header assignments_table">
+    <thead class="header"><tr>
       <th></th>
-      <% @schedule.days.each do |day| -%>
-        <th><%= day.strftime('%a')[0] %> <br> <%= day.strftime('%-d') %></th>
-      <% end -%>
+      <!-- ko with: location_plans()[0] -->
+        <!-- ko foreach: days -->
+        <th data-bind="css: {weekend: is_weekend}">
+          <span data-bind="text: dow"></span><br>
+          <span data-bind="text: day_num"></span>
+        </th>
+        <!-- /ko -->
+      <!-- /ko -->
     </tr></thead>
 
     <tbody data-bind="foreach: location_plans">
       <tr>
         <th data-bind="text: name"></th>
         <!-- ko foreach: days -->
-          <td>
-            <table class="table table-condensed table-hover inner_shifts_table">
+          <td class="assignment_day" data-bind="css: {weekend: is_weekend}">
+            <table class="table table-striped table-condensed table-hover inner_shifts_table">
               <tbody data-bind="foreach: shifts">
-                <tr data-bind="css: css_class">
+                <tr>
                   <td data-bind="click: $parent.displayDay">
-                    <span data-bind="text: starts_hour"></span> -
-                    <span data-bind="text: ends_hour"></span>
-                    <span data-bind="text: physician_initials"></span>
+                    <span data-bind="text: mini_starts_hour"></span> -
+                    <span data-bind="text: mini_ends_hour"></span>
                   </td>
                 </tr>
               </tbody>
             </table>
+            <div class="assignment_day_total">
+              <em><span data-bind="text: total_hours()"></span> hrs</em>
+              <br>
+              <em data-bind="if: is_sunday"><span data-bind="text: hours_for_week()"></span> total</em>
+            </div>
           </td>
         <!-- /ko -->
       </tr>

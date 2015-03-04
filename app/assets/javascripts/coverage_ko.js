@@ -223,7 +223,7 @@ function CoverageViewModel() {
 
     colorNewDay(data.day_info.date, data.day_info.analysis.stats.pen_per_pat ); // coloring based on waste per patient
 
-    // We dont' want to set loaded until we've loaded a DAY, not just the grade-wide data
+    // We don't want to set loaded until we've loaded a DAY, not just the grade-wide data
     self.loaded(true);
   };
 

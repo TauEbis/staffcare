@@ -1,4 +1,4 @@
-<div class="modal fade" id="showAssignmentModal" data-bind="with: selected_day">
+<div class="modal fade" id="show_assignment_modal" data-bind="with: selected_day">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -6,25 +6,28 @@
         <h4 class="modal-title">
           <span data-bind="text: location_plan.name"></span>
           -
-          <span data-bind="text: date"></span>
+          <span data-bind="text: date.format('MMMM Do, YYYY')"></span>
         </h4>
       </div>
       <div class="modal-body">
         <h4>
+          Physician Shifts
         </h4>
 
         <form class="form-horizontal">
           <div data-bind="foreach: shifts">
-            <div class="form-group">
-              <label data-bind="text: timeLabel" class="col-sm-4 control-label"></label>
-              <div class="col-sm-4">
-                <!-- DEMO CODE FOR EFFECT -->
-                <select class="form-control" data-bind="options: $root.physician_list, value: selected_physician">
-                  <option>Unassigned</option>
-                  <option>Drew Blas</option>
-                  <option>Rio Bennin</option>
-                </select>
-                <!-- END DEMO CODE FOR EFFECT -->
+            <div class="form-group shifts row">
+              <label data-bind="text: timeLabel" class="col-sm-2 time-label text-left"></label>
+              <div class="shift-data">
+              <div class="col-sm-6 shift-bar" data-bind="style: {width: shift_bar_width(), marginLeft: shift_bar_offset()}">
+                <div></div>
+              </div>
+              <div class="totals col-sm-1">
+                <h5>
+                  <span data-bind="text: hours()"></span> <small>hrs</small>
+<% if false %>   (<span data-bind="text: patients_per_hour()"></span> <small>pph</small>) <% end %>
+                </h5>
+              </div>
               </div>
             </div>
           </div>
@@ -34,15 +37,15 @@
 
         <hr>
 
-        <h4>Schedule & Stats for physicians above</h4>
+        <h4>
+          Schedule Efficiency
+        </h4>
 
-        <h5> - Dr. Drew Blas</h5>
-        <img src="/demo_rmd_physician_schedule.png">
+        <div id="highcharts-container" style="width: 750px; height: 400px; margin: 0 auto"></div>
 
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->

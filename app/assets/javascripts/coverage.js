@@ -36,19 +36,13 @@ function load_coverage_day_info(grade_id, date){
 
   load_grade_info(grade_id, {date: date});
 
-  $.ajax( "/grades/" + grade_id + "/highcharts", {data: {date: date}} )
-    .done(function(data, status, xhr) {
-      build_highcharts(data);
-    })
-    .fail(function(xhr, status, error) {
-      inject_coverage_fail('#coverage_hourly', xhr, status, error);
-    });
+  load_highcharts(grade_id, date);
 
   $.ajax( "/grades/" + grade_id + "/hourly", {data: {date: date}} )
     .done(function(data, status, xhr) {
       inject_coverage_data('#coverage_hourly', data);
       colorBreakdown();
-      $('.table-fixed-header').fixedHeader();
+      $('.table-fixed-header').fixedHeader({topOffset: 130}); // masthead and save area hight
     })
     .fail(function(xhr, status, error) {
       inject_coverage_fail('#coverage_hourly', xhr, status, error);
@@ -96,6 +90,18 @@ function timeOfDay(t){
     return (t-12) + ':00pm';
   }else{
     return t + ':00am';
+  }
+}
+
+function miniTimeOfDay(t){
+  if(t == 24 || t == 0){
+    return '12a';
+  }else if(t == 12){
+    return '12p';
+  }else if(t > 12){
+    return (t-12) + 'p';
+  }else{
+    return t + 'a';
   }
 }
 
@@ -149,6 +155,15 @@ function colorNewDay(date, score) {
   });
 }
 
+function load_highcharts(grade_id, date) {
+  $.ajax( "/grades/" + grade_id + "/highcharts", {data: {date: date}} )
+    .done(function(data, status, xhr) {
+      build_highcharts(data);
+    })
+    .fail(function(xhr, status, error) {
+      inject_coverage_fail('#coverage_hourly', xhr, status, error);
+    });
+}
 
 function build_highcharts(source){
   $('#highcharts-container').highcharts({
