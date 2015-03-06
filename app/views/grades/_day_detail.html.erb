@@ -28,6 +28,14 @@
   <div data-bind="ifnot: grade().editable">
     <div id='positions' data-bind="foreach: positions">
       <h5 data-bind="text: name"></h5>
+
+      <div class='totals'>
+        <h5>
+          <span data-bind="text: hours()"></span> <small>hrs</small>
+          (<span data-bind="text: cost()">$249</span></span>)
+        </h5>
+      </div>
+
       <div class='shifts' data-bind="foreach: shifts">
         <div class="row form-inline form-group">
           <div class="col-sm-3">
@@ -56,6 +64,13 @@
     <div id='positions' data-bind="foreach: positions">
       <h5 data-bind="text: name"></h5>
 
+      <div class='totals'>
+        <h5>
+          <span data-bind="text: hours()"></span> <small>hrs</small>
+          (<span data-bind="text: cost()">$249</span></span>)
+        </h5>
+      </div>
+
       <div class='shifts' data-bind="foreach: shifts">
         <div class="row form-inline form-group">
           <div class="col-sm-3">
@@ -80,9 +95,10 @@
           </div>
           <br>
         </div>
+
       </div> <!-- foreach: shifts -->
 
-      <a href="#" data-bind="click: addShift">
+      <a class='add' href="#" data-bind="click: addShift">
         <span class="glyphicon glyphicon-plus"></span>
         Add <span data-bind="text: name"></span> Shift
       </a>

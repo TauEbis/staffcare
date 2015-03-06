@@ -46,15 +46,29 @@ function Position(data, visits, starts_hour, ends_hour) {
       }
   ;
 
-  self.name = ko.observable(data.name);
-  self.key  = ko.observable(data.key);
-  self.visits = ko.observable(visits);
+  self.name        = data.name;
+  self.key         = data.key;
+  self.hourly_rate = data.hourly_rate;
+  self.visits      = visits;
 
   self.shifts = ko.observableArray(
     $.map(data.shifts, function(shift, _){ return subscribe( new Shift(shift) ); } )
   );
   distribute(visits);
 
+  self.hours = ko.computed(function() {
+    var sum = 0;
+
+    self.shifts().forEach(function(shift, index) {
+      sum += shift.hours();
+    });
+
+    return Number( sum );
+  });
+
+  self.cost = ko.computed(function() {
+    return "$" + Number( self.hourly_rate * self.hours() );
+  });
   self.addShift = function(position) {
     self.shifts.push(
       subscribe(
@@ -219,7 +233,7 @@ function CoverageViewModel() {
 
       return new Position(position, visits, data.day_info.open_time, data.day_info.close_time);
     }));
-    self.positions( self.positions.sort( function(a, b){ return position_keys.indexOf(a.key()) - position_keys.indexOf(b.key()) }) );
+    self.positions( self.positions.sort( function(a, b){ return position_keys.indexOf(a.key) - position_keys.indexOf(b.key) }) );
 
     colorNewDay(data.day_info.date, data.day_info.analysis.stats.pen_per_pat ); // coloring based on waste per patient
 

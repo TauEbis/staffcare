@@ -76,16 +76,43 @@ $table-header-z-index: 1020;
   }
 
   #positions {
-    .shifts {
-      .totals {
-        float: left;
-        width: 105px;
-        position: relative;
+    $shift-hours: 285px;
+    $totals-hours: 105px;
 
-        h5 {
-          margin-top: 0px;
-        }
+    a.add {
+     display:block;
+     width: $shift-hours;
+    }
+
+    .totals {
+      float: left;
+      height: 30px;
+      margin: 0;
+      line-height: 30px;
+      width: 105px;
+      position: relative;
+
+      h5 {
+        margin: 5px 0;
       }
+    }
+    & > h5, & > .totals {
+      width: $shift-hours;
+      line-height: 30px;
+      margin: 35px 0 10px;
+      float:left;
+      position: relative;
+      font-size: 120%;
+    }
+    & > h5 {
+      clear: both;
+      width: $shift-hours - 20px;
+    }
+    & > .totals {
+      margin-left: 20px;
+    }
+    .shifts {
+      clear: both;
 
       .shift-bar {
         padding: 0;
