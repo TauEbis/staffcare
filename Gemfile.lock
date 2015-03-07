@@ -1,4 +1,10 @@
 GIT
+  remote: https://github.com/alexdunae/holidays.git
+  revision: 3ece845669c63091acff0b44b4cac89d76f4e3c8
+  specs:
+    holidays (1.0.8)
+
+GIT
   remote: https://github.com/matthewrudy/sidekiq-status.git
   revision: f284a7a7cbfa531a7c344b844e1ed3da613ec364
   branch: sidekiq-3.1
@@ -422,6 +428,7 @@ DEPENDENCIES
   guard-bundler
   guard-rspec
   guard-teaspoon
+  holidays!
   httparty
   iconv
   jbuilder (~> 2.0)
