@@ -1,12 +1,12 @@
 $bk-aqua: #ADD8E6;
-$nav-height: 35px;
-$save-height: $nav-height + 85px;
+$breadcrumb-height: 35px;
+$save-height: $breadcrumb-height + 85px;
 $masthead-height: 50px;
 $table-header-z-index: 1020;
 
 #grades_controller {
   main {
-   margin-top: 150px;
+   margin-top: 185px;
    position: relative;
   }
 
@@ -17,7 +17,7 @@ $table-header-z-index: 1020;
     position: fixed;
     background: #fff;
     height: $save-height;
-    top: $masthead-height;
+    top: $masthead-height + $breadcrumb-height;
     z-index: $table-header-z-index + 1;
 
     -webkit-border-radius: 0;

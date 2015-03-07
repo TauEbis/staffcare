@@ -1,12 +1,15 @@
-$nav-height: 35px;
+$breadcrumb-height: 35px;
 $masthead-height: 50px;
+$table-header-z-index: 1020;
 
 nav#breadcrumbs {
-  top: $masthead-height;
+  width: 100%;
   display: block;
-  position: relative;
+  position: fixed;
   background: #d9d9d9;
+  top: $masthead-height;
   border-top: 1px solid #6f6f6f;
+  z-index: $table-header-z-index + 100;
 
   &:after {
     height: 0;
@@ -23,8 +26,8 @@ nav#breadcrumbs {
     display: block;
     color: #6f6f6f;
     position: relative;
-    height: $nav-height;
-    line-height: $nav-height;
+    height: $breadcrumb-height;
+    line-height: $breadcrumb-height;
     text-decoration: underline;
 
     &:first-of-type {
@@ -48,7 +51,7 @@ nav#breadcrumbs {
     margin: 0 5px;
     display: block;
     position: relative;
-    height: $nav-height;
-    line-height: $nav-height;
+    height: $breadcrumb-height;
+    line-height: $breadcrumb-height;
   }
 }
