@@ -1,5 +1,5 @@
 <nav id='breadcrumbs'>
-  <%= link_to_unless( request.env['PATH_INFO'] == '/', 'Dashboard', root_path) %> <span>&gt;</span>
+  <%= link_to 'Dashboard', root_path %> <span>&gt;</span>
 
 <% if current_user.admin? -%>
   <%- if (request.env['PATH_INFO'].include?('schedules') || @schedule) && policy(Schedule).index? -%>
