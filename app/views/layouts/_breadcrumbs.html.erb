@@ -19,8 +19,8 @@
   <%= link_to @location_plan.name, location_plan_path(@location_plan) %> <span>&gt;</span>
 <%- end -%>
 
-<% if @grade %>
-  Grade Page
+<% if @grade && request.env['PATH_INFO'].include?('grades/') %>
+  <%= link_to 'Grade Page', grade_path(@grade) %> <span>&gt;</span>
 <%- end -%>
 </nav>
 
