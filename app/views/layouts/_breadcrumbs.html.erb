@@ -11,11 +11,11 @@
   <%= link_to schedule_date_span(@schedule), schedule_path(@schedule) %> <span>&gt;</span>
 <%- end -%>
 
-<% if @zone %>
+<% if @zone && request.env['PATH_INFO'].include?('location_plans/') %>
   <%= link_to @zone.name, schedule_location_plans_path(@schedule, zone_id: @zone.id) %> <span>&gt;</span>
 <%- end -%>
 
-<% if @location_plan %>
+<% if @location_plan && request.env['PATH_INFO'].include?('location_plans/') %>
   <%= link_to @location_plan.name, location_plan_path(@location_plan) %> <span>&gt;</span>
 <%- end -%>
 
