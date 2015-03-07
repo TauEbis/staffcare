@@ -74,6 +74,15 @@ class Schedule < ActiveRecord::Base
     @_days ||= (starts_on..ends_on).to_a
   end
 
+  def holidays
+    holidays_in_schedule = []
+    h_dates = Schedule::HOLIDAYS.map{|h| h[:date]}
+    days.each do |date|
+      holidays_in_schedule << date if h_dates.include? date
+    end
+    holidays_in_schedule
+  end
+
   def grader_weights
     @_grader_weights ||= self.attributes.slice(*OPTIMIZER_FIELDS.map(&:to_s)).symbolize_keys
   end
