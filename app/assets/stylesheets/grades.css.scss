@@ -32,61 +32,9 @@ $table-header-z-index: 1020;
       margin-left: 10%;
     }
 
-    nav {
-      display: block;
-      position: relative;
-      background: #d9d9d9;
-      border-top: 1px solid #6f6f6f;
-
-      &:after {
-        height: 0;
-        clear: both;
-        content: " ";
-        font-size: 0;
-        display: block;
-        visibility: hidden;
-      }
-
-      a {
-        margin: 0;
-        float: left;
-        display: block;
-        color: #6f6f6f;
-        position: relative;
-        height: $nav-height;
-        line-height: $nav-height;
-        text-decoration: underline;
-
-        &:first-of-type {
-          margin-left: 130px;
-        }
-        &:hover {
-          color: #5b5b5b;
-          text-decoration: none;
-        }
-        &:active {
-
-        }
-        &:visited {
-
-        }
-      }
-
-      span {
-        float: left;
-        width: 12px;
-        margin: 0 5px;
-        display: block;
-        position: relative;
-        height: $nav-height;
-        line-height: $nav-height;
-      }
-    }
-
     #statistics {
       width: 43%;
-      float: left;
-      margin-left: 2%;
+      float: left; margin-left: 2%;
       position: relative;
 
       div > h4:last-of-type {
