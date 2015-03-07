@@ -11,7 +11,7 @@
   <%= link_to schedule_date_span(@schedule), schedule_path(@schedule) %> <span>&gt;</span>
 <%- end -%>
 
-<% if @zone && request.env['PATH_INFO'].include?('location_plans/') %>
+<% if @zone && request.env['PATH_INFO'].include?('location_plans') %>
   <%= link_to @zone.name, schedule_location_plans_path(@schedule, zone_id: @zone.id) %> <span>&gt;</span>
 <%- end -%>
 
