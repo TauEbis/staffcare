@@ -1,12 +1,11 @@
 $bk-aqua: #ADD8E6;
 $breadcrumb-height: 35px;
-$save-height: $breadcrumb-height + 85px;
+$save-height: 85px;
 $masthead-height: 50px;
 $table-header-z-index: 1020;
 
 #grades_controller {
   main {
-   margin-top: 220px;
    position: relative;
   }
 
@@ -73,6 +72,10 @@ $table-header-z-index: 1020;
       }
       button { width: 193px; }
     }
+  }
+
+  .location_plan_container {
+    padding-top: 20px;
   }
 
   #positions {
