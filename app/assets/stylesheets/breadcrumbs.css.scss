@@ -2,6 +2,10 @@ $breadcrumb-height: 35px;
 $masthead-height: 50px;
 $table-header-z-index: 1020;
 
+nav.navbar {
+  z-index: $table-header-z-index + 200;
+}
+
 nav#breadcrumbs {
   width: 100%;
   display: block;
