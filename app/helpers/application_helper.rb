@@ -2,8 +2,7 @@ module ApplicationHelper
 
   def path_for_breadcrumbs?
     path = request.env['PATH_INFO']
-
-    return true if path.match(/(schedules(\/\d)+|location_plans|grades)/)
+    path.match(/(schedules(\/\d)*|location_plans|grades)/)
   end
 
   def zones_for_picker

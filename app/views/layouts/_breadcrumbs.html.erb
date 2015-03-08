@@ -1,34 +1,32 @@
-<nav id='breadcrumbs'>
+<% if path_for_breadcrumbs? %>
+  <nav id='breadcrumbs'>
   <%= link_to 'Dashboard', root_path %> <span>&gt;</span>
 
-<% if path_for_breadcrumbs? %>
-
-<% if current_user.admin? -%>
-  <%- if (request.env['PATH_INFO'].include?('schedules') || @schedule) && policy(Schedule).index? -%>
-    <%= link_to 'Schedules', schedules_path %> <span>&gt;</span>
+  <% if current_user.admin? -%>
+    <%- if (request.env['PATH_INFO'].include?('schedules') || @schedule) && policy(Schedule).index? -%>
+      <%= link_to 'Schedules', schedules_path %> <span>&gt;</span>
+    <%- end -%>
   <%- end -%>
-<%- end -%>
 
-<%- if (request.env['PATH_INFO'].include?('schedules/')  || @schedule) && policy(Schedule).index? -%>
-  <%= link_to schedule_date_span(@schedule), schedule_path(@schedule) %> <span>&gt;</span>
-<%- end -%>
+  <%- if (request.env['PATH_INFO'].include?('schedules/')  || @schedule) && policy(Schedule).index? -%>
+    <%= link_to schedule_date_span(@schedule), schedule_path(@schedule) %> <span>&gt;</span>
+  <%- end -%>
 
-<% if @zone && (request.env['PATH_INFO'].include?('location_plans') ||
-                request.env['PATH_INFO'].include?('grades/'))
-%>
-  <%= link_to @zone.name, schedule_location_plans_path(@schedule, zone_id: @zone.id) %> <span>&gt;</span>
-<%- end -%>
+  <% if @zone && (request.env['PATH_INFO'].include?('location_plans') ||
+                  request.env['PATH_INFO'].include?('grades/'))
+  %>
+    <%= link_to @zone.name, schedule_location_plans_path(@schedule, zone_id: @zone.id) %> <span>&gt;</span>
+  <%- end -%>
 
-<% if @location_plan && (request.env['PATH_INFO'].include?('location_plans/') ||
-                         request.env['PATH_INFO'].include?('grades/'))
-%>
-  <%= link_to @location_plan.name, location_plan_path(@location_plan) %> <span>&gt;</span>
-<%- end -%>
+  <% if @location_plan && (request.env['PATH_INFO'].include?('location_plans/') ||
+                           request.env['PATH_INFO'].include?('grades/'))
+  %>
+    <%= link_to @location_plan.name, location_plan_path(@location_plan) %> <span>&gt;</span>
+  <%- end -%>
 
-<% if @grade && request.env['PATH_INFO'].include?('grades/') %>
-  <%= link_to 'Grade Page', grade_path(@grade) %> <span>&gt;</span>
-<%- end -%>
+  <% if @grade && request.env['PATH_INFO'].include?('grades/') %>
+    <%= link_to 'Grade Page', grade_path(@grade) %> <span>&gt;</span>
+  <%- end -%>
 
+  </nav>
 <% end %>
-
-</nav>
