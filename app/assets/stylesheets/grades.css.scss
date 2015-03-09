@@ -1,12 +1,18 @@
 $bk-aqua: #ADD8E6;
-$breadcrumb-height: 35px;
 $save-height: 85px;
-$masthead-height: 50px;
 $table-header-z-index: 1020;
+$masthead-height: 51px;
+$breadcrumb-height: 35px;
 
 #grades_controller {
-  main {
-   position: relative;
+
+  main { /* grades main without breadcrumbs */
+    margin-top: $masthead-height + $save-height;
+    position: relative;
+  }
+
+  #breadcrumbs + main { /* grades main with breadcrumbs (using sibling selector) */
+    margin-top: $masthead-height + $breadcrumb-height + $save-height;
   }
 
   #save {

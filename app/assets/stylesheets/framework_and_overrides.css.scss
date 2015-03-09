@@ -2,6 +2,16 @@
 @import "bootstrap-sprockets";
 @import "bootstrap";
 
+// set margin-top based on prescence of breadcrumbs
+$masthead-height: 51px;
+$breadcrumb-height: 35px;
+
+main { margin-top: $masthead-height; } /* universal margin-top for main */
+
+#breadcrumbs + main { /* universal main with breadcrumbs (using sibling selector) */
+    margin-top: $masthead-height + $breadcrumb-height;
+}
+
 // make all images responsive by default
 img {
   @extend .img-responsive;
@@ -53,12 +63,11 @@ img {
 // apply styles to HTML elements
 // to make views framework-neutral
 main {
-  @extend .container;
-//  background-color: #eee;
+  @extend .container;;
   padding-bottom: 80px;
   width: 100%;
-  margin-top: 51px;
   }
+
 section {
   @extend .row;
   margin-top: 20px;

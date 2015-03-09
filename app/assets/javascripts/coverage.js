@@ -42,7 +42,7 @@ function load_coverage_day_info(grade_id, date){
     .done(function(data, status, xhr) {
       inject_coverage_data('#coverage_hourly', data);
       colorBreakdown();
-      $('.table-fixed-header').fixedHeader({topOffset: 169}); // masthead and save area hight
+      $('.table-fixed-header').fixedHeader({topOffset: 170}); // masthead and save area hight
     })
     .fail(function(xhr, status, error) {
       inject_coverage_fail('#coverage_hourly', xhr, status, error);
@@ -73,8 +73,6 @@ function inject_coverage_fail(selector, xhr, status, error){
   $(selector + "_load").addClass('hidden');
   console.log(xhr.responseText);
 }
-
-
 
 function toCurrency(n, dec){
   if(typeof(dec)==='undefined') dec = 0;

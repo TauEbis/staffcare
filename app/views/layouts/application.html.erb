@@ -12,9 +12,7 @@
     <link rel="icon" href="<%= image_path('favicon.ico') %>" type="image/x-icon">
   </head>
   <body id="<%= params[:controller].parameterize %>_controller">
-    <header>
-      <%= render 'layouts/navigation' %>
-    </header>
+    <%= render 'layouts/navigation' %>
     <main role="main">
       <div class="<%= @wide_container ? 'wide-container' : 'container' %>">
         <%= render 'layouts/messages' %>

@@ -1,6 +1,5 @@
 <% if path_for_breadcrumbs? %>
   <nav id='breadcrumbs'>
-  <%= link_to 'Dashboard', root_path %> <span>&gt;</span>
 
   <% if current_user.admin? -%>
     <%- if (request.env['PATH_INFO'].include?('schedules') || @schedule) && policy(Schedule).index? -%>

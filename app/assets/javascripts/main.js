@@ -28,28 +28,8 @@ $(document).ready(function() {
     $(this).css('margin-top', $(this).parent().height()-$(this).height())
   });
 
-  //$('.chevronbar li').css('width', 99.0 / ($('.chevronbar li').length * 1.0) + "%");
-
-  setMainMargin();
-
   setSessionTimeout();
 });
-
-//
-function setMainMargin() {
-  var breadcrumbs = $('#breadcrumbs');
-  var grade = $('#grades_controller');
-  if (breadcrumbs.data()) {
-    var margin_top = 51;
-    margin_top += 35; // accommodate the navbar & breadcrumbs
-    if (grade.data()) {
-      margin_top += (85); // accommodate the navbar & breadcrumbs & savebar
-    }
-    margin_top = margin_top.toString() + 'px';
-    $('main').css('margin-top', margin_top);
-  }
-}
-
 
 // Automatic logout functionality
 
