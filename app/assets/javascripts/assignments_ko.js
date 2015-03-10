@@ -50,6 +50,9 @@ function DayData(data, parent, index) {
   self.dow = self.date.format("ddd").charAt(0);
   self.day_num = self.date.format("D");
   self.is_weekend = self.date.day() == 6 || self.date.day() == 0;
+  self.is_holiday = parent.holidays.indexOf(data.date) != -1;
+  self.is_weekend_or_holiday = self.is_weekend || self.is_holiday;
+  console.log(self.is_holiday);
   self.is_sunday = self.date.day() == 0;
   self.location_plan = parent;
 
@@ -78,11 +81,12 @@ function DayData(data, parent, index) {
   self.url = "/location_plans/" + parent.id();
 }
 
-function LocationPlan(data) {
+function LocationPlan(data, holidays) {
   var self = this;
   self.id = ko.observable(data.id);
   self.name = ko.observable(data.name);
   self.chosen_grade_id = data.chosen_grade_id;
+  self.holidays = holidays;
   self.days = ko.observableArray($.map(data.days, function(elem, i){
     return new DayData(elem, self, i);
   }));
@@ -109,6 +113,7 @@ function AssignmentViewModel() {
   self.zone_id = ko.observable(0);
   self.start_date = ko.observable(0);
   self.end_date = ko.observable(0);
+  self.holidays = ko.observableArray([]);
   self.location_plans = ko.observableArray([]);
 
   self.selected_day = ko.observable(null);
@@ -140,7 +145,7 @@ function AssignmentViewModel() {
 
   self.load = function(data) {
     var c = jQuery.map(data.location_plans, function(location_plan, i){ // Actually a flatmap. Stupid jQuery
-      return new LocationPlan(location_plan);
+      return new LocationPlan(location_plan, data.holidays);
     });
 
     self.location_plans(c);
@@ -159,6 +164,7 @@ $(document).ready(function() {
     assignmentContext.zone_id(d.zoneId);
     assignmentContext.start_date(d.startDate);
     assignmentContext.end_date(d.endDate);
+    assignmentContext.holidays(d.holidays);
     assignmentContext.load_all();
   }
 

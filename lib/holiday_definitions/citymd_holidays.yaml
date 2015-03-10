@@ -1,0 +1,44 @@
+# CityMD holiday definitions for the Ruby Holiday gem.
+#
+# Updated: 2015-03-06.
+# Source:  http://en.wikipedia.org/wiki/Public_holidays_of_the_United_States
+---
+months:
+  1:
+  - name: New Year's Day
+    regions: [citymd]
+    mday: 1
+    observed: to_weekday_if_weekend
+  5:
+  - name: Memorial Day
+    week: -1
+    regions: [citymd]
+    wday: 1
+  7:
+  - name: Independence Day
+    regions: [citymd]
+    mday: 4
+    observed: to_weekday_if_weekend
+  9:
+  - name: Labor Day
+    week: 1
+    regions: [citymd]
+    wday: 1
+  11:
+  - name: Thanksgiving
+    week: 4
+    regions: [citymd]
+    wday: 4
+  12:
+  - name: Christmas Eve
+    regions: [citymd]
+    mday: 24
+    observed: to_weekday_if_weekend
+  - name: Christmas Day
+    regions: [citymd]
+    mday: 25
+    observed: to_weekday_if_weekend
+  - name: New Year's Eve
+    regions: [citymd]
+    mday: 31
+    observed: to_weekday_if_weekend

@@ -74,6 +74,10 @@ class Schedule < ActiveRecord::Base
     @_days ||= (starts_on..ends_on).to_a
   end
 
+  def holidays
+    days & HOLIDAYS.collect{ |h| h[:date] }
+  end
+
   def grader_weights
     @_grader_weights ||= self.attributes.slice(*OPTIMIZER_FIELDS.map(&:to_s)).symbolize_keys
   end
