@@ -75,12 +75,7 @@ class Schedule < ActiveRecord::Base
   end
 
   def holidays
-    holidays_in_schedule = []
-    h_dates = Schedule::HOLIDAYS.map{|h| h[:date]}
-    days.each do |date|
-      holidays_in_schedule << date if h_dates.include? date
-    end
-    holidays_in_schedule
+    days & HOLIDAYS.collect{ |h| h[:date] }
   end
 
   def grader_weights
