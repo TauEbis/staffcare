@@ -1,5 +1,10 @@
 module ApplicationHelper
 
+  def path_for_breadcrumbs?
+    path = request.env['PATH_INFO']
+    (path.match(/(schedules(\/\d)+|location_plans|grades)/) || (path == schedules_path && params[:action] == 'index') ) && !path.include?('rules')
+  end
+
   def zones_for_picker
     if @schedule
       policy_scope(Zone).assigned.ordered.for_schedule(@schedule)

@@ -1,43 +1,45 @@
 $bk-aqua: #ADD8E6;
 $save-height: 85px;
-$masthead-height: 50px;
 $table-header-z-index: 1020;
+$masthead-height: 51px;
+$breadcrumb-height: 35px;
 
 #grades_controller {
-  main {
-   margin-top: 150px;
-   position: relative;
+
+  main { /* grades main without breadcrumbs */
+    margin-top: $masthead-height + $save-height;
+    position: relative;
+  }
+
+  #breadcrumbs + main { /* grades main with breadcrumbs (using sibling selector) */
+    margin-top: $masthead-height + $breadcrumb-height + $save-height;
   }
 
   #save {
+    left:0;
+    width: 100%;
     display: block;
-    position: relative;
+    position: fixed;
+    background: #fff;
     height: $save-height;
+    top: $masthead-height + $breadcrumb-height;
+    z-index: $table-header-z-index + 1;
 
-    &.fixed {
-      left:0;
-      width: 100%;
-      position: fixed;
-      background: #fff;
-      top: $masthead-height;
-      z-index: $table-header-z-index + 1;
-
-      -webkit-border-radius: 0;
-         -moz-border-radius: 0;
-              border-radius: 0;
-      -webkit-box-shadow: inset 0 1px 0 #fff, 0 1px 5px rgba(0,0,0,.1);
-         -moz-box-shadow: inset 0 1px 0 #fff, 0 1px 5px rgba(0,0,0,.1);
-              box-shadow: inset 0 1px 0 #fff, 0 1px 5px rgba(0,0,0,.1);
-      filter: progid:DXImageTransform.Microsoft.gradient(enabled=false); /* IE6-9 */
-    }
+    -webkit-border-radius: 0;
+       -moz-border-radius: 0;
+            border-radius: 0;
+    -webkit-box-shadow: inset 0 1px 0 #fff, 0 1px 5px rgba(0,0,0,.1);
+       -moz-box-shadow: inset 0 1px 0 #fff, 0 1px 5px rgba(0,0,0,.1);
+            box-shadow: inset 0 1px 0 #fff, 0 1px 5px rgba(0,0,0,.1);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false); /* IE6-9 */
 
     & > h3 {
       margin-left: 10%;
     }
+
     #statistics {
       width: 43%;
-      float: left;
-      margin-left: 2%;
+      float: left; margin-left: 2%;
       position: relative;
 
       div > h4:last-of-type {
@@ -48,6 +50,7 @@ $table-header-z-index: 1020;
         margin-top: 0;
       }
     }
+
     #actions {
       width: 31%;
       position: relative;
@@ -62,17 +65,23 @@ $table-header-z-index: 1020;
         display: block;
         visibility: hidden;
       }
+
       .btn {
         margin-top: 7px;
         padding: 5px 12px;
         position: relative;
       }
+
       .btn-warning, button {
         margin-right: 28%;
         position: relative;
       }
       button { width: 193px; }
     }
+  }
+
+  .location_plan_container {
+    padding-top: 20px;
   }
 
   #positions {

@@ -28,11 +28,8 @@ $(document).ready(function() {
     $(this).css('margin-top', $(this).parent().height()-$(this).height())
   });
 
-  //$('.chevronbar li').css('width', 99.0 / ($('.chevronbar li').length * 1.0) + "%");
-
   setSessionTimeout();
 });
-
 
 // Automatic logout functionality
 
