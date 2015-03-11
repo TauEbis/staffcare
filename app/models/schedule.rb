@@ -1,6 +1,14 @@
 # A generated and scored schedule
 class Schedule < ActiveRecord::Base
 
+  def self.load_holidays
+    Holidays.load_custom("./lib/holiday_definitions/citymd_holidays.yaml")
+    y = Date.today.year
+    return Holidays.between(Date.civil(y-5, 1,1), Date.civil(y+5, 12,31), :citymd).freeze
+  end
+
+  HOLIDAYS = load_holidays
+
   has_many :visit_projections, dependent: :destroy
   has_many :location_plans, dependent: :destroy
   has_many :grades, dependent: :destroy
