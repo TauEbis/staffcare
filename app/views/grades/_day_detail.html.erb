@@ -15,13 +15,12 @@
     </div>
 
     <div id='actions' class='pull-right'>
-      <%= action_links @location_plan %>
-      <%= state_label @location_plan %>
 
-      <button data-bind='visible: grade().editable'
-              data-bind='click: save' class='btn btn-default'>
+      <button data-bind='visible: grade().editable, click: save' class='btn btn-default'>
         <span class='glyphicon glyphicon-refresh'></span> Save and Recalculate
       </button>
+
+      <% if @is_chosen %><%= state_label @location_plan %><% end %>
     </div>
   </div>
 

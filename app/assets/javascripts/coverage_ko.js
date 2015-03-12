@@ -116,7 +116,7 @@ function Shift(data) {
 
   self.shift_bar_width = ko.computed(function(){
     //TODO: usage of shift_bar_width should be removed as it is not a concern of the shift
-    var hourly_bar_width = 41;
+    var hourly_bar_width = 55;
 
     return (self.hours() * hourly_bar_width) + "px";
   });
@@ -124,7 +124,7 @@ function Shift(data) {
   self.shift_bar_offset = ko.computed(function(){
     //TODO: usage of shift_bar_offset should be removed as it is not a concern of the shift
     var opens = 8 // this is very brittle. Should be coming from the Grade open time.
-      , hourly_bar_width = 41
+      , hourly_bar_width = 55
     ;
 
     return ((self.starts() - opens) * hourly_bar_width) + "px";

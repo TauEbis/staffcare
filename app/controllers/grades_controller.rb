@@ -38,6 +38,7 @@ class GradesController < ApplicationController
       format.html do
         @schedule = @location_plan.schedule
         @zone = @location_plan.location.zone
+        @is_chosen = (@location_plan.chosen_grade_id == @grade.id)
       end
       format.json do
 
