@@ -60,7 +60,8 @@ class Analysis
       letters = {}
 
       my_sums = points.except("hours")
-      opt_sums = Analysis.new(@grades.map(&:plans_optimized_grade)).points.except("hours")
+      date = @days.length == 1 ? @days : nil
+      opt_sums = Analysis.new(@grades.map(&:plans_optimized_grade), date).points.except("hours")
 
       my_sums.each do |k1, v1|
         if k1 == "total"
