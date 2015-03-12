@@ -1,3 +1,4 @@
+@import 'bootstrap/variables';
 $breadcrumb-height: 35px;
 $masthead-height: 50px;
 $table-header-z-index: 1020;
@@ -42,10 +43,14 @@ nav#breadcrumbs {
       text-decoration: none;
     }
     &:active {
-
     }
     &:visited {
-
+    }
+    &:last-of-type {
+      pointer-events: none;
+      cursor: default;
+      text-decoration: none;
+      color: $gray;
     }
   }
 
