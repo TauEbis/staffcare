@@ -1,31 +1,43 @@
-<% if path_for_breadcrumbs? %>
+<%- if path_for_breadcrumbs? -%>
   <nav id='breadcrumbs'>
 
-  <% if current_user.admin? -%>
-    <%- if (request.env['PATH_INFO'].include?('schedules') || @schedule) && policy(Schedule).index? -%>
+  <%- if request.env['PATH_INFO'] == schedules_path -%>
+    <a class='disabled'>Schedules</a>
+  <%- end -%>
+
+  <%- if @schedule -%>
+
+    <%- if policy(Schedule).index? -%>
       <%= link_to 'Schedules', schedules_path %>
+      <span>&gt;</span>
+    <%- end -%>
+
+    <%- if policy(@schedule).show? -%>
+      <%= link_to schedule_date_span(@schedule), schedule_path(@schedule) %>
+    <%- else -%>
+      <a class='disabled'> <%= schedule_date_span(@schedule) %> </a>
+    <%- end -%>
+
+  <%- end -%>
+
+  <%- if @zone -%>
+    <span>&gt;</span>
+    <%- if !current_user.single_manager? -%>
+      <%= link_to @zone.name, schedule_location_plans_path(@schedule, zone_id: @zone.id) %>
+    <%- else -%>
+      <a class='disabled'> <%= @zone.name %> </a>
     <%- end -%>
   <%- end -%>
 
-  <%- if (request.env['PATH_INFO'].include?('schedules/')  || @schedule) && policy(Schedule).index? -%>
-    <span>&gt;</span> <%= link_to schedule_date_span(@schedule), schedule_path(@schedule) %>
+  <%- if @location_plan -%>
+    <span>&gt;</span>
+    <%= link_to @location_plan.name, location_plan_path(@location_plan) %>
   <%- end -%>
 
-  <% if @zone && (request.env['PATH_INFO'].include?('location_plans') ||
-                  request.env['PATH_INFO'].include?('grades/'))
-  %>
-    <span>&gt;</span> <%= link_to @zone.name, schedule_location_plans_path(@schedule, zone_id: @zone.id) %>
-  <%- end -%>
-
-  <% if @location_plan && (request.env['PATH_INFO'].include?('location_plans/') ||
-                           request.env['PATH_INFO'].include?('grades/'))
-  %>
-    <span>&gt;</span> <%= link_to @location_plan.name, location_plan_path(@location_plan) %>
-  <%- end -%>
-
-  <% if @grade && request.env['PATH_INFO'].include?('grades/') %>
-    <span>&gt;</span> <%= link_to 'Grade Page', grade_path(@grade) %>
+  <%- if @grade && request.env['PATH_INFO'] == grade_path(@grade) -%>
+    <span>&gt;</span>
+    <%= link_to 'Grade Page', grade_path(@grade) %>
   <%- end -%>
 
   </nav>
-<% end %>
+<%- end -%>
