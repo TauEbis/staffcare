@@ -3,28 +3,28 @@
 
   <% if current_user.admin? -%>
     <%- if (request.env['PATH_INFO'].include?('schedules') || @schedule) && policy(Schedule).index? -%>
-      <%= link_to 'Schedules', schedules_path %> <span>&gt;</span>
+      <%= link_to 'Schedules', schedules_path %>
     <%- end -%>
   <%- end -%>
 
   <%- if (request.env['PATH_INFO'].include?('schedules/')  || @schedule) && policy(Schedule).index? -%>
-    <%= link_to schedule_date_span(@schedule), schedule_path(@schedule) %> <span>&gt;</span>
+    <span>&gt;</span> <%= link_to schedule_date_span(@schedule), schedule_path(@schedule) %>
   <%- end -%>
 
   <% if @zone && (request.env['PATH_INFO'].include?('location_plans') ||
                   request.env['PATH_INFO'].include?('grades/'))
   %>
-    <%= link_to @zone.name, schedule_location_plans_path(@schedule, zone_id: @zone.id) %> <span>&gt;</span>
+    <span>&gt;</span> <%= link_to @zone.name, schedule_location_plans_path(@schedule, zone_id: @zone.id) %>
   <%- end -%>
 
   <% if @location_plan && (request.env['PATH_INFO'].include?('location_plans/') ||
                            request.env['PATH_INFO'].include?('grades/'))
   %>
-    <%= link_to @location_plan.name, location_plan_path(@location_plan) %> <span>&gt;</span>
+    <span>&gt;</span> <%= link_to @location_plan.name, location_plan_path(@location_plan) %>
   <%- end -%>
 
   <% if @grade && request.env['PATH_INFO'].include?('grades/') %>
-    <%= link_to 'Grade Page', grade_path(@grade) %> <span>&gt;</span>
+    <span>&gt;</span> <%= link_to 'Grade Page', grade_path(@grade) %>
   <%- end -%>
 
   </nav>
