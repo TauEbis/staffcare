@@ -17,8 +17,12 @@ body#assignments_controller {
     }
   }
 
-  #show_assignment_modal .modal-dialog {
-    width: 800px;
+  #show_assignment_modal {
+    z-index: 2000;
+    .modal-dialog {
+      width: 800px;
+      z-index: 2000;
+    }
   }
 
   .weekend {
