@@ -37,7 +37,7 @@ class AssignmentsController < ApplicationController
                 user_zones.ordered.first
               end
 
-      @zones = user_zones.ordered
+      @zones = user_zones.assigned.ordered
 
       @location_plans = @schedule.location_plans.for_user(current_user).where(location_id: @zone.location_ids)
     end
