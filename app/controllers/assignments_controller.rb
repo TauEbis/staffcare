@@ -11,13 +11,13 @@ class AssignmentsController < ApplicationController
     @wide_container = true # Control the body wrapper css class for the giant grid
 
     @start_date = params[:start_date] ? Date.parse(params[:start_date].to_s) : @schedule.starts_on
-    @end_date = params[:end_date] ? Date.parse(params[:end_date].to_s) + 1 : @schedule.ends_on # Plus one here because arel range doesn't understand how to include the end date
+    @end_date = params[:end_date] ? Date.parse(params[:end_date].to_s) : @schedule.ends_on
 
     respond_to do |format|
       format.html
       format.json do
         @shifts = @location_plans.inject({}) do |hsh, lp|
-          hsh[lp.id] = lp.chosen_grade.shifts.for_date_range(@start_date..@end_date).md.group_by {|s| s.date }
+          hsh[lp.id] = lp.chosen_grade.shifts.for_date_range(@start_date..(@end_date+1)).md.group_by {|s| s.date } # Plus one here because arel range doesn't understand how to include the end date
           hsh
         end
       end
