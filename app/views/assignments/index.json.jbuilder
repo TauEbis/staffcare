@@ -1,6 +1,6 @@
 json.extract! @schedule, :id, :days, :holidays
 
-json.location_plans @schedule.location_plans do |location_plan|
+json.location_plans @location_plans do |location_plan|
   json.id location_plan.id
   json.name location_plan.name
   json.chosen_grade_id location_plan.chosen_grade_id
